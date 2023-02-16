@@ -1,8 +1,8 @@
 {
-  "name": "hmpps-template-typescript",
+  "name": "hmpps-book-a-prison-visit-ui",
   "version": "0.0.1",
-  "description": "HMPPS Typescript Template",
-  "repository": "git@github.com:ministryofjustice/hmpps-template-typescript.git",
+  "description": "Hmpps Book A Prison Visit Ui",
+  "repository": "git@github.com:ministryofjustice/hmpps-book-a-prison-visit-ui.git",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
