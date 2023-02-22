@@ -5,7 +5,7 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: hmpps-book-a-prison-visit-ui-dev.hmpps.service.justice.gov.uk
+    host: hmpps-book-a-prison-visit-ui-preprod.hmpps.service.justice.gov.uk
     contextColour: green
     v1_2_enabled: true
     v0_47_enabled: false
