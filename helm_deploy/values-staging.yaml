@@ -15,11 +15,6 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api-staging.prison.service.justice.gov.uk"
 
-  namespace_secrets:
-    elasticache-redis:
-      REDIS_HOST: "primary_endpoint_address"
-      REDIS_AUTH_TOKEN: "auth_token"
-
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
 
