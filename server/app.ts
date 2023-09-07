@@ -1,6 +1,6 @@
+import path from 'path'
 import express from 'express'
 
-import path from 'path'
 import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
