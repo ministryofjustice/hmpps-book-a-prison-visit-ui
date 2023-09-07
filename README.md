@@ -7,24 +7,24 @@ Template github repo used for new Typescript based projects.
 # Instructions
 
 If this is a HMPPS project then the project will be created as part of bootstrapping - 
-see https://github.com/ministryofjustice/dps-project-bootstrap.
+see https://github.com/ministryofjustice/dps-project-bootstrap. You are able to specify a template application using the `github_template_repo` attribute to clone without the need to manually do this yourself within GitHub.
 
 This bootstrap is community managed by the mojdt `#typescript` slack channel. 
 Please raise any questions or queries there. Contributions welcome!
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-book-a-prison-visit-ui/security/policy). 
+Our security policy is located [here](https://github.com/ministryofjustice/hmpps-template-typescript/security/policy). 
 
 More information about the template project including features can be found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
 
-## Creating a CloudPlatform namespace
+## Creating a Cloud Platform namespace
 
 When deploying to a new namespace, you may wish to use this template typescript project namespace as the basis for your new namespace:
 
-<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-book-a-prison-visit-ui>
+<https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-template-typescript>
 
 This template namespace includes an AWS elasticache setup - which is required by this template project.
 
-Copy this folder, update all the existing namespace references, and submit a PR to the CloudPlatform team. Further instructions from the CloudPlatform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
+Copy this folder, update all the existing namespace references, and submit a PR to the Cloud Platform team. Further instructions from the Cloud Platform team can be found here: <https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide>
 
 ## Renaming from HMPPS Template Typescript - github Actions
 
@@ -48,6 +48,10 @@ It then performs a search and replace and directory renames so the project is re
 ## Ensuring slack notifications are raised correctly
 
 To ensure notifications are routed to the correct slack channels, update the `alerts-slack-channel` and `releases-slack-channel` parameters in `.circle/config.yml` to an appropriate channel.
+
+## Filling in the `productId`
+
+To allow easy identification of an application, the product Id of the overall product should be set in `values.yaml`. The Service Catalogue contains a list of these IDs and is currently in development here https://developer-portal.hmpps.service.justice.gov.uk/products
 
 ## Running the app
 The easiest way to run the app is to use docker compose to create the service and all dependencies. 
@@ -101,8 +105,12 @@ Or run tests with the cypress UI:
 
 `npm run int-test-ui`
 
+## Change log
 
-### Dependency Checks
+A changelog for the service is available [here](./CHANGELOG.md)
+
+
+## Dependency Checks
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`

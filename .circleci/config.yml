@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.2.1
-  slack: circleci/slack@4.12.1
+  hmpps: ministryofjustice/hmpps@7.3.4
+  slack: circleci/slack@4.12.5
 
 parameters:
   alerts-slack-channel:
@@ -15,7 +15,7 @@ parameters:
 
   node-version:
     type: string
-    default: 18.15-browsers
+    default: 18.17-browsers
 
 jobs:
   build:
@@ -40,10 +40,6 @@ jobs:
       - run:
           command: |
             npm run build
-            DATE=$(date '+%Y-%m-%d')
-            export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-            export GIT_REF="$CIRCLE_SHA1"
-            npm run record-build-info
       - run: # Run linter after build because the integration test code depend on compiled typescript...
           name: Linter check
           command: npm run lint
@@ -51,10 +47,9 @@ jobs:
           root: .
           paths:
             - node_modules
-            - build-info.json
             - build
             - dist
-            - .cache/Cypress
+            - assets/stylesheets
 
   unit_test:
     executor:
@@ -76,7 +71,7 @@ jobs:
     executor:
       name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "6.2"
+      redis_tag: "7.0"
     steps:
       - checkout
       - attach_workspace:
@@ -106,67 +101,13 @@ jobs:
       - store_test_results:
           path: test_results
       - store_artifacts:
-          path: integration-tests/videos
+          path: integration_tests/videos
       - store_artifacts:
-          path: integration-tests/screenshots
+          path: integration_tests/screenshots
 
 workflows:
   version: 2
-  build-test-and-deploy-develop:
-    when:
-      and:
-        - not:
-            equal: [ main, << pipeline.git.branch >> ]
-    jobs:
-      - build:
-          filters:
-            tags:
-              ignore: /.*/
-      - unit_test:
-          requires:
-            - build
-      - integration_test:
-          requires:
-            - build
-      - hmpps/helm_lint:
-          name: helm_lint
-      - hmpps/build_docker:
-          name: build_docker
-      - request-dev-approval:
-          type: approval
-          requires:
-            - helm_lint
-            - unit_test
-            - integration_test
-            - build_docker
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context:
-            - hmpps-common-vars
-          requires:
-            - request-dev-approval
-          helm_timeout: 5m
-      - request-staging-approval:
-          type: approval
-          requires:
-            - deploy_dev
-      - hmpps/deploy_env:
-          name: deploy_staging
-          env: "staging"
-          jira_update: true
-          jira_env_type: staging
-          context:
-            - hmpps-common-vars
-            - hmpps-book-a-prison-visit-ui-stage
-          requires:
-            - request-staging-approval
-          helm_timeout: 5m
   build-test-and-deploy:
-    when:
-      and:
-        - equal: [ main, << pipeline.git.branch >> ]
     jobs:
       - build:
           filters:
@@ -182,69 +123,57 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-      - request-dev-approval:
-          type: approval
+          filters:
+            branches:
+              only:
+                - main
+      - hmpps/deploy_env:
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context: hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - helm_lint
             - unit_test
             - integration_test
             - build_docker
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context:
-            - hmpps-common-vars
-          requires:
-            - request-dev-approval
           helm_timeout: 5m
-      - request-staging-approval:
-          type: approval
-          requires:
-            - deploy_dev
-      - hmpps/deploy_env:
-          name: deploy_staging
-          env: "staging"
-          jira_update: true
-          jira_env_type: staging
-          context:
-            - hmpps-common-vars
-            - hmpps-book-a-prison-visit-ui-stage
-          requires:
-            - request-staging-approval
-          helm_timeout: 5m
-      - request-preprod-approval:
-          type: approval
-          requires:
-            - deploy_staging
-      - hmpps/deploy_env:
-          name: deploy_preprod
-          env: "preprod"
-          jira_update: true
-          jira_env_type: staging
-          context:
-            - hmpps-common-vars
-            - hmpps-book-a-prison-visit-ui-preprod
-          requires:
-            - request-preprod-approval
-          helm_timeout: 5m
-  #      - request-prod-approval:
-  #          type: approval
-  #          requires:
-  #            - deploy_preprod
-  #      - hmpps/deploy_env:
-  #          name: deploy_prod
-  #          env: "prod"
-  #          jira_update: true
-  #          jira_env_type: production
-  #          slack_notification: true
-  #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-  #          context:
-  #            - hmpps-common-vars
-  #            - hmpps-book-a-prison-visit-ui-prod
-  #          requires:
-  #            - request-prod-approval
-  #          helm_timeout: 5m
+#      - request-preprod-approval:
+#          type: approval
+#          requires:
+#            - deploy_dev
+#      - hmpps/deploy_env:
+#          name: deploy_preprod
+#          env: "preprod"
+#          jira_update: true
+#          jira_env_type: staging
+#          context:
+#            - hmpps-common-vars
+#            - hmpps-book-a-prison-visit-ui-preprod
+#          requires:
+#            - request-preprod-approval
+#          helm_timeout: 5m
+#      - request-prod-approval:
+#          type: approval
+#          requires:
+#            - deploy_preprod
+#      - hmpps/deploy_env:
+#          name: deploy_prod
+#          env: "prod"
+#          jira_update: true
+#          jira_env_type: production
+#          slack_notification: true
+#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+#          context:
+#            - hmpps-common-vars
+#            - hmpps-book-a-prison-visit-ui-prod
+#          requires:
+#            - request-prod-approval
+#          helm_timeout: 5m
 
   security:
     triggers:
