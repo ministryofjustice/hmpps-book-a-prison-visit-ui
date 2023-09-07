@@ -1,7 +1,16 @@
+main_branch: &main_branch
+  filters:
+    branches:
+      only: main
+feature_branch: &feature_branch
+  filters:
+    branches:
+      ignore: main
+
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.2.1
+  hmpps: ministryofjustice/hmpps@7.3.4
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -69,6 +78,8 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
+      - store_artifacts:
+          path: test_results/jest/coverage
 
   integration_test:
     executor:
@@ -85,8 +96,8 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Get wiremock
-          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
+          name: Get wiremock # match version in docker-compose-test.yml
+          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-jre8-standalone/2.35.0/wiremock-jre8-standalone-2.35.0.jar
       - run:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091
@@ -126,57 +137,102 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          filters:
-            branches:
-              only:
-                - main
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: "dev"
-          jira_update: true
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
+
+      - request-dev-preview-approval:
+          <<: *feature_branch
+          type: approval
           requires:
             - helm_lint
             - unit_test
             - integration_test
             - build_docker
-          helm_timeout: 5m
-#      - request-preprod-approval:
-#          type: approval
-#          requires:
-#            - deploy_dev
-#      - hmpps/deploy_env:
-#          name: deploy_preprod
-#          env: "preprod"
-#          jira_update: true
-#          jira_env_type: staging
-#          context:
-#            - hmpps-common-vars
-#            - hmpps-book-a-prison-visit-ui-preprod
-#          requires:
-#            - request-preprod-approval
-#          helm_timeout: 5m
-#      - request-prod-approval:
-#          type: approval
-#          requires:
-#            - deploy_preprod
-#      - hmpps/deploy_env:
-#          name: deploy_prod
-#          env: "prod"
-#          jira_update: true
-#          jira_env_type: production
-#          slack_notification: true
-#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-#          context:
-#            - hmpps-common-vars
-#            - hmpps-book-a-prison-visit-ui-prod
-#          requires:
-#            - request-prod-approval
-#          helm_timeout: 5m
+      - hmpps/deploy_env:
+          <<: *feature_branch
+          name: deploy_dev_preview
+          env: "dev"
+          jira_update: true
+          context:
+            - hmpps-common-vars
+          requires:
+            - request-dev-preview-approval
+
+      - request-staging-preview-approval:
+          <<: *feature_branch
+          type: approval
+          requires:
+            - deploy_dev_preview
+      - hmpps/deploy_env:
+          name: deploy_staging_preview
+          env: "staging"
+          jira_update: true
+          jira_env_type: staging
+          context:
+            - hmpps-common-vars
+            - hmpps-book-a-prison-visit-ui-stage
+          requires:
+            - request-staging-preview-approval
+
+      - hmpps/deploy_env:
+          <<: *main_branch
+          name: deploy_dev
+          env: "dev"
+          jira_update: true
+          context:
+            - hmpps-common-vars
+          requires:
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
+
+      - request-staging-approval:
+          <<: *main_branch
+          type: approval
+          requires:
+            - deploy_dev
+      - hmpps/deploy_env:
+          name: deploy_staging
+          env: "staging"
+          jira_update: true
+          jira_env_type: staging
+          context:
+            - hmpps-common-vars
+            - hmpps-book-a-prison-visit-ui-stage
+          requires:
+            - request-staging-approval
+
+      # - request-preprod-approval:
+      #     type: approval
+      #     requires:
+      #       - deploy_staging
+      # - hmpps/deploy_env:
+      #     name: deploy_preprod
+      #     env: "preprod"
+      #     jira_update: true
+      #     jira_env_type: staging
+      #     context:
+      #       - hmpps-common-vars
+      #       - hmpps-book-a-prison-visit-ui-preprod
+      #     requires:
+      #       - request-preprod-approval
+
+      # - request-prod-approval:
+      #     type: approval
+      #     requires:
+      #       - deploy_preprod
+      # - hmpps/deploy_env:
+      #     name: deploy_prod
+      #     env: "prod"
+      #     jira_update: true
+      #     jira_env_type: production
+      #     slack_notification: true
+      #     slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+      #     context:
+      #       - hmpps-common-vars
+      #       - hmpps-book-a-prison-visit-ui-prod
+      #     requires:
+      #       - request-prod-approval
+
 
   security:
     triggers:
