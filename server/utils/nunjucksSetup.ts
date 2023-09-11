@@ -30,8 +30,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
       path.join(__dirname, '../../server/views'),
       'node_modules/govuk-frontend/',
       'node_modules/govuk-frontend/components/',
-      'node_modules/@ministryofjustice/frontend/',
-      'node_modules/@ministryofjustice/frontend/moj/components/',
     ],
     {
       autoescape: true,
