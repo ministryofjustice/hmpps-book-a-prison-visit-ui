@@ -4,12 +4,13 @@ import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import authorisationMiddleware from './middleware/authorisationMiddleware'
+// import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { metricsMiddleware } from './monitoring/metricsApp'
 
-import setUpAuthentication from './middleware/setUpAuthentication'
+// import setUpAuthentication from './middleware/setUpAuthentication'
+import setupGovukOneLogin from './middleware/setUpGovukOneLogin'
 import setUpCsrf from './middleware/setUpCsrf'
-import setUpCurrentUser from './middleware/setUpCurrentUser'
+// import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
@@ -33,10 +34,11 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
-  app.use(setUpAuthentication())
-  app.use(authorisationMiddleware())
+  // app.use(setUpAuthentication())
+  app.use(setupGovukOneLogin())
+  // app.use(authorisationMiddleware())
   app.use(setUpCsrf())
-  app.use(setUpCurrentUser(services))
+  // app.use(setUpCurrentUser(services))
 
   app.use(routes(services))
 

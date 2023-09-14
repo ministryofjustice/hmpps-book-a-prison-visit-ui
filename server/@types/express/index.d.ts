@@ -3,23 +3,23 @@ export default {}
 declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
-    returnTo: string
+    // returnTo: string
     nowInMinutes: number
   }
 }
 
 export declare global {
   namespace Express {
-    interface User {
-      username: string
-      token: string
-      authSource: string
-    }
+    // interface User {
+    //   username: string
+    //   token: string
+    //   authSource: string
+    // }
 
     interface Request {
-      verified?: boolean
+      // verified?: boolean
       id: string
-      logout(done: (err: unknown) => void): void
+      // logout(done: (err: unknown) => void): void
     }
   }
 }

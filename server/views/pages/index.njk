@@ -7,4 +7,15 @@
   <h1 class="govuk-heading-l">This site is under construction...</h1>
   <p>Please check back later when there is content to view.</p>
 
+  <hr>
+
+  <pre>User details retrieved from GOV.UK One Login:
+
+{{ (user | dump(2)) if user else "NONE" }}
+
+  </pre>
+
+  <hr>
+
+  <p><a href="/sign-out">Sign out</a></p>
 {% endblock %}
