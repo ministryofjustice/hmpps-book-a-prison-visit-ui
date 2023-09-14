@@ -3,13 +3,17 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
+export default function routes({ supportedPrisonsService }: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', (req, res, next) => {
     res.render('pages/index', { user: req.user })
+  })
+
+  get('/prisons', async (req, res, next) => {
+    const prisonIds = await supportedPrisonsService.getSupportedPrisonIds()
+    res.render('pages/prisons', { prisonIds })
   })
 
   return router
