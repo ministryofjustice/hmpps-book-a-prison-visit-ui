@@ -14,6 +14,8 @@ generic-service:
     enabled: true
     host: app-hostname.local    # override per environment
     tlsSecretName: hmpps-book-a-prison-visit-ui-cert
+    annotations:
+      nginx.ingress.kubernetes.io/limit-rpm: "120"
 
   livenessProbe:
     httpGet:
