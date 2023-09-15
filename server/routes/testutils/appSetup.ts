@@ -16,7 +16,7 @@ const testAppInfo: ApplicationInfo = {
   gitShortHash: 'short ref',
 }
 
-export const user = {
+export const user: Express.User = {
   sub: 'user1',
   phone_number_verified: true,
   phone_number: '+440123456789',
@@ -37,7 +37,6 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
     req.user = userSupplier()
     req.flash = flashProvider
     res.locals = {}
-    res.locals.user = { ...req.user }
     next()
   })
   app.use(express.json())
