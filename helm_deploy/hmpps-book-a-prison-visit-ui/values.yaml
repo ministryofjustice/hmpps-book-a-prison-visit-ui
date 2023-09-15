@@ -14,6 +14,8 @@ generic-service:
     enabled: true
     host: app-hostname.local    # override per environment
     tlsSecretName: hmpps-book-a-prison-visit-ui-cert
+    annotations:
+      nginx.ingress.kubernetes.io/limit-rpm: "120"
 
   livenessProbe:
     httpGet:
@@ -49,6 +51,9 @@ generic-service:
       SYSTEM_CLIENT_ID: "SYSTEM_CLIENT_ID"
       SYSTEM_CLIENT_SECRET: "SYSTEM_CLIENT_SECRET"
       SESSION_SECRET: "SESSION_SECRET"
+    govuk-one-login:
+      GOVUK_ONE_LOGIN_CLIENT_ID: "GOVUK_ONE_LOGIN_CLIENT_ID"
+      GOVUK_ONE_LOGIN_PRIVATE_KEY: "GOVUK_ONE_LOGIN_PRIVATE_KEY"
     elasticache-redis-public:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"

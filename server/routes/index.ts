@@ -9,7 +9,7 @@ export default function routes(service: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', (req, res, next) => {
-    res.render('pages/index')
+    res.render('pages/index', { user: req.user })
   })
 
   return router
