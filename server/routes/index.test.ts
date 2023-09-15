@@ -1,11 +1,15 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes } from './testutils/appSetup'
+import { createMockSupportedPrisonsService } from '../services/testutils/mocks'
 
 let app: Express
 
+const supportedPrisonsService = createMockSupportedPrisonsService()
+
 beforeEach(() => {
-  app = appWithAllRoutes({})
+  supportedPrisonsService.getSupportedPrisonIds.mockResolvedValue(['HEI', 'PNI'])
+  app = appWithAllRoutes({ services: { supportedPrisonsService } })
 })
 
 afterEach(() => {
@@ -19,6 +23,20 @@ describe('GET /', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         expect(res.text).toContain('This site is under construction...')
+      })
+  })
+})
+
+describe('GET /prisons', () => {
+  it('should render prisons page with API call', () => {
+    return request(app)
+      .get('/prisons')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        expect(res.text).toContain('Test API call')
+        expect(res.text).toContain('HEI')
+        expect(res.text).toContain('PNI')
+        expect(supportedPrisonsService.getSupportedPrisonIds).toHaveBeenCalledWith()
       })
   })
 })
