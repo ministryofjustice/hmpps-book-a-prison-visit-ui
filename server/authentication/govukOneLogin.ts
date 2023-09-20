@@ -50,7 +50,7 @@ async function init(): Promise<Client> {
   )
 
   const verify: StrategyVerifyCallbackUserInfo<UserinfoResponse> = (tokenSet, userInfo, done) => {
-    logger.info(`GOV.UK One Login user verified: sub =  ${userInfo.sub}`)
+    logger.info(`GOV.UK One Login user verified, sub: ${userInfo.sub}`)
     return done(null, userInfo)
   }
 
@@ -61,6 +61,7 @@ async function init(): Promise<Client> {
         scope: 'openid email phone',
         vtr: '["Cl.Cm"]',
       },
+      usePKCE: false,
     },
     verify,
   )
