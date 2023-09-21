@@ -1,17 +1,17 @@
 import fs from 'fs'
-import path from 'path'
 import jwt from 'jsonwebtoken'
 import { Response } from 'superagent'
 import { createPublicKey } from 'crypto'
 import { getMatchingRequests, stubFor } from './wiremock'
 
-const oidcConfigPath = path.join(__dirname, 'mappings/openid-configuration.json')
-const oidcConfig = JSON.parse(fs.readFileSync(oidcConfigPath).toString())
+const oidcConfig = JSON.parse(
+  fs.readFileSync('integration_tests/mockApis/mappings/openid-configuration.json').toString(),
+)
 
 const stubOidcDiscovery = () => stubFor(oidcConfig)
 
 const stubJwks = () => {
-  const publicKey = fs.readFileSync(path.join(__dirname, '../testKeys/server_public_key.pem'))
+  const publicKey = fs.readFileSync('integration_tests/testKeys/server_public_key.pem')
   const publicKeyJwk = createPublicKey({ key: publicKey }).export({ format: 'jwk' })
 
   return stubFor({
@@ -80,7 +80,7 @@ const createIdToken = (nonce: string) => {
     sid: 'SESSION_IDENTIFIER',
   }
 
-  const privateKey = fs.readFileSync(path.join(__dirname, '../testKeys/server_private_key.pem'))
+  const privateKey = fs.readFileSync('integration_tests/testKeys/server_private_key.pem')
   const idToken = jwt.sign(payload, privateKey, { algorithm: 'ES256' })
   return idToken
 }
