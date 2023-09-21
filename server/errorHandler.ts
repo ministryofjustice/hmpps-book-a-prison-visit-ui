@@ -4,7 +4,7 @@ import logger from '../logger'
 
 export default function createErrorHandler(production: boolean) {
   return (error: HTTPError, req: Request, res: Response, next: NextFunction): void => {
-    logger.error(`Error handling request for '${req.originalUrl}', user '${req.user?.sub.slice(0, 30)}...'`, error)
+    logger.error(`Error handling request for '${req.originalUrl}', user '${req.user?.sub}...'`, error)
 
     if (error.status === 401 || error.status === 403) {
       logger.info('Logging user out')

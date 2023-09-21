@@ -60,6 +60,7 @@ async function init(): Promise<Client> {
       params: {
         scope: 'openid email phone',
         vtr: '["Cl.Cm"]',
+        ui_locales: 'en',
       },
       usePKCE: false,
     },
