@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
-import auth from './integration_tests/mockApis/auth'
+import govukOneLogin from './integration_tests/mockApis/govukOneLogin'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
-        ...auth,
+        ...govukOneLogin,
         ...tokenVerification,
 
         // Log message to console

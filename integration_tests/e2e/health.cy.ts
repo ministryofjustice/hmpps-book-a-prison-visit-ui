@@ -2,7 +2,6 @@ context('Healthcheck', () => {
   context('All healthy', () => {
     beforeEach(() => {
       cy.task('reset')
-      cy.task('stubAuthPing')
       cy.task('stubTokenVerificationPing')
     })
 
@@ -22,11 +21,9 @@ context('Healthcheck', () => {
   context('Some unhealthy', () => {
     it('Reports correctly when token verification down', () => {
       cy.task('reset')
-      cy.task('stubAuthPing')
       cy.task('stubTokenVerificationPing', 500)
 
       cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
-        expect(response.body.checks.hmppsAuth).to.equal('OK')
         expect(response.body.checks.tokenVerification).to.contain({ status: 500, retries: 2 })
       })
     })

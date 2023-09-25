@@ -20,7 +20,6 @@ import createError from 'http-errors'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
-import * as govukOneLogin from '../../authentication/govukOneLogin'
 import type { Services } from '../../services'
 
 export const user: Express.User = {
@@ -64,6 +63,5 @@ export function appWithAllRoutes({
   services?: Partial<Services>
   userSupplier?: () => Express.User
 }): Express {
-  govukOneLogin.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier)
 }
