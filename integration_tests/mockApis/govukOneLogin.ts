@@ -1,5 +1,5 @@
 import fs from 'fs'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Response } from 'superagent'
 import { createPublicKey } from 'crypto'
 import { getMatchingRequests, stubFor } from './wiremock'
@@ -75,7 +75,7 @@ const createIdToken = (nonce: string) => {
     iss: 'http://localhost:9091/govukOneLogin/',
     nonce,
     aud: 'clientId',
-    exp: nowTimestamp + 180,
+    exp: nowTimestamp + 180 * 1000, // 3 minutes
     iat: nowTimestamp,
     sid: 'SESSION_IDENTIFIER',
   }
@@ -114,6 +114,22 @@ const token = (nonce: string) =>
       },
     },
   })
+
+// get the client assertion JWT used for /token request and
+// verify its signature with the client's public key
+const verifyJwtAssertionForToken = (): Promise<string | JwtPayload> =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPath: '/govukOneLogin/token',
+  })
+    .then(data => {
+      const { requests } = data.body
+      const clientJwtAssertion = requests[requests.length - 1].formParams.client_assertion.values[0]
+      return clientJwtAssertion
+    })
+    .then(clientJwtAssertion => {
+      return jwt.verify(clientJwtAssertion, fs.readFileSync('integration_tests/testKeys/client_public_key.pem'))
+    })
 
 const stubUserInfo = () =>
   stubFor({
@@ -159,6 +175,7 @@ const signOut = () =>
 
 export default {
   getSignInUrl,
+  verifyJwtAssertionForToken,
   stubSignIn: (): Promise<[Response, Response, Response, Response, Response]> =>
     Promise.all([stubOidcDiscovery(), stubJwks(), redirect(), stubUserInfo(), signOut()]),
 }
