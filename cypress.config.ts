@@ -1,7 +1,8 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
+import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
 import govukOneLogin from './integration_tests/mockApis/govukOneLogin'
-import tokenVerification from './integration_tests/mockApis/tokenVerification'
+import orchestrationService from './integration_tests/mockApis/orchestration'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -17,8 +18,10 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+        ...hmppsAuth,
         ...govukOneLogin,
-        ...tokenVerification,
+
+        ...orchestrationService,
 
         // Log message to console
         log: (message: string) => {

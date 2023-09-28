@@ -49,16 +49,8 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
   return { ...aggregateStatus, [currentStatus.name]: currentStatus.message }
 }
 
-const apiChecks = [
-  ...(config.apis.tokenVerification.enabled
-    ? [
-        service(
-          'tokenVerification',
-          `${config.apis.tokenVerification.url}/health/ping`,
-          config.apis.tokenVerification.agent,
-        ),
-      ]
-    : []),
+const apiChecks: HealthCheckService[] = [
+  service('orchestration', `${config.apis.orchestration.url}/health/ping`, config.apis.orchestration.agent),
 ]
 
 export default function healthCheck(
