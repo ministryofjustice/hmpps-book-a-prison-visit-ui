@@ -33,11 +33,8 @@ services:
       - "3000:3000"
     environment:
       - REDIS_HOST=redis-public-ui
-      - HMPPS_AUTH_EXTERNAL_URL=http://localhost:9090/auth
       - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
       # These will need to match new creds in the seed auth service auth
-      - API_CLIENT_ID=client-id
-      - API_CLIENT_SECRET=client-secret
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
 

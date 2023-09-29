@@ -1,12 +1,13 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
+import TestData from '../../server/routes/testutils/testData'
 
 export default {
-  stubTokenVerificationPing: (status = 200): SuperAgentRequest =>
+  stubOrchestrationPing: (status = 200): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/verification/health/ping',
+        urlPattern: '/orchestration/health/ping',
       },
       response: {
         status,
@@ -14,16 +15,17 @@ export default {
         jsonBody: { status: 'UP' },
       },
     }),
-  stubVerifyToken: (active = true): SuperAgentRequest =>
-    stubFor({
+  stubSupportedPrisonIds: (): SuperAgentRequest => {
+    return stubFor({
       request: {
-        method: 'POST',
-        urlPattern: '/verification/token/verify',
+        method: 'GET',
+        url: '/orchestration/config/prisons/supported',
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { active },
+        jsonBody: TestData.supportedPrisonIds(),
       },
-    }),
+    })
+  },
 }
