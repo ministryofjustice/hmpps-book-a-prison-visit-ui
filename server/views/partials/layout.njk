@@ -18,6 +18,5 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="/assets/govuk/all.js"></script>
-  <script nonce="{{ cspNonce }}">window.GOVUKFrontend.initAll()</script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
 {% endblock %}
