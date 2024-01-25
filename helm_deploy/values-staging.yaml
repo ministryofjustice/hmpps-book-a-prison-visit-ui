@@ -10,6 +10,13 @@ generic-service:
   env:
     INGRESS_URL: "https://visit-staging.prison.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
+    GOVUK_ONE_LOGIN_URL: "https://oidc.integration.account.gov.uk"
+    ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
+    APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
+
+  namespace_secrets:
+    hmpps-book-a-prison-visit-ui:
+      APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
