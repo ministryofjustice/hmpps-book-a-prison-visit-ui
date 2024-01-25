@@ -207,20 +207,20 @@ workflows:
           requires:
             - request-staging-approval
 
-      # - request-preprod-approval:
-      #     type: approval
-      #     requires:
-      #       - deploy_staging
-      # - hmpps/deploy_env:
-      #     name: deploy_preprod
-      #     env: "preprod"
-      #     jira_update: true
-      #     jira_env_type: staging
-      #     context:
-      #       - hmpps-common-vars
-      #       - hmpps-book-a-prison-visit-ui-preprod
-      #     requires:
-      #       - request-preprod-approval
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_staging
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: "preprod"
+          jira_update: true
+          jira_env_type: staging
+          context:
+            - hmpps-common-vars
+            - hmpps-book-a-prison-visit-ui-preprod
+          requires:
+            - request-preprod-approval
 
       # - request-prod-approval:
       #     type: approval
