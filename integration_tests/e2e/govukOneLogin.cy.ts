@@ -1,4 +1,4 @@
-import HomePage from '../pages/home'
+import IndexPage from '../pages/index'
 import GovukOneLoginPage from '../pages/govukOneLogin'
 import Page from '../pages/page'
 
@@ -30,7 +30,7 @@ context('Sign in with GOV.UK One Login', () => {
 
   it('User can sign in and view home page', () => {
     cy.signIn()
-    Page.verifyOnPage(HomePage)
+    Page.verifyOnPage(IndexPage)
 
     // just testing sample data dumped to the page for now
     cy.contains('"sub": "user1"')
@@ -46,8 +46,8 @@ context('Sign in with GOV.UK One Login', () => {
 
   it('User can log out', () => {
     cy.signIn()
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.signOut().click()
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.signOut().click()
     Page.verifyOnPage(GovukOneLoginPage)
     cy.contains('You have been logged out.')
   })
