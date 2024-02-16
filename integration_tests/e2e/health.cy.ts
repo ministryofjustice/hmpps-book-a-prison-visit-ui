@@ -5,8 +5,8 @@ context('Healthcheck', () => {
       cy.task('stubOrchestrationPing')
     })
 
-    it('Health check page is visible', () => {
-      cy.request('/health').its('body.healthy').should('equal', true)
+    it('Health check page is visible and UP', () => {
+      cy.request('/health').its('body.status').should('equal', 'UP')
     })
 
     it('Ping is visible and UP', () => {
@@ -19,13 +19,20 @@ context('Healthcheck', () => {
   })
 
   context('Some unhealthy', () => {
-    it('Reports correctly when orchestration down', () => {
+    beforeEach(() => {
       cy.task('reset')
       cy.task('stubOrchestrationPing', 500)
+    })
 
+    it('Reports correctly when token orchestration down', () => {
       cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
-        expect(response.body.checks.orchestration).to.contain({ status: 500, retries: 2 })
+        expect(response.body.components.orchestration.status).to.equal('DOWN')
+        expect(response.body.components.orchestration.details).to.contain({ status: 500, retries: 2 })
       })
+    })
+
+    it('Health check page is visible and DOWN', () => {
+      cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).its('body.status').should('equal', 'DOWN')
     })
   })
 })

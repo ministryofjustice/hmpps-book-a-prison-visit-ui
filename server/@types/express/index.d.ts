@@ -20,6 +20,11 @@ export declare global {
 
     interface Request {
       id: string
+      logout(done: (err: unknown) => void): void
+    }
+
+    interface Locals {
+      user: Express.User
     }
   }
 }

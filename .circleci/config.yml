@@ -10,7 +10,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7
+  hmpps: ministryofjustice/hmpps@8
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -78,14 +78,11 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
-      - store_artifacts:
-          path: test_results/jest/coverage
 
   integration_test:
     executor:
-      name: hmpps/node_redis
-      node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "7.0"
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
     steps:
       - checkout
       - attach_workspace:
@@ -157,6 +154,8 @@ workflows:
           name: deploy_dev_preview
           env: "dev"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           context:
             - hmpps-common-vars
           requires:
@@ -171,6 +170,8 @@ workflows:
           name: deploy_staging_preview
           env: "staging"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           jira_env_type: staging
           context:
             - hmpps-common-vars
@@ -183,6 +184,8 @@ workflows:
           name: deploy_dev
           env: "dev"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           context:
             - hmpps-common-vars
           requires:
@@ -200,6 +203,8 @@ workflows:
           name: deploy_staging
           env: "staging"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           jira_env_type: staging
           context:
             - hmpps-common-vars
@@ -215,6 +220,8 @@ workflows:
           name: deploy_preprod
           env: "preprod"
           jira_update: true
+          pipeline_id: <<pipeline.id>>
+          pipeline_number: <<pipeline.number>>
           jira_env_type: staging
           context:
             - hmpps-common-vars
