@@ -5,21 +5,19 @@
 Public facing prison visits booking application.
 
 ## Running the app for development
-The easiest way to run the app is to use docker compose to run Redis and then launch the app directly with Node.
+The easiest way to run the app is to use docker compose to create the service and all dependencies. 
 
 ```bash
 docker-compose pull
-docker-compose up redis-public-ui -d
-
+docker-compose up
 ```
 
-Install dependencies using `npm install`, ensuring you are using `node v18.x` and `npm v10.x`
+Install dependencies using `npm install`, ensuring you are using `node v20.x` and `npm v10.x`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
 
 Using your personal client credentials, create a `.env` local settings file
 ```bash
-REDIS_HOST=localhost
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 NODE_ENV=development
 
@@ -51,7 +49,7 @@ And then, to build the assets and start the app with nodemon:
 
 ### Running integration tests
 
-For local running, start a test db, redis, and wiremock instance by:
+For local running, start a wiremock instance by:
 
 `docker-compose -f docker-compose-test.yml up`
 
