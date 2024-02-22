@@ -1,5 +1,6 @@
 import type { Express } from 'express'
 import request from 'supertest'
+import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import { createMockSupportedPrisonsService } from '../services/testutils/mocks'
 
@@ -22,6 +23,12 @@ describe('GET /', () => {
       .get('/')
       .expect('Content-Type', /html/)
       .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
+        expect($('.service-header__nav-list-item').length).toBe(3)
+        expect($('.service-header__nav-list-item:nth-child(1)').eq(0).text()).toContain('Home')
+        expect($('.service-header__nav-list-item:nth-child(2)').eq(0).text()).toContain('Bookings')
+        expect($('.service-header__nav-list-item:nth-child(3)').eq(0).text()).toContain('Visitors')
         expect(res.text).toContain('This site is under construction...')
       })
   })
