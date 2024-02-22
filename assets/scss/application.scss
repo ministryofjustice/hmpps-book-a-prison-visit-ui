@@ -3,4 +3,5 @@ $path: "/assets/images/";
 
 @import 'govuk/all';
 
-@import 'assets/scss/local';
+@import './components/service-header-no-imports';
+@import './local';

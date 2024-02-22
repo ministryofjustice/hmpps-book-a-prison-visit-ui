@@ -1,6 +1,25 @@
 {% extends "govuk/template.njk" %}
 
-{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "../components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
+
+{% set navigationItems = [
+  {
+    href: "#",
+    text: 'Home',
+    id: 'home-link'
+  },{
+    href: "#",
+    text: 'Bookings',
+    id: 'bookings-link'
+  },{
+    href: "#",
+    text: 'Visitors',
+    id: 'visitors-link'
+  }]
+%}
+{% set activeLinkId = "home-link" %}
+{% set serviceName = "Visit someone in prison" %}
+{% set signOutLink = "#" %}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -9,14 +28,17 @@
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
 
 {% block header %}
-  {{ govukHeader({
-    homepageUrl: "/",
-    serviceName: applicationName,
-    serviceUrl: "/"
-  }) }}
+  {{ govukOneLoginServiceHeader({ 
+    navigationItems: navigationItems,
+    serviceName: serviceName,
+    activeLinkId: activeLinkId,
+    signOutLink: signOutLink
+  })}}
 {% endblock %}
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/service-header.js"></script>
+  <script src="/assets/init-service-header.js"></script>
 {% endblock %}
