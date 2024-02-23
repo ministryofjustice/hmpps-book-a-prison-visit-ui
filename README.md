@@ -27,6 +27,7 @@ SYSTEM_CLIENT_SECRET="<system_client_secret>"
 ORCHESTRATION_API_URL="https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
 
 GOVUK_ONE_LOGIN_URL=https://oidc.integration.account.gov.uk
+ONE_LOGIN_ACCOUNT_LINK=https://home.integration.account.gov.uk
 GOVUK_ONE_LOGIN_CLIENT_ID="<govuk_one_login_client_id>"
 GOVUK_ONE_LOGIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
 <private key contents>

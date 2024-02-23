@@ -19,7 +19,7 @@
 %}
 {% set activeLinkId = "home-link" %}
 {% set serviceName = "Visit someone in prison" %}
-{% set signOutLink = "#" %}
+{% set signOutLink = "/sign-out" %}
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -32,7 +32,8 @@
     navigationItems: navigationItems,
     serviceName: serviceName,
     activeLinkId: activeLinkId,
-    signOutLink: signOutLink
+    signOutLink: signOutLink,
+    oneLoginLink: oneLoginLink
   })}}
 {% endblock %}
 

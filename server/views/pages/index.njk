@@ -1,26 +1,18 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = applicationName + " - Home" %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">This site is under construction...</h1>
-  <p>Please check back later when there is content to view.</p>
+  <h1 class="govuk-heading-l">Book a visit</h1>
 
-  <hr>
+  <p class="govuk-heading-s">Prisoner: <span data-test="prisoner-name">Adam Greene</span></p>
 
-  <pre>User details retrieved from GOV.UK One Login:
+  {{ govukButton({
+    text: "Start ",
+    href: "#",
+    isStartButton: true
+  }) }}
 
-{{ (user | dump(2)) if user else "NONE" }}
-
-  </pre>
-
-  <hr>
-
-  <p>API test: <a href="/prisons">list of supported prison IDs</a></p>
-
-  <br>
-  <br>
-
-  <p><a href="/sign-out" data-test="signOut">Sign out</a></p>
 {% endblock %}
