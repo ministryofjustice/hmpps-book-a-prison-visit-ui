@@ -30,12 +30,9 @@ context('Sign in with GOV.UK One Login', () => {
 
   it('User can sign in and view home page', () => {
     cy.signIn()
-    Page.verifyOnPage(IndexPage)
 
-    // just testing sample data dumped to the page for now
-    cy.contains('"sub": "user1"')
-    cy.contains('"phone_number": "+440123456789"')
-    cy.contains('"email": "user1@example.com"')
+    const indexPage = Page.verifyOnPage(IndexPage)
+    indexPage.prisonerName().contains('Adam Greene')
   })
 
   it('User sent to auth error page if sign in fails', () => {

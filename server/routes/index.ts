@@ -8,7 +8,7 @@ export default function routes({ supportedPrisonsService }: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', (req, res, next) => {
-    res.render('pages/index', { user: req.user })
+    res.render('pages/index')
   })
 
   get('/prisons', async (req, res, next) => {
