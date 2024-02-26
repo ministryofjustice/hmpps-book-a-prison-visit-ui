@@ -41,8 +41,7 @@ context('Sign in with GOV.UK One Login', () => {
     cy.get('h1').contains('Authorisation Error')
   })
 
-  // Skipping test as can't target sign out button without changing template
-  it.skip('User can log out', () => {
+  it('User can log out', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()

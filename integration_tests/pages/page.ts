@@ -34,5 +34,5 @@ export default abstract class Page {
     )
   }
 
-  signOut = (): PageElement => cy.get('[data-test=signOut]')
+  signOut = (): PageElement => cy.get('.one-login-header a[href="/sign-out"]')
 }
