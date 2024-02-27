@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import nock from 'nock'
 import config from '../config'
 import OrchestrationApiClient from './orchestrationApiClient'
@@ -21,18 +22,5 @@ describe('orchestrationApiClient', () => {
     nock.cleanAll()
   })
 
-  describe('getSupportedPrisonIds', () => {
-    it('should return an array of supported prison IDs', async () => {
-      const results = ['HEI', 'BLI']
-
-      fakeOrchestrationApi
-        .get('/config/prisons/supported')
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, results)
-
-      const output = await orchestrationApiClient.getSupportedPrisonIds()
-
-      expect(output).toEqual(results)
-    })
-  })
+  it('placeholder', () => Promise.resolve()) // placeholder until methods added to client
 })

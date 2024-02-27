@@ -7,10 +7,4 @@ export default class OrchestrationApiClient {
   constructor(token: string) {
     this.restClient = new RestClient('orchestrationApiClient', config.apis.orchestration as ApiConfig, token)
   }
-
-  async getSupportedPrisonIds(): Promise<string[]> {
-    return this.restClient.get({
-      path: '/config/prisons/supported',
-    })
-  }
 }
