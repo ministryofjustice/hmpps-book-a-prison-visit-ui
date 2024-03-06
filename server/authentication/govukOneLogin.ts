@@ -22,6 +22,7 @@ const authenticationMiddleware = (): RequestHandler => {
       return next()
     }
 
+    req.session.returnTo = req.originalUrl
     return res.redirect('/sign-in')
   }
 }
