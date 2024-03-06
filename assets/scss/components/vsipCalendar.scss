@@ -1,0 +1,109 @@
+// hide calendar on unsupported browsers
+.vsip-calendar {
+  display: none;
+}
+
+.govuk-frontend-supported {
+
+  .vsip-calendar {
+    display: block;
+  }
+
+  .vsip-calendar__month, .vsip-calendar__day-headings {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    row-gap: govuk-spacing(1);
+  }
+
+  .vsip-calendar__day-headings {
+    li {
+      min-width: 2.25rem;
+      max-width: 3rem;
+    }
+
+    // only show abbreviated weekday names on mobile
+    span {
+      @include govuk-media-query($until: tablet) {
+        display: none;
+      }
+    }
+  }
+
+  .vsip-calendar__day {
+    aspect-ratio: 1 / 1;
+    min-width: 2.25rem;
+    max-width: 3rem;
+    position: relative;
+
+    a, span {
+      padding: govuk-spacing(1);
+      position: absolute;
+      top: 47%;
+      transform: translate(-50%, -50%);
+    }
+    
+    a {
+      @include govuk-link-style-no-visited-state;
+      font-weight: $govuk-font-weight-bold;
+      min-width: 1.5rem;
+    }
+  }
+
+  // generate classes to offset start day column
+  @for $i from 2 through 7 {
+    .vsip-calendar__day--start-col-#{$i} {
+      grid-column-start: $i;
+    }
+  }
+
+  .vsip-calendar__day--selected {
+    background-color: govuk-colour("blue");
+    border-radius: 50%;
+
+    &:has(a:focus) {
+      background-color: $govuk-focus-colour;
+    }
+
+    a {
+      @include govuk-link-style-inverse;
+      text-decoration: none;
+
+      &:focus {
+        background-color: transparent;
+        box-shadow: 0 4px $govuk-focus-text-colour;
+      }
+    }
+  }
+
+  // start with each day's form group of radios hidden
+  .vsip-calendar__day-group {
+    display: none;
+    margin-bottom: govuk-spacing(2);
+
+    legend {
+      margin-bottom: govuk-spacing(3);
+    }
+  }
+
+  .vsip-calendar__day-group--active {
+    display: block;
+  }
+
+  // split time & duration to separate lines and vertically centre by radio
+  @include govuk-media-query($until: desktop) {
+    .govuk-radios__item  {
+      margin-top: govuk-spacing(1);
+    }
+  
+    .vsip-calendar__day-group .govuk-label {
+      margin-top: govuk-spacing(-2);
+    }
+  
+    .vsip-calendar__slot-duration {
+      display: block;
+      padding-bottom: govuk-spacing(1);
+  
+    }
+  }
+}

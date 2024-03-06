@@ -1,0 +1,119 @@
+{% extends "../partials/layout.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Calendar component" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Choose the visit time</h1>
+  <p>Select one visit time. It will be reserved for 10 minutes.</p>
+  <p>Only times that [prisoner name] can attend are shown.</p>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <nav class="vsip-calendar" aria-label="Visit date selection calendar" role="navigation">
+        {# Loop over months #}
+        {% for monthName, monthData in calendarData.months %}
+          <h2 class="govuk-heading-m">{{ monthName }}</h2>
+
+          {# Day name headings on first month only #}
+          {% if loop.first %}
+            <ul class="govuk-list vsip-calendar__day-headings" aria-hidden="true">
+              <li>M<span>on</span></li>
+              <li>T<span>ue</span></li>
+              <li>W<span>ed</span></li>
+              <li>T<span>hu</span></li>
+              <li>F<span>ri</span></li>
+              <li>S<span>at</span></li>
+              <li>S<span>un</span></li>
+            </ul>
+          {% endif %}
+
+          <ul class="govuk-list vsip-calendar__month">
+            {# Days for this month #}
+            {% for date, slots in monthData.dates %}
+              {%- set numberOfSlots = slots | length -%}
+              <li data-date="{{ date }}" class="vsip-calendar__day
+                {%- if loop.first %} vsip-calendar__day--start-col-{{ monthData.startDayColumn }}{% endif %}
+                {%- if calendarData.selectedDate == date %} vsip-calendar__day--selected
+                {%- endif %}"
+                {%- if not numberOfSlots %}aria-hidden="true"{% endif %}>
+
+                {%- if numberOfSlots %}
+                  <a id="day-link-{{ date }}" href="#day-group-{{ date }}">
+                    {{ date | formatDate("d") }}
+                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - {{ numberOfSlots }} visit {{ "time" | pluralise(numberOfSlots )}} available</span>
+                  </a>
+                {% else %}
+                    <span>{{ date | formatDate("d") }}</span>
+                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - no visit times available</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </nav>
+
+      <form action="/calendar-preview" method="GET" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {# Build radio visit slot items from months/dates/slots data #}
+        {% for monthName, monthData in calendarData.months %}
+          {% for date, slots in monthData.dates %}
+            {% if slots | length %}
+              {% set visitSlotItems = [] %}
+              {% for slot in slots %}
+                {% set visitSlotItems = (visitSlotItems.push({
+                  value: slot.reference,
+                  html: slot.time + ' <span class="vsip-calendar__slot-duration">(' + slot.duration + ')</span>'
+                }), visitSlotItems) %}
+              {% endfor %}
+
+              {{ govukRadios({
+                name: "visitSlot",
+                idPrefix: "date-" + date,
+                formGroup: {
+                  classes: "vsip-calendar__day-group",
+                  attributes: { "data-date": date },
+                  afterInputs: {
+                    html: '<p class="govuk-!-margin-top-5">' +
+                      '<a class="govuk-visually-hidden-focusable" href="#day-link-' +
+                      date + '">Choose a different date above</a></p>'
+                  }
+                },
+                fieldset: {
+                  attributes: { id: 'day-group-' + date },
+                  legend: {
+                    text: date | formatDate("EEEE d MMMM yyyy"),
+                    classes: "govuk-fieldset__legend--s"
+                  }
+                },
+                hint: {
+                  text: "You can only choose one option",
+                  classes: "govuk-visually-hidden"
+                },
+                items: visitSlotItems
+              }) }}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/vsipCalendar.js"></script>
+{% endblock %}
