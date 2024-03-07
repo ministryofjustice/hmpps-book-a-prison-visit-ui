@@ -5,6 +5,6 @@ declare namespace Cypress {
      * Optionally set nonce to override the value used in the ID token
      * @example cy.signIn({ failOnStatusCode: boolean })
      */
-    signIn(options?: { failOnStatusCode: boolean; nonce?: string }): Chainable<unknown>
+    signIn(options?: { failOnStatusCode: boolean }, nonce?: string, initialRequestUrl?: string): Chainable<unknown>
   }
 }
