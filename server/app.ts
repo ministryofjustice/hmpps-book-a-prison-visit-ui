@@ -15,6 +15,9 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
+
+import calendarPreview from './routes/calendarPreview' // TODO remove
+
 import type { Services } from './services'
 
 export default function createApp(services: Services): express.Application {
@@ -31,6 +34,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
+  app.use(calendarPreview(services)) // TODO - remove
   app.use(setupGovukOneLogin())
   app.use(setUpCsrf())
 
