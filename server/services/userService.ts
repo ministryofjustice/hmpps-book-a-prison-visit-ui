@@ -18,6 +18,7 @@ export default class UserService {
     const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
 
     // TODO try/catch for non-200 and log user out
+    // TODO log here?
     return bookerRegistryApiClient.getBookerReference(authDetailDto)
   }
 }
