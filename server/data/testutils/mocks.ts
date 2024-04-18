@@ -17,11 +17,14 @@ jest.mock('../../applicationInfo', () => {
   return jest.fn(() => testAppInfo)
 })
 
-import { HmppsAuthClient, OrchestrationApiClient } from '..'
+import { HmppsAuthClient, BookerRegistryApiClient, OrchestrationApiClient } from '..'
 
 jest.mock('..')
 
 export const createMockHmppsAuthClient = () => new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
+
+export const createMockBookingRegistryApiClient = () =>
+  new BookerRegistryApiClient(null) as jest.Mocked<BookerRegistryApiClient>
 
 export const createMockOrchestrationApiClient = () =>
   new OrchestrationApiClient(null) as jest.Mocked<OrchestrationApiClient>
