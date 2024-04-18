@@ -48,6 +48,11 @@ export default function setUpGovukOneLogin(): Router {
     })
 
     router.use(govukOneLogin.authenticationMiddleware())
+
+    router.use((req, res, next) => {
+      res.locals.user = req.user
+      next()
+    })
   })
 
   return router
