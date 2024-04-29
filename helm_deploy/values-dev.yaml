@@ -11,8 +11,8 @@ generic-service:
     INGRESS_URL: "https://visit-dev.prison.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     GOVUK_ONE_LOGIN_URL: "https://oidc.integration.account.gov.uk"
+    GOVUK_ONE_LOGIN_ACCOUNT_URL: "https://home.integration.account.gov.uk"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
-    GOVUK_ONE_LOGIN_ACCOUNT_URL: 'https://home.integration.account.gov.uk'
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev

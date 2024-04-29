@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import nock from 'nock'
 import config from '../config'
 import OrchestrationApiClient from './orchestrationApiClient'
+import TestData from '../routes/testutils/testData'
 
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
@@ -22,5 +22,19 @@ describe('orchestrationApiClient', () => {
     nock.cleanAll()
   })
 
-  it('placeholder', () => Promise.resolve()) // placeholder until methods added to client
+  describe('getBookerReference', () => {
+    it('should send details from One Login and receive BookerReference', async () => {
+      const authDetailDto = TestData.authDetailDto()
+      const bookerReference = TestData.bookerReference()
+
+      fakeOrchestrationApi
+        .put('/public/booker/register/auth', authDetailDto)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, bookerReference)
+
+      const result = await orchestrationApiClient.getBookerReference(authDetailDto)
+
+      expect(result).toStrictEqual(bookerReference)
+    })
+  })
 })
