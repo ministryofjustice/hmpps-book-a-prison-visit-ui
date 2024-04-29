@@ -2,9 +2,9 @@ import { dataAccess } from '../data'
 import UserService from './userService'
 
 export const services = () => {
-  const { applicationInfo, hmppsAuthClient, bookerRegistryApiClientBuilder } = dataAccess()
+  const { applicationInfo, hmppsAuthClient, orchestrationApiClientBuilder } = dataAccess()
 
-  const userService = new UserService(bookerRegistryApiClientBuilder, hmppsAuthClient)
+  const userService = new UserService(orchestrationApiClientBuilder, hmppsAuthClient)
 
   return {
     applicationInfo,

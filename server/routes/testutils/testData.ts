@@ -1,4 +1,4 @@
-import type { AuthDetailDto, BookerReference } from '../../data/bookerRegistryApiTypes'
+import type { AuthDetailDto, BookerReference } from '../../data/orchestrationApiTypes'
 
 export default class TestData {
   static authDetailDto = ({

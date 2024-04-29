@@ -12,7 +12,6 @@ generic-service:
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
     GOVUK_ONE_LOGIN_URL: "https://oidc.integration.account.gov.uk"
     GOVUK_ONE_LOGIN_ACCOUNT_URL: "https://home.integration.account.gov.uk"
-    BOOKER_REGISTRY_API_URL: "https://hmpps-prison-visit-booker-registry-preprod.prison.service.justice.gov.uk"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-preprod.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:

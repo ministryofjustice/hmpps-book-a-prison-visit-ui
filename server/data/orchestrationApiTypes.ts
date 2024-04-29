@@ -1,4 +1,4 @@
-import { components } from '../@types/booker-registry-api'
+import { components } from '../@types/orchestration-api'
 
 export type AuthDetailDto = components['schemas']['AuthDetailDto']
 export type BookerReference = components['schemas']['BookerReference']

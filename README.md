@@ -24,7 +24,6 @@ NODE_ENV=development
 SYSTEM_CLIENT_ID="<system_client_id>"
 SYSTEM_CLIENT_SECRET="<system_client_secret>"
 
-BOOKER_REGISTRY_API_URL="https://hmpps-prison-visit-booker-registry-dev.prison.service.justice.gov.uk"
 ORCHESTRATION_API_URL="https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
 
 GOVUK_ONE_LOGIN_URL=https://oidc.integration.account.gov.uk

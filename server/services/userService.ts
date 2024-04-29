@@ -1,24 +1,27 @@
-import { HmppsAuthClient, RestClientBuilder } from '../data'
-import BookerRegistryApiClient from '../data/bookerRegistryApiClient'
-import { AuthDetailDto, BookerReference } from '../data/bookerRegistryApiTypes'
+import logger from '../../logger'
+import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
+import { AuthDetailDto } from '../data/orchestrationApiTypes'
 
 export interface UserDetails {
   bookerReference: string
 }
 
+// 'User' is the 'Booker' - TODO should we rename to BookerService?
 export default class UserService {
   constructor(
-    private readonly bookerRegistryApiClientFactory: RestClientBuilder<BookerRegistryApiClient>,
+    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
   // TODO add tests!
-  async getBookerReference(authDetailDto: AuthDetailDto): Promise<BookerReference> {
+  async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
-    const bookerRegistryApiClient = this.bookerRegistryApiClientFactory(token)
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     // TODO try/catch for non-200 and log user out
-    // TODO log here?
-    return bookerRegistryApiClient.getBookerReference(authDetailDto)
+    const bookerReference = await (await orchestrationApiClient.getBookerReference(authDetailDto)).value
+
+    logger.info(`Booker reference ${bookerReference} retrieved`)
+    return bookerReference
   }
 }

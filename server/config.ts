@@ -69,14 +69,6 @@ export default {
       clientId: get('GOVUK_ONE_LOGIN_CLIENT_ID', 'clientId', requiredInProduction),
       privateKey: get('GOVUK_ONE_LOGIN_PRIVATE_KEY', 'privateKey', requiredInProduction),
     },
-    bookerRegistry: {
-      url: get('BOOKER_REGISTRY_API_URL', 'http://localhost:8080', requiredInProduction),
-      timeout: {
-        response: Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000)),
-        deadline: Number(get('BOOKER_REGISTRY_API_TIMEOUT_DEADLINE', 10000)),
-      },
-      agent: new AgentConfig(Number(get('BOOKER_REGISTRY_API_TIMEOUT_RESPONSE', 10000))),
-    },
     orchestration: {
       url: get('ORCHESTRATION_API_URL', 'http://localhost:8080', requiredInProduction),
       timeout: {

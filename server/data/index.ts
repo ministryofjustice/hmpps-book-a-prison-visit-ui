@@ -16,7 +16,6 @@ import RedisTokenStore from './tokenStore/redisTokenStore'
 import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import OrchestrationApiClient from './orchestrationApiClient'
 import config from '../config'
-import BookerRegistryApiClient from './bookerRegistryApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -25,12 +24,10 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(
     config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
   ),
-  bookerRegistryApiClientBuilder: ((token: string) =>
-    new BookerRegistryApiClient(token)) as RestClientBuilder<BookerRegistryApiClient>,
   orchestrationApiClientBuilder: ((token: string) =>
     new OrchestrationApiClient(token)) as RestClientBuilder<OrchestrationApiClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { HmppsAuthClient, BookerRegistryApiClient, OrchestrationApiClient, RestClientBuilder }
+export { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder }
