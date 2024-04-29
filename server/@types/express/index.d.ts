@@ -1,4 +1,4 @@
-import { UserDetails } from '../../services/userService'
+import { Booker, BookingJourneyData } from '../bapv'
 
 export default {}
 
@@ -8,13 +8,14 @@ declare module 'express-session' {
     returnTo: string
     nowInMinutes: number
 
-    bookerReference: string
+    booker: Booker
+    bookingJourney: BookingJourneyData
   }
 }
 
 export declare global {
   namespace Express {
-    interface User extends UserDetails {
+    interface User {
       sub: string
       email: string
       email_verified?: boolean

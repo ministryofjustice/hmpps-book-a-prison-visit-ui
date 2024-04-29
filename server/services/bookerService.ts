@@ -2,12 +2,7 @@ import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AuthDetailDto, PrisonerBasicInfoDto, VisitorBasicInfoDto } from '../data/orchestrationApiTypes'
 
-export interface UserDetails {
-  bookerReference: string
-}
-
-// 'User' is the 'Booker' - TODO should we rename to BookerService?
-export default class UserService {
+export default class BookerService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
     private readonly hmppsAuthClient: HmppsAuthClient,
@@ -26,14 +21,13 @@ export default class UserService {
   }
 
   // TODO add tests!
-  async getPrisoner(bookerReference: string): Promise<PrisonerBasicInfoDto> {
+  async getPrisoners(bookerReference: string): Promise<PrisonerBasicInfoDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
 
-    // TODO handle empty prisoner array
-    return prisoners[0]
+    return prisoners
   }
 
   // TODO add tests!

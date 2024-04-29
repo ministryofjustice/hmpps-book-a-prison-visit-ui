@@ -6,8 +6,8 @@
 {% block content %}
 
   <h1 class="govuk-heading-l">Book a visit</h1>
-
-  <p>Prisoner: <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span></p>
+{# TODO render as form and use prisoner[0] - also handle prisoner array being empty and don't show button #}
+  <p>Prisoner: <span data-test="prisoner-name">{{ prisoners[0].firstName | capitalize }} {{prisoners[0].lastName | capitalize }}</span></p>
 
   {{ govukButton({
     text: "Start ",
