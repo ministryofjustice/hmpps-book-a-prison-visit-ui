@@ -3,13 +3,16 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// TODO use controller pattern like in Admin UI?
 export default function routes(service: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', (req, res, next) => {
-    res.render('pages/index')
+  get('/', async (req, res) => {
+    const { bookerReference } = res.locals.user
+    const prisoner = await service.userService.getPrisoner(bookerReference)
+
+    res.render('pages/index', { prisoner })
   })
 
   return router
