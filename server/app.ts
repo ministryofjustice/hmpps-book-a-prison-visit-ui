@@ -37,7 +37,7 @@ export default function createApp(services: Services): express.Application {
   nunjucksSetup(app, services.applicationInfo)
   app.use(calendarPreview(services)) // TODO - remove
   app.use(setupGovukOneLogin())
-  app.use(populateCurrentBooker(services.userService)) // TODO add this to appSetup.ts for tests
+  app.use(populateCurrentBooker(services.bookerService)) // TODO add this to appSetup.ts for tests?
   app.use(setUpCsrf())
 
   app.use(routes(services))

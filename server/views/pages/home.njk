@@ -1,0 +1,32 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Home" %}
+
+{% block content %}
+
+  <h1 class="govuk-heading-l">Book a visit</h1>
+
+  {% if prisoners | length %}
+    <p>Prisoner: <span data-test="prisoner-name">{{ prisoners[0].firstName | capitalize }} {{prisoners[0].lastName | capitalize }}</span></p>
+
+    <form action="/book-a-visit/select-prisoner" method="POST" novalidate>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      <input type="hidden" name="prisonerNumber" value="{{ prisoners[0].prisonerNumber }}">
+
+      {{ govukButton({
+        text: "Start",
+        classes: "govuk-!-margin-top-3",
+        isStartButton: true,
+        preventDoubleClick: true,
+        attributes: { "data-test": "start-booking" }
+      }) }}
+    </form>
+
+  {% else %}
+    {# TODO check what the message/behaviour in this case should be #}
+    <p>No prisoner details found.</p>
+  {% endif %}
+
+{% endblock %}

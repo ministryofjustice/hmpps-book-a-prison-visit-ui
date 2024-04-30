@@ -23,7 +23,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getBookerReference', () => {
-    it('should send details from One Login and receive BookerReference', async () => {
+    it('should send details received from One Login to retrieve BookerReference', async () => {
       const authDetailDto = TestData.authDetailDto()
       const bookerReference = TestData.bookerReference()
 
@@ -35,6 +35,39 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getBookerReference(authDetailDto)
 
       expect(result).toStrictEqual(bookerReference)
+    })
+  })
+
+  describe('getPrisoners', () => {
+    it('should retrieve prisoners associated with a booker', async () => {
+      const bookerReference = TestData.bookerReference()
+      const prisoners = [TestData.prisonerBasicInfoDto()]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/prisoners`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prisoners)
+
+      const result = await orchestrationApiClient.getPrisoners(bookerReference.value)
+
+      expect(result).toStrictEqual(prisoners)
+    })
+  })
+
+  describe('getVisitors', () => {
+    it('should retrieve visitors associated with a booker and prisoner', async () => {
+      const bookerReference = TestData.bookerReference()
+      const { prisonerNumber } = TestData.prisonerBasicInfoDto()
+      const visitors = [TestData.visitorBasicInfoDto()]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/prisoners/${prisonerNumber}/visitors`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visitors)
+
+      const result = await orchestrationApiClient.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(result).toStrictEqual(visitors)
     })
   })
 })

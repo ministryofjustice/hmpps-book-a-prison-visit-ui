@@ -1,17 +1,17 @@
 import { dataAccess } from '../data'
-import UserService from './userService'
+import BookerService from './bookerService'
 
 export const services = () => {
   const { applicationInfo, hmppsAuthClient, orchestrationApiClientBuilder } = dataAccess()
 
-  const userService = new UserService(orchestrationApiClientBuilder, hmppsAuthClient)
+  const bookerService = new BookerService(orchestrationApiClientBuilder, hmppsAuthClient)
 
   return {
     applicationInfo,
-    userService,
+    bookerService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { UserService }
+export { BookerService }

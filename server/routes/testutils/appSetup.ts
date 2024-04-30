@@ -29,7 +29,6 @@ export const user: Express.User = {
   phone_number: '+440123456789',
   email_verified: true,
   email: 'user1@example.com',
-  bookerReference: 'aaaa-bbbb-cccc',
 }
 
 export const flashProvider = jest.fn()
