@@ -13,7 +13,7 @@ export default function routes(services: Services): Router {
   const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   const selectPrisonerController = new SelectPrisonerController()
-  const selectVisitorsController = new SelectVisitorsController()
+  const selectVisitorsController = new SelectVisitorsController(services.bookerService)
 
   // TODO need session checks for each stage to validate what is in session
   post('/select-prisoner', selectPrisonerController.selectPrisoner())

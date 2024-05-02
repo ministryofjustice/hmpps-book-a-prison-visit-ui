@@ -3,6 +3,7 @@ import { PrisonerBasicInfoDto, VisitorBasicInfoDto } from '../data/orchestration
 export type Booker = {
   reference: string
   prisoners?: PrisonerBasicInfoDto[] // prisoners this booker can book for
+  visitors?: VisitorBasicInfoDto[] // visitors this booker can book for
 }
 
 // data that is built up during a booking journey
