@@ -8,7 +8,10 @@ export default class SelectVisitorsController {
     return async (req, res) => {
       const { booker, bookingJourney } = req.session
       if (!bookingJourney.allVisitors) {
-        const allVisitors = await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
+        req.session.bookingJourney.allVisitors = await this.bookerService.getVisitors(
+          booker.reference,
+          booker.prisoners[0].prisonerNumber,
+        )
       }
       res.render('pages/bookingJourney/selectVisitors', {
         visitors: req.session.bookingJourney.allVisitors,
