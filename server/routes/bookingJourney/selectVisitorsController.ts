@@ -6,19 +6,25 @@ export default class SelectVisitorsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
-      if (!booker.visitors) {
-        req.session.booker.visitors = await this.bookerService.getVisitors(
-          booker.reference,
-          booker.prisoners[0].prisonerNumber,
-        )
+      const { booker, bookingJourney } = req.session
+      if (!bookingJourney.allVisitors) {
+        const allVisitors = await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
       }
-
       res.render('pages/bookingJourney/selectVisitors', {
-        booker: req.session.booker,
-        visitors: req.session.booker.visitors,
-        bookingJourney: req.session.bookingJourney,
+        visitors: req.session.bookingJourney.allVisitors,
       })
+    }
+  }
+
+  public submit(): RequestHandler {
+    return async (req, res) => {
+      // const { bookingJourney } = req.session
+
+      const { visitors } = req.body
+
+      req.session.bookingJourney.selectedVisitors = visitors
+
+      res.redirect('/book-a-visit/date-and-time')
     }
   }
 }

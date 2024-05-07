@@ -10,7 +10,7 @@
   <h1 class="govuk-heading-l">Who is going on the visit?</h1>
 
   <p>Up to [x] people can visit someone at [prison name]. This includes</p>
-  <ul>
+  <ul class="govuk-body">
     <li>[x] people [x] years old or older</li>
     <li>[x] people under [x] years old.</li>
   </ul>
@@ -24,7 +24,7 @@
         text: visitor.firstName + ' ' + visitor.lastName + ', (' + visitor.dateOfBirth | displayAge + ')'
       }), visitorList)%}
     {% endfor %}
-    <form action="/book-a-visit/select-visitor" method="POST" novalidate>
+    <form action="/book-a-visit/select-visitors" method="POST" novalidate>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
       {{ govukCheckboxes({
