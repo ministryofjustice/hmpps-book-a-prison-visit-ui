@@ -3,6 +3,6 @@ import { components } from '../@types/orchestration-api'
 export type AuthDetailDto = components['schemas']['AuthDetailDto']
 export type BookerReference = components['schemas']['BookerReference']
 
-export type PrisonerBasicInfoDto = components['schemas']['PrisonerBasicInfoDto']
+export type PrisonerInfoDto = components['schemas']['PrisonerInfoDto']
 
-export type VisitorBasicInfoDto = components['schemas']['VisitorBasicInfoDto']
+export type VisitorInfoDto = components['schemas']['VisitorInfoDto']

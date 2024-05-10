@@ -1,9 +1,4 @@
-import type {
-  AuthDetailDto,
-  BookerReference,
-  PrisonerBasicInfoDto,
-  VisitorBasicInfoDto,
-} from '../../data/orchestrationApiTypes'
+import type { AuthDetailDto, BookerReference, PrisonerInfoDto, VisitorInfoDto } from '../../data/orchestrationApiTypes'
 
 export default class TestData {
   static authDetailDto = ({
@@ -14,16 +9,17 @@ export default class TestData {
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
-  static prisonerBasicInfoDto = ({
+  static prisonerInfoDto = ({
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
-  }: Partial<PrisonerBasicInfoDto> = {}): PrisonerBasicInfoDto => ({ prisonerNumber, firstName, lastName })
+    prisonCode = 'HEI',
+  }: Partial<PrisonerInfoDto> = {}): PrisonerInfoDto => ({ prisonerNumber, firstName, lastName, prisonCode })
 
-  static visitorBasicInfoDto = ({
+  static visitorInfoDto = ({
     personId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<VisitorBasicInfoDto> = {}): VisitorBasicInfoDto => ({ personId, firstName, lastName, dateOfBirth })
+  }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ personId, firstName, lastName, dateOfBirth })
 }

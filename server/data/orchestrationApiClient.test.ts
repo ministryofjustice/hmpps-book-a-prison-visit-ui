@@ -41,7 +41,7 @@ describe('orchestrationApiClient', () => {
   describe('getPrisoners', () => {
     it('should retrieve prisoners associated with a booker', async () => {
       const bookerReference = TestData.bookerReference()
-      const prisoners = [TestData.prisonerBasicInfoDto()]
+      const prisoners = [TestData.prisonerInfoDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/prisoners`)
@@ -57,8 +57,8 @@ describe('orchestrationApiClient', () => {
   describe('getVisitors', () => {
     it('should retrieve visitors associated with a booker and prisoner', async () => {
       const bookerReference = TestData.bookerReference()
-      const { prisonerNumber } = TestData.prisonerBasicInfoDto()
-      const visitors = [TestData.visitorBasicInfoDto()]
+      const { prisonerNumber } = TestData.prisonerInfoDto()
+      const visitors = [TestData.visitorInfoDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/prisoners/${prisonerNumber}/visitors`)
