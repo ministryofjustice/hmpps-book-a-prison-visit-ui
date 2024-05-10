@@ -9,7 +9,7 @@ import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
-export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): void {
+export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): nunjucks.Environment {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
@@ -35,10 +35,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     express: app,
   })
 
-  njkEnv.addFilter('initialiseName', initialiseName)
-
-  njkEnv.addFilter('formatDate', formatDate)
-
   njkEnv.addFilter('displayAge', (dateOfBirth: string) => {
     const dob = new Date(dateOfBirth)
     const today = new Date()
@@ -60,6 +56,11 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     return `${age} old`
   })
 
-  // TODO add tests
+  njkEnv.addFilter('formatDate', formatDate)
+
+  njkEnv.addFilter('initialiseName', initialiseName)
+
   njkEnv.addFilter('pluralise', (word, count, plural = `${word}s`) => (count === 1 ? word : plural))
+
+  return njkEnv
 }

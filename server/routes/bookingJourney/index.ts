@@ -7,7 +7,6 @@ import SelectPrisonerController from './selectPrisonerController'
 import SelectVisitorsController from './selectVisitorsController'
 import DateAndTimeController from './selectDateAndTimeController'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(services: Services): Router {
   const router = Router()
 
