@@ -5,13 +5,6 @@
 Public facing prison visits booking application.
 
 ## Running the app for development
-The easiest way to run the app is to use docker compose to create the service and all dependencies. 
-
-```bash
-docker-compose pull
-docker-compose up
-```
-
 Install dependencies using `npm install`, ensuring you are using `node v20.x` and `npm v10.x`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json` and the CircleCI build config.
