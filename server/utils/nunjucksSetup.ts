@@ -2,13 +2,14 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
+import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { formatDate, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
-export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): void {
+export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): nunjucks.Environment {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
@@ -34,10 +35,32 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     express: app,
   })
 
-  njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('displayAge', (dateOfBirth: string) => {
+    const dob = new Date(dateOfBirth)
+    const today = new Date()
+
+    if (dob.toString() === 'Invalid Date' || isAfter(dob, today)) {
+      return ''
+    }
+
+    const duration = intervalToDuration({ start: dob, end: today })
+
+    let age = ''
+    if (duration.years) {
+      age = formatDuration(duration, { format: ['years'] })
+    } else {
+      // workaround below for Duration zero/undefined change (https://github.com/date-fns/date-fns/issues/3658)
+      age = formatDuration(duration, { format: ['months'] }) || '0 months'
+    }
+
+    return `${age} old`
+  })
 
   njkEnv.addFilter('formatDate', formatDate)
 
-  // TODO add tests
+  njkEnv.addFilter('initialiseName', initialiseName)
+
   njkEnv.addFilter('pluralise', (word, count, plural = `${word}s`) => (count === 1 ? word : plural))
+
+  return njkEnv
 }

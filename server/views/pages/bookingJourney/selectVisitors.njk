@@ -1,10 +1,67 @@
-<h1>Select visitors</h1>
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
-<pre>
-  req.session.booker:
-  {{ booker | dump(2) }}
+{% set pageTitle = applicationName + " - Home" %}
 
+{% set backLinkHref = "/" %}
 
-  req.session.bookingJourney:
-  {{ bookingJourney | dump(2) }} 
-</pre>
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Who is going on the visit?</h1>
+
+      <p>Up to [x] people can visit someone at [prison name]. This includes</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>[x] people [x] years old or older</li>
+        <li>[x] people under [x] years old.</li>
+      </ul>
+      <p>At least one visitor must be 18 years or older</p>
+
+      {% if visitors | length %}
+        {% set visitorList = [] %}
+        {% for visitor in visitors %}
+          {% set visitorList = (visitorList.push({
+            value: visitor.personId,
+            text: visitor.firstName + ' ' + visitor.lastName + ', (' + visitor.dateOfBirth | displayAge + ')'
+          }), visitorList)%}
+        {% endfor %}
+        <form action="/book-a-visit/select-visitors" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukCheckboxes({
+            name: "visitorIds",
+            fieldset: {
+              legend: {
+                text: "Select visitors",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: visitorList
+          }) }}
+
+          {{ govukButton({
+            text: "Continue",
+            classes: "govuk-!-margin-top-3",
+            preventDoubleClick: true,
+            attributes: { "data-test": "continue-button" }
+          }) }}
+        </form>
+
+      {% else %}
+        {# TODO check what the message/behaviour in this case should be #}
+        <p>No visitor details found.</p>
+      {% endif %}
+
+      {# TODO Get correct link for form #}
+      {{ govukDetails({
+        summaryText: "Add a new visitor",
+        html: "<p>The person you want to book for must be on the prisoner's visitor list</p>" +
+          "<p>To make a request to book for someone new, <a href='#'>complete the form (opens in a new tab)</a>. We will respond within [x] working days</p>"
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

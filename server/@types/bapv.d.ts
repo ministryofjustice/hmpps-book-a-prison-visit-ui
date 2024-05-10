@@ -9,6 +9,8 @@ export type Booker = {
 export type BookingJourneyData = {
   // selected prisoner for this visit
   prisoner: PrisonerBasicInfoDto
+  // all possible visitors for this visit
+  allVisitors?: VisitorBasicInfoDto[]
   // selected visitors for this visit
-  visitors?: VisitorBasicInfoDto[]
+  selectedVisitors?: VisitorBasicInfoDto[]
 }

@@ -24,7 +24,6 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-// TODO - add tests
 export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): string | null => {
   if (typeof dateFormat !== 'string') return null
   try {
