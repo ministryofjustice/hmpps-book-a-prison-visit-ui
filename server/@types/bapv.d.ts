@@ -1,16 +1,16 @@
-import { PrisonerBasicInfoDto, VisitorBasicInfoDto } from '../data/orchestrationApiTypes'
+import { PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 
 export type Booker = {
   reference: string
-  prisoners?: PrisonerBasicInfoDto[] // prisoners this booker can book for
+  prisoners?: PrisonerInfoDto[] // prisoners this booker can book for
 }
 
 // data that is built up during a booking journey
 export type BookingJourneyData = {
   // selected prisoner for this visit
-  prisoner: PrisonerBasicInfoDto
+  prisoner: PrisonerInfoDto
   // all possible visitors for this visit
-  allVisitors?: VisitorBasicInfoDto[]
+  allVisitors?: VisitorInfoDto[]
   // selected visitors for this visit
-  selectedVisitors?: VisitorBasicInfoDto[]
+  selectedVisitors?: VisitorInfoDto[]
 }

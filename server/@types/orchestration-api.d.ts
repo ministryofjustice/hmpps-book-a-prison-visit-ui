@@ -451,6 +451,8 @@ export interface components {
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
       visitorSupport?: components['schemas']['ApplicationSupportDto']
+      /** @description allow over booking */
+      allowOverBooking: boolean
     }
     /** @description Visit */
     ApplicationDto: {
@@ -567,6 +569,8 @@ export interface components {
        * @example asd-asd-asd or STAFF_USER
        */
       actionedBy: string
+      /** @description allow over booking */
+      allowOverBooking: boolean
     }
     DlqMessage: {
       body: {
@@ -931,7 +935,7 @@ export interface components {
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
     }
-    PrisonerBasicInfoDto: {
+    PrisonerInfoDto: {
       /**
        * @description Prisoner Number
        * @example A1234AA
@@ -948,14 +952,13 @@ export interface components {
        */
       lastName: string
       /**
-       * Format: date
-       * @description Date of Birth
-       * @example 1975-04-02
+       * @description Prison code
+       * @example MDI
        */
-      dateOfBirth?: string
+      prisonCode: string
     }
     /** @description A contact for a prisoner */
-    VisitorBasicInfoDto: {
+    VisitorInfoDto: {
       /**
        * Format: int64
        * @description Identifier for this contact (Person in NOMIS)
@@ -1190,6 +1193,11 @@ export interface components {
        * @example BHI
        */
       code: string
+      /**
+       * @description prison name
+       * @example HMP Hewell
+       */
+      prisonName: string
       /**
        * @description is prison active
        * @example true
@@ -2160,20 +2168,10 @@ export interface operations {
          */
         prisonerId: string
         /**
-         * @description Filter sessions by session restriction - OPEN or CLOSED
+         * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
          * @example CLOSED
          */
         sessionRestriction: 'OPEN' | 'CLOSED'
-        /**
-         * @description Override the default minimum number of days notice from the current date
-         * @example 2
-         */
-        min?: number
-        /**
-         * @description Override the default maximum number of days to book-ahead from the current date
-         * @example 28
-         */
-        max?: number
       }
     }
     responses: {
@@ -2233,7 +2231,7 @@ export interface operations {
       /** @description Returned prisoners associated with a booker */
       200: {
         content: {
-          '*/*': components['schemas']['PrisonerBasicInfoDto'][]
+          '*/*': components['schemas']['PrisonerInfoDto'][]
         }
       }
       /** @description Incorrect request to get prisoners associated with a booker */
@@ -2275,7 +2273,7 @@ export interface operations {
       /** @description Returned visitors for a prisoner associated with that booker */
       200: {
         content: {
-          '*/*': components['schemas']['VisitorBasicInfoDto'][]
+          '*/*': components['schemas']['VisitorInfoDto'][]
         }
       }
       /** @description Incorrect request to get visitors for a prisoner associated with that booker */

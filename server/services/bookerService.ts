@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, PrisonerBasicInfoDto, VisitorBasicInfoDto } from '../data/orchestrationApiTypes'
+import { AuthDetailDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 
 export default class BookerService {
   constructor(
@@ -21,7 +21,7 @@ export default class BookerService {
   }
 
   // TODO add tests!
-  async getPrisoners(bookerReference: string): Promise<PrisonerBasicInfoDto[]> {
+  async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
@@ -31,7 +31,7 @@ export default class BookerService {
   }
 
   // TODO add tests!
-  async getVisitors(bookerReference: string, prisonNumber: string): Promise<VisitorBasicInfoDto[]> {
+  async getVisitors(bookerReference: string, prisonNumber: string): Promise<VisitorInfoDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 

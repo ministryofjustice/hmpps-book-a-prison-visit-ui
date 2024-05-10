@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import { AuthDetailDto, BookerReference, PrisonerBasicInfoDto, VisitorBasicInfoDto } from './orchestrationApiTypes'
+import { AuthDetailDto, BookerReference, PrisonerInfoDto, VisitorInfoDto } from './orchestrationApiTypes'
 
 export default class OrchestrationApiClient {
   private restClient: RestClient
@@ -16,11 +16,11 @@ export default class OrchestrationApiClient {
     })
   }
 
-  async getPrisoners(bookerReference: string): Promise<PrisonerBasicInfoDto[]> {
+  async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/prisoners` })
   }
 
-  async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorBasicInfoDto[]> {
+  async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/prisoners/${prisonerNumber}/visitors` })
   }
 }
