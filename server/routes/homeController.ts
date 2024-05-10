@@ -8,9 +8,8 @@ export default class HomeController {
     return async (req, res) => {
       const { booker } = req.session
 
-      if (!booker.prisoners) {
-        booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
-      }
+      const prisoners = await this.bookerService.getPrisoners(booker.reference)
+      booker.prisoners = prisoners
 
       res.render('pages/home', { prisoners: booker.prisoners })
     }
