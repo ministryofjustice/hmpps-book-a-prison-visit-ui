@@ -66,8 +66,10 @@ export default {
     },
     govukOneLogin: {
       url: get('GOVUK_ONE_LOGIN_URL', 'http://localhost:9091/govukOneLogin', requiredInProduction),
+      homeUrl: get('GOVUK_ONE_LOGIN_HOME_URL', '', requiredInProduction),
       clientId: get('GOVUK_ONE_LOGIN_CLIENT_ID', 'clientId', requiredInProduction),
       privateKey: get('GOVUK_ONE_LOGIN_PRIVATE_KEY', 'privateKey', requiredInProduction),
+      vtr: process.env.GOVUK_ONE_LOGIN_VTR === 'LOW' ? '["Cl"]' : '["Cl.Cm"]',
     },
     orchestration: {
       url: get('ORCHESTRATION_API_URL', 'http://localhost:8080', requiredInProduction),
@@ -78,7 +80,6 @@ export default {
       agent: new AgentConfig(Number(get('ORCHESTRATION_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
-  oneLoginLink: get('GOVUK_ONE_LOGIN_ACCOUNT_URL', 'https://home.account.gov.uk/'),
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }

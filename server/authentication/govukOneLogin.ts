@@ -60,7 +60,7 @@ async function init(): Promise<Client> {
       client,
       params: {
         scope: 'openid email phone',
-        vtr: '["Cl.Cm"]',
+        vtr: config.apis.govukOneLogin.vtr,
         ui_locales: 'en',
       },
       usePKCE: false,
