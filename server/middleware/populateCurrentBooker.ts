@@ -21,7 +21,7 @@ export default function populateCurrentBooker(bookerService: BookerService): Req
       next()
     } catch (error) {
       logger.error(error, `Failed to retrieve booker reference for: ${res.locals.user?.sub}`)
-      // TODO Here it should log out user?
+      // TODO Here it should log out user? e.g. if 404 from getBookerReference()
       next(error)
     }
   }

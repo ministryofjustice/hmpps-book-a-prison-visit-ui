@@ -8,33 +8,27 @@ export default class BookerService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  // TODO add tests!
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    // TODO try/catch for non-200 and log user out
-    const bookerReference = await (await orchestrationApiClient.getBookerReference(authDetailDto)).value
+    const bookerReference = (await orchestrationApiClient.getBookerReference(authDetailDto)).value
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
   }
 
-  // TODO add tests!
   async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
-
-    return prisoners
+    return orchestrationApiClient.getPrisoners(bookerReference)
   }
 
-  // TODO add tests!
-  async getVisitors(bookerReference: string, prisonNumber: string): Promise<VisitorInfoDto[]> {
+  async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    return orchestrationApiClient.getVisitors(bookerReference, prisonNumber)
+    return orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
   }
 }
