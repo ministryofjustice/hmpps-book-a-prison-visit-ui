@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import { AuthDetailDto, BookerReference, PrisonerInfoDto, VisitorInfoDto } from './orchestrationApiTypes'
+import { AuthDetailDto, BookerReference, PrisonDto, PrisonerInfoDto, VisitorInfoDto } from './orchestrationApiTypes'
 
 export default class OrchestrationApiClient {
   private restClient: RestClient
@@ -8,6 +8,8 @@ export default class OrchestrationApiClient {
   constructor(token: string) {
     this.restClient = new RestClient('orchestrationApiClient', config.apis.orchestration as ApiConfig, token)
   }
+
+  // public-booker-controller
 
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<BookerReference> {
     return this.restClient.put({
@@ -22,5 +24,10 @@ export default class OrchestrationApiClient {
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/prisoners/${prisonerNumber}/visitors` })
+  }
+
+  // orchestration-prisons-config-controller
+  async getPrison(prisonCode: string): Promise<PrisonDto> {
+    return this.restClient.get({ path: `/config/prisons/prison/${prisonCode}` })
   }
 }

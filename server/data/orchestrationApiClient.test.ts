@@ -70,4 +70,19 @@ describe('orchestrationApiClient', () => {
       expect(result).toStrictEqual(visitors)
     })
   })
+
+  describe('getPrison', () => {
+    it('should get a prison by prisonCode', async () => {
+      const prison = TestData.prisonDto()
+
+      fakeOrchestrationApi
+        .get(`/config/prisons/prison/${prison.code}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prison)
+
+      const result = await orchestrationApiClient.getPrison(prison.code)
+
+      expect(result).toStrictEqual(prison)
+    })
+  })
 })
