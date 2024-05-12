@@ -29,13 +29,6 @@ describe('Home page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        // TODO move service header tests to .njk test file
-        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
-        expect($('.service-header__nav-list-item').length).toBe(3)
-        expect($('.service-header__nav-list-item:nth-child(1)').eq(0).text()).toContain('Home')
-        expect($('.service-header__nav-list-item:nth-child(2)').eq(0).text()).toContain('Bookings')
-        expect($('.service-header__nav-list-item:nth-child(3)').eq(0).text()).toContain('Visitors')
-
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
@@ -63,6 +56,26 @@ describe('Home page', () => {
         expect($('[data-test=no-prisoners]').text()).toBe('No prisoner details found.')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
+      })
+  })
+})
+
+describe('Page header', () => {
+  it('should render the GOVUK One Login Header on pages where the user is logged in', () => {
+    bookerService.getPrisoners.mockResolvedValue([])
+
+    return request(app)
+      .get('/')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('header .one-login-header').length).toBe(1)
+        expect($('header.govuk-header').length).toBe(0)
+        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
+        expect($('.service-header__nav-list-item').length).toBe(3)
+        expect($('.service-header__nav-list-item:nth-child(1)').eq(0).text()).toContain('Home')
+        expect($('.service-header__nav-list-item:nth-child(2)').eq(0).text()).toContain('Bookings')
+        expect($('.service-header__nav-list-item:nth-child(3)').eq(0).text()).toContain('Visitors')
       })
   })
 })
