@@ -43,7 +43,8 @@
     {% if backLinkHref %}
       {{ govukBackLink({
         text: "Back",
-        href: backLinkHref
+        href: backLinkHref,
+        attributes: { "data-test": "back-link" }
       }) }}
     {% endif %}
   </div>
