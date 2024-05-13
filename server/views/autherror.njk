@@ -1,4 +1,13 @@
 {% extends "./partials/layout.njk" %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "/",
+    serviceName: applicationName,
+    serviceUrl: "/"
+  }) }}
+{% endblock %}
 
 {% block content %}
   <h1 class="govuk-heading-l">

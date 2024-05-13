@@ -1,9 +1,8 @@
-import IndexPage from '../pages/index'
+import HomePage from '../pages/home'
 import GovukOneLoginPage from '../pages/govukOneLogin'
 import Page from '../pages/page'
 
-// TODO fix skipped tests!
-context.skip('Sign in with GOV.UK One Login', () => {
+context('Sign in with GOV.UK One Login', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -30,14 +29,18 @@ context.skip('Sign in with GOV.UK One Login', () => {
   })
 
   it('User can sign in and view home page', () => {
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners', {})
     cy.signIn()
 
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.prisonerName().contains('Adam Greene')
+    Page.verifyOnPage(HomePage)
   })
 
   it('User can request a specific page and be redirected to this after sign in', () => {
     const page = '/deep-link' // will be a 404, but OK as testing original URL preserved
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubGetBookerReference')
     cy.signIn({ failOnStatusCode: false }, undefined, page)
     cy.location('pathname').should('equal', page)
     cy.contains('404')
@@ -50,8 +53,11 @@ context.skip('Sign in with GOV.UK One Login', () => {
   })
 
   it('User can log out', () => {
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners', {})
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
+    const indexPage = Page.verifyOnPage(HomePage)
     indexPage.signOut().click()
     Page.verifyOnPage(GovukOneLoginPage)
     cy.contains('You have been logged out.')

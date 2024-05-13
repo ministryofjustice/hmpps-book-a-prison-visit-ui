@@ -22,6 +22,7 @@ import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
+import TestData from './testData'
 
 export const user: Express.User = {
   sub: 'user1',
@@ -30,6 +31,8 @@ export const user: Express.User = {
   email_verified: true,
   email: 'user1@example.com',
 }
+
+const bookerReference = TestData.bookerReference().value
 
 export const flashProvider = jest.fn()
 
@@ -41,6 +44,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   nunjucksSetup(app, testAppInfo)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
+    req.session.booker = { reference: bookerReference } // emulate populateCurrentBooker()
     req.user = userSupplier()
     req.flash = flashProvider
     res.locals = {

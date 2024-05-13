@@ -19,7 +19,7 @@
   }]
 %}
 {% set activeLinkId = "home-link" %}
-{% set serviceName = "Visit someone in prison" %}
+{% set serviceName = applicationName %}
 {% set signOutLink = "/sign-out" %}
 
 {% block head %}
@@ -43,7 +43,8 @@
     {% if backLinkHref %}
       {{ govukBackLink({
         text: "Back",
-        href: backLinkHref
+        href: backLinkHref,
+        attributes: { "data-test": "back-link" }
       }) }}
     {% endif %}
   </div>
