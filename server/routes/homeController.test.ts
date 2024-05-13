@@ -1,6 +1,7 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
+import { SessionData } from 'express-session'
 import { appWithAllRoutes } from './testutils/appSetup'
 import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from './testutils/testData'
@@ -8,9 +9,11 @@ import TestData from './testutils/testData'
 let app: Express
 
 const bookerService = createMockBookerService()
+let sessionData: SessionData
 
 beforeEach(() => {
-  app = appWithAllRoutes({ services: { bookerService } })
+  sessionData = {} as SessionData
+  app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })
 
 afterEach(() => {
@@ -19,7 +22,7 @@ afterEach(() => {
 
 describe('Home page', () => {
   // For MVP only one prisoner per booker supported; so only first rendered
-  it('should render the home page with the prisoner associated with the booker', () => {
+  it('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
     const bookerReference = TestData.bookerReference().value
     const prisoner = TestData.prisonerInfoDto()
     bookerService.getPrisoners.mockResolvedValue([prisoner])
@@ -37,6 +40,13 @@ describe('Home page', () => {
         expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [prisoner],
+          },
+        } as SessionData)
       })
   })
 
@@ -56,6 +66,13 @@ describe('Home page', () => {
         expect($('[data-test=no-prisoners]').text()).toBe('No prisoner details found.')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [],
+          },
+        } as SessionData)
       })
   })
 })
