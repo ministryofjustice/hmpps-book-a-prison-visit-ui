@@ -13,10 +13,19 @@
 
       <h1 class="govuk-heading-l">Who is going on the visit?</h1>
 
-      <p>Up to [x] people can visit someone at [prison name]. This includes</p>
+      <p>
+        Up to {{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}
+        can visit someone at {{ prison.prisonName }}. This includes
+      </p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>[x] people [x] years old or older</li>
-        <li>[x] people under [x] years old.</li>
+        <li>
+          {{ prison.maxAdultVisitors }} {{ "person" | pluralise(prison.maxAdultVisitors, "people") }}
+          {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old or older
+        </li>
+        <li>
+          {{ prison.maxChildVisitors }} {{ "person" | pluralise(prison.maxChildVisitors, "people") }}
+          under {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old.
+        </li>
       </ul>
       <p>At least one visitor must be 18 years or older</p>
 

@@ -1,20 +1,26 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { BookerService } from '../../services'
+import { BookerService, PrisonService } from '../../services'
 
 export default class SelectVisitorsController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookingJourney } = req.session
-      if (!bookingJourney.allVisitors) {
-        bookingJourney.allVisitors = await this.bookerService.getVisitors(
-          booker.reference,
-          booker.prisoners[0].prisonerNumber,
-        )
+
+      if (!bookingJourney.prison) {
+        ;[bookingJourney.prison, bookingJourney.allVisitors] = await Promise.all([
+          this.prisonService.getPrison(bookingJourney.prisoner.prisonCode),
+          this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber),
+        ])
       }
+
       res.render('pages/bookingJourney/selectVisitors', {
+        prison: bookingJourney.prison,
         visitors: bookingJourney.allVisitors,
       })
     }

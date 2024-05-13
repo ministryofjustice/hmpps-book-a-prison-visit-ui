@@ -7,5 +7,7 @@ export default class HomePage extends Page {
 
   prisonerName = (): PageElement => cy.get('[data-test=prisoner-name]')
 
-  startButton = (): PageElement => cy.get('[data-test="start-booking"]')
+  startBooking = (): void => {
+    cy.get('[data-test="start-booking"]').click()
+  }
 }

@@ -14,9 +14,14 @@ context('Booking journey', () => {
     cy.task('stubGetPrisoners', { prisoners: [TestData.prisonerInfoDto()] })
     cy.signIn()
 
+    // Home page - prisoner shown
     const homePage = Page.verifyOnPage(HomePage)
     homePage.prisonerName().contains('John Smith')
-    homePage.startButton().contains('Start')
+
+    // Start booking journey
+    cy.task('stubGetPrison')
+    cy.task('stubGetVisitors', {})
+    homePage.startBooking()
 
     // TODO add to this test as booking journey implemented
   })
