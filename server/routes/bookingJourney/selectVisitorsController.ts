@@ -19,7 +19,11 @@ export default class SelectVisitorsController {
         ])
       }
 
+      // TODO pre-populate form (e.g. if coming from Back link or Change answers)
+
       res.render('pages/bookingJourney/selectVisitors', {
+        errors: req.flash('errors'),
+        formValues: req.flash('formValues')?.[0] || {},
         prison: bookingJourney.prison,
         visitors: bookingJourney.allVisitors,
       })
@@ -29,9 +33,10 @@ export default class SelectVisitorsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
-        throw new Error(JSON.stringify(errors.array())) // TODO add error messages to form
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect('/book-a-visit/select-visitors')
       }
 
       const { bookingJourney } = req.session
@@ -41,7 +46,7 @@ export default class SelectVisitorsController {
 
       bookingJourney.selectedVisitors = selectedVisitors
 
-      res.redirect('/book-a-visit/select-date-and-time')
+      return res.redirect('/book-a-visit/select-date-and-time')
     }
   }
 

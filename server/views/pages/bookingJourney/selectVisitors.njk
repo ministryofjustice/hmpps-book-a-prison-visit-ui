@@ -11,6 +11,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
+      {% include "partials/errorSummary.njk" %}
+
       <h1 class="govuk-heading-l">Who is going on the visit?</h1>
 
       <p>
@@ -48,7 +50,9 @@
                 classes: "govuk-fieldset__legend--m"
               }
             },
-            items: visitorList
+            items: visitorList,
+            values: formValues.visitorIds,
+            errorMessage: errors | findError('visitorIds')
           }) }}
 
           {{ govukButton({

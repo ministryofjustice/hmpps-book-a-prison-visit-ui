@@ -25,6 +25,7 @@ export declare global {
 
     interface Request {
       id: string
+      flash(type: 'errors', message: FlashErrorMessage): number
       logout(done: (err: unknown) => void): void
     }
 
