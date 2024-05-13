@@ -32,6 +32,7 @@ describe('Home page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Book a visit -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
@@ -59,6 +60,7 @@ describe('Home page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Book a visit -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').length).toBe(0)
@@ -86,6 +88,8 @@ describe('Page header', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+
         expect($('header .one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
         expect($('.service-header__heading').text()).toBe('Visit someone in prison')
