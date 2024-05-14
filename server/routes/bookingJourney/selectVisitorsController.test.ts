@@ -188,6 +188,28 @@ describe('Select visitors page', () => {
         })
     })
 
+    it('should filter out invalid visitor IDs', () => {
+      return request(app)
+        .post(url)
+        .send({ visitorIds: [1, 999, 3] })
+        .expect(302)
+        .expect('Location', '/book-a-visit/select-date-and-time')
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+            bookingJourney: {
+              prisoner,
+              prison,
+              allVisitors: visitors,
+              selectedVisitors: [visitors[0], visitors[2]], // invalid ID '999' filtered out
+            },
+          } as SessionData)
+        })
+    })
+
     it('should set a validation error and redirect to original page when no visitors selected', () => {
       const expectedFlashData: FlashData = {
         errors: [

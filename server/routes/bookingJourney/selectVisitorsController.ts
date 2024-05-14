@@ -52,9 +52,18 @@ export default class SelectVisitorsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('visitorIds').toArray().toInt(),
-      body('visitorIds').isArray({ min: 1 }).withMessage('No visitors selected'),
-      // TODO check that it is a valid visitor ID
+      body('visitorIds')
+        .toArray()
+        .toInt()
+        .customSanitizer((visitorIds: number[], meta) => {
+          const req = meta.req as unknown as Express.Request
+          const allVisitorIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.personId)
+
+          const validVisitorIds = visitorIds.filter(visitorId => allVisitorIds.includes(visitorId))
+          return validVisitorIds
+        })
+        .isArray({ min: 1 })
+        .withMessage('No visitors selected'),
     ]
   }
 }
