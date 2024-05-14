@@ -3,7 +3,7 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = "Who is going on the visit?" %}
 
 {% set backLinkHref = "/" %}
 
@@ -11,16 +11,28 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
+      {% include "partials/errorSummary.njk" %}
+
       <h1 class="govuk-heading-l">Who is going on the visit?</h1>
 
-      <p>Up to [x] people can visit someone at [prison name]. This includes</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>[x] people [x] years old or older</li>
-        <li>[x] people under [x] years old.</li>
-      </ul>
-      <p>At least one visitor must be 18 years or older</p>
-
       {% if visitors | length %}
+
+        <p data-test="visitors-max-total">
+          Up to {{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}
+          can visit someone at {{ prison.prisonName }}. This includes:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li data-test="visitors-max-adults">
+            {{ prison.maxAdultVisitors }} {{ "person" | pluralise(prison.maxAdultVisitors, "people") }}
+            {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old or older
+          </li>
+          <li data-test="visitors-max-child">
+            {{ prison.maxChildVisitors }} {{ "person" | pluralise(prison.maxChildVisitors, "people") }}
+            under {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old
+          </li>
+        </ul>
+        <p>At least one visitor must be 18 years or older</p>
+
         {% set visitorList = [] %}
         {% for visitor in visitors %}
           {% set visitorList = (visitorList.push({
@@ -39,7 +51,9 @@
                 classes: "govuk-fieldset__legend--m"
               }
             },
-            items: visitorList
+            items: visitorList,
+            values: formValues.visitorIds,
+            errorMessage: errors | findError('visitorIds')
           }) }}
 
           {{ govukButton({
@@ -52,7 +66,7 @@
 
       {% else %}
         {# TODO check what the message/behaviour in this case should be #}
-        <p>No visitor details found.</p>
+        <p data-test="no-visitors">No visitor details found.</p>
       {% endif %}
 
       {# TODO Get correct link for form #}

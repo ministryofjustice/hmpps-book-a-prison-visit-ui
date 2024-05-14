@@ -9,6 +9,7 @@ describe('Authorisation error page', () => {
   it('should render a default GOVUK Header on the authorisation error page', () => {
     app.render('autherror', (err: Error, html: string) => {
       const $ = cheerio.load(html)
+      expect($('head title').text()).toBe('Visit someone in prison - GOV.UK')
 
       expect($('header.govuk-header').length).toBe(1)
       expect($('header .one-login-header').length).toBe(0)

@@ -17,9 +17,10 @@ jest.mock('../../applicationInfo', () => {
   return jest.fn(() => testAppInfo)
 })
 
-import { BookerService } from '..'
+import { BookerService, PrisonService } from '..'
 
 jest.mock('..')
 
-// eslint-disable-next-line import/prefer-default-export
 export const createMockBookerService = () => new BookerService(null, null) as jest.Mocked<BookerService>
+
+export const createMockPrisonService = () => new PrisonService(null, null) as jest.Mocked<PrisonService>

@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express'
+import { NotFound } from 'http-errors'
 
 export default class SelectPrisonerController {
   public constructor() {}
@@ -17,7 +18,7 @@ export default class SelectPrisonerController {
 
       const { prisonerNumber } = req.body
       if (prisonerNumber !== prisoner.prisonerNumber) {
-        throw new Error('Invalid prisoner selected')
+        throw new NotFound('Prisoner not found')
       }
 
       req.session.bookingJourney = { prisoner }

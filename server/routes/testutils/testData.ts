@@ -1,4 +1,10 @@
-import type { AuthDetailDto, BookerReference, PrisonerInfoDto, VisitorInfoDto } from '../../data/orchestrationApiTypes'
+import type {
+  AuthDetailDto,
+  BookerReference,
+  PrisonDto,
+  PrisonerInfoDto,
+  VisitorInfoDto,
+} from '../../data/orchestrationApiTypes'
 
 export default class TestData {
   static authDetailDto = ({
@@ -8,6 +14,33 @@ export default class TestData {
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
+
+  static prisonDto = ({
+    code = 'HEI',
+    prisonName = 'Hewell (HMP)',
+    active = true,
+    policyNoticeDaysMax = 28,
+    policyNoticeDaysMin = 2,
+    maxTotalVisitors = 6,
+    maxAdultVisitors = 2,
+    maxChildVisitors = 4,
+    adultAgeYears = 16,
+    excludeDates = [],
+    clients = [],
+  }: Partial<PrisonDto> = {}): PrisonDto =>
+    ({
+      code,
+      prisonName,
+      active,
+      policyNoticeDaysMax,
+      policyNoticeDaysMin,
+      maxTotalVisitors,
+      maxAdultVisitors,
+      maxChildVisitors,
+      adultAgeYears,
+      excludeDates,
+      clients,
+    }) as PrisonDto
 
   static prisonerInfoDto = ({
     prisonerNumber = 'A1234BC',

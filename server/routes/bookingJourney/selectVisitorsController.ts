@@ -1,20 +1,30 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { BookerService } from '../../services'
+import { BookerService, PrisonService } from '../../services'
 
 export default class SelectVisitorsController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookingJourney } = req.session
-      if (!bookingJourney.allVisitors) {
-        bookingJourney.allVisitors = await this.bookerService.getVisitors(
-          booker.reference,
-          booker.prisoners[0].prisonerNumber,
-        )
+
+      if (!bookingJourney.prison) {
+        ;[bookingJourney.prison, bookingJourney.allVisitors] = await Promise.all([
+          this.prisonService.getPrison(bookingJourney.prisoner.prisonCode),
+          this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber),
+        ])
       }
+
+      // TODO pre-populate form (e.g. if coming from Back link or Change answers)
+
       res.render('pages/bookingJourney/selectVisitors', {
+        errors: req.flash('errors'), // TODO need to add "Error: " to page title if errors?
+        formValues: req.flash('formValues')?.[0] || {},
+        prison: bookingJourney.prison,
         visitors: bookingJourney.allVisitors,
       })
     }
@@ -23,9 +33,10 @@ export default class SelectVisitorsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
-        throw new Error(JSON.stringify(errors.array())) // TODO add error messages to form
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect('/book-a-visit/select-visitors')
       }
 
       const { bookingJourney } = req.session
@@ -35,7 +46,7 @@ export default class SelectVisitorsController {
 
       bookingJourney.selectedVisitors = selectedVisitors
 
-      res.redirect('/book-a-visit/select-date-and-time')
+      return res.redirect('/book-a-visit/select-date-and-time')
     }
   }
 
