@@ -188,10 +188,10 @@ describe('Select visitors page', () => {
         })
     })
 
-    it('should filter out invalid visitor IDs', () => {
+    it('should filter out invalid or duplicate visitor IDs', () => {
       return request(app)
         .post(url)
-        .send({ visitorIds: [1, 999, 3] })
+        .send({ visitorIds: [1, 1, 999, 3] })
         .expect(302)
         .expect('Location', '/book-a-visit/select-date-and-time')
         .expect(() => {
@@ -204,7 +204,7 @@ describe('Select visitors page', () => {
               prisoner,
               prison,
               allVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]], // invalid ID '999' filtered out
+              selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
             },
           } as SessionData)
         })
