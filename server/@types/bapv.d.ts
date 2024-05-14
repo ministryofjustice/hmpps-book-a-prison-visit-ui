@@ -1,3 +1,4 @@
+import { FieldValidationError } from 'express-validator'
 import { PrisonDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 
 export type Booker = {
@@ -18,4 +19,9 @@ export type BookingJourneyData = {
 
   // selected visitors for this visit
   selectedVisitors?: VisitorInfoDto[]
+}
+
+export type FlashData = {
+  errors?: FieldValidationError[]
+  formValues?: Record<string, string | string[]>
 }
