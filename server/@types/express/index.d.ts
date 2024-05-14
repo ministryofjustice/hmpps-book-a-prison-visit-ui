@@ -1,3 +1,4 @@
+import { ValidationError } from 'express-validator'
 import { Booker, BookingJourneyData } from '../bapv'
 
 export default {}
@@ -25,7 +26,7 @@ export declare global {
 
     interface Request {
       id: string
-      flash(type: 'errors', message: FlashErrorMessage): number
+      flash(type: 'errors', message: ValidationError[]): number
       logout(done: (err: unknown) => void): void
     }
 
