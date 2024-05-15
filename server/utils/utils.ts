@@ -32,3 +32,7 @@ export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): st
     return null
   }
 }
+
+export const pluralise = (word: string, count: string | number, plural = `${word}s`): string => {
+  return parseInt(count.toString(), 10) === 1 ? word : plural
+}
