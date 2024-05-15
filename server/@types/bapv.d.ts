@@ -23,5 +23,5 @@ export type BookingJourneyData = {
 
 export type FlashData = {
   errors?: FieldValidationError[]
-  formValues?: Record<string, string | string[]>
+  formValues?: Record<string, string | string[] | number[]>
 }
