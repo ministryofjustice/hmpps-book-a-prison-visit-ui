@@ -17,18 +17,18 @@
 
       {% if visitors | length %}
 
-        <p data-test="visitors-max-total">
-          Up to {{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}
-          can visit someone at {{ prison.prisonName }}. This includes:
+        <p>
+          Up to <span data-test="visitors-max-total">{{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}</span>
+          can visit someone at <span data-test="prison-name">{{ prison.prisonName }}</span>. This includes:
         </p>
         <ul class="govuk-list govuk-list--bullet">
-          <li data-test="visitors-max-adults">
-            {{ prison.maxAdultVisitors }} {{ "person" | pluralise(prison.maxAdultVisitors, "people") }}
-            {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old or older
+          <li>
+            <span data-test="visitors-max-adults">{{ prison.maxAdultVisitors }} {{ "person" | pluralise(prison.maxAdultVisitors, "people") }}</span>
+            <span data-test="visitors-adult-age">{{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }}</span> old or older
           </li>
-          <li data-test="visitors-max-child">
-            {{ prison.maxChildVisitors }} {{ "person" | pluralise(prison.maxChildVisitors, "people") }}
-            under {{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }} old
+          <li>
+            <span data-test="visitors-max-child">{{ prison.maxChildVisitors }} {{ "person" | pluralise(prison.maxChildVisitors, "people") }}</span> under
+            <span data-test="visitors-adult-age">{{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }}</span> old
           </li>
         </ul>
         <p>At least one visitor must be 18 years or older</p>
