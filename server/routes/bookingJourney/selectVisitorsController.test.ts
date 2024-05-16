@@ -70,15 +70,12 @@ describe('Select visitors page', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe('/')
           expect($('h1').text()).toBe('Who is going on the visit?')
 
-          expect($('[data-test=visitors-max-total]').text().trim().replace(/\s+/g, ' ')).toBe(
-            'Up to 4 people can visit someone at Hewell (HMP). This includes:',
-          )
-          expect($('[data-test=visitors-max-adults]').text().trim().replace(/\s+/g, ' ')).toBe(
-            '2 people 16 years old or older',
-          )
-          expect($('[data-test=visitors-max-child]').text().trim().replace(/\s+/g, ' ')).toBe(
-            '3 people under 16 years old',
-          )
+          expect($('[data-test=visitors-max-total]').text()).toBe('4 people')
+          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('[data-test=visitors-max-adults]').text()).toBe('2 people')
+          expect($('[data-test=visitors-max-children]').text()).toBe('3 people')
+          expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
+          expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
 
           expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-visitors')
           expect($('input[name=visitorIds]').length).toBe(8)
@@ -146,7 +143,7 @@ describe('Select visitors page', () => {
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
           expect($('[data-test=visitors-max-adults]').length).toBe(0)
-          expect($('[data-test=visitors-max-child]').length).toBe(0)
+          expect($('[data-test=visitors-max-children]').length).toBe(0)
 
           expect($('form[method=POST]').length).toBe(0)
           expect($('input[name=visitorIds]').length).toBe(0)
