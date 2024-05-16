@@ -1,18 +1,20 @@
-{% extends "../partials/layout.njk" %}
+{% extends "../../partials/layout.njk" %}
 
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = applicationName + " - Calendar component" %}
+{% set pageTitle = "Choose the visit time" %}
 
 {% block content %}
 
-  <h1 class="govuk-heading-l">Choose the visit time</h1>
-  <p>Select one visit time. It will be reserved for 10 minutes.</p>
-  <p>Only times that [prisoner name] can attend are shown.</p>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">Choose the visit time</h1>
+      <p>Select one visit time. It will be reserved for 10 minutes.</p>
+      <p>Only times that [prisoner name] can attend are shown.</p>
 
       <nav class="vsip-calendar" aria-label="Visit date selection calendar" role="navigation">
         {# Loop over months #}
@@ -112,6 +114,20 @@
     </div>
   </div>
 
+  {# TODO remove below #}
+  <hr>
+  <pre>
+    <h1>Select date and time</h1>
+  
+    BOOKER
+    {{ booker | dump(2) }}
+  
+    BOOKING JOURNEY
+    {{ bookingJourney | dump(2) }}
+  
+    AVAILABLE VISIT SESSIONS
+    {{ visitSessions | dump(2) }}
+  </pre>
 {% endblock %}
 
 {% block pageScripts %}

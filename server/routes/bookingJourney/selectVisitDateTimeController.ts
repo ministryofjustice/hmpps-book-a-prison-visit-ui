@@ -1,7 +1,5 @@
-import { type RequestHandler, Router } from 'express'
-
-import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
+import type { RequestHandler } from 'express'
+import { VisitSessionsService } from '../../services'
 
 type CalendarData = {
   selectedDate: string
@@ -84,14 +82,27 @@ const calendarData: CalendarData = {
   },
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(service: Services): Router {
-  const router = Router()
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+export default class SelectVisitDateTimeController {
+  public constructor(private readonly visitSessionsService: VisitSessionsService) {}
 
-  get('/calendar-preview', (req, res, next) => {
-    res.render('pages/calendarPreview', { calendarData })
-  })
+  public view(): RequestHandler {
+    return async (req, res) => {
+      const { prisoner, selectedVisitors } = req.session.bookingJourney
 
-  return router
+      const selectedVisitorIds = selectedVisitors.map(visitor => visitor.personId)
+
+      const visitSessions = await this.visitSessionsService.getVisitSessions(
+        prisoner.prisonCode,
+        prisoner.prisonerNumber,
+        selectedVisitorIds,
+      )
+
+      res.render('pages/bookingJourney/selectVisitDateTime', {
+        booker: req.session.booker,
+        bookingJourney: req.session.bookingJourney,
+        visitSessions,
+        calendarData,
+      })
+    }
+  }
 }
