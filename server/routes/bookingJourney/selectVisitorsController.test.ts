@@ -73,7 +73,7 @@ describe('Select visitors page', () => {
           expect($('[data-test=visitors-max-total]').text()).toBe('4 people')
           expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
           expect($('[data-test=visitors-max-adults]').text()).toBe('2 people')
-          expect($('[data-test=visitors-max-child]').text()).toBe('3 people')
+          expect($('[data-test=visitors-max-children]').text()).toBe('3 people')
           expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
           expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
 
@@ -143,7 +143,7 @@ describe('Select visitors page', () => {
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
           expect($('[data-test=visitors-max-adults]').length).toBe(0)
-          expect($('[data-test=visitors-max-child]').length).toBe(0)
+          expect($('[data-test=visitors-max-children]').length).toBe(0)
 
           expect($('form[method=POST]').length).toBe(0)
           expect($('input[name=visitorIds]').length).toBe(0)

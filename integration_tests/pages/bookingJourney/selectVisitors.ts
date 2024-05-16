@@ -12,7 +12,7 @@ export default class SelectVisitorsPage extends Page {
 
   visitorsMaxAdults = (): PageElement => cy.get('[data-test=visitors-max-adults]')
 
-  visitorsMaxChild = (): PageElement => cy.get('[data-test=visitors-max-child]')
+  visitorsMaxChildren = (): PageElement => cy.get('[data-test=visitors-max-children]')
 
   visitorsAdultAge = (): PageElement => cy.get('[data-test=visitors-adult-age]')
 
