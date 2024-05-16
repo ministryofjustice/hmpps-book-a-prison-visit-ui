@@ -1,7 +1,13 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
-import { BookerReference, PrisonDto, PrisonerInfoDto, VisitorInfoDto } from '../../server/data/orchestrationApiTypes'
+import {
+  AvailableVisitSessionDto,
+  BookerReference,
+  PrisonDto,
+  PrisonerInfoDto,
+  VisitorInfoDto,
+} from '../../server/data/orchestrationApiTypes'
 
 export default {
   stubGetBookerReference: (bookerReference = TestData.bookerReference()): SuperAgentRequest =>
@@ -67,6 +73,34 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: prisonDto,
+      },
+    }),
+
+  stubGetVisitSessions: ({
+    prisonId,
+    prisonerId,
+    visitorIds,
+    visitSessions,
+  }: {
+    prisonId: string
+    prisonerId: string
+    visitorIds: number[]
+    visitSessions: AvailableVisitSessionDto[]
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: `/orchestration/visit-sessions/available`,
+        queryParameters: {
+          prisonId: { equalTo: prisonId },
+          prisonerId: { equalTo: prisonerId },
+          visitors: { equalTo: visitorIds.join(',') },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visitSessions,
       },
     }),
 

@@ -695,10 +695,12 @@ export interface components {
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
+      first?: boolean
+      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
@@ -708,20 +710,18 @@ export interface components {
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
-      first?: boolean
-      last?: boolean
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject'][]
-      paged?: boolean
-      unpaged?: boolean
-      /** Format: int32 */
-      pageNumber?: number
       /** Format: int32 */
       pageSize?: number
+      /** Format: int32 */
+      pageNumber?: number
+      unpaged?: boolean
+      paged?: boolean
     }
     SortObject: {
       direction?: string
@@ -920,13 +920,18 @@ export interface components {
        * @example 2020-11-01
        */
       sessionDate: string
+      /**
+       * @description sessionTemplateReference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
-       * @description Visit Restriction
+       * @description Session Restriction
        * @example OPEN
        * @enum {string}
        */
-      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      sessionRestriction: 'OPEN' | 'CLOSED'
     }
     GetDlqResult: {
       /** Format: int32 */
@@ -2171,7 +2176,12 @@ export interface operations {
          * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
          * @example CLOSED
          */
-        sessionRestriction: 'OPEN' | 'CLOSED'
+        sessionRestriction?: 'OPEN' | 'CLOSED'
+        /**
+         * @description List of visitors who require visit sessions
+         * @example 4729510,4729220
+         */
+        visitors?: number[]
       }
     }
     responses: {
