@@ -76,7 +76,7 @@ export default {
       },
     }),
 
-  stubGetVisitorSessions: ({
+  stubGetVisitSessions: ({
     prisonId,
     prisonerId,
     visitorIds,
