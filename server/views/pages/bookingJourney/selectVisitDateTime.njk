@@ -18,7 +18,7 @@
 
       <nav class="vsip-calendar" aria-label="Visit date selection calendar" role="navigation">
         {# Loop over months #}
-        {% for monthName, monthData in calendarData.months %}
+        {% for monthName, monthData in visitSessionsCalendar.months %}
           <h2 class="govuk-heading-m">{{ monthName }}</h2>
 
           {# Day name headings on first month only #}
@@ -40,7 +40,7 @@
               {%- set numberOfSlots = slots | length -%}
               <li data-date="{{ date }}" class="vsip-calendar__day
                 {%- if loop.first %} vsip-calendar__day--start-col-{{ monthData.startDayColumn }}{% endif %}
-                {%- if calendarData.selectedDate == date %} vsip-calendar__day--selected
+                {%- if visitSessionsCalendar.selectedDate == date %} vsip-calendar__day--selected
                 {%- endif %}"
                 {%- if not numberOfSlots %}aria-hidden="true"{% endif %}>
 
@@ -59,17 +59,17 @@
         {% endfor %}
       </nav>
 
-      <form action="/calendar-preview" method="GET" novalidate>
+      <form action="/book-a-visit/select-date-and-time" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit slot items from months/dates/slots data #}
-        {% for monthName, monthData in calendarData.months %}
+        {% for monthName, monthData in visitSessionsCalendar.months %}
           {% for date, slots in monthData.dates %}
             {% if slots | length %}
               {% set visitSlotItems = [] %}
               {% for slot in slots %}
                 {% set visitSlotItems = (visitSlotItems.push({
-                  value: slot.reference,
+                  value: date + "_" +slot.reference,
                   html: slot.time + ' <span class="vsip-calendar__slot-duration">(' + slot.duration + ')</span>'
                 }), visitSlotItems) %}
               {% endfor %}
@@ -113,21 +113,6 @@
 
     </div>
   </div>
-
-  {# TODO remove below #}
-  <hr>
-  <pre>
-    <h1>Select date and time</h1>
-  
-    BOOKER
-    {{ booker | dump(2) }}
-  
-    BOOKING JOURNEY
-    {{ bookingJourney | dump(2) }}
-  
-    AVAILABLE VISIT SESSIONS
-    {{ visitSessions | dump(2) }}
-  </pre>
 {% endblock %}
 
 {% block pageScripts %}
