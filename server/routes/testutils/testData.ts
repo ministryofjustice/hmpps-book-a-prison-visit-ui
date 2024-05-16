@@ -1,5 +1,6 @@
 import type {
   AuthDetailDto,
+  AvailableVisitSessionDto,
   BookerReference,
   PrisonDto,
   PrisonerInfoDto,
@@ -12,6 +13,18 @@ export default class TestData {
     email = 'user1@example.com',
     phoneNumber = undefined,
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
+
+  static availableVisitSessionDto = ({
+    sessionDate = '2024-05-01',
+    sessionTemplateReference = 'aaa-bbb-ccc',
+    sessionTimeSlot = { startTime: '10:00', endTime: '11:30' },
+    sessionRestriction = 'OPEN',
+  }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({
+    sessionDate,
+    sessionTemplateReference,
+    sessionTimeSlot,
+    sessionRestriction,
+  })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 

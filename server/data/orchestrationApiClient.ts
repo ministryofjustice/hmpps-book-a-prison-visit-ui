@@ -1,6 +1,13 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import { AuthDetailDto, BookerReference, PrisonDto, PrisonerInfoDto, VisitorInfoDto } from './orchestrationApiTypes'
+import {
+  AuthDetailDto,
+  AvailableVisitSessionDto,
+  BookerReference,
+  PrisonDto,
+  PrisonerInfoDto,
+  VisitorInfoDto,
+} from './orchestrationApiTypes'
 
 export default class OrchestrationApiClient {
   private restClient: RestClient
@@ -27,7 +34,20 @@ export default class OrchestrationApiClient {
   }
 
   // orchestration-prisons-config-controller
+
   async getPrison(prisonCode: string): Promise<PrisonDto> {
     return this.restClient.get({ path: `/config/prisons/prison/${prisonCode}` })
+  }
+
+  // orchestration-sessions-controller
+  async getVisitSessions(
+    prisonId: string,
+    prisonerId: string,
+    visitorIds: number[],
+  ): Promise<AvailableVisitSessionDto[]> {
+    return this.restClient.get({
+      path: '/visit-sessions/available',
+      query: new URLSearchParams({ prisonId, prisonerId, visitors: visitorIds.join(',') }).toString(),
+    })
   }
 }
