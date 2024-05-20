@@ -10,7 +10,7 @@ export default class SelectVisitDateTimeController {
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.personId)
 
-      const visitSessionsCalendar = await this.visitSessionsService.getVisitSessionsCalendar(
+      const { calendar, firstSessionDate } = await this.visitSessionsService.getVisitSessionsCalendar(
         prisoner.prisonCode,
         prisoner.prisonerNumber,
         selectedVisitorIds,
@@ -18,9 +18,9 @@ export default class SelectVisitDateTimeController {
       )
 
       res.render('pages/bookingJourney/selectVisitDateTime', {
-        booker: req.session.booker,
-        bookingJourney: req.session.bookingJourney,
-        visitSessionsCalendar,
+        calendar,
+        selectedDate: firstSessionDate,
+        prisoner,
       })
     }
   }

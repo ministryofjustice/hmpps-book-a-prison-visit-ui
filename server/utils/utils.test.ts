@@ -1,4 +1,5 @@
-import { convertToTitleCase, formatDate, initialiseName, pluralise } from './utils'
+import { formatDuration } from 'date-fns'
+import { convertToTitleCase, formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -29,15 +30,37 @@ describe('initialise name', () => {
   })
 })
 
-describe('format a date', () => {
+describe('formatDate', () => {
   it.each([
     ['Default format (date/time input)', '2022-02-14T10:00:00', undefined, '14 February 2022'],
     ['Default format (short date input)', '2022-02-14', undefined, '14 February 2022'],
     ['Custom format', '2022-02-14T10:00:00', 'yy MMM d', '22 Feb 14'],
-    ['Invalid date', 'not a date', undefined, null],
-    ['Invalid format', '2022-02-14T10:00:00', '', null],
+    ['Invalid date', 'not a date', undefined, ''],
+    ['Invalid format', '2022-02-14T10:00:00', '', ''],
   ])('%s formatDate(%s, %s) = %s', (_: string, date: string, format: string, expected: string) => {
     expect(formatDate(date, format)).toEqual(expected)
+  })
+})
+
+describe('formatTime', () => {
+  it.each([
+    ['Morning time', '10:30', '10:30am'],
+    ['Afternoon time', '14:30', '2:30pm'],
+    ['Truncate whole hours', '09:00', '9am'],
+    ['Invalid date', 'not a date', ''],
+  ])('%s formatTime(%s) = %s', (_: string, date: string, expected: string) => {
+    expect(formatTime(date)).toEqual(expected)
+  })
+})
+
+describe('formatTimeDuration', () => {
+  it.each([
+    ['Hours and minutes', '10:00', '11:30', '1 hour and 30 minutes'],
+    ['Minutes only', '14:00', '14:45', '45 minutes'],
+    ['Hours only', '11:00', '13:00', '2 hours'],
+    ['Invalid times', 'not a time', undefined, ''],
+  ])('%s formatTimeDuration(%s, %s) = %s', (_: string, startTime: string, endTime: string, expected: string) => {
+    expect(formatTimeDuration(startTime, endTime)).toEqual(expected)
   })
 })
 

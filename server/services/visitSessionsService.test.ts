@@ -1,8 +1,7 @@
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import VisitSessionsService from './visitSessionsService'
+import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsService'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
-import { VisitSessionsCalendar } from '../@types/bapv'
 
 const token = 'some token'
 
@@ -26,7 +25,7 @@ describe('Visit sessions service', () => {
   })
 
   describe('getVisitSessionsCalendar', () => {
-    const fakeDate = new Date('2024-05-25')
+    const fakeDate = new Date('2024-05-28')
 
     beforeEach(() => {
       jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
@@ -39,7 +38,7 @@ describe('Visit sessions service', () => {
     it('should return a VisitSessionsCalendar with visit sessions for prison / prisoner / visitors', async () => {
       const prisoner = TestData.prisonerInfoDto()
       const visitorIds = [1, 2]
-      const daysAhead = 10 // the booking window 'policyNoticeDaysMax' for the prison
+      const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison
       const visitSessions: AvailableVisitSessionDto[] = [
         // first session after the fake start date to check we get empty dates at start
         TestData.availableVisitSessionDto({
@@ -59,40 +58,28 @@ describe('Visit sessions service', () => {
         }),
         // next month - testing multiple months
         TestData.availableVisitSessionDto({
-          sessionDate: '2024-06-03',
+          sessionDate: '2024-06-02',
           sessionTemplateReference: 'd',
           sessionTimeSlot: { startTime: '09:00', endTime: '11:00' },
         }),
       ]
       orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
 
-      const expectedVisitSessionsCalendar: VisitSessionsCalendar = {
-        selectedDate: '2024-05-30',
-        months: {
-          'May 2024': {
-            startDayColumn: 6, // first day is a Saturday; sixth calendar day column
-            dates: {
-              '2024-05-25': [],
-              '2024-05-26': [],
-              '2024-05-27': [],
-              '2024-05-28': [],
-              '2024-05-29': [],
-              '2024-05-30': [{ reference: 'a', time: '10am to 11:30am', duration: '1 hour and 30 minutes' }],
-              '2024-05-31': [
-                { reference: 'b', time: '9am to 9:45am', duration: '45 minutes' },
-                { reference: 'c', time: '2pm to 3pm', duration: '1 hour' },
-              ],
-            },
-          },
-          'June 2024': {
-            startDayColumn: 6,
-            dates: {
-              '2024-06-01': [],
-              '2024-06-02': [],
-              '2024-06-03': [{ reference: 'd', time: '9am to 11am', duration: '2 hours' }],
-              '2024-06-04': [],
-            },
-          },
+      const expectedFirstSessionDate = '2024-05-30'
+      const expectedCalendar: VisitSessionsCalendar = {
+        '2024-05': {
+          '2024-05-28': [],
+          '2024-05-29': [],
+          '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30' }],
+          '2024-05-31': [
+            { reference: 'b', startTime: '09:00', endTime: '09:45' },
+            { reference: 'c', startTime: '14:00', endTime: '15:00' },
+          ],
+        },
+        '2024-06': {
+          '2024-06-01': [],
+          '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00' }],
+          '2024-06-03': [],
         },
       }
 
@@ -108,10 +95,8 @@ describe('Visit sessions service', () => {
         prisoner.prisonerNumber,
         visitorIds,
       )
-      expect(results).toStrictEqual(expectedVisitSessionsCalendar)
+      expect(results).toStrictEqual({ calendar: expectedCalendar, firstSessionDate: expectedFirstSessionDate })
     })
-
-    // TODO add tests to cover different startDayColumn values (mon / sun) and year boundary
 
     it('should return an empty VisitSessionsCalendar if no available visit sessions', async () => {
       const prisoner = TestData.prisonerInfoDto()
@@ -119,10 +104,8 @@ describe('Visit sessions service', () => {
       const visitSessions: AvailableVisitSessionDto[] = []
       orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
 
-      const expectedVisitSessionsCalendar: VisitSessionsCalendar = {
-        selectedDate: '',
-        months: {},
-      }
+      const expectedFirstSessionDate = ''
+      const expectedCalendar: VisitSessionsCalendar = {}
 
       const results = await visitSessionsService.getVisitSessionsCalendar(
         prisoner.prisonCode,
@@ -136,7 +119,7 @@ describe('Visit sessions service', () => {
         prisoner.prisonerNumber,
         visitorIds,
       )
-      expect(results).toStrictEqual(expectedVisitSessionsCalendar)
+      expect(results).toStrictEqual({ calendar: expectedCalendar, firstSessionDate: expectedFirstSessionDate })
     })
   })
 })

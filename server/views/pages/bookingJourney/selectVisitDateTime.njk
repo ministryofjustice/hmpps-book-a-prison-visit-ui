@@ -14,12 +14,16 @@
 
       <h1 class="govuk-heading-l">Choose the visit time</h1>
       <p>Select one visit time. It will be reserved for 10 minutes.</p>
-      <p>Only times that [prisoner name] can attend are shown.</p>
+      <p>
+        Only times that
+          <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+        can attend are shown.
+      </p>
 
       <nav class="vsip-calendar" aria-label="Visit date selection calendar" role="navigation">
         {# Loop over months #}
-        {% for monthName, monthData in visitSessionsCalendar.months %}
-          <h2 class="govuk-heading-m">{{ monthName }}</h2>
+        {% for monthName, monthData in calendar %}
+          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy') }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}
@@ -36,11 +40,11 @@
 
           <ul class="govuk-list vsip-calendar__month">
             {# Days for this month #}
-            {% for date, slots in monthData.dates %}
+            {% for date, slots in monthData %}
               {%- set numberOfSlots = slots | length -%}
               <li data-date="{{ date }}" class="vsip-calendar__day
-                {%- if loop.first %} vsip-calendar__day--start-col-{{ monthData.startDayColumn }}{% endif %}
-                {%- if visitSessionsCalendar.selectedDate == date %} vsip-calendar__day--selected
+                {%- if loop.first %} vsip-calendar__day--start-col-{{ date | formatDate('i') }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
+                {%- if selectedDate == date %} vsip-calendar__day--selected
                 {%- endif %}"
                 {%- if not numberOfSlots %}aria-hidden="true"{% endif %}>
 
@@ -63,14 +67,15 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit slot items from months/dates/slots data #}
-        {% for monthName, monthData in visitSessionsCalendar.months %}
-          {% for date, slots in monthData.dates %}
+        {% for monthName, monthData in calendar %}
+          {% for date, slots in monthData %}
             {% if slots | length %}
               {% set visitSlotItems = [] %}
               {% for slot in slots %}
                 {% set visitSlotItems = (visitSlotItems.push({
-                  value: date + "_" +slot.reference,
-                  html: slot.time + ' <span class="vsip-calendar__slot-duration">(' + slot.duration + ')</span>'
+                  value: date + "_" + slot.reference,
+                  html: (slot.startTime | formatTime) + " to " + (slot.endTime | formatTime) +
+                   ' <span class="vsip-calendar__slot-duration">(' + (slot.startTime | formatTimeDuration(slot.endTime)) + ')</span>'
                 }), visitSlotItems) %}
               {% endfor %}
 

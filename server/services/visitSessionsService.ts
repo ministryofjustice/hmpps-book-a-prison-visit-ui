@@ -1,7 +1,12 @@
-import { addDays, eachDayOfInterval, format, formatDuration, getISODay, intervalToDuration, parse } from 'date-fns'
-import { VisitSessionsCalendar } from '../@types/bapv'
+import { addDays, eachDayOfInterval, format } from 'date-fns'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
+import { DateFormats } from '../utils/constants'
+
+type VisitSession = { reference: string; startTime: string; endTime: string }
+
+// Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
+export type VisitSessionsCalendar = Record<string, Record<string, VisitSession[]>>
 
 export default class VisitSessionsService {
   constructor(
@@ -9,58 +14,45 @@ export default class VisitSessionsService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  private readonly dateFormat = 'yyyy-MM-dd'
-
   async getVisitSessionsCalendar(
     prisonId: string,
     prisonerId: string,
     visitorIds: number[],
     daysAhead: number,
-  ): Promise<VisitSessionsCalendar> {
+  ): Promise<{ calendar: VisitSessionsCalendar; firstSessionDate: string }> {
     const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds)
 
     if (visitSessions.length === 0) {
-      return { selectedDate: '', months: {} }
+      return { calendar: {}, firstSessionDate: '' }
     }
 
-    const calendar: VisitSessionsCalendar = {
-      selectedDate: visitSessions[0].sessionDate, // TODO consider if this should be worked out in route?
-      months: {},
-    }
-
-    // generate all calendar dates: first is today; last is max booking window
+    const calendar: VisitSessionsCalendar = {}
+    const firstSessionDate = visitSessions[0].sessionDate
     const today = new Date()
+
     const allCalendarDates = eachDayOfInterval({
-      start: format(today, this.dateFormat),
-      end: format(addDays(today, daysAhead), this.dateFormat),
+      start: today,
+      end: addDays(today, daysAhead),
     })
 
     allCalendarDates.forEach(date => {
-      const currentMonth = format(date, 'MMMM yyyy')
-      if (!calendar.months[currentMonth]) {
-        calendar.months[currentMonth] = { startDayColumn: getISODay(date), dates: {} }
-      }
+      const dateKey = format(date, DateFormats.ISO_DATE)
+      const monthKey = dateKey.substring(0, 7) // get e.g. '2024-05'
 
-      const { dates } = calendar.months[currentMonth]
-      const thisDate = format(date, this.dateFormat)
-      const thisDateVisitSessions = visitSessions.filter(session => session.sessionDate === thisDate)
+      const currentMonth = calendar[monthKey] ?? (calendar[monthKey] = {})
 
-      dates[thisDate] = thisDateVisitSessions.map(session => {
-        const startTime = parse(session.sessionTimeSlot.startTime, 'HH:mm', date)
-        const endTime = parse(session.sessionTimeSlot.endTime, 'HH:mm', date)
+      const visitSessionsOnDate = visitSessions.filter(session => session.sessionDate === dateKey)
 
-        const startTimeFormatted = format(startTime, 'h:mmaaa').replace(':00', '')
-        const endTimeFormatted = format(endTime, 'h:mmaaa').replace(':00', '')
-
-        const duration = formatDuration(intervalToDuration({ start: startTime, end: endTime }), { delimiter: ' and ' })
+      currentMonth[dateKey] = visitSessionsOnDate.map(session => {
         return {
           reference: session.sessionTemplateReference,
-          time: `${startTimeFormatted} to ${endTimeFormatted}`,
-          duration,
+          startTime: session.sessionTimeSlot.startTime,
+          endTime: session.sessionTimeSlot.endTime,
         }
       })
     })
-    return calendar
+
+    return { calendar, firstSessionDate }
   }
 
   private async getVisitSessions(
