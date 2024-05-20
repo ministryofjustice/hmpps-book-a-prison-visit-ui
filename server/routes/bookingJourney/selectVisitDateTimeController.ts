@@ -27,9 +27,9 @@ export default class SelectVisitDateTimeController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { visitSession } = req.body
-
-      console.log('Selected visit session: ', visitSession)
+      // const { visitSession } = req.body
+      // TODO validate visit session selection and save to req.session
+      // logger.info('Selected visit session: ', visitSession)
 
       return res.redirect('/book-a-visit/select-additional-support')
     }
