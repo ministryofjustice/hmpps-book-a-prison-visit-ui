@@ -695,21 +695,21 @@ export interface components {
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
+      first?: boolean
+      last?: boolean
+      content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       size?: number
-      content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
-      first?: boolean
-      last?: boolean
       empty?: boolean
     }
     PageableObject: {
@@ -920,13 +920,18 @@ export interface components {
        * @example 2020-11-01
        */
       sessionDate: string
+      /**
+       * @description sessionTemplateReference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
        * @description Visit Restriction
        * @example OPEN
        * @enum {string}
        */
-      visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      visitRestriction: 'OPEN' | 'CLOSED'
     }
     GetDlqResult: {
       /** Format: int32 */
@@ -2171,7 +2176,12 @@ export interface operations {
          * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
          * @example CLOSED
          */
-        sessionRestriction: 'OPEN' | 'CLOSED'
+        sessionRestriction?: 'OPEN' | 'CLOSED'
+        /**
+         * @description List of visitors who require visit sessions
+         * @example 4729510,4729220
+         */
+        visitors?: number[]
       }
     }
     responses: {

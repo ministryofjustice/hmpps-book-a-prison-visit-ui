@@ -6,6 +6,8 @@ import type { Services } from '../../services'
 import SelectPrisonerController from './selectPrisonerController'
 import SelectVisitorsController from './selectVisitorsController'
 import DateAndTimeController from './selectDateAndTimeController'
+import AdditionalSupportController from './selectAdditionalSupportController'
+import MainContactController from './selectMainContactController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -18,6 +20,8 @@ export default function routes(services: Services): Router {
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
   const dateAndTimeController = new DateAndTimeController(services.bookerService)
+  const additionalSupportController = new AdditionalSupportController(services.bookerService)
+  const mainContactController = new MainContactController(services.bookerService)
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
 
@@ -28,5 +32,16 @@ export default function routes(services: Services): Router {
   postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
 
   get('/select-date-and-time', dateAndTimeController.view())
+
+  get('/select-additional-support', additionalSupportController.view())
+
+  postWithValidation(
+    '/select-additional-support',
+    additionalSupportController.validate(),
+    additionalSupportController.submit(),
+  )
+
+  get('/select-main-contact', mainContactController.view())
+
   return router
 }

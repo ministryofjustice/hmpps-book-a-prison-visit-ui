@@ -1,0 +1,49 @@
+import type { RequestHandler } from 'express'
+import { ValidationChain, body, validationResult } from 'express-validator'
+import { BookerService } from '../../services'
+
+export default class AdditionalSupportController {
+  public constructor(private readonly bookerService: BookerService) {}
+
+  public view(): RequestHandler {
+    return async (req, res) => {
+      res.render('pages/bookingJourney/selectAdditionalSupport', {
+        errors: req.flash('errors'),
+        formValues: req.flash('formValues')?.[0] || {},
+        booker: req.session.booker,
+        bookingJourney: req.session.bookingJourney,
+      })
+    }
+  }
+
+  public submit(): RequestHandler {
+    return async (req, res) => {
+      const { bookingJourney } = req.session
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array() as [])
+        req.flash('formValues', req.body)
+        return res.redirect(`/book-a-visit/select-additional-support`)
+      }
+
+      bookingJourney.visitorSupport = req.body.additionalSupportRequired === 'no' ? '' : req.body.additionalSupport
+
+      return res.redirect('/book-a-visit/select-main-contact')
+    }
+  }
+
+  validate(): ValidationChain[] {
+    return [
+      body('additionalSupportRequired').isIn(['yes', 'no']).withMessage('No answer selected'),
+      body('additionalSupport')
+        .trim()
+        .if(body('additionalSupportRequired').equals('yes'))
+        .notEmpty()
+        .withMessage('Enter details of the request')
+        .bail()
+        .isLength({ min: 3, max: 512 })
+        .withMessage('Please enter at least 3 and no more than 512 characters'),
+    ]
+  }
+}
