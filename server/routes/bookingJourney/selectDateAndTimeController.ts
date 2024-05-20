@@ -8,7 +8,7 @@ export default class SelectDateAndTimeController {
     return async (req, res) => {
       const { prisoner, selectedVisitors } = req.session.bookingJourney
 
-      const selectedVisitorIds = selectedVisitors.map(visitor => visitor.personId)
+      const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
       const visitSessions = await this.visitSessionsService.getVisitSessions(
         prisoner.prisonCode,

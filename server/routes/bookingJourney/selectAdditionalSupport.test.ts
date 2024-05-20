@@ -17,7 +17,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisonerInfoDto()
 const prison = TestData.prisonDto()
 const visitors = [
-  TestData.visitorInfoDto({ personId: 1, firstName: 'Visitor', lastName: 'One', dateOfBirth: '1980-02-03' }),
+  TestData.visitorInfoDto({ visitorId: 1, firstName: 'Visitor', lastName: 'One', dateOfBirth: '1980-02-03' }),
 ]
 
 describe('Select additional support page', () => {

@@ -36,7 +36,7 @@
         {% set visitorList = [] %}
         {% for visitor in visitors %}
           {% set visitorList = (visitorList.push({
-            value: visitor.personId,
+            value: visitor.visitorId,
             text: visitor.firstName + ' ' + visitor.lastName + ', (' + visitor.dateOfBirth | displayAge + ')'
           }), visitorList)%}
         {% endfor %}

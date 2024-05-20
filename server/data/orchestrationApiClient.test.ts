@@ -45,7 +45,7 @@ describe('orchestrationApiClient', () => {
       const prisoners = [TestData.prisonerInfoDto()]
 
       fakeOrchestrationApi
-        .get(`/public/booker/${bookerReference.value}/prisoners`)
+        .get(`/public/booker/${bookerReference.value}/permitted/prisoners`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prisoners)
 
@@ -62,28 +62,13 @@ describe('orchestrationApiClient', () => {
       const visitors = [TestData.visitorInfoDto()]
 
       fakeOrchestrationApi
-        .get(`/public/booker/${bookerReference.value}/prisoners/${prisonerNumber}/visitors`)
+        .get(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/permitted/visitors`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, visitors)
 
       const result = await orchestrationApiClient.getVisitors(bookerReference.value, prisonerNumber)
 
       expect(result).toStrictEqual(visitors)
-    })
-  })
-
-  describe('getPrison', () => {
-    it('should get a prison by prisonCode', async () => {
-      const prison = TestData.prisonDto()
-
-      fakeOrchestrationApi
-        .get(`/config/prisons/prison/${prison.code}`)
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, prison)
-
-      const result = await orchestrationApiClient.getPrison(prison.code)
-
-      expect(result).toStrictEqual(prison)
     })
   })
 
@@ -110,6 +95,21 @@ describe('orchestrationApiClient', () => {
       )
 
       expect(result).toStrictEqual(visitSessions)
+    })
+  })
+
+  describe('getPrison', () => {
+    it('should get a prison by prisonCode', async () => {
+      const prison = TestData.prisonDto()
+
+      fakeOrchestrationApi
+        .get(`/config/prisons/prison/${prison.code}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prison)
+
+      const result = await orchestrationApiClient.getPrison(prison.code)
+
+      expect(result).toStrictEqual(prison)
     })
   })
 })

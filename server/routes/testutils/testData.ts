@@ -63,9 +63,9 @@ export default class TestData {
   }: Partial<PrisonerInfoDto> = {}): PrisonerInfoDto => ({ prisonerNumber, firstName, lastName, prisonCode })
 
   static visitorInfoDto = ({
-    personId = 1234,
+    visitorId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ personId, firstName, lastName, dateOfBirth })
+  }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ visitorId, firstName, lastName, dateOfBirth })
 }

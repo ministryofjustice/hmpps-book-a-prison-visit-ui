@@ -22,14 +22,14 @@ const prison = TestData.prisonDto()
 
 const fakeDate = new Date('2024-05-02')
 const visitors = [
-  TestData.visitorInfoDto({ personId: 1, firstName: 'Visitor', lastName: 'Age 20y', dateOfBirth: '2004-04-01' }),
-  TestData.visitorInfoDto({ personId: 2, firstName: 'Visitor', lastName: 'Age 18y', dateOfBirth: '2006-05-02' }), // 18 today
-  TestData.visitorInfoDto({ personId: 3, firstName: 'Visitor', lastName: 'Age 17y', dateOfBirth: '2006-05-03' }), // 18 tomorrow
-  TestData.visitorInfoDto({ personId: 4, firstName: 'Visitor', lastName: 'Age 16y', dateOfBirth: '2008-05-02' }), // 16 today
-  TestData.visitorInfoDto({ personId: 5, firstName: 'Visitor', lastName: 'Age 15y', dateOfBirth: '2008-05-03' }), // 16 tomorrow
-  TestData.visitorInfoDto({ personId: 6, firstName: 'Visitor', lastName: 'Age 10y', dateOfBirth: '2014-05-02' }),
-  TestData.visitorInfoDto({ personId: 7, firstName: 'Visitor', lastName: 'Age 1y', dateOfBirth: '2023-05-02' }),
-  TestData.visitorInfoDto({ personId: 8, firstName: 'Visitor', lastName: 'Age 4m', dateOfBirth: '2024-01-02' }),
+  TestData.visitorInfoDto({ visitorId: 1, firstName: 'Visitor', lastName: 'Age 20y', dateOfBirth: '2004-04-01' }),
+  TestData.visitorInfoDto({ visitorId: 2, firstName: 'Visitor', lastName: 'Age 18y', dateOfBirth: '2006-05-02' }), // 18 today
+  TestData.visitorInfoDto({ visitorId: 3, firstName: 'Visitor', lastName: 'Age 17y', dateOfBirth: '2006-05-03' }), // 18 tomorrow
+  TestData.visitorInfoDto({ visitorId: 4, firstName: 'Visitor', lastName: 'Age 16y', dateOfBirth: '2008-05-02' }), // 16 today
+  TestData.visitorInfoDto({ visitorId: 5, firstName: 'Visitor', lastName: 'Age 15y', dateOfBirth: '2008-05-03' }), // 16 tomorrow
+  TestData.visitorInfoDto({ visitorId: 6, firstName: 'Visitor', lastName: 'Age 10y', dateOfBirth: '2014-05-02' }),
+  TestData.visitorInfoDto({ visitorId: 7, firstName: 'Visitor', lastName: 'Age 1y', dateOfBirth: '2023-05-02' }),
+  TestData.visitorInfoDto({ visitorId: 8, firstName: 'Visitor', lastName: 'Age 4m', dateOfBirth: '2024-01-02' }),
 ]
 
 beforeEach(() => {

@@ -10,19 +10,19 @@ context('Booking journey', () => {
   const prisoner = TestData.prisonerInfoDto()
   const visitors = [
     TestData.visitorInfoDto({
-      personId: 1,
+      visitorId: 1,
       firstName: 'Adult',
       lastName: 'One',
       dateOfBirth: format(subYears(today, 25), 'yyyy-MM-dd'), // 25-year-old
     }),
     TestData.visitorInfoDto({
-      personId: 2,
+      visitorId: 2,
       firstName: 'Child',
       lastName: 'One',
       dateOfBirth: format(subYears(today, 12), 'yyyy-MM-dd'), // 12-year-old
     }),
     TestData.visitorInfoDto({
-      personId: 3,
+      visitorId: 3,
       firstName: 'Child',
       lastName: 'Two',
       dateOfBirth: format(subYears(today, 5), 'yyyy-MM-dd'), // 5-year-old
