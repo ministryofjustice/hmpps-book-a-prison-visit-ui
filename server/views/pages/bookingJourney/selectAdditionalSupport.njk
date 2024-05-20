@@ -1,12 +1,11 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageTitle = "Any additional support needs?" %}
 
-{% set backLinkHref = "/" %}
+{% set backLinkHref = "/book-a-visit/select-date-and-time" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -21,7 +20,7 @@
 
       <form action="/book-a-visit/select-additional-support" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        {% set otherSupportHtml %}
+        {% set supportDetailsHtml %}
           {{ govukInput({
             id: "additionalSupport",
             name: "additionalSupport",
@@ -55,7 +54,7 @@
               },
               checked: formValues.additionalSupportRequired == "yes",
               conditional: {
-                html: otherSupportHtml
+                html: supportDetailsHtml
               }
             },
             {

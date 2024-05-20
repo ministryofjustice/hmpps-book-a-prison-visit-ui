@@ -4,14 +4,11 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { FlashData } from '../../@types/bapv'
 
 let app: Express
 
-const bookerService = createMockBookerService()
-const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const url = '/book-a-visit/select-additional-support'
@@ -21,14 +18,7 @@ const prisoner = TestData.prisonerInfoDto()
 const prison = TestData.prisonDto()
 const visitors = [
   TestData.visitorInfoDto({ personId: 1, firstName: 'Visitor', lastName: 'One', dateOfBirth: '1980-02-03' }),
-  TestData.visitorInfoDto({ personId: 2, firstName: 'Visitor', lastName: 'Two', dateOfBirth: '1990-09-03' }),
-  TestData.visitorInfoDto({ personId: 3, firstName: 'Visitor', lastName: 'Three', dateOfBirth: '2024-03-01' }),
 ]
-
-afterEach(() => {
-  jest.resetAllMocks()
-  jest.useRealTimers()
-})
 
 describe('Select additional support page', () => {
   let flashData: FlashData
@@ -43,7 +33,7 @@ describe('Select additional support page', () => {
         bookingJourney: { allVisitors: visitors, selectedVisitors: visitors, prisoner, prison },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ sessionData })
     })
 
     it('should render additional support page', () => {
@@ -53,7 +43,7 @@ describe('Select additional support page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Any additional support needs\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/')
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-a-visit/select-date-and-time')
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
 
           expect($('[data-test=prison-name]').text().trim()).toContain('Hewell (HMP)')
@@ -99,7 +89,7 @@ describe('Select additional support page', () => {
           prisoner,
           prison,
           allVisitors: visitors,
-          selectedVisitors: [visitors[0], visitors[2]],
+          selectedVisitors: [visitors[0]],
         },
       } as SessionData
 
@@ -122,7 +112,7 @@ describe('Select additional support page', () => {
               prisoner,
               prison,
               allVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]],
+              selectedVisitors: [visitors[0]],
               visitorSupport: 'Wheelchair access',
             },
           } as SessionData)
@@ -160,7 +150,7 @@ describe('Select additional support page', () => {
               prisoner,
               prison,
               allVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]],
+              selectedVisitors: [visitors[0]],
             },
           } as SessionData)
         })

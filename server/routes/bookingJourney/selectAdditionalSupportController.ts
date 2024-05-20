@@ -1,9 +1,8 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { BookerService } from '../../services'
 
-export default class AdditionalSupportController {
-  public constructor(private readonly bookerService: BookerService) {}
+export default class SelectAdditionalSupportController {
+  public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -22,7 +21,7 @@ export default class AdditionalSupportController {
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
-        req.flash('errors', errors.array() as [])
+        req.flash('errors', errors.array())
         req.flash('formValues', req.body)
         return res.redirect(`/book-a-visit/select-additional-support`)
       }

@@ -1,8 +1,7 @@
 import type { RequestHandler } from 'express'
-import { BookerService } from '../../services'
 
-export default class MainContactController {
-  public constructor(private readonly bookerService: BookerService) {}
+export default class SelectMainContactController {
+  public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
