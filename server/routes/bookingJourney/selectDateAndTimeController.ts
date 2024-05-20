@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import { VisitSessionsService } from '../../services'
 
-export default class DateAndTimeController {
+export default class SelectDateAndTimeController {
   public constructor(private readonly visitSessionsService: VisitSessionsService) {}
 
   public view(): RequestHandler {

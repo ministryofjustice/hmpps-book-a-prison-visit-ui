@@ -19,6 +19,8 @@ export type BookingJourneyData = {
 
   // selected visitors for this visit
   selectedVisitors?: VisitorInfoDto[]
+
+  visitorSupport?: string
 }
 
 export type FlashData = {
