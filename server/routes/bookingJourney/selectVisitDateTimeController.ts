@@ -29,12 +29,9 @@ export default class SelectVisitDateTimeController {
     return async (req, res) => {
       const { visitSession } = req.body
 
-      const sessionDate = visitSession.split('_')[0]
-      const sessionTemplateReference = visitSession.split('_')[1]
+      console.log('Selected visit session: ', visitSession)
 
-      return res.send(
-        `<pre>Visit session selected:\n\nsessionDate: ${sessionDate}\n\nsessionTemplateReference: ${sessionTemplateReference}</pre>`,
-      )
+      return res.redirect('/book-a-visit/select-additional-support')
     }
   }
 }
