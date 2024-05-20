@@ -48,18 +48,18 @@ context('Booking journey', () => {
     }),
     TestData.availableVisitSessionDto({
       sessionDate: format(in5Days, DateFormats.ISO_DATE),
-      sessionTemplateReference: 'b',
+      sessionTemplateReference: 'c',
       sessionTimeSlot: { startTime: '14:00', endTime: '15:00' },
     }),
     TestData.availableVisitSessionDto({
       sessionDate: format(in10Days, DateFormats.ISO_DATE),
-      sessionTemplateReference: 'c',
+      sessionTemplateReference: 'd',
       sessionTimeSlot: { startTime: '14:00', endTime: '15:00' },
     }),
     // next month - testing multiple months
     TestData.availableVisitSessionDto({
       sessionDate: format(in35Days, DateFormats.ISO_DATE),
-      sessionTemplateReference: 'd',
+      sessionTemplateReference: 'e',
       sessionTimeSlot: { startTime: '09:00', endTime: '11:00' },
     }),
   ]

@@ -27,13 +27,13 @@ export default class SelectVisitDateTimeController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { visitSlot } = req.body
+      const { visitSession } = req.body
 
-      const sessionDate = visitSlot.split('_')[0]
-      const sessionTemplateReference = visitSlot.split('_')[1]
+      const sessionDate = visitSession.split('_')[0]
+      const sessionTemplateReference = visitSession.split('_')[1]
 
       return res.send(
-        `<pre>Visit slot selected:\n\nsessionDate: ${sessionDate}\n\nsessionTemplateReference: ${sessionTemplateReference}</pre>`,
+        `<pre>Visit session selected:\n\nsessionDate: ${sessionDate}\n\nsessionTemplateReference: ${sessionTemplateReference}</pre>`,
       )
     }
   }

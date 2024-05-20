@@ -20,14 +20,14 @@
         can attend are shown.
       </p>
 
-      <nav class="vsip-calendar" aria-label="Visit date selection calendar" role="navigation">
+      <nav class="visits-calendar" aria-label="Visit date selection calendar" role="navigation">
         {# Loop over months #}
         {% for monthName, monthData in calendar %}
           <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy') }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}
-            <ul class="govuk-list vsip-calendar__day-headings" aria-hidden="true">
+            <ul class="govuk-list visits-calendar__day-headings" aria-hidden="true">
               <li>M<span>on</span></li>
               <li>T<span>ue</span></li>
               <li>W<span>ed</span></li>
@@ -38,20 +38,20 @@
             </ul>
           {% endif %}
 
-          <ul class="govuk-list vsip-calendar__month">
+          <ul class="govuk-list visits-calendar__month">
             {# Days for this month #}
-            {% for date, slots in monthData %}
-              {%- set numberOfSlots = slots | length -%}
-              <li data-date="{{ date }}" class="vsip-calendar__day
-                {%- if loop.first %} vsip-calendar__day--start-col-{{ date | formatDate('i') }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
-                {%- if selectedDate == date %} vsip-calendar__day--selected
+            {% for date, sessions in monthData %}
+              {%- set numberOfSessions = sessions | length -%}
+              <li data-date="{{ date }}" class="visits-calendar__day
+                {%- if loop.first %} visits-calendar__day--start-col-{{ date | formatDate('i') }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
+                {%- if selectedDate == date %} visits-calendar__day--selected
                 {%- endif %}"
-                {%- if not numberOfSlots %}aria-hidden="true"{% endif %}>
+                {%- if not numberOfSessions %}aria-hidden="true"{% endif %}>
 
-                {%- if numberOfSlots %}
+                {%- if numberOfSessions %}
                   <a id="day-link-{{ date }}" href="#day-group-{{ date }}">
                     {{ date | formatDate("d") }}
-                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - {{ numberOfSlots }} visit {{ "time" | pluralise(numberOfSlots )}} available</span>
+                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - {{ numberOfSessions }} visit {{ "time" | pluralise(numberOfSessions )}} available</span>
                   </a>
                 {% else %}
                     <span>{{ date | formatDate("d") }}</span>
@@ -66,24 +66,24 @@
       <form action="/book-a-visit/select-date-and-time" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {# Build radio visit slot items from months/dates/slots data #}
+        {# Build radio visit session items from months/dates/sessions data #}
         {% for monthName, monthData in calendar %}
-          {% for date, slots in monthData %}
-            {% if slots | length %}
-              {% set visitSlotItems = [] %}
-              {% for slot in slots %}
-                {% set visitSlotItems = (visitSlotItems.push({
-                  value: date + "_" + slot.reference,
-                  html: (slot.startTime | formatTime) + " to " + (slot.endTime | formatTime) +
-                   ' <span class="vsip-calendar__slot-duration">(' + (slot.startTime | formatTimeDuration(slot.endTime)) + ')</span>'
-                }), visitSlotItems) %}
+          {% for date, sessions in monthData %}
+            {% if sessions | length %}
+              {% set visitSessionItems = [] %}
+              {% for session in sessions %}
+                {% set visitSessionItems = (visitSessionItems.push({
+                  value: date + "_" + session.reference,
+                  html: (session.startTime | formatTime) + " to " + (session.endTime | formatTime) +
+                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>'
+                }), visitSessionItems) %}
               {% endfor %}
 
               {{ govukRadios({
-                name: "visitSlot",
+                name: "visitSession",
                 idPrefix: "date-" + date,
                 formGroup: {
-                  classes: "vsip-calendar__day-group",
+                  classes: "visits-calendar__day-group",
                   attributes: { "data-date": date },
                   afterInputs: {
                     html: '<p class="govuk-!-margin-top-5">' +
@@ -102,7 +102,7 @@
                   text: "You can only choose one option",
                   classes: "govuk-visually-hidden"
                 },
-                items: visitSlotItems
+                items: visitSessionItems
               }) }}
             {% endif %}
           {% endfor %}
@@ -121,5 +121,5 @@
 {% endblock %}
 
 {% block pageScripts %}
-<script src="/assets/vsipCalendar.js"></script>
+<script src="/assets/visitsCalendar.js"></script>
 {% endblock %}
