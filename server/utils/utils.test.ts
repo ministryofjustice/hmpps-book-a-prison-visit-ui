@@ -1,4 +1,3 @@
-import { formatDuration } from 'date-fns'
 import { convertToTitleCase, formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
 
 describe('convert to title case', () => {
