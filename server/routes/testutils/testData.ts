@@ -1,5 +1,6 @@
 import type {
   AuthDetailDto,
+  AvailableVisitSessionDto,
   BookerReference,
   PrisonDto,
   PrisonerInfoDto,
@@ -13,6 +14,18 @@ export default class TestData {
     phoneNumber = undefined,
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
 
+  static availableVisitSessionDto = ({
+    sessionDate = '2024-05-01',
+    sessionTemplateReference = 'aaa-bbb-ccc',
+    sessionTimeSlot = { startTime: '10:00', endTime: '11:30' },
+    sessionRestriction = 'OPEN',
+  }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({
+    sessionDate,
+    sessionTemplateReference,
+    sessionTimeSlot,
+    sessionRestriction,
+  })
+
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static prisonDto = ({
@@ -21,9 +34,9 @@ export default class TestData {
     active = true,
     policyNoticeDaysMax = 28,
     policyNoticeDaysMin = 2,
-    maxTotalVisitors = 6,
+    maxTotalVisitors = 4,
     maxAdultVisitors = 2,
-    maxChildVisitors = 4,
+    maxChildVisitors = 3,
     adultAgeYears = 16,
     excludeDates = [],
     clients = [],

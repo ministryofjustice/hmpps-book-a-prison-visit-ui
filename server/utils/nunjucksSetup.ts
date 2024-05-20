@@ -4,7 +4,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { FieldValidationError } from 'express-validator'
-import { formatDate, initialiseName } from './utils'
+import { formatDate, initialiseName, pluralise } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 
@@ -83,7 +83,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('initialiseName', initialiseName)
 
-  njkEnv.addFilter('pluralise', (word, count, plural = `${word}s`) => (count === 1 ? word : plural))
+  njkEnv.addFilter('pluralise', pluralise)
 
   return njkEnv
 }

@@ -2,6 +2,7 @@ import nock from 'nock'
 import config from '../config'
 import OrchestrationApiClient from './orchestrationApiClient'
 import TestData from '../routes/testutils/testData'
+import { AvailableVisitSessionDto } from './orchestrationApiTypes'
 
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
@@ -83,6 +84,32 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getPrison(prison.code)
 
       expect(result).toStrictEqual(prison)
+    })
+  })
+
+  describe('getVisitSessions', () => {
+    it('should get available visit sessions for prison / prisoner / visitors', async () => {
+      const prisoner = TestData.prisonerInfoDto()
+      const visitorIds = [1, 2]
+      const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
+
+      fakeOrchestrationApi
+        .get('/visit-sessions/available')
+        .query({
+          prisonId: prisoner.prisonCode,
+          prisonerId: prisoner.prisonerNumber,
+          visitors: visitorIds.join(','),
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visitSessions)
+
+      const result = await orchestrationApiClient.getVisitSessions(
+        prisoner.prisonCode,
+        prisoner.prisonerNumber,
+        visitorIds,
+      )
+
+      expect(result).toStrictEqual(visitSessions)
     })
   })
 })

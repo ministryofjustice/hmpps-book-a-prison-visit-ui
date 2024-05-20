@@ -84,40 +84,4 @@ describe('Nunjucks Filters', () => {
       expect(result).toEqual(null)
     })
   })
-
-  describe('pluralise', () => {
-    describe('Regular plurals', () => {
-      it('should return plural form when count is 0', () => {
-        const result = njk.getFilter('pluralise')('table', 0)
-        expect(result).toEqual('tables')
-      })
-
-      it('should return singular form when count is 1', () => {
-        const result = njk.getFilter('pluralise')('table', 1)
-        expect(result).toEqual('table')
-      })
-
-      it('should return plural form when count is 2', () => {
-        const result = njk.getFilter('pluralise')('table', 2)
-        expect(result).toEqual('tables')
-      })
-    })
-
-    describe('Irregular plurals', () => {
-      it('should return plural form when count is 0', () => {
-        const result = njk.getFilter('pluralise')('child', 0, 'children')
-        expect(result).toEqual('children')
-      })
-
-      it('should return singular form when count is 1', () => {
-        const result = njk.getFilter('pluralise')('child', 1, 'children')
-        expect(result).toEqual('child')
-      })
-
-      it('should return plural form when count is 2', () => {
-        const result = njk.getFilter('pluralise')('child', 2, 'children')
-        expect(result).toEqual('children')
-      })
-    })
-  })
 })

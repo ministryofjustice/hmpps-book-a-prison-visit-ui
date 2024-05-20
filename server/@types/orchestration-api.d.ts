@@ -701,7 +701,6 @@ export interface components {
       totalElements?: number
       first?: boolean
       last?: boolean
-      content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       size?: number
       /** Format: int32 */
@@ -710,18 +709,19 @@ export interface components {
       pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject'][]
-      paged?: boolean
-      unpaged?: boolean
-      /** Format: int32 */
-      pageNumber?: number
       /** Format: int32 */
       pageSize?: number
+      /** Format: int32 */
+      pageNumber?: number
+      unpaged?: boolean
+      paged?: boolean
     }
     SortObject: {
       direction?: string
@@ -927,11 +927,11 @@ export interface components {
       sessionTemplateReference: string
       sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
       /**
-       * @description Visit Restriction
+       * @description Session Restriction
        * @example OPEN
        * @enum {string}
        */
-      visitRestriction: 'OPEN' | 'CLOSED'
+      sessionRestriction: 'OPEN' | 'CLOSED'
     }
     GetDlqResult: {
       /** Format: int32 */
