@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns'
+import { format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -24,12 +24,35 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export const formatDate = (dateToFormat: string, dateFormat = 'd MMMM yyyy'): string | null => {
-  if (typeof dateFormat !== 'string') return null
+export const formatDate = (date: string, dateFormat = 'd MMMM yyyy'): string => {
   try {
-    return dateToFormat ? format(parseISO(dateToFormat), dateFormat) : null
+    return format(parseISO(date), dateFormat)
   } catch (error) {
-    return null
+    return ''
+  }
+}
+
+export const formatTime = (time: string): string => {
+  try {
+    const referenceDate = new Date()
+    const parsedTime = parse(time, 'HH:mm', referenceDate)
+    return format(parsedTime, 'h:mmaaa').replace(':00', '')
+  } catch (error) {
+    return ''
+  }
+}
+
+export const formatTimeDuration = (startTime: string, endTime: string): string => {
+  try {
+    const referenceDate = new Date()
+    const start = parse(startTime, 'HH:mm', referenceDate)
+    const end = parse(endTime, 'HH:mm', referenceDate)
+
+    const duration = intervalToDuration({ start, end })
+
+    return formatDuration(duration, { delimiter: ' and ' })
+  } catch (error) {
+    return ''
   }
 }
 

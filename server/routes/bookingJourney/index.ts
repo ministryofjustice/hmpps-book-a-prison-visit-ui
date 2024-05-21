@@ -5,7 +5,7 @@ import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
 import SelectPrisonerController from './selectPrisonerController'
 import SelectVisitorsController from './selectVisitorsController'
-import SelectDateAndTimeController from './selectDateAndTimeController'
+import SelectVisitDateTimeController from './selectVisitDateTimeController'
 import SelectAdditionalSupportController from './selectAdditionalSupportController'
 import SelectMainContactController from './selectMainContactController'
 
@@ -19,7 +19,7 @@ export default function routes(services: Services): Router {
 
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
-  const selectDateAndTimeController = new SelectDateAndTimeController(services.visitSessionsService)
+  const selectVisitDateTimeController = new SelectVisitDateTimeController(services.visitSessionsService)
   const selectAdditionalSupportController = new SelectAdditionalSupportController()
   const selectMainContactController = new SelectMainContactController()
 
@@ -31,7 +31,8 @@ export default function routes(services: Services): Router {
 
   postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
 
-  get('/select-date-and-time', selectDateAndTimeController.view())
+  get('/select-date-and-time', selectVisitDateTimeController.view())
+  post('/select-date-and-time', selectVisitDateTimeController.submit())
 
   get('/select-additional-support', selectAdditionalSupportController.view())
 

@@ -1,7 +1,7 @@
-const calendarDayClass = 'vsip-calendar__day'
-const calendarDaySelectedClass = 'vsip-calendar__day--selected'
-const calendarDayGroupClass = 'vsip-calendar__day-group'
-const calendarDayGroupActiveClass = 'vsip-calendar__day-group--active'
+const calendarDayClass = 'visits-calendar__day'
+const calendarDaySelectedClass = 'visits-calendar__day--selected'
+const calendarDayGroupClass = 'visits-calendar__day-group'
+const calendarDayGroupActiveClass = 'visits-calendar__day-group--active'
 
 function handleSelectDate(event) {
   event.preventDefault()
@@ -9,24 +9,24 @@ function handleSelectDate(event) {
 
   // remove highlighted day
   document.querySelector(`.${calendarDaySelectedClass}`).classList.remove(calendarDaySelectedClass)
-  
+
   // hide active form group
   document.querySelector(`.${calendarDayGroupActiveClass}`).classList.remove(calendarDayGroupActiveClass)
 
   // highlight selected day
   document.querySelector(`.${calendarDayClass}[data-date='${dateToShow}']`).classList.add(calendarDaySelectedClass)
 
-  // show selected day's slots
+  // show selected day's sessions
   const selectedFormGroup = document.querySelector(`.${calendarDayGroupClass}[data-date='${dateToShow}']`)
   selectedFormGroup.classList.add(calendarDayGroupActiveClass)
 
-  // scroll to slots if first input is not in viewport
-  const firstSlot = document.getElementById(`date-${dateToShow}`)
-  const isFirstSlotInViewport = window.innerHeight <= firstSlot.getBoundingClientRect().bottom
-  if (isFirstSlotInViewport) {
-    selectedFormGroup.scrollIntoView({ behavior: "smooth"})
+  // scroll to sessions if first input is not in viewport
+  const firstSession = document.getElementById(`date-${dateToShow}`)
+  const isFirstSessionInViewport = window.innerHeight <= firstSession.getBoundingClientRect().bottom
+  if (isFirstSessionInViewport) {
+    selectedFormGroup.scrollIntoView({ behavior: 'smooth' })
   }
-  firstSlot.focus()
+  firstSession.focus()
 }
 
 if (document.body.classList.contains('govuk-frontend-supported')) {
@@ -35,12 +35,12 @@ if (document.body.classList.contains('govuk-frontend-supported')) {
     dayLink.addEventListener('click', handleSelectDate)
   })
 
-
   // set the default selected day on load
   const selectedDate = document.querySelector(`.${calendarDaySelectedClass}`)?.dataset?.date
 
   if (selectedDate) {
-    document.querySelector(`.${calendarDayGroupClass}[data-date='${selectedDate}']`)
+    document
+      .querySelector(`.${calendarDayGroupClass}[data-date='${selectedDate}']`)
       .classList.add(calendarDayGroupActiveClass)
   }
 }
