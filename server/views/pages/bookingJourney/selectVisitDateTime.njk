@@ -1,0 +1,125 @@
+{% extends "../../partials/layout.njk" %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Choose the visit time" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">Choose the visit time</h1>
+      <p>Select one visit time. It will be reserved for 10 minutes.</p>
+      <p>
+        Only times that
+          <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+        can attend are shown.
+      </p>
+
+      <nav class="visits-calendar" aria-label="Visit date selection calendar" role="navigation">
+        {# Loop over months #}
+        {% for monthName, monthData in calendar %}
+          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy') }}</h2>
+
+          {# Day name headings on first month only #}
+          {% if loop.first %}
+            <ul class="govuk-list visits-calendar__day-headings" aria-hidden="true">
+              <li>M<span>on</span></li>
+              <li>T<span>ue</span></li>
+              <li>W<span>ed</span></li>
+              <li>T<span>hu</span></li>
+              <li>F<span>ri</span></li>
+              <li>S<span>at</span></li>
+              <li>S<span>un</span></li>
+            </ul>
+          {% endif %}
+
+          <ul class="govuk-list visits-calendar__month">
+            {# Days for this month #}
+            {% for date, sessions in monthData %}
+              {%- set numberOfSessions = sessions | length -%}
+              <li data-date="{{ date }}" class="visits-calendar__day
+                {%- if loop.first %} visits-calendar__day--start-col-{{ date | formatDate('i') }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
+                {%- if selectedDate == date %} visits-calendar__day--selected
+                {%- endif %}"
+                {%- if not numberOfSessions %}aria-hidden="true"{% endif %}>
+
+                {%- if numberOfSessions %}
+                  <a id="day-link-{{ date }}" href="#day-group-{{ date }}">
+                    {{ date | formatDate("d") }}
+                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - {{ numberOfSessions }} visit {{ "time" | pluralise(numberOfSessions )}} available</span>
+                  </a>
+                {% else %}
+                    <span>{{ date | formatDate("d") }}</span>
+                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - no visit times available</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </nav>
+
+      <form action="/book-a-visit/select-date-and-time" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {# Build radio visit session items from months/dates/sessions data #}
+        {% for monthName, monthData in calendar %}
+          {% for date, sessions in monthData %}
+            {% if sessions | length %}
+              {% set visitSessionItems = [] %}
+              {% for session in sessions %}
+                {% set visitSessionItems = (visitSessionItems.push({
+                  value: date + "_" + session.reference,
+                  html: (session.startTime | formatTime) + " to " + (session.endTime | formatTime) +
+                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>'
+                }), visitSessionItems) %}
+              {% endfor %}
+
+              {{ govukRadios({
+                name: "visitSession",
+                idPrefix: "date-" + date,
+                formGroup: {
+                  classes: "visits-calendar__day-group",
+                  attributes: { "data-date": date },
+                  afterInputs: {
+                    html: '<p class="govuk-!-margin-top-5">' +
+                      '<a class="govuk-visually-hidden-focusable" href="#day-link-' +
+                      date + '">Choose a different date above</a></p>'
+                  }
+                },
+                fieldset: {
+                  attributes: { id: 'day-group-' + date },
+                  legend: {
+                    text: date | formatDate("EEEE d MMMM yyyy"),
+                    classes: "govuk-fieldset__legend--s"
+                  }
+                },
+                hint: {
+                  text: "You can only choose one option",
+                  classes: "govuk-visually-hidden"
+                },
+                items: visitSessionItems
+              }) }}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/visitsCalendar.js"></script>
+{% endblock %}
