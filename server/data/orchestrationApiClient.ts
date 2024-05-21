@@ -26,20 +26,17 @@ export default class OrchestrationApiClient {
   }
 
   async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
-    return this.restClient.get({ path: `/public/booker/${bookerReference}/prisoners` })
+    return this.restClient.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` })
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
-    return this.restClient.get({ path: `/public/booker/${bookerReference}/prisoners/${prisonerNumber}/visitors` })
-  }
-
-  // orchestration-prisons-config-controller
-
-  async getPrison(prisonCode: string): Promise<PrisonDto> {
-    return this.restClient.get({ path: `/config/prisons/prison/${prisonCode}` })
+    return this.restClient.get({
+      path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerNumber}/permitted/visitors`,
+    })
   }
 
   // orchestration-sessions-controller
+
   async getVisitSessions(
     prisonId: string,
     prisonerId: string,
@@ -49,5 +46,11 @@ export default class OrchestrationApiClient {
       path: '/visit-sessions/available',
       query: new URLSearchParams({ prisonId, prisonerId, visitors: visitorIds.join(',') }).toString(),
     })
+  }
+
+  // orchestration-prisons-config-controller
+
+  async getPrison(prisonCode: string): Promise<PrisonDto> {
+    return this.restClient.get({ path: `/config/prisons/prison/${prisonCode}` })
   }
 }

@@ -33,7 +33,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/orchestration/public/booker/${bookerReference.value}/prisoners`,
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners`,
       },
       response: {
         status: 200,
@@ -54,25 +54,12 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/orchestration/public/booker/${bookerReference.value}/prisoners/${prisonerNumber}/visitors`,
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/permitted/visitors`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: visitors,
-      },
-    }),
-
-  stubGetPrison: (prisonDto: PrisonDto = TestData.prisonDto()): SuperAgentRequest =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/orchestration/config/prisons/prison/${prisonDto.code}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: prisonDto,
       },
     }),
 
@@ -101,6 +88,19 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: visitSessions,
+      },
+    }),
+
+  stubGetPrison: (prisonDto: PrisonDto = TestData.prisonDto()): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/config/prisons/prison/${prisonDto.code}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: prisonDto,
       },
     }),
 

@@ -138,19 +138,19 @@ export interface paths {
   '/queue-admin/get-dlq-messages/{dlqName}': {
     get: operations['getDlqMessages']
   }
-  '/public/booker/{bookerReference}/prisoners': {
+  '/public/booker/{bookerReference}/permitted/prisoners': {
     /**
-     * Get prisoners associated with a booker.
-     * @description Get prisoners associated with a booker.
+     * Get permitted prisoners associated with a booker.
+     * @description Get permitted prisoners associated with a booker.
      */
-    get: operations['getPrisonersForBooker']
+    get: operations['getPermittedPrisonersForBooker']
   }
-  '/public/booker/{bookerReference}/prisoners/{prisonerNumber}/visitors': {
+  '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/permitted/visitors': {
     /**
-     * Get visitors for a prisoner associated with that booker.
-     * @description Get visitors for a prisoner associated with that booker.
+     * Get permitted visitors for a prisoner associated with that booker.
+     * @description Get permitted visitors for a prisoner associated with that booker.
      */
-    get: operations['getVisitorsForPrisoner']
+    get: operations['getPermittedVisitorsForPrisoner']
   }
   '/prisoner/{prisonId}/{prisonerId}/profile': {
     /**
@@ -703,10 +703,10 @@ export interface components {
       last?: boolean
       /** Format: int32 */
       size?: number
+      content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
-      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
@@ -720,8 +720,8 @@ export interface components {
       pageSize?: number
       /** Format: int32 */
       pageNumber?: number
-      unpaged?: boolean
       paged?: boolean
+      unpaged?: boolean
     }
     SortObject: {
       direction?: string
@@ -962,14 +962,14 @@ export interface components {
        */
       prisonCode: string
     }
-    /** @description A contact for a prisoner */
+    /** @description A visitor for a prisoner */
     VisitorInfoDto: {
       /**
        * Format: int64
        * @description Identifier for this contact (Person in NOMIS)
        * @example 5871791
        */
-      personId: number
+      visitorId: number
       /**
        * @description First name
        * @example John
@@ -2224,10 +2224,10 @@ export interface operations {
     }
   }
   /**
-   * Get prisoners associated with a booker.
-   * @description Get prisoners associated with a booker.
+   * Get permitted prisoners associated with a booker.
+   * @description Get permitted prisoners associated with a booker.
    */
-  getPrisonersForBooker: {
+  getPermittedPrisonersForBooker: {
     parameters: {
       path: {
         /**
@@ -2265,28 +2265,28 @@ export interface operations {
     }
   }
   /**
-   * Get visitors for a prisoner associated with that booker.
-   * @description Get visitors for a prisoner associated with that booker.
+   * Get permitted visitors for a prisoner associated with that booker.
+   * @description Get permitted visitors for a prisoner associated with that booker.
    */
-  getVisitorsForPrisoner: {
+  getPermittedVisitorsForPrisoner: {
     parameters: {
       path: {
         bookerReference: string
         /**
-         * @description Prisoner Number for whom visitors need to be returned.
+         * @description Prisoner Id for whom visitors need to be returned.
          * @example A12345DC
          */
-        prisonerNumber: string
+        prisonerId: string
       }
     }
     responses: {
-      /** @description Returned visitors for a prisoner associated with that booker */
+      /** @description Returned permitted permitted visitors for a prisoner associated with that booker */
       200: {
         content: {
           '*/*': components['schemas']['VisitorInfoDto'][]
         }
       }
-      /** @description Incorrect request to get visitors for a prisoner associated with that booker */
+      /** @description Incorrect request to get permitted visitors for a prisoner associated with that booker */
       400: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -2298,7 +2298,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Incorrect permissions to get visitors for a prisoner associated with that booker */
+      /** @description Incorrect permissions to get permitted visitors for a prisoner associated with that booker */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
