@@ -32,7 +32,11 @@ export default function routes(services: Services): Router {
   postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
 
   get('/select-date-and-time', selectVisitDateTimeController.view())
-  post('/select-date-and-time', selectVisitDateTimeController.submit())
+  postWithValidation(
+    '/select-date-and-time',
+    selectVisitDateTimeController.validate(),
+    selectVisitDateTimeController.submit(),
+  )
 
   get('/select-additional-support', selectAdditionalSupportController.view())
 

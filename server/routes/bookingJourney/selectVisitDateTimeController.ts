@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express'
+import { ValidationChain, body, validationResult } from 'express-validator'
 import { VisitSessionsService } from '../../services'
 
 export default class SelectVisitDateTimeController {
@@ -18,6 +19,8 @@ export default class SelectVisitDateTimeController {
       )
 
       res.render('pages/bookingJourney/selectVisitDateTime', {
+        errors: req.flash('errors'),
+        formValues: req.flash('formValues')?.[0] || {},
         calendar,
         selectedDate: firstSessionDate,
         prisoner,
@@ -27,11 +30,22 @@ export default class SelectVisitDateTimeController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', req.body)
+        return res.redirect('/book-a-visit/select-date-and-time')
+      }
+
       // const { visitSession } = req.body
       // TODO validate visit session selection and save to req.session
       // logger.info('Selected visit session: ', visitSession)
 
       return res.redirect('/book-a-visit/select-additional-support')
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [body('visitSession').notEmpty().withMessage('No visit time selected')]
   }
 }
