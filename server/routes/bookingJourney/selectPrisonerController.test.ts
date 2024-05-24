@@ -52,7 +52,7 @@ describe('Select prisoner', () => {
 
     return request(app)
       .post('/book-a-visit/select-prisoner')
-      .send({ prisonerNumber: 'INVALID' })
+      .send({ displayId: 'INVALID' })
       .expect(404)
       .expect(res => {
         const $ = cheerio.load(res.text)

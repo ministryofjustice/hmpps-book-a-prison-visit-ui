@@ -15,7 +15,7 @@
         <form action="/book-a-visit/select-prisoner" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-          <input type="hidden" name="prisonerNumber" value="{{ prisoners[0].prisonerNumber }}">
+          <input type="hidden" name="displayId" value="{{ prisoners[0].displayId }}">
 
           {{ govukButton({
             text: "Start",

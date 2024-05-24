@@ -2,6 +2,9 @@ import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AuthDetailDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 
+export interface Prisoner extends PrisonerInfoDto {
+  displayId: number
+}
 export default class BookerService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
@@ -18,11 +21,14 @@ export default class BookerService {
     return bookerReference
   }
 
-  async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
+  async getPrisoners(bookerReference: string): Promise<Prisoner[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    return orchestrationApiClient.getPrisoners(bookerReference)
+    const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
+    return prisoners.map((prisoner, index) => {
+      return { ...prisoner, displayId: index + 1 }
+    })
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
