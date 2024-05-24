@@ -44,7 +44,7 @@ export default class SelectVisitorsController {
       const { bookingJourney } = req.session
       const { visitorIds }: { visitorIds: number[] } = req.body
 
-      const selectedVisitors = bookingJourney.allVisitors.filter(visitor => visitorIds.includes(visitor.visitorId))
+      const selectedVisitors = bookingJourney.allVisitors.filter(visitor => visitorIds.includes(visitor.displayId))
 
       bookingJourney.selectedVisitors = selectedVisitors
 
@@ -60,12 +60,12 @@ export default class SelectVisitorsController {
         // filter out any invalid or duplicate visitorId values
         .customSanitizer((visitorIds: number[], meta) => {
           const req = meta.req as unknown as Express.Request
-          const allVisitorIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.visitorId)
+          const allDisplaysIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.displayId)
 
-          const validVisitorIds = visitorIds.filter(visitorId => allVisitorIds.includes(visitorId))
-          const uniqueValidVisitorIds = new Set(validVisitorIds)
+          const validDisplayIds = visitorIds.filter(visitorId => allDisplaysIds.includes(visitorId))
+          const uniqueDisplayIds = new Set(validDisplayIds)
 
-          return [...uniqueValidVisitorIds]
+          return [...uniqueDisplayIds]
         })
         .isArray({ min: 1 })
         .withMessage('No visitors selected')
@@ -84,7 +84,7 @@ export default class SelectVisitorsController {
           const { allVisitors } = req.session.bookingJourney
           const today = new Date()
           const visitorAges: number[] = visitorIds.map(visitorId => {
-            const { dateOfBirth } = allVisitors.find(v => v.visitorId === visitorId)
+            const { dateOfBirth } = allVisitors.find(v => v.displayId === visitorId)
             return differenceInYears(today, dateOfBirth)
           })
 
