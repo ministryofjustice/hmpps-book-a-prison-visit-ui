@@ -7,7 +7,7 @@ import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { FlashData } from '../../@types/bapv'
-import { VisitSessionsCalendar } from '../../services/visitSessionsService'
+import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
 
 let app: Express
 
@@ -38,6 +38,7 @@ const calendar: VisitSessionsCalendar = {
   },
 }
 const allVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
+const sessionRestriction: SessionRestriction = 'OPEN'
 
 const fakeDate = new Date('2024-05-28')
 
@@ -59,6 +60,7 @@ describe('Select visit date and time page', () => {
         calendar,
         firstSessionDate,
         allVisitSessionIds,
+        sessionRestriction,
       })
 
       flashData = {}
@@ -153,6 +155,7 @@ describe('Select visit date and time page', () => {
               allVisitors: [visitor],
               selectedVisitors: [visitor],
               allVisitSessionIds,
+              sessionRestriction,
             },
           } as SessionData)
         })

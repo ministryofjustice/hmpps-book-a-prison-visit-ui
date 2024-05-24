@@ -7,11 +7,12 @@ export default class SelectVisitDateTimeController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { prison, prisoner, selectedVisitors } = req.session.bookingJourney
+      const { bookingJourney } = req.session
+      const { prison, prisoner, selectedVisitors } = bookingJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
-      const { calendar, firstSessionDate, allVisitSessionIds } =
+      const { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction } =
         await this.visitSessionsService.getVisitSessionsCalendar(
           prisoner.prisonCode,
           prisoner.prisonerNumber,
@@ -19,9 +20,10 @@ export default class SelectVisitDateTimeController {
           prison.policyNoticeDaysMax,
         )
 
-      req.session.bookingJourney.allVisitSessionIds = allVisitSessionIds
+      // TODO if allVisitSessionIds.length === 0 then render a different page: 'No slots available' (VB-3713)
 
-      // TODO if availableVisitSessions.length === 0 then render a different page: 'No slots available' (VB-3713)
+      bookingJourney.allVisitSessionIds = allVisitSessionIds
+      bookingJourney.sessionRestriction = sessionRestriction
 
       res.render('pages/bookingJourney/selectVisitDateTime', {
         errors: req.flash('errors'),

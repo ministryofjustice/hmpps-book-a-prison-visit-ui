@@ -2,7 +2,8 @@ import nock from 'nock'
 import config from '../config'
 import OrchestrationApiClient from './orchestrationApiClient'
 import TestData from '../routes/testutils/testData'
-import { AvailableVisitSessionDto } from './orchestrationApiTypes'
+import { ApplicationDto, AvailableVisitSessionDto, CreateApplicationDto } from './orchestrationApiTypes'
+import { SessionRestriction } from '../services/visitSessionsService'
 
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
@@ -21,6 +22,46 @@ describe('orchestrationApiClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
+  })
+
+  describe('createVisitApplication', () => {
+    it('should return a new Visit Application', async () => {
+      const prisonerId = 'A1234BC'
+      const sessionTemplateReference = 'v9d.7ed.7u'
+      const sessionDate = '2024-05-01'
+      const applicationRestriction: SessionRestriction = 'OPEN'
+      const visitorIds = [1234, 2345]
+      const bookerReference = 'aaaa-bbbb-cccc'
+
+      const result = { reference: 'aaa-bbb-ccc' } as ApplicationDto
+
+      fakeOrchestrationApi
+        .post('/visits/application/slot/reserve', <CreateApplicationDto>{
+          prisonerId,
+          sessionTemplateReference,
+          sessionDate,
+          applicationRestriction,
+          visitors: visitorIds.map(id => {
+            return { nomisPersonId: id }
+          }),
+          userType: 'PUBLIC',
+          actionedBy: bookerReference,
+          allowOverBooking: false,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, result)
+
+      const output = await orchestrationApiClient.createVisitApplication(
+        prisonerId,
+        sessionTemplateReference,
+        sessionDate,
+        applicationRestriction,
+        visitorIds,
+        bookerReference,
+      )
+
+      expect(output).toStrictEqual(result)
+    })
   })
 
   describe('getBookerReference', () => {

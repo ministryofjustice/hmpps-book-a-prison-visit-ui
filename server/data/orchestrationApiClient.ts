@@ -1,19 +1,51 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import {
+  ApplicationDto,
   AuthDetailDto,
   AvailableVisitSessionDto,
   BookerReference,
+  CreateApplicationDto,
   PrisonDto,
   PrisonerInfoDto,
   VisitorInfoDto,
 } from './orchestrationApiTypes'
+import { type SessionRestriction } from '../services/visitSessionsService'
 
 export default class OrchestrationApiClient {
   private restClient: RestClient
 
   constructor(token: string) {
     this.restClient = new RestClient('orchestrationApiClient', config.apis.orchestration as ApiConfig, token)
+  }
+
+  // orchestration-applications-controller
+
+  async createVisitApplication(
+    prisonerId: string,
+    sessionTemplateReference: string,
+    sessionDate: string,
+    applicationRestriction: SessionRestriction,
+    visitorIds: number[],
+    bookerReference: string,
+  ): Promise<ApplicationDto> {
+    return this.restClient.post({
+      path: '/visits/application/slot/reserve',
+      data: <CreateApplicationDto>{
+        prisonerId,
+        sessionTemplateReference,
+        sessionDate,
+        applicationRestriction,
+        visitors: visitorIds.map(id => {
+          return {
+            nomisPersonId: id,
+          }
+        }),
+        userType: 'PUBLIC',
+        actionedBy: bookerReference,
+        allowOverBooking: false,
+      },
+    })
   }
 
   // public-booker-controller
