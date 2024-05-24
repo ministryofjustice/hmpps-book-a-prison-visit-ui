@@ -70,9 +70,6 @@ export default class TestData {
     dateOfBirth = '1980-02-21',
   }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ visitorId, firstName, lastName, dateOfBirth })
 
-  // doesn't work correctly and can't figure out what needs to change
-  // static visitor = ({ displayId = 1 }: Partial<Visitor> = {}): Visitor => ({ ...this.visitorInfoDto(), displayId })
-
   static visitor = ({
     displayId = 1,
     visitorId = 1234,
