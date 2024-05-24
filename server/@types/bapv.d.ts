@@ -1,6 +1,8 @@
 import { FieldValidationError } from 'express-validator'
 import { PrisonDto, PrisonerInfoDto } from '../data/orchestrationApiTypes'
 
+import { Visitor } from '../services/bookerService'
+
 export type Booker = {
   reference: string
   prisoners?: PrisonerInfoDto[] // prisoners this booker can book for
@@ -15,10 +17,10 @@ export type BookingJourneyData = {
   prison?: PrisonDto
 
   // all possible visitors for this visit
-  allVisitors?: Visitors[]
+  allVisitors?: Visitor[]
 
   // selected visitors for this visit
-  selectedVisitors?: Visitors[]
+  selectedVisitors?: Visitor[]
 
   visitorSupport?: string
 }
