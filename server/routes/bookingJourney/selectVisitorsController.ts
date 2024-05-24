@@ -44,7 +44,7 @@ export default class SelectVisitorsController {
       const { bookingJourney } = req.session
       const { visitorIds }: { visitorIds: number[] } = req.body
 
-      const selectedVisitors = bookingJourney.allVisitors.filter(visitor => visitorIds.includes(visitor.visitorId))
+      const selectedVisitors = bookingJourney.allVisitors.filter(visitor => visitorIds.includes(visitor.displayId))
 
       bookingJourney.selectedVisitors = selectedVisitors
 
@@ -60,7 +60,7 @@ export default class SelectVisitorsController {
         // filter out any invalid or duplicate visitorId values
         .customSanitizer((visitorIds: number[], meta) => {
           const req = meta.req as unknown as Express.Request
-          const allVisitorIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.visitorId)
+          const allVisitorIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.displayId)
 
           const validVisitorIds = visitorIds.filter(visitorId => allVisitorIds.includes(visitorId))
           const uniqueValidVisitorIds = new Set(validVisitorIds)
