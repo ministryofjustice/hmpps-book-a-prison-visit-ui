@@ -18,8 +18,6 @@ export default class SelectPrisonerController {
 
       const { displayId } = req.body
       if (displayId !== prisoner.displayId.toString()) {
-        console.log(typeof displayId)
-        console.log(typeof prisoner.displayId)
         throw new NotFound('Prisoner not found')
       }
 
