@@ -82,6 +82,7 @@ describe('Visit sessions service', () => {
           '2024-06-03': [],
         },
       }
+      const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
 
       const results = await visitSessionsService.getVisitSessionsCalendar(
         prisoner.prisonCode,
@@ -95,7 +96,11 @@ describe('Visit sessions service', () => {
         prisoner.prisonerNumber,
         visitorIds,
       )
-      expect(results).toStrictEqual({ calendar: expectedCalendar, firstSessionDate: expectedFirstSessionDate })
+      expect(results).toStrictEqual({
+        calendar: expectedCalendar,
+        firstSessionDate: expectedFirstSessionDate,
+        allVisitSessionIds: expectedAllVisitSessionIds,
+      })
     })
 
     it('should return an empty VisitSessionsCalendar if no available visit sessions', async () => {
@@ -106,6 +111,7 @@ describe('Visit sessions service', () => {
 
       const expectedFirstSessionDate = ''
       const expectedCalendar: VisitSessionsCalendar = {}
+      const expectedAllVisitSessionIds: string[] = []
 
       const results = await visitSessionsService.getVisitSessionsCalendar(
         prisoner.prisonCode,
@@ -119,7 +125,11 @@ describe('Visit sessions service', () => {
         prisoner.prisonerNumber,
         visitorIds,
       )
-      expect(results).toStrictEqual({ calendar: expectedCalendar, firstSessionDate: expectedFirstSessionDate })
+      expect(results).toStrictEqual({
+        calendar: expectedCalendar,
+        firstSessionDate: expectedFirstSessionDate,
+        allVisitSessionIds: expectedAllVisitSessionIds,
+      })
     })
   })
 })

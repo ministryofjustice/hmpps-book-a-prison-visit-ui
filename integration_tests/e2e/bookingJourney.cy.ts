@@ -5,6 +5,8 @@ import HomePage from '../pages/home'
 import Page from '../pages/page'
 import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiTypes'
 import { DateFormats } from '../../server/utils/constants'
+import SelectVisitDateTimePage from '../pages/bookingJourney/selectVisitDateTime'
+import SelectAdditionalSupportPage from '../pages/bookingJourney/selectAdditionalSupport'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -31,28 +33,28 @@ context('Booking journey', () => {
     }),
   ]
 
-  const tomorrow = addDays(today, 1)
-  const in5Days = addDays(today, 5)
-  const in10Days = addDays(today, 10)
-  const in35Days = addDays(today, 35)
+  const tomorrow = format(addDays(today, 1), DateFormats.ISO_DATE)
+  const in5Days = format(addDays(today, 5), DateFormats.ISO_DATE)
+  const in10Days = format(addDays(today, 10), DateFormats.ISO_DATE)
+  const in35Days = format(addDays(today, 35), DateFormats.ISO_DATE)
   const visitSessions: AvailableVisitSessionDto[] = [
     TestData.availableVisitSessionDto({
-      sessionDate: format(tomorrow, DateFormats.ISO_DATE),
+      sessionDate: tomorrow,
       sessionTemplateReference: 'a',
       sessionTimeSlot: { startTime: '10:00', endTime: '11:30' },
     }),
     TestData.availableVisitSessionDto({
-      sessionDate: format(in5Days, DateFormats.ISO_DATE),
+      sessionDate: in5Days,
       sessionTemplateReference: 'b',
       sessionTimeSlot: { startTime: '09:00', endTime: '09:45' },
     }),
     TestData.availableVisitSessionDto({
-      sessionDate: format(in5Days, DateFormats.ISO_DATE),
+      sessionDate: in5Days,
       sessionTemplateReference: 'c',
       sessionTimeSlot: { startTime: '14:00', endTime: '15:00' },
     }),
     TestData.availableVisitSessionDto({
-      sessionDate: format(in10Days, DateFormats.ISO_DATE),
+      sessionDate: in10Days,
       sessionTemplateReference: 'd',
       sessionTimeSlot: { startTime: '14:00', endTime: '15:00' },
     }),
@@ -91,9 +93,9 @@ context('Booking journey', () => {
     selectVisitorsPage.visitorsMaxChildren().contains(prison.maxChildVisitors)
     selectVisitorsPage.visitorsAdultAge().eq(0).contains(prison.adultAgeYears)
     selectVisitorsPage.visitorsAdultAge().eq(1).contains(prison.adultAgeYears)
-    selectVisitorsPage.getVisitorLabel(1).contains('Adult One, (25 years old)')
-    selectVisitorsPage.getVisitorLabel(2).contains('Child One, (12 years old)')
-    selectVisitorsPage.getVisitorLabel(3).contains('Child Two, (5 years old)')
+    selectVisitorsPage.getVisitorLabel(1).contains('Adult One (25 years old)')
+    selectVisitorsPage.getVisitorLabel(2).contains('Child One (12 years old)')
+    selectVisitorsPage.getVisitorLabel(3).contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitor(1)
     selectVisitorsPage.selectVisitor(3)
 
@@ -105,6 +107,17 @@ context('Booking journey', () => {
       visitSessions,
     })
     selectVisitorsPage.continue()
+    const selectVisitDateTimePage = Page.verifyOnPage(SelectVisitDateTimePage)
+    selectVisitDateTimePage.clickCalendarDay(in5Days)
+    selectVisitDateTimePage.getSessionLabel(in5Days, 1).contains('2pm to 3pm (1 hour)')
+    selectVisitDateTimePage.selectSession(in5Days, 1)
+    selectVisitDateTimePage.continue()
+
+    // Additional support
+    const selectAdditionalSupportPage = Page.verifyOnPage(SelectAdditionalSupportPage)
+    selectAdditionalSupportPage.selectYes()
+    selectAdditionalSupportPage.enterSupportDetails('Wheelchair access')
+    selectAdditionalSupportPage.continue()
 
     // TODO add to this test as booking journey implemented
   })

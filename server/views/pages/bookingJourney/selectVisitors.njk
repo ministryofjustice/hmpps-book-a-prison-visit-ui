@@ -37,7 +37,7 @@
         {% for visitor in visitors %}
           {% set visitorList = (visitorList.push({
             value: visitor.displayId,
-            text: visitor.firstName + ' ' + visitor.lastName + ', (' + visitor.dateOfBirth | displayAge + ')'
+            text: visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge + ")"
           }), visitorList)%}
         {% endfor %}
         <form action="/book-a-visit/select-visitors" method="POST" novalidate>
@@ -53,7 +53,7 @@
             },
             items: visitorList,
             values: formValues.visitorIds,
-            errorMessage: errors | findError('visitorIds')
+            errorMessage: errors | findError("visitorIds")
           }) }}
 
           {{ govukButton({
