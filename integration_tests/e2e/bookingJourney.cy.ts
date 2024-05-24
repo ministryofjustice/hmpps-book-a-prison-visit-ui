@@ -93,9 +93,9 @@ context('Booking journey', () => {
     selectVisitorsPage.visitorsMaxChildren().contains(prison.maxChildVisitors)
     selectVisitorsPage.visitorsAdultAge().eq(0).contains(prison.adultAgeYears)
     selectVisitorsPage.visitorsAdultAge().eq(1).contains(prison.adultAgeYears)
-    selectVisitorsPage.getVisitorLabel(1).contains('Adult One, (25 years old)')
-    selectVisitorsPage.getVisitorLabel(2).contains('Child One, (12 years old)')
-    selectVisitorsPage.getVisitorLabel(3).contains('Child Two, (5 years old)')
+    selectVisitorsPage.getVisitorLabel(1).contains('Adult One (25 years old)')
+    selectVisitorsPage.getVisitorLabel(2).contains('Child One (12 years old)')
+    selectVisitorsPage.getVisitorLabel(3).contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitor(1)
     selectVisitorsPage.selectVisitor(3)
 

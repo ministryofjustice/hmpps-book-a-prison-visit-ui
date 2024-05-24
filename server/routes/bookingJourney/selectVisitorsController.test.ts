@@ -79,14 +79,14 @@ describe('Select visitors page', () => {
 
           expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-visitors')
           expect($('input[name=visitorIds]').length).toBe(8)
-          expect($('input[name=visitorIds][value=1] + label').text().trim()).toBe('Visitor Age 20y, (20 years old)')
-          expect($('input[name=visitorIds][value=2] + label').text().trim()).toBe('Visitor Age 18y, (18 years old)')
-          expect($('input[name=visitorIds][value=3] + label').text().trim()).toBe('Visitor Age 17y, (17 years old)')
-          expect($('input[name=visitorIds][value=4] + label').text().trim()).toBe('Visitor Age 16y, (16 years old)')
-          expect($('input[name=visitorIds][value=5] + label').text().trim()).toBe('Visitor Age 15y, (15 years old)')
-          expect($('input[name=visitorIds][value=6] + label').text().trim()).toBe('Visitor Age 10y, (10 years old)')
-          expect($('input[name=visitorIds][value=7] + label').text().trim()).toBe('Visitor Age 1y, (1 year old)')
-          expect($('input[name=visitorIds][value=8] + label').text().trim()).toBe('Visitor Age 4m, (4 months old)')
+          expect($('input[name=visitorIds][value=1] + label').text().trim()).toBe('Visitor Age 20y (20 years old)')
+          expect($('input[name=visitorIds][value=2] + label').text().trim()).toBe('Visitor Age 18y (18 years old)')
+          expect($('input[name=visitorIds][value=3] + label').text().trim()).toBe('Visitor Age 17y (17 years old)')
+          expect($('input[name=visitorIds][value=4] + label').text().trim()).toBe('Visitor Age 16y (16 years old)')
+          expect($('input[name=visitorIds][value=5] + label').text().trim()).toBe('Visitor Age 15y (15 years old)')
+          expect($('input[name=visitorIds][value=6] + label').text().trim()).toBe('Visitor Age 10y (10 years old)')
+          expect($('input[name=visitorIds][value=7] + label').text().trim()).toBe('Visitor Age 1y (1 year old)')
+          expect($('input[name=visitorIds][value=8] + label').text().trim()).toBe('Visitor Age 4m (4 months old)')
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
