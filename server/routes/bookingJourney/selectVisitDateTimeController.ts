@@ -11,12 +11,17 @@ export default class SelectVisitDateTimeController {
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
-      const { calendar, firstSessionDate } = await this.visitSessionsService.getVisitSessionsCalendar(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
-        selectedVisitorIds,
-        prison.policyNoticeDaysMax,
-      )
+      const { calendar, firstSessionDate, allVisitSessionIds } =
+        await this.visitSessionsService.getVisitSessionsCalendar(
+          prisoner.prisonCode,
+          prisoner.prisonerNumber,
+          selectedVisitorIds,
+          prison.policyNoticeDaysMax,
+        )
+
+      req.session.bookingJourney.allVisitSessionIds = allVisitSessionIds
+
+      // TODO if availableVisitSessions.length === 0 then render a different page: 'No slots available' (VB-3713)
 
       res.render('pages/bookingJourney/selectVisitDateTime', {
         errors: req.flash('errors'),

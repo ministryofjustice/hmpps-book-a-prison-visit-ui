@@ -19,11 +19,11 @@ export default class VisitSessionsService {
     prisonerId: string,
     visitorIds: number[],
     daysAhead: number,
-  ): Promise<{ calendar: VisitSessionsCalendar; firstSessionDate: string }> {
+  ): Promise<{ calendar: VisitSessionsCalendar; firstSessionDate: string; allVisitSessionIds: string[] }> {
     const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds)
 
     if (visitSessions.length === 0) {
-      return { calendar: {}, firstSessionDate: '' }
+      return { calendar: {}, firstSessionDate: '', allVisitSessionIds: [] }
     }
 
     const calendar: VisitSessionsCalendar = {}
@@ -52,7 +52,12 @@ export default class VisitSessionsService {
       })
     })
 
-    return { calendar, firstSessionDate }
+    // array of valid visitSession IDs (e.g. '2025-05-25_session-ref')
+    const allVisitSessionIds: string[] = visitSessions.map(
+      session => `${session.sessionDate}_${session.sessionTemplateReference}`,
+    )
+
+    return { calendar, firstSessionDate, allVisitSessionIds }
   }
 
   private async getVisitSessions(
