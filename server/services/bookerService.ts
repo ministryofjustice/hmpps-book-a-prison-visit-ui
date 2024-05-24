@@ -5,6 +5,10 @@ import { AuthDetailDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestr
 export interface Prisoner extends PrisonerInfoDto {
   displayId: number
 }
+export interface Visitor extends VisitorInfoDto {
+  displayId: number
+}
+
 export default class BookerService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
@@ -31,10 +35,13 @@ export default class BookerService {
     })
   }
 
-  async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
+  async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+    const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
-    return orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
+    return visitors.map((visitor, index) => {
+      return { ...visitor, displayId: index + 1 }
+    })
   }
 }

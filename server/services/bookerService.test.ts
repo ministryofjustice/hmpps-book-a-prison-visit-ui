@@ -53,7 +53,7 @@ describe('Booker service', () => {
     it('should return visitors for the given booker reference and prisoner number', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.prisonerInfoDto()
-      const visitors = [TestData.visitorInfoDto()]
+      const visitors = [TestData.visitor()]
       orchestrationApiClient.getVisitors.mockResolvedValue(visitors)
 
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)

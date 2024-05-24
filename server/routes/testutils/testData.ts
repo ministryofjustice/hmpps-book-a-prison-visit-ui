@@ -6,7 +6,7 @@ import type {
   PrisonerInfoDto,
   VisitorInfoDto,
 } from '../../data/orchestrationApiTypes'
-import { Prisoner } from '../../services/bookerService'
+import { Prisoner, Visitor } from '../../services/bookerService'
 
 export default class TestData {
   static authDetailDto = ({
@@ -77,4 +77,12 @@ export default class TestData {
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
   }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ visitorId, firstName, lastName, dateOfBirth })
+
+  static visitor = ({
+    displayId = 1,
+    visitorId = 1234,
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+  }: Partial<Visitor> = {}): Visitor => ({ displayId, visitorId, lastName, firstName, dateOfBirth })
 }
