@@ -24,7 +24,7 @@ describe('Home page', () => {
   // For MVP only one prisoner per booker supported; so only first rendered
   it('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
     const bookerReference = TestData.bookerReference().value
-    const prisoner = TestData.prisonerInfoDto()
+    const prisoner = TestData.prisoner()
     bookerService.getPrisoners.mockResolvedValue([prisoner])
 
     return request(app)
@@ -37,7 +37,7 @@ describe('Home page', () => {
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-prisoner')
-        expect($('input[name=prisonerNumber]').val()).toBe(prisoner.prisonerNumber)
+        expect($('input[name=displayId]').val()).toBe('1')
         expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)

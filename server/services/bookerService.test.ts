@@ -39,8 +39,10 @@ describe('Booker service', () => {
   describe('getPrisoners', () => {
     it('should return prisoners for the given booker reference', async () => {
       const bookerReference = TestData.bookerReference()
-      const prisoners = [TestData.prisonerInfoDto()]
-      orchestrationApiClient.getPrisoners.mockResolvedValue(prisoners)
+      const prisonerInfoDtos = [TestData.prisonerInfoDto(), TestData.prisonerInfoDto({ prisonerNumber: 'A9999AB' })]
+      const prisoners = [TestData.prisoner(), TestData.prisoner({ prisonerNumber: 'A9999AB', displayId: 2 })]
+
+      orchestrationApiClient.getPrisoners.mockResolvedValue(prisonerInfoDtos)
 
       const results = await bookerService.getPrisoners(bookerReference.value)
 
@@ -53,8 +55,10 @@ describe('Booker service', () => {
     it('should return visitors for the given booker reference and prisoner number', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.prisonerInfoDto()
-      const visitors = [TestData.visitor()]
-      orchestrationApiClient.getVisitors.mockResolvedValue(visitors)
+      const visitorInfoDtos = [TestData.visitorInfoDto(), TestData.visitorInfoDto({ visitorId: 105231 })]
+      const visitors = [TestData.visitor(), TestData.visitor({ visitorId: 105231, displayId: 2 })]
+
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
 
