@@ -15,7 +15,7 @@ afterEach(() => {
 
 describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
-  const prisoner = TestData.prisonerInfoDto()
+  const prisoner = TestData.prisoner()
 
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {
@@ -27,7 +27,7 @@ describe('Select prisoner', () => {
 
     return request(app)
       .post('/book-a-visit/select-prisoner')
-      .send({ prisonerNumber: prisoner.prisonerNumber })
+      .send({ displayId: prisoner.displayId.toString() })
       .expect(302)
       .expect('location', '/book-a-visit/select-visitors')
       .expect(() => {
@@ -52,7 +52,7 @@ describe('Select prisoner', () => {
 
     return request(app)
       .post('/book-a-visit/select-prisoner')
-      .send({ displayId: 'INVALID' })
+      .send({ displayId: 100000 })
       .expect(404)
       .expect(res => {
         const $ = cheerio.load(res.text)

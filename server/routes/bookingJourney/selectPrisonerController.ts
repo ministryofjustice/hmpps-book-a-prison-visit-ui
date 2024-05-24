@@ -17,7 +17,9 @@ export default class SelectPrisonerController {
       const prisoner = req.session.booker.prisoners[0]
 
       const { displayId } = req.body
-      if (displayId !== prisoner.displayId) {
+      if (displayId !== prisoner.displayId.toString()) {
+        console.log(typeof displayId)
+        console.log(typeof prisoner.displayId)
         throw new NotFound('Prisoner not found')
       }
 
