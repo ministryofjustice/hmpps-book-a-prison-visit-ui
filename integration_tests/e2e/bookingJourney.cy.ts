@@ -14,19 +14,19 @@ context('Booking journey', () => {
   const prisoner = TestData.prisonerInfoDto()
   const visitors = [
     TestData.visitorInfoDto({
-      visitorId: 1,
+      visitorId: 1000,
       firstName: 'Adult',
       lastName: 'One',
       dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
     }),
     TestData.visitorInfoDto({
-      visitorId: 2,
+      visitorId: 2000,
       firstName: 'Child',
       lastName: 'One',
       dateOfBirth: format(subYears(today, 12), DateFormats.ISO_DATE), // 12-year-old
     }),
     TestData.visitorInfoDto({
-      visitorId: 3,
+      visitorId: 3000,
       firstName: 'Child',
       lastName: 'Two',
       dateOfBirth: format(subYears(today, 5), DateFormats.ISO_DATE), // 5-year-old
@@ -103,7 +103,7 @@ context('Booking journey', () => {
     cy.task('stubGetVisitSessions', {
       prisonId: prisoner.prisonCode,
       prisonerId: prisoner.prisonerNumber,
-      visitorIds: [1, 3],
+      visitorIds: [1000, 3000],
       visitSessions,
     })
     selectVisitorsPage.continue()
