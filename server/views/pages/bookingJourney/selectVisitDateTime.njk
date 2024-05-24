@@ -5,6 +5,8 @@
 
 {% set pageTitle = "Choose the visit time" %}
 
+{% set backLinkHref = "/book-a-visit/select-visitors" %}
+
 {% block content %}
 
   <div class="govuk-grid-row">
@@ -63,7 +65,8 @@
         {% endfor %}
       </nav>
 
-      <form action="/book-a-visit/select-date-and-time" method="POST" novalidate>
+      {# if errors, add error ID so anchor link from error summary works #}
+      <form action="/book-a-visit/select-date-and-time" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit session items from months/dates/sessions data #}
@@ -102,7 +105,8 @@
                   text: "You can only choose one option",
                   classes: "govuk-visually-hidden"
                 },
-                items: visitSessionItems
+                items: visitSessionItems,
+                errorMessage: errors | findError('visitSession')
               }) }}
             {% endif %}
           {% endfor %}
@@ -110,7 +114,7 @@
 
         {{ govukButton({
           text: "Continue",
-          attributes: { "data-test": "submit" },
+          attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }}
 
