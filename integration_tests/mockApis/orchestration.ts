@@ -2,6 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 import TestData from '../../server/routes/testutils/testData'
 import {
+  ApplicationDto,
   AvailableVisitSessionDto,
   BookerReference,
   PrisonDto,
@@ -10,6 +11,40 @@ import {
 } from '../../server/data/orchestrationApiTypes'
 
 export default {
+  stubCreateVisitApplication: ({
+    application,
+    bookerReference,
+  }: {
+    application: ApplicationDto
+    bookerReference: string
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        url: '/orchestration/visits/application/slot/reserve',
+        bodyPatterns: [
+          {
+            equalToJson: {
+              prisonerId: application.prisonerId,
+              sessionTemplateReference: application.sessionTemplateReference,
+              sessionDate: application.startTimestamp.split('T')[0],
+              applicationRestriction: application.visitRestriction,
+              visitors: application.visitors,
+              userType: 'PUBLIC',
+              actionedBy: bookerReference,
+              allowOverBooking: false,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: application,
+      },
+    })
+  },
+
   stubGetBookerReference: (bookerReference = TestData.bookerReference()): SuperAgentRequest =>
     stubFor({
       request: {

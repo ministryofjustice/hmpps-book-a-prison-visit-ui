@@ -65,6 +65,14 @@ context('Booking journey', () => {
       sessionTimeSlot: { startTime: '09:00', endTime: '11:00' },
     }),
   ]
+
+  const application = TestData.applicationDto({
+    sessionTemplateReference: 'c',
+    startTimestamp: `${in5Days}T14:00`,
+    endTimestamp: `${in5Days}T15:00`,
+    visitors: [{ nomisPersonId: 1000 }, { nomisPersonId: 3000 }],
+  })
+
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -111,6 +119,7 @@ context('Booking journey', () => {
     selectVisitDateTimePage.clickCalendarDay(in5Days)
     selectVisitDateTimePage.getSessionLabel(in5Days, 1).contains('2pm to 3pm (1 hour)')
     selectVisitDateTimePage.selectSession(in5Days, 1)
+    cy.task('stubCreateVisitApplication', { application, bookerReference: TestData.bookerReference().value })
     selectVisitDateTimePage.continue()
 
     // Additional support
