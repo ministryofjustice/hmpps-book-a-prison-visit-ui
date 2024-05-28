@@ -3,6 +3,8 @@ import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../d
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../utils/constants'
 
+export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
+
 type VisitSession = { reference: string; startTime: string; endTime: string }
 
 // Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
@@ -19,11 +21,16 @@ export default class VisitSessionsService {
     prisonerId: string,
     visitorIds: number[],
     daysAhead: number,
-  ): Promise<{ calendar: VisitSessionsCalendar; firstSessionDate: string; allVisitSessionIds: string[] }> {
+  ): Promise<{
+    calendar: VisitSessionsCalendar
+    firstSessionDate: string
+    allVisitSessionIds: string[]
+    sessionRestriction: SessionRestriction
+  }> {
     const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds)
 
     if (visitSessions.length === 0) {
-      return { calendar: {}, firstSessionDate: '', allVisitSessionIds: [] }
+      return { calendar: {}, firstSessionDate: '', allVisitSessionIds: [], sessionRestriction: undefined }
     }
 
     const calendar: VisitSessionsCalendar = {}
@@ -57,7 +64,10 @@ export default class VisitSessionsService {
       session => `${session.sessionDate}_${session.sessionTemplateReference}`,
     )
 
-    return { calendar, firstSessionDate, allVisitSessionIds }
+    // take session restriction (OPEN | CLOSED) from first session as they should all be the same
+    const { sessionRestriction } = visitSessions[0]
+
+    return { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction }
   }
 
   private async getVisitSessions(

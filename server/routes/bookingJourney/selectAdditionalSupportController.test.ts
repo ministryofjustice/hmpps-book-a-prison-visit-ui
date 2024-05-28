@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { FlashData } from '../../@types/bapv'
+import { BookingJourneyData, FlashData } from '../../@types/bapv'
 
 let app: Express
 
@@ -14,11 +14,13 @@ let sessionData: SessionData
 const url = '/book-a-visit/select-additional-support'
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisonerInfoDto()
+const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
-const visitors = [
-  TestData.visitorInfoDto({ visitorId: 1, firstName: 'Visitor', lastName: 'One', dateOfBirth: '1980-02-03' }),
-]
+const visitor = TestData.visitor()
+
+afterEach(() => {
+  jest.resetAllMocks()
+})
 
 describe('Select additional support page', () => {
   let flashData: FlashData
@@ -30,7 +32,16 @@ describe('Select additional support page', () => {
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { allVisitors: visitors, selectedVisitors: visitors, prisoner, prison },
+        bookingJourney: {
+          prisoner,
+          prison,
+          allVisitors: [visitor],
+          selectedVisitors: [visitor],
+          allVisitSessionIds: ['2024-05-30_a'],
+          selectedSessionDate: '2024-05-30',
+          selectedSessionTemplateReference: 'a',
+          applicationReference: TestData.applicationDto().reference,
+        },
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })
@@ -79,6 +90,8 @@ describe('Select additional support page', () => {
   })
 
   describe(`POST ${url}`, () => {
+    let expectedBookingJourney: BookingJourneyData
+
     beforeEach(() => {
       sessionData = {
         booker: {
@@ -88,10 +101,25 @@ describe('Select additional support page', () => {
         bookingJourney: {
           prisoner,
           prison,
-          allVisitors: visitors,
-          selectedVisitors: [visitors[0]],
+          allVisitors: [visitor],
+          selectedVisitors: [visitor],
+          allVisitSessionIds: ['2024-05-30_a'],
+          selectedSessionDate: '2024-05-30',
+          selectedSessionTemplateReference: 'a',
+          applicationReference: TestData.applicationDto().reference,
         },
       } as SessionData
+
+      expectedBookingJourney = {
+        prisoner,
+        prison,
+        allVisitors: [visitor],
+        selectedVisitors: [visitor],
+        allVisitSessionIds: ['2024-05-30_a'],
+        selectedSessionDate: '2024-05-30',
+        selectedSessionTemplateReference: 'a',
+        applicationReference: TestData.applicationDto().reference,
+      }
 
       app = appWithAllRoutes({ sessionData })
     })
@@ -103,19 +131,26 @@ describe('Select additional support page', () => {
         .expect(302)
         .expect('Location', '/book-a-visit/select-main-contact')
         .expect(() => {
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: visitors,
-              selectedVisitors: [visitors[0]],
-              visitorSupport: 'Wheelchair access',
-            },
-          } as SessionData)
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookingJourney).toStrictEqual({
+            ...expectedBookingJourney,
+            visitorSupport: 'Wheelchair access',
+          })
+        })
+    })
+
+    it('should should save no additional support choice to session and redirect to main contact page', () => {
+      return request(app)
+        .post(url)
+        .send({ additionalSupportRequired: 'no' })
+        .expect(302)
+        .expect('Location', '/book-a-visit/select-main-contact')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookingJourney).toStrictEqual({
+            ...expectedBookingJourney,
+            visitorSupport: '',
+          })
         })
     })
 
@@ -141,18 +176,34 @@ describe('Select additional support page', () => {
           expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: visitors,
-              selectedVisitors: [visitors[0]],
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
+        })
+    })
+
+    it('should set a validation error and redirect to original page when text length validation fails', () => {
+      const expectedFlashData: FlashData = {
+        errors: [
+          {
+            type: 'field',
+            location: 'body',
+            path: 'additionalSupport',
+            value: 'ab',
+            msg: 'Please enter at least 3 and no more than 512 characters',
+          },
+        ],
+        formValues: { additionalSupportRequired: 'yes', additionalSupport: 'ab' },
+      }
+
+      return request(app)
+        .post(url)
+        .send({ additionalSupportRequired: 'yes', additionalSupport: 'ab' })
+        .expect(302)
+        .expect('Location', url)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
+          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+
+          expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
         })
     })
   })

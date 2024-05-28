@@ -4,13 +4,14 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockVisitSessionService } from '../../services/testutils/mocks'
+import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { FlashData } from '../../@types/bapv'
-import { VisitSessionsCalendar } from '../../services/visitSessionsService'
+import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
 
 let app: Express
 
+const visitService = createMockVisitService()
 const visitSessionsService = createMockVisitSessionService()
 let sessionData: SessionData
 
@@ -38,6 +39,8 @@ const calendar: VisitSessionsCalendar = {
   },
 }
 const allVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
+const sessionRestriction: SessionRestriction = 'OPEN'
+const application = TestData.applicationDto()
 
 const fakeDate = new Date('2024-05-28')
 
@@ -59,6 +62,7 @@ describe('Select visit date and time page', () => {
         calendar,
         firstSessionDate,
         allVisitSessionIds,
+        sessionRestriction,
       })
 
       flashData = {}
@@ -153,6 +157,7 @@ describe('Select visit date and time page', () => {
               allVisitors: [visitor],
               selectedVisitors: [visitor],
               allVisitSessionIds,
+              sessionRestriction,
             },
           } as SessionData)
         })
@@ -185,15 +190,56 @@ describe('Select visit date and time page', () => {
 
   describe(`POST ${url}`, () => {
     beforeEach(() => {
+      visitService.createVisitApplication.mockResolvedValue(application)
+
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { prisoner, prison, allVisitors: [visitor], selectedVisitors: [visitor] },
+        bookingJourney: {
+          prisoner,
+          prison,
+          allVisitors: [visitor],
+          selectedVisitors: [visitor],
+          allVisitSessionIds,
+          sessionRestriction,
+        },
       } as SessionData
 
-      app = appWithAllRoutes({ sessionData })
+      app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    // TODO it should create a visit application for the selected session and store data in session
+    it('it should create a visit application for the selected session and store data in session', () => {
+      return request(app)
+        .post(url)
+        .send({ visitSession: '2024-05-30_a' })
+        .expect(302)
+        .expect('Location', '/book-a-visit/select-additional-support')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+
+          expect(visitService.createVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
+            bookerReference,
+          })
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+            bookingJourney: {
+              prisoner,
+              prison,
+              allVisitors: [visitor],
+              selectedVisitors: [visitor],
+              allVisitSessionIds,
+              sessionRestriction,
+              selectedSessionDate: '2024-05-30',
+              selectedSessionTemplateReference: 'a',
+              applicationReference: application.reference,
+            },
+          } as SessionData)
+        })
+    })
 
     it('should set a validation error and redirect to original page when no visit time selected', () => {
       const expectedFlashData: FlashData = {
@@ -210,9 +256,28 @@ describe('Select visit date and time page', () => {
         .expect(() => {
           expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
           expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
         })
     })
 
-    // TODO it should set a validation error and redirect to original page when an INVALID visit time selected
+    it('should filter out an invalid visit session date/reference', () => {
+      const expectedFlashData: FlashData = {
+        errors: [
+          { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
+        ],
+        formValues: {},
+      }
+
+      return request(app)
+        .post(url)
+        .send({ visitSession: 'INVALID_VALUE' })
+        .expect(302)
+        .expect('Location', url)
+        .expect(() => {
+          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
+          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+        })
+    })
   })
 })

@@ -1,17 +1,21 @@
 import type { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
-import { VisitSessionsService } from '../../services'
+import { Meta, ValidationChain, body, validationResult } from 'express-validator'
+import { VisitService, VisitSessionsService } from '../../services'
 
 export default class SelectVisitDateTimeController {
-  public constructor(private readonly visitSessionsService: VisitSessionsService) {}
+  public constructor(
+    private readonly visitService: VisitService,
+    private readonly visitSessionsService: VisitSessionsService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { prison, prisoner, selectedVisitors } = req.session.bookingJourney
+      const { bookingJourney } = req.session
+      const { prison, prisoner, selectedVisitors } = bookingJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
-      const { calendar, firstSessionDate, allVisitSessionIds } =
+      const { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction } =
         await this.visitSessionsService.getVisitSessionsCalendar(
           prisoner.prisonCode,
           prisoner.prisonerNumber,
@@ -19,9 +23,10 @@ export default class SelectVisitDateTimeController {
           prison.policyNoticeDaysMax,
         )
 
-      req.session.bookingJourney.allVisitSessionIds = allVisitSessionIds
+      // TODO if allVisitSessionIds.length === 0 then render a different page: 'No slots available' (VB-3713)
 
-      // TODO if availableVisitSessions.length === 0 then render a different page: 'No slots available' (VB-3713)
+      bookingJourney.allVisitSessionIds = allVisitSessionIds
+      bookingJourney.sessionRestriction = sessionRestriction
 
       res.render('pages/bookingJourney/selectVisitDateTime', {
         errors: req.flash('errors'),
@@ -42,15 +47,39 @@ export default class SelectVisitDateTimeController {
         return res.redirect('/book-a-visit/select-date-and-time')
       }
 
-      // const { visitSession } = req.body
-      // TODO validate visit session selection and save to req.session
-      // logger.info('Selected visit session: ', visitSession)
+      const visitSession = req.body.visitSession.split('_')
+      const selectedSessionDate = visitSession[0]
+      const selectedSessionTemplateReference = visitSession[1]
+
+      const { booker, bookingJourney } = req.session
+      bookingJourney.selectedSessionDate = selectedSessionDate
+      bookingJourney.selectedSessionTemplateReference = selectedSessionTemplateReference
+
+      try {
+        const application = await this.visitService.createVisitApplication({
+          bookingJourney,
+          bookerReference: booker.reference,
+        })
+
+        bookingJourney.applicationReference = application.reference
+      } catch (error) {
+        // TODO catch create application errors - VB-3777
+        return res.redirect('/book-a-visit/select-date-and-time')
+      }
 
       return res.redirect('/book-a-visit/select-additional-support')
     }
   }
 
   public validate(): ValidationChain[] {
-    return [body('visitSession').notEmpty().withMessage('No visit time selected')]
+    return [
+      body('visitSession')
+        .customSanitizer((visitSession: string, { req }: Meta & { req: Express.Request }) => {
+          const { allVisitSessionIds } = req.session.bookingJourney
+          return allVisitSessionIds.includes(visitSession) ? visitSession : undefined
+        })
+        .notEmpty()
+        .withMessage('No visit time selected'),
+    ]
   }
 }

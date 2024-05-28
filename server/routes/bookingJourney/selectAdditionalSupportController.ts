@@ -17,15 +17,14 @@ export default class SelectAdditionalSupportController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { bookingJourney } = req.session
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
         return res.redirect(`/book-a-visit/select-additional-support`)
       }
 
+      const { bookingJourney } = req.session
       bookingJourney.visitorSupport = req.body.additionalSupportRequired === 'no' ? '' : req.body.additionalSupport
 
       return res.redirect('/book-a-visit/select-main-contact')

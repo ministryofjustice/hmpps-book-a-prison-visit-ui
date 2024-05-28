@@ -233,6 +233,7 @@ describe('Select visitors page', () => {
         .expect(302)
         .expect('Location', '/book-a-visit/select-date-and-time')
         .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
@@ -255,6 +256,7 @@ describe('Select visitors page', () => {
         .expect(302)
         .expect('Location', '/book-a-visit/select-date-and-time')
         .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,

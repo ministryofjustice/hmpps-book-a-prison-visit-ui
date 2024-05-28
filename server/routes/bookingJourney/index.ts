@@ -19,7 +19,10 @@ export default function routes(services: Services): Router {
 
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
-  const selectVisitDateTimeController = new SelectVisitDateTimeController(services.visitSessionsService)
+  const selectVisitDateTimeController = new SelectVisitDateTimeController(
+    services.visitService,
+    services.visitSessionsService,
+  )
   const selectAdditionalSupportController = new SelectAdditionalSupportController()
   const selectMainContactController = new SelectMainContactController()
 
