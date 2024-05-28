@@ -51,14 +51,14 @@ describe('orchestrationApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, result)
 
-      const output = await orchestrationApiClient.createVisitApplication(
+      const output = await orchestrationApiClient.createVisitApplication({
         prisonerId,
         sessionTemplateReference,
         sessionDate,
         applicationRestriction,
         visitorIds,
         bookerReference,
-      )
+      })
 
       expect(output).toStrictEqual(result)
     })

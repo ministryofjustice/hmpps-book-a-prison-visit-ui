@@ -21,14 +21,21 @@ export default class OrchestrationApiClient {
 
   // orchestration-applications-controller
 
-  async createVisitApplication(
-    prisonerId: string,
-    sessionTemplateReference: string,
-    sessionDate: string,
-    applicationRestriction: SessionRestriction,
-    visitorIds: number[],
-    bookerReference: string,
-  ): Promise<ApplicationDto> {
+  async createVisitApplication({
+    prisonerId,
+    sessionTemplateReference,
+    sessionDate,
+    applicationRestriction,
+    visitorIds,
+    bookerReference,
+  }: {
+    prisonerId: string
+    sessionTemplateReference: string
+    sessionDate: string
+    applicationRestriction: SessionRestriction
+    visitorIds: number[]
+    bookerReference: string
+  }): Promise<ApplicationDto> {
     return this.restClient.post({
       path: '/visits/application/slot/reserve',
       data: <CreateApplicationDto>{

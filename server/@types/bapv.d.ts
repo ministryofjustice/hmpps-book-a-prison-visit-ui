@@ -24,7 +24,13 @@ export type BookingJourneyData = {
 
   // all available calendar / visit sessions (e.g. ['2024-05-28_session-ref'])
   allVisitSessionIds?: string[]
+
+  // whether this visit will be OPEN | CLOSED
   sessionRestriction?: SessionRestriction
+
+  // selected visit session
+  selectedSessionDate?: string
+  selectedSessionTemplateReference?: string
 
   // visitor additional support
   visitorSupport?: string

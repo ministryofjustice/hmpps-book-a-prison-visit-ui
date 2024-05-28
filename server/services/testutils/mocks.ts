@@ -17,13 +17,15 @@ jest.mock('../../applicationInfo', () => {
   return jest.fn(() => testAppInfo)
 })
 
-import { BookerService, PrisonService, VisitSessionsService } from '..'
+import { BookerService, PrisonService, VisitService, VisitSessionsService } from '..'
 
 jest.mock('..')
 
 export const createMockBookerService = () => new BookerService(null, null) as jest.Mocked<BookerService>
 
 export const createMockPrisonService = () => new PrisonService(null, null) as jest.Mocked<PrisonService>
+
+export const createMockVisitService = () => new VisitService(null, null) as jest.Mocked<VisitService>
 
 export const createMockVisitSessionService = () =>
   new VisitSessionsService(null, null) as jest.Mocked<VisitSessionsService>
