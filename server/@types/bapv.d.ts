@@ -32,6 +32,9 @@ export type BookingJourneyData = {
   selectedSessionDate?: string
   selectedSessionTemplateReference?: string
 
+  // visit application reference
+  applicationReference?: string
+
   // visitor additional support
   visitorSupport?: string
 }

@@ -43,10 +43,10 @@ describe('Visit service', () => {
       const application = TestData.applicationDto()
       orchestrationApiClient.createVisitApplication.mockResolvedValue(application)
 
-      const results = await visitService.createVisitApplication({ bookerReference, bookingJourney })
+      const results = await visitService.createVisitApplication({ bookingJourney, bookerReference })
 
       expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
-        prisonerId: bookingJourney.prison.code,
+        prisonerId: bookingJourney.prisoner.prisonerNumber,
         sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
         sessionDate: bookingJourney.selectedSessionDate,
         applicationRestriction: bookingJourney.sessionRestriction,

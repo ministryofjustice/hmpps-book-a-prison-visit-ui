@@ -58,8 +58,7 @@ export default class SelectVisitorsController {
         .toArray()
         .toInt()
         // filter out any invalid or duplicate visitorId values
-        .customSanitizer((visitorIds: number[], meta) => {
-          const req = meta.req as unknown as Express.Request
+        .customSanitizer((visitorIds: number[], { req }: Meta & { req: Express.Request }) => {
           const allDisplaysIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.displayId)
 
           const validDisplayIds = visitorIds.filter(visitorId => allDisplaysIds.includes(visitorId))

@@ -1,9 +1,12 @@
 import type { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
-import { VisitSessionsService } from '../../services'
+import { Meta, ValidationChain, body, validationResult } from 'express-validator'
+import { VisitService, VisitSessionsService } from '../../services'
 
 export default class SelectVisitDateTimeController {
-  public constructor(private readonly visitSessionsService: VisitSessionsService) {}
+  public constructor(
+    private readonly visitService: VisitService,
+    private readonly visitSessionsService: VisitSessionsService,
+  ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -44,15 +47,39 @@ export default class SelectVisitDateTimeController {
         return res.redirect('/book-a-visit/select-date-and-time')
       }
 
-      // const { visitSession } = req.body
-      // TODO validate visit session selection and save to req.session
-      // logger.info('Selected visit session: ', visitSession)
+      const visitSession = req.body.visitSession.split('_')
+      const selectedSessionDate = visitSession[0]
+      const selectedSessionTemplateReference = visitSession[1]
+
+      const { booker, bookingJourney } = req.session
+      bookingJourney.selectedSessionDate = selectedSessionDate
+      bookingJourney.selectedSessionTemplateReference = selectedSessionTemplateReference
+
+      try {
+        const application = await this.visitService.createVisitApplication({
+          bookingJourney,
+          bookerReference: booker.reference,
+        })
+
+        bookingJourney.applicationReference = application.reference
+      } catch (error) {
+        // TODO catch create application errors - VB-3777
+        return res.redirect('/book-a-visit/select-date-and-time')
+      }
 
       return res.redirect('/book-a-visit/select-additional-support')
     }
   }
 
   public validate(): ValidationChain[] {
-    return [body('visitSession').notEmpty().withMessage('No visit time selected')]
+    return [
+      body('visitSession')
+        .customSanitizer((visitSession: string, { req }: Meta & { req: Express.Request }) => {
+          const { allVisitSessionIds } = req.session.bookingJourney
+          return allVisitSessionIds.includes(visitSession) ? visitSession : undefined
+        })
+        .notEmpty()
+        .withMessage('No visit time selected'),
+    ]
   }
 }

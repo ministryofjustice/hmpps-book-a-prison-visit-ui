@@ -9,11 +9,11 @@ export default class VisitService {
   ) {}
 
   async createVisitApplication({
-    bookerReference,
     bookingJourney,
+    bookerReference,
   }: {
-    bookerReference: string
     bookingJourney: BookingJourneyData
+    bookerReference: string
   }): Promise<ApplicationDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
@@ -21,7 +21,7 @@ export default class VisitService {
     const visitorIds = bookingJourney.selectedVisitors.map(visitor => visitor.visitorId)
 
     return orchestrationApiClient.createVisitApplication({
-      prisonerId: bookingJourney.prison.code,
+      prisonerId: bookingJourney.prisoner.prisonerNumber,
       sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
       sessionDate: bookingJourney.selectedSessionDate,
       applicationRestriction: bookingJourney.sessionRestriction,
