@@ -94,12 +94,12 @@ export default class TestData {
   }: Partial<PrisonerInfoDto> = {}): PrisonerInfoDto => ({ prisonerNumber, firstName, lastName, prisonCode })
 
   static prisoner = ({
-    displayId = 1,
+    prisonerDisplayId = 1,
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonCode = 'HEI',
-  }: Partial<Prisoner> = {}): Prisoner => ({ displayId, prisonerNumber, firstName, lastName, prisonCode })
+  }: Partial<Prisoner> = {}): Prisoner => ({ prisonerDisplayId, prisonerNumber, firstName, lastName, prisonCode })
 
   static visitorInfoDto = ({
     visitorId = 1234,
@@ -109,10 +109,10 @@ export default class TestData {
   }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ visitorId, firstName, lastName, dateOfBirth })
 
   static visitor = ({
-    displayId = 1,
+    visitorDisplayId = 1,
     visitorId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<Visitor> = {}): Visitor => ({ displayId, visitorId, lastName, firstName, dateOfBirth })
+  }: Partial<Visitor> = {}): Visitor => ({ visitorDisplayId, visitorId, lastName, firstName, dateOfBirth })
 }

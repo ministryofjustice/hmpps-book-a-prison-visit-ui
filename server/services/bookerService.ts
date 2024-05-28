@@ -3,10 +3,10 @@ import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../d
 import { AuthDetailDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 
 export interface Prisoner extends PrisonerInfoDto {
-  displayId: number
+  prisonerDisplayId: number
 }
 export interface Visitor extends VisitorInfoDto {
-  displayId: number
+  visitorDisplayId: number
 }
 
 export default class BookerService {
@@ -31,7 +31,7 @@ export default class BookerService {
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
     return prisoners.map((prisoner, index) => {
-      return { ...prisoner, displayId: index + 1 }
+      return { ...prisoner, prisonerDisplayId: index + 1 }
     })
   }
 
@@ -41,7 +41,7 @@ export default class BookerService {
     const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map((visitor, index) => {
-      return { ...visitor, displayId: index + 1 }
+      return { ...visitor, visitorDisplayId: index + 1 }
     })
   }
 }

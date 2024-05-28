@@ -42,9 +42,11 @@ export default class SelectVisitorsController {
       }
 
       const { bookingJourney } = req.session
-      const { visitorIds }: { visitorIds: number[] } = req.body
+      const { visitorDisplayIds }: { visitorDisplayIds: number[] } = req.body
 
-      const selectedVisitors = bookingJourney.allVisitors.filter(visitor => visitorIds.includes(visitor.displayId))
+      const selectedVisitors = bookingJourney.allVisitors.filter(visitor =>
+        visitorDisplayIds.includes(visitor.visitorDisplayId),
+      )
 
       bookingJourney.selectedVisitors = selectedVisitors
 
@@ -54,36 +56,38 @@ export default class SelectVisitorsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('visitorIds')
+      body('visitorDisplayIds')
         .toArray()
         .toInt()
-        // filter out any invalid or duplicate visitorId values
-        .customSanitizer((visitorIds: number[], { req }: Meta & { req: Express.Request }) => {
-          const allDisplaysIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.displayId)
+        // filter out any invalid or duplicate visitorDisplayId values
+        .customSanitizer((visitorDisplayIds: number[], { req }: Meta & { req: Express.Request }) => {
+          const allVisitorDisplaysIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.visitorDisplayId)
 
-          const validDisplayIds = visitorIds.filter(visitorId => allDisplaysIds.includes(visitorId))
-          const uniqueDisplayIds = new Set(validDisplayIds)
+          const validVisitorDisplayIds = visitorDisplayIds.filter(visitorDisplayId =>
+            allVisitorDisplaysIds.includes(visitorDisplayId),
+          )
+          const uniqueVisitorDisplayIds = new Set(validVisitorDisplayIds)
 
-          return [...uniqueDisplayIds]
+          return [...uniqueVisitorDisplayIds]
         })
         .isArray({ min: 1 })
         .withMessage('No visitors selected')
         .bail()
         // validate visitor totals
-        .custom((visitorIds: number[], { req }: Meta & { req: Express.Request }) => {
+        .custom((visitorDisplayIds: number[], { req }: Meta & { req: Express.Request }) => {
           const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
             req.session.bookingJourney.prison
 
           // max total visitors
-          if (visitorIds.length > maxTotalVisitors) {
+          if (visitorDisplayIds.length > maxTotalVisitors) {
             throw new Error(`Select no more than ${maxTotalVisitors} visitors`)
           }
 
           // calculate selected visitor ages
           const { allVisitors } = req.session.bookingJourney
           const today = new Date()
-          const visitorAges: number[] = visitorIds.map(visitorId => {
-            const { dateOfBirth } = allVisitors.find(v => v.displayId === visitorId)
+          const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
+            const { dateOfBirth } = allVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
             return differenceInYears(today, dateOfBirth)
           })
 
