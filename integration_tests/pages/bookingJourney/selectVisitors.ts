@@ -17,10 +17,11 @@ export default class SelectVisitorsPage extends Page {
   visitorsAdultAge = (): PageElement => cy.get('[data-test=visitors-adult-age]')
 
   // visitor list
-  getVisitorLabel = (visitorId: number): PageElement => cy.get(`input[name=visitorIds][value=${visitorId}] + label`)
+  getVisitorLabel = (visitorDisplayId: number): PageElement =>
+    cy.get(`input[name=visitorDisplayIds][value=${visitorDisplayId}] + label`)
 
-  selectVisitor = (visitorId: number): void => {
-    cy.get(`input[name=visitorIds][value=${visitorId}]`).check()
+  selectVisitor = (visitorDisplayId: number): void => {
+    cy.get(`input[name=visitorDisplayIds][value=${visitorDisplayId}]`).check()
   }
 
   continue = (): void => {

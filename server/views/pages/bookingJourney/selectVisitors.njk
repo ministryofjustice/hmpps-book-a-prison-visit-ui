@@ -36,7 +36,7 @@
         {% set visitorList = [] %}
         {% for visitor in visitors %}
           {% set visitorList = (visitorList.push({
-            value: visitor.displayId,
+            value: visitor.visitorDisplayId,
             text: visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge + ")"
           }), visitorList)%}
         {% endfor %}
@@ -44,7 +44,7 @@
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
           {{ govukCheckboxes({
-            name: "visitorIds",
+            name: "visitorDisplayIds",
             fieldset: {
               legend: {
                 text: "Select visitors",
@@ -52,8 +52,8 @@
               }
             },
             items: visitorList,
-            values: formValues.visitorIds,
-            errorMessage: errors | findError("visitorIds")
+            values: formValues.visitorDisplayIds,
+            errorMessage: errors | findError("visitorDisplayIds")
           }) }}
 
           {{ govukButton({

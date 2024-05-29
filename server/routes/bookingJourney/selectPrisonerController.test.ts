@@ -27,7 +27,7 @@ describe('Select prisoner', () => {
 
     return request(app)
       .post('/book-a-visit/select-prisoner')
-      .send({ displayId: prisoner.displayId.toString() })
+      .send({ prisonerDisplayId: prisoner.prisonerDisplayId.toString() })
       .expect(302)
       .expect('location', '/book-a-visit/select-visitors')
       .expect(() => {
@@ -52,7 +52,7 @@ describe('Select prisoner', () => {
 
     return request(app)
       .post('/book-a-visit/select-prisoner')
-      .send({ displayId: 100000 })
+      .send({ prisonerDisplayId: 1000 })
       .expect(404)
       .expect(res => {
         const $ = cheerio.load(res.text)
