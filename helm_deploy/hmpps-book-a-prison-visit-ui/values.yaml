@@ -1,6 +1,6 @@
 generic-service:
   nameOverride: hmpps-book-a-prison-visit-ui
-  productId: "UNASSIGNED" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
+  productId: "DPS035"
 
   replicaCount: 4
 
