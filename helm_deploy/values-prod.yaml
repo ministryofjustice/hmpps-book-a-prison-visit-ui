@@ -2,12 +2,17 @@
 # Per environment values which override defaults in hmpps-book-a-prison-visit-ui/values.yaml
 
 generic-service:
+  replicaCount: 2
+
   ingress:
-    host: visit.prison.service.justice.gov.uk
+    host: prison-visits.service.justice.gov.uk
 
   env:
-    INGRESS_URL: "https://visit.prison.service.justice.gov.uk"
+    INGRESS_URL: "https://prison-visits.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
+    GOVUK_ONE_LOGIN_URL: "https://oidc.account.gov.uk"
+    GOVUK_ONE_LOGIN_HOME_URL: "https://home.account.gov.uk"
+    ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration.prison.service.justice.gov.uk"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service
