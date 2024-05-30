@@ -23,12 +23,14 @@ export default class SelectVisitDateTimeController {
           prison.policyNoticeDaysMax,
         )
 
-      // TODO if allVisitSessionIds.length === 0 then render a different page: 'No slots available' (VB-3713)
+      if (allVisitSessionIds.length === 0) {
+        return res.render('pages/bookingJourney/selectVisitDateTimeNoSessions')
+      }
 
       bookingJourney.allVisitSessionIds = allVisitSessionIds
       bookingJourney.sessionRestriction = sessionRestriction
 
-      res.render('pages/bookingJourney/selectVisitDateTime', {
+      return res.render('pages/bookingJourney/selectVisitDateTime', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         calendar,

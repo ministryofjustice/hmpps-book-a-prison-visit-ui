@@ -163,6 +163,49 @@ describe('Select visit date and time page', () => {
         })
     })
 
+    it('should render a drop-out page when there are no available visit sessions', () => {
+      visitSessionsService.getVisitSessionsCalendar.mockResolvedValue({
+        calendar: {},
+        firstSessionDate: '',
+        allVisitSessionIds: [],
+        sessionRestriction: undefined,
+      })
+
+      return request(app)
+        .get(url)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-a-visit/select-visitors')
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('main p').eq(0).text()).toContain('no available visit times')
+          expect($('[data-test=return-to-home]').text()).toBe('return to the homepage')
+          expect($('[data-test=return-to-home]').attr('href')).toBe('/')
+
+          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith(
+            prison.code,
+            prisoner.prisonerNumber,
+            [visitor.visitorId],
+            prison.policyNoticeDaysMax,
+          )
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+            bookingJourney: {
+              prisoner,
+              prison,
+              allVisitors: [visitor],
+              selectedVisitors: [visitor],
+            },
+          } as SessionData)
+        })
+    })
+
     it('should render validation errors', () => {
       const validationError: FieldValidationError = {
         type: 'field',
@@ -184,8 +227,6 @@ describe('Select visit date and time page', () => {
           expect($('#visitSession-error').text()).toContain('No visit time selected')
         })
     })
-
-    // TODO it should display page when no slots available - VB-3713
   })
 
   describe(`POST ${url}`, () => {

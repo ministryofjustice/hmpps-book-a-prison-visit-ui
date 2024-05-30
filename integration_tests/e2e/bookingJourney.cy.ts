@@ -7,6 +7,7 @@ import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiType
 import { DateFormats } from '../../server/utils/constants'
 import SelectVisitDateTimePage from '../pages/bookingJourney/selectVisitDateTime'
 import SelectAdditionalSupportPage from '../pages/bookingJourney/selectAdditionalSupport'
+import SelectVisitDateTimeNoSessionsPage from '../pages/bookingJourney/selectVisitDateTimeNoSessions'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -129,5 +130,40 @@ context('Booking journey', () => {
     selectAdditionalSupportPage.continue()
 
     // TODO add to this test as booking journey implemented
+  })
+
+  describe('Booking journey - drop-out points', () => {
+    it('should show drop-out page when no available visit sessions', () => {
+      cy.task('stubGetBookerReference')
+      cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.signIn()
+
+      // Home page - prisoner shown
+      const homePage = Page.verifyOnPage(HomePage)
+
+      // Start booking journey
+      cy.task('stubGetPrison', prison)
+      cy.task('stubGetVisitors', { visitors })
+      homePage.startBooking()
+
+      // Select visitors page - choose visitors
+      const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
+      selectVisitorsPage.selectVisitor(1)
+      selectVisitorsPage.selectVisitor(3)
+
+      // Choose visit time
+      cy.task('stubGetVisitSessions', {
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds: [1000, 3000],
+        visitSessions: [],
+      })
+      selectVisitorsPage.continue()
+
+      // No sessions so drop-out page and return to home
+      const selectVisitDateTimeNoSessions = Page.verifyOnPage(SelectVisitDateTimeNoSessionsPage)
+      selectVisitDateTimeNoSessions.returnToHome()
+      Page.verifyOnPage(HomePage)
+    })
   })
 })
