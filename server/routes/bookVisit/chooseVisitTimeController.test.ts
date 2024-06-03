@@ -53,7 +53,7 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-describe('Select visit date and time page', () => {
+describe('Choose visit time', () => {
   let flashData: FlashData
 
   describe(`GET ${url}`, () => {

@@ -22,7 +22,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Select additional support page', () => {
+describe('Additional support needs', () => {
   let flashData: FlashData
 
   describe(`GET ${url}`, () => {

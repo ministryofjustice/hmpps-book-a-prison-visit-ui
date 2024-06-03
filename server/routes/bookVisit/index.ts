@@ -5,9 +5,9 @@ import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
 import SelectPrisonerController from './selectPrisonerController'
 import SelectVisitorsController from './selectVisitorsController'
-import SelectVisitDateTimeController from './selectVisitDateTimeController'
-import SelectAdditionalSupportController from './selectAdditionalSupportController'
-import SelectMainContactController from './selectMainContactController'
+import ChooseVisitTimeController from './chooseVisitTimeController'
+import AdditionalSupportController from './additionalSupportController'
+import MainContactController from './mainContactController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -19,12 +19,12 @@ export default function routes(services: Services): Router {
 
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
-  const selectVisitDateTimeController = new SelectVisitDateTimeController(
+  const selectVisitDateTimeController = new ChooseVisitTimeController(
     services.visitService,
     services.visitSessionsService,
   )
-  const selectAdditionalSupportController = new SelectAdditionalSupportController()
-  const selectMainContactController = new SelectMainContactController()
+  const selectAdditionalSupportController = new AdditionalSupportController()
+  const selectMainContactController = new MainContactController()
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
 

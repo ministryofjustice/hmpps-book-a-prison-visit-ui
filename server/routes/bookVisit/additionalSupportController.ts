@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 
-export default class SelectAdditionalSupportController {
+export default class AdditionalSupportController {
   public constructor() {}
 
   public view(): RequestHandler {

@@ -3,7 +3,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import HomeController from './homeController'
-import bookingJourneyRoutes from './bookingJourney'
+import bookingJourneyRoutes from './bookVisit'
 
 export default function routes(services: Services): Router {
   const router = Router()

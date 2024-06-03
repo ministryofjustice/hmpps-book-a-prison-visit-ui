@@ -89,7 +89,7 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-describe('Select visitors page', () => {
+describe('Select visitors', () => {
   let flashData: FlashData
 
   describe(`GET ${url}`, () => {

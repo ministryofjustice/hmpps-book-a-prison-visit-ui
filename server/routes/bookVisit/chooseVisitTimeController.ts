@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 
-export default class SelectVisitDateTimeController {
+export default class ChooseVisitTimeController {
   public constructor(
     private readonly visitService: VisitService,
     private readonly visitSessionsService: VisitSessionsService,

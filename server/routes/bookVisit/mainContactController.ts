@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 
-export default class SelectMainContactController {
+export default class MainContactController {
   public constructor() {}
 
   public view(): RequestHandler {
