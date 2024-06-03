@@ -9,8 +9,7 @@ export default class AdditionalSupportController {
       res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
-        booker: req.session.booker,
-        bookingJourney: req.session.bookingJourney,
+        prisonName: req.session.bookingJourney.prison.prisonName,
       })
     }
   }
