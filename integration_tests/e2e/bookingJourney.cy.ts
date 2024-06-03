@@ -1,13 +1,13 @@
 import { addDays, format, subYears } from 'date-fns'
-import TestData from '../../server/routes/testutils/testData'
-import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
-import HomePage from '../pages/home'
-import Page from '../pages/page'
 import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiTypes'
 import { DateFormats } from '../../server/utils/constants'
-import SelectVisitDateTimePage from '../pages/bookVisit/selectVisitDateTime'
-import SelectAdditionalSupportPage from '../pages/bookVisit/selectAdditionalSupport'
-import SelectVisitDateTimeNoSessionsPage from '../pages/bookVisit/selectVisitDateTimeNoSessions'
+import TestData from '../../server/routes/testutils/testData'
+import AdditionalSupportPage from '../pages/bookVisit/additionalSupport'
+import ChooseVisitTimePage from '../pages/bookVisit/chooseVisitTime'
+import ChooseVisitTimeNoSessionsPage from '../pages/bookVisit/chooseVisitTimeNoSessions'
+import HomePage from '../pages/home'
+import Page from '../pages/page'
+import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -116,18 +116,18 @@ context('Booking journey', () => {
       visitSessions,
     })
     selectVisitorsPage.continue()
-    const selectVisitDateTimePage = Page.verifyOnPage(SelectVisitDateTimePage)
-    selectVisitDateTimePage.clickCalendarDay(in5Days)
-    selectVisitDateTimePage.getSessionLabel(in5Days, 1).contains('2pm to 3pm (1 hour)')
-    selectVisitDateTimePage.selectSession(in5Days, 1)
+    const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
+    chooseVisitTimePage.clickCalendarDay(in5Days)
+    chooseVisitTimePage.getSessionLabel(in5Days, 1).contains('2pm to 3pm (1 hour)')
+    chooseVisitTimePage.selectSession(in5Days, 1)
     cy.task('stubCreateVisitApplication', { application, bookerReference: TestData.bookerReference().value })
-    selectVisitDateTimePage.continue()
+    chooseVisitTimePage.continue()
 
     // Additional support
-    const selectAdditionalSupportPage = Page.verifyOnPage(SelectAdditionalSupportPage)
-    selectAdditionalSupportPage.selectYes()
-    selectAdditionalSupportPage.enterSupportDetails('Wheelchair access')
-    selectAdditionalSupportPage.continue()
+    const additionalSupportPage = Page.verifyOnPage(AdditionalSupportPage)
+    additionalSupportPage.selectYes()
+    additionalSupportPage.enterSupportDetails('Wheelchair access')
+    additionalSupportPage.continue()
 
     // TODO add to this test as booking journey implemented
   })
@@ -161,8 +161,8 @@ context('Booking journey', () => {
       selectVisitorsPage.continue()
 
       // No sessions so drop-out page and return to home
-      const selectVisitDateTimeNoSessions = Page.verifyOnPage(SelectVisitDateTimeNoSessionsPage)
-      selectVisitDateTimeNoSessions.returnToHome()
+      const chooseVisitTimeNoSessionsPage = Page.verifyOnPage(ChooseVisitTimeNoSessionsPage)
+      chooseVisitTimeNoSessionsPage.returnToHome()
       Page.verifyOnPage(HomePage)
     })
   })
