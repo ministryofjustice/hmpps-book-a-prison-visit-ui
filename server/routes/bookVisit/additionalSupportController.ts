@@ -6,7 +6,7 @@ export default class AdditionalSupportController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      res.render('pages/bookingJourney/selectAdditionalSupport', {
+      res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         booker: req.session.booker,

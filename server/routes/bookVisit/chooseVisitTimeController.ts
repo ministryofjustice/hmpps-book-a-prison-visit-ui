@@ -24,13 +24,13 @@ export default class ChooseVisitTimeController {
         )
 
       if (allVisitSessionIds.length === 0) {
-        return res.render('pages/bookingJourney/selectVisitDateTimeNoSessions')
+        return res.render('pages/bookVisit/chooseVisitTimeNoSessions')
       }
 
       bookingJourney.allVisitSessionIds = allVisitSessionIds
       bookingJourney.sessionRestriction = sessionRestriction
 
-      return res.render('pages/bookingJourney/selectVisitDateTime', {
+      return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         calendar,

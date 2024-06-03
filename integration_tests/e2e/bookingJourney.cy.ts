@@ -1,13 +1,13 @@
 import { addDays, format, subYears } from 'date-fns'
 import TestData from '../../server/routes/testutils/testData'
-import SelectVisitorsPage from '../pages/bookingJourney/selectVisitors'
+import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiTypes'
 import { DateFormats } from '../../server/utils/constants'
-import SelectVisitDateTimePage from '../pages/bookingJourney/selectVisitDateTime'
-import SelectAdditionalSupportPage from '../pages/bookingJourney/selectAdditionalSupport'
-import SelectVisitDateTimeNoSessionsPage from '../pages/bookingJourney/selectVisitDateTimeNoSessions'
+import SelectVisitDateTimePage from '../pages/bookVisit/selectVisitDateTime'
+import SelectAdditionalSupportPage from '../pages/bookVisit/selectAdditionalSupport'
+import SelectVisitDateTimeNoSessionsPage from '../pages/bookVisit/selectVisitDateTimeNoSessions'
 
 context('Booking journey', () => {
   const today = new Date()

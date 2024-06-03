@@ -5,7 +5,7 @@ export default class MainContactController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      res.render('pages/bookingJourney/selectMainContact', {
+      res.render('pages/bookVisit/mainContact', {
         booker: req.session.booker,
         bookingJourney: req.session.bookingJourney,
       })

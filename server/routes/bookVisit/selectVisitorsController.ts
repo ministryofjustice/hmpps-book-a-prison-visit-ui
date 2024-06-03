@@ -23,7 +23,7 @@ export default class SelectVisitorsController {
 
       // TODO pre-populate form (e.g. if coming from Back link or Change answers)
 
-      res.render('pages/bookingJourney/selectVisitors', {
+      res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         prison: bookingJourney.prison,
