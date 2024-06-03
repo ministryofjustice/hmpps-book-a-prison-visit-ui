@@ -15,7 +15,7 @@ const visitService = createMockVisitService()
 const visitSessionsService = createMockVisitSessionService()
 let sessionData: SessionData
 
-const url = '/book-a-visit/select-date-and-time'
+const url = '/book-visit/choose-visit-time'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisonerInfoDto()
@@ -91,7 +91,7 @@ describe('Select visit date and time page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Choose the visit time -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-a-visit/select-visitors')
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/select-visitors')
           expect($('h1').text()).toBe('Choose the visit time')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
@@ -123,7 +123,7 @@ describe('Select visit date and time page', () => {
             '30 May - Thursday - 1 visit time available',
           )
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-date-and-time')
+          expect($('form[method=POST]').attr('action')).toBe('/book-visit/choose-visit-time')
 
           // visit session radios per day
           expect($('.visits-calendar__day-group').length).toBe(3)
@@ -177,7 +177,7 @@ describe('Select visit date and time page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-a-visit/select-visitors')
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/select-visitors')
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('main p').eq(0).text()).toContain('no available visit times')
@@ -253,7 +253,7 @@ describe('Select visit date and time page', () => {
         .post(url)
         .send({ visitSession: '2024-05-30_a' })
         .expect(302)
-        .expect('Location', '/book-a-visit/select-additional-support')
+        .expect('Location', '/book-visit/additional-support')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
 

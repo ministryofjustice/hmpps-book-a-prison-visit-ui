@@ -14,7 +14,7 @@ export default function routes(services: Services): Router {
 
   get('/', home.view())
 
-  router.use('/book-a-visit', bookingJourneyRoutes(services))
+  router.use('/book-visit', bookingJourneyRoutes(services))
 
   return router
 }

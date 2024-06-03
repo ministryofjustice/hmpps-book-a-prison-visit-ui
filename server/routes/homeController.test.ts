@@ -36,7 +36,7 @@ describe('Home page', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
-        expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-prisoner')
+        expect($('form[method=POST]').attr('action')).toBe('/book-visit/select-prisoner')
         expect($('input[name=prisonerDisplayId]').val()).toBe('1')
         expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
 

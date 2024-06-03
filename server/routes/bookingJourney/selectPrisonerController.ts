@@ -23,7 +23,7 @@ export default class SelectPrisonerController {
 
       req.session.bookingJourney = { prisoner }
 
-      res.redirect('/book-a-visit/select-visitors')
+      res.redirect('/book-visit/select-visitors')
     }
   }
 }

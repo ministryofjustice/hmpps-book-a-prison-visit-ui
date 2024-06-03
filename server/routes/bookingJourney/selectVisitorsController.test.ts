@@ -14,7 +14,7 @@ const bookerService = createMockBookerService()
 const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
-const url = '/book-a-visit/select-visitors'
+const url = '/book-visit/select-visitors'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisonerInfoDto()
@@ -125,7 +125,7 @@ describe('Select visitors page', () => {
           expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
           expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-visitors')
+          expect($('form[method=POST]').attr('action')).toBe('/book-visit/select-visitors')
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds][value=1]+label').text().trim()).toBe('Visitor Age 20y (20 years old)')
           expect($('input[name=visitorDisplayIds][value=2]+label').text().trim()).toBe('Visitor Age 18y (18 years old)')
@@ -231,7 +231,7 @@ describe('Select visitors page', () => {
         .post(url)
         .send({ visitorDisplayIds: [1, 3] })
         .expect(302)
-        .expect('Location', '/book-a-visit/select-date-and-time')
+        .expect('Location', '/book-visit/choose-visit-time')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
@@ -254,7 +254,7 @@ describe('Select visitors page', () => {
         .post(url)
         .send({ visitorDisplayIds: [1, 1, 999, 3] })
         .expect(302)
-        .expect('Location', '/book-a-visit/select-date-and-time')
+        .expect('Location', '/book-visit/choose-visit-time')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({

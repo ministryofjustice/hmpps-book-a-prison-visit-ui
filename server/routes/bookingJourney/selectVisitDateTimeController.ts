@@ -46,7 +46,7 @@ export default class SelectVisitDateTimeController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect('/book-a-visit/select-date-and-time')
+        return res.redirect('/book-visit/choose-visit-time')
       }
 
       const visitSession = req.body.visitSession.split('_')
@@ -66,10 +66,10 @@ export default class SelectVisitDateTimeController {
         bookingJourney.applicationReference = application.reference
       } catch (error) {
         // TODO catch create application errors - VB-3777
-        return res.redirect('/book-a-visit/select-date-and-time')
+        return res.redirect('/book-visit/choose-visit-time')
       }
 
-      return res.redirect('/book-a-visit/select-additional-support')
+      return res.redirect('/book-visit/additional-support')
     }
   }
 

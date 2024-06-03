@@ -21,13 +21,13 @@ export default class SelectAdditionalSupportController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect(`/book-a-visit/select-additional-support`)
+        return res.redirect(`/book-visit/additional-support`)
       }
 
       const { bookingJourney } = req.session
       bookingJourney.visitorSupport = req.body.additionalSupportRequired === 'no' ? '' : req.body.additionalSupport
 
-      return res.redirect('/book-a-visit/select-main-contact')
+      return res.redirect('/book-visit/main-contact')
     }
   }
 

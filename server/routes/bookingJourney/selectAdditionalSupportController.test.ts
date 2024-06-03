@@ -11,7 +11,7 @@ let app: Express
 
 let sessionData: SessionData
 
-const url = '/book-a-visit/select-additional-support'
+const url = '/book-visit/additional-support'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
@@ -54,12 +54,12 @@ describe('Select additional support page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Any additional support needs\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-a-visit/select-date-and-time')
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/choose-visit-time')
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
 
           expect($('[data-test=prison-name]').text().trim()).toContain('Hewell (HMP)')
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-a-visit/select-additional-support')
+          expect($('form[method=POST]').attr('action')).toBe('/book-visit/additional-support')
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
         })
@@ -129,7 +129,7 @@ describe('Select additional support page', () => {
         .post(url)
         .send({ additionalSupportRequired: 'yes', additionalSupport: 'Wheelchair access' })
         .expect(302)
-        .expect('Location', '/book-a-visit/select-main-contact')
+        .expect('Location', '/book-visit/main-contact')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney).toStrictEqual({
@@ -144,7 +144,7 @@ describe('Select additional support page', () => {
         .post(url)
         .send({ additionalSupportRequired: 'no' })
         .expect(302)
-        .expect('Location', '/book-a-visit/select-main-contact')
+        .expect('Location', '/book-visit/main-contact')
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney).toStrictEqual({

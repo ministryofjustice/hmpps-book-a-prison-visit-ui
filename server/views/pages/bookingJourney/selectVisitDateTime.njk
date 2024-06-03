@@ -5,7 +5,7 @@
 
 {% set pageTitle = "Choose the visit time" %}
 
-{% set backLinkHref = "/book-a-visit/select-visitors" %}
+{% set backLinkHref = "/book-visit/select-visitors" %}
 
 {% block content %}
 
@@ -66,7 +66,7 @@
       </nav>
 
       {# if errors, add error ID so anchor link from error summary works #}
-      <form action="/book-a-visit/select-date-and-time" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
+      <form action="/book-visit/choose-visit-time" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit session items from months/dates/sessions data #}
