@@ -1,4 +1,4 @@
-import { BookingJourneyData } from '../@types/bapv'
+import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
 import { ApplicationDto } from '../data/orchestrationApiTypes'
 
@@ -12,7 +12,7 @@ export default class VisitService {
     bookingJourney,
     bookerReference,
   }: {
-    bookingJourney: BookingJourneyData
+    bookingJourney: BookingJourney
     bookerReference: string
   }): Promise<ApplicationDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()

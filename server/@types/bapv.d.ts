@@ -9,7 +9,7 @@ export type Booker = {
 }
 
 // data that is built up during a booking journey
-export type BookingJourneyData = {
+export type BookingJourney = {
   // selected prisoner for this visit
   prisoner: Prisoner
 

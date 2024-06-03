@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { BookingJourneyData, FlashData } from '../../@types/bapv'
+import { BookingJourney, FlashData } from '../../@types/bapv'
 
 let app: Express
 
@@ -90,7 +90,7 @@ describe('Additional support needs', () => {
   })
 
   describe(`POST ${url}`, () => {
-    let expectedBookingJourney: BookingJourneyData
+    let expectedBookingJourney: BookingJourney
 
     beforeEach(() => {
       sessionData = {

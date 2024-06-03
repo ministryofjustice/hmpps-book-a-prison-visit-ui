@@ -1,7 +1,7 @@
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
-import { BookingJourneyData } from '../@types/bapv'
+import { BookingJourney } from '../@types/bapv'
 
 const token = 'some token'
 
@@ -28,7 +28,7 @@ describe('Visit service', () => {
     const bookerReference = TestData.bookerReference().value
     const visitorOne = TestData.visitor({ visitorId: 100 })
     const visitorTwo = TestData.visitor({ visitorId: 200 })
-    const bookingJourney: BookingJourneyData = {
+    const bookingJourney: BookingJourney = {
       prisoner: TestData.prisoner(),
       prison: TestData.prisonDto(),
       allVisitors: [visitorOne, visitorTwo],
