@@ -2,10 +2,9 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { BookingJourney, FlashData } from '../../@types/bapv'
+import { FlashData } from '../../@types/bapv'
 
 let app: Express
 
