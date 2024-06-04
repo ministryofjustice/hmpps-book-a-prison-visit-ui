@@ -19,12 +19,9 @@ export default function routes(services: Services): Router {
 
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
-  const selectVisitDateTimeController = new ChooseVisitTimeController(
-    services.visitService,
-    services.visitSessionsService,
-  )
-  const selectAdditionalSupportController = new AdditionalSupportController()
-  const selectMainContactController = new MainContactController()
+  const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
+  const additionalSupportController = new AdditionalSupportController()
+  const mainContactController = new MainContactController()
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
 
@@ -34,22 +31,18 @@ export default function routes(services: Services): Router {
 
   postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
 
-  get('/choose-visit-time', selectVisitDateTimeController.view())
-  postWithValidation(
-    '/choose-visit-time',
-    selectVisitDateTimeController.validate(),
-    selectVisitDateTimeController.submit(),
-  )
+  get('/choose-visit-time', chooseVisitTimeController.view())
+  postWithValidation('/choose-visit-time', chooseVisitTimeController.validate(), chooseVisitTimeController.submit())
 
-  get('/additional-support', selectAdditionalSupportController.view())
+  get('/additional-support', additionalSupportController.view())
 
   postWithValidation(
     '/additional-support',
-    selectAdditionalSupportController.validate(),
-    selectAdditionalSupportController.submit(),
+    additionalSupportController.validate(),
+    additionalSupportController.submit(),
   )
 
-  get('/main-contact', selectMainContactController.view())
+  get('/main-contact', mainContactController.view())
 
   return router
 }
