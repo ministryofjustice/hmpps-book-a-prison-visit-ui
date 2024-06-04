@@ -1,10 +1,134 @@
-<pre>
-  <h1>Main contact</h1>
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
-  BOOKER
-  {{ booker | dump(2) }}
+{% set pageTitle = "Who is the main contact for this booking?" %}
 
-  BOOKING JOURNEY
-  {{ bookingJourney | dump(2) }}
-  
-</pre>
+{% set backLinkHref = "/book-visit/additional-support" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">Who is the main contact for this booking?</h1>
+
+      <form action="/book-visit/main-contact" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set visitors = [] %}
+
+        {% for visitor in adultVisitors %}
+          {% set visitors = (visitors.push(
+            {
+              value: visitor.visitorDisplayId,
+              text: visitor.firstName + ' ' + visitor.lastName,
+              checked: visitor.visitorDisplayId == formValues.contact
+            }
+          ), visitors) %}
+        {% endfor %}
+
+        {% set someoneElseHtml %}
+          {{ govukInput({
+            id: "someoneElseName",
+            name: "someoneElseName",
+            type: "text",
+            classes: "govuk-!-width-one-third",
+            label: {
+              text: "Name"
+            },
+            value: formValues.someoneElseName,
+            autocomplete: "off",
+            errorMessage: errors | findError('someoneElseName')
+          }) }}
+        {% endset -%}
+
+        {% set visitors = (visitors.push(
+          {
+            value: "someoneElse",
+            text: "Someone else",
+            checked: formValues.contact == "someoneElse",
+            conditional: {
+              html: someoneElseHtml
+            }
+          }
+        ), visitors) %}
+
+
+        {{ govukRadios({
+          idPrefix: "contact",
+          name: "contact",
+          fieldset: {
+            legend: {
+              text: pageHeaderTitle,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: visitors,
+          errorMessage: errors | findError('contact')
+        }) }}
+        
+        {% set inputPhoneNumberHtml %}
+          {{ govukInput({
+            classes: "govuk-!-width-one-third",
+            label: {
+              text: "Number"
+            },
+            id: "phoneNumberInput",
+            name: "phoneNumberInput",
+            value: formValues.phoneNumberInput,
+            autocomplete: "off",
+            errorMessage: errors | findError('phoneNumberInput')
+
+          }) }}
+        {% endset %}
+
+        {{ govukRadios({
+          idPrefix: "phoneNumber",
+          name: "phoneNumber",
+          fieldset: {
+            legend: {
+              text: 'What is their phone number?',
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "We will use this to update the main contact about the booking."
+          },
+          items: [
+          {
+            value: 'hasPhoneNumber',
+            text: 'UK phone number',
+            hint: {
+              text: "If this is a UK mobile number, they will recieve a text message to confirm the booking"
+            },
+            conditional: {
+              html: inputPhoneNumberHtml
+            },
+            checked: formValues.phoneNumber == 'hasPhoneNumber'
+          },
+          {
+            value: 'noPhoneNumber',
+            text: 'No phone number provided',
+            hint: {
+              text: "We will not be able to contact visitors if there is a problem with the booking"
+            },
+            checked: formValues.phoneNumber == 'noPhoneNumber'
+          }
+          ],
+          errorMessage: errors | findError('phoneNumber')
+        }) }}
+          
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}

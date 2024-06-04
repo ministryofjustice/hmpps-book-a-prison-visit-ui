@@ -1,4 +1,4 @@
-import { format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
+import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -58,4 +58,9 @@ export const formatTimeDuration = (startTime: string, endTime: string): string =
 
 export const pluralise = (word: string, count: string | number, plural = `${word}s`): string => {
   return parseInt(count.toString(), 10) === 1 ? word : plural
+}
+
+export const isAdult = (dateOfBirth: string, referenceDate: Date = new Date()): boolean => {
+  const dobDate = parseISO(dateOfBirth)
+  return differenceInYears(referenceDate, dobDate) >= 18
 }

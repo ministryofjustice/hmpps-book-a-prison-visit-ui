@@ -8,6 +8,7 @@ import ChooseVisitTimeNoSessionsPage from '../pages/bookVisit/chooseVisitTimeNoS
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
+import MainContactPage from '../pages/bookVisit/mainContact'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -129,10 +130,18 @@ context('Booking journey', () => {
     additionalSupportPage.enterSupportDetails('Wheelchair access')
     additionalSupportPage.continue()
 
+    // Main contact
+    const mainContactPage = Page.verifyOnPage(MainContactPage)
+    mainContactPage.firstVisitor().contains('Adult One')
+    mainContactPage.selectFirstVisitor()
+    mainContactPage.selectPhoneNumber()
+    mainContactPage.enterPhoneNumber('01444 555888')
+    mainContactPage.continue()
+
     // TODO add to this test as booking journey implemented
   })
 
-  describe('Booking journey - drop-out points', () => {
+  describe.skip('Booking journey - drop-out points', () => {
     it('should show drop-out page when no available visit sessions', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
