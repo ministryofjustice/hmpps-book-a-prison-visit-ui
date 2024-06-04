@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../page'
 
-export default class SelectAdditionalSupportPage extends Page {
+export default class AdditionalSupportPage extends Page {
   constructor() {
     super('Is additional support needed for any of the visitors?', {
       // Known issue with radio conditional reveal. See:

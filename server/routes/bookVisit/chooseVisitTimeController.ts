@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 
-export default class SelectVisitDateTimeController {
+export default class ChooseVisitTimeController {
   public constructor(
     private readonly visitService: VisitService,
     private readonly visitSessionsService: VisitSessionsService,
@@ -24,13 +24,13 @@ export default class SelectVisitDateTimeController {
         )
 
       if (allVisitSessionIds.length === 0) {
-        return res.render('pages/bookingJourney/selectVisitDateTimeNoSessions')
+        return res.render('pages/bookVisit/chooseVisitTimeNoSessions')
       }
 
       bookingJourney.allVisitSessionIds = allVisitSessionIds
       bookingJourney.sessionRestriction = sessionRestriction
 
-      return res.render('pages/bookingJourney/selectVisitDateTime', {
+      return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         calendar,
@@ -46,7 +46,7 @@ export default class SelectVisitDateTimeController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect('/book-a-visit/select-date-and-time')
+        return res.redirect('/book-visit/choose-visit-time')
       }
 
       const visitSession = req.body.visitSession.split('_')
@@ -66,10 +66,10 @@ export default class SelectVisitDateTimeController {
         bookingJourney.applicationReference = application.reference
       } catch (error) {
         // TODO catch create application errors - VB-3777
-        return res.redirect('/book-a-visit/select-date-and-time')
+        return res.redirect('/book-visit/choose-visit-time')
       }
 
-      return res.redirect('/book-a-visit/select-additional-support')
+      return res.redirect('/book-visit/additional-support')
     }
   }
 

@@ -23,7 +23,7 @@ export default class SelectVisitorsController {
 
       // TODO pre-populate form (e.g. if coming from Back link or Change answers)
 
-      res.render('pages/bookingJourney/selectVisitors', {
+      res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
         prison: bookingJourney.prison,
@@ -38,7 +38,7 @@ export default class SelectVisitorsController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect('/book-a-visit/select-visitors')
+        return res.redirect('/book-visit/select-visitors')
       }
 
       const { bookingJourney } = req.session
@@ -50,7 +50,7 @@ export default class SelectVisitorsController {
 
       bookingJourney.selectedVisitors = selectedVisitors
 
-      return res.redirect('/book-a-visit/select-date-and-time')
+      return res.redirect('/book-visit/choose-visit-time')
     }
   }
 

@@ -1,6 +1,6 @@
 import Page from '../page'
 
-export default class SelectVisitDateTimeNoSessionsPage extends Page {
+export default class ChooseVisitTimeNoSessionsPage extends Page {
   constructor() {
     super('A visit cannot be booked')
 

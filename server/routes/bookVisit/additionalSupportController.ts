@@ -1,16 +1,15 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
 
-export default class SelectAdditionalSupportController {
+export default class AdditionalSupportController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      res.render('pages/bookingJourney/selectAdditionalSupport', {
+      res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
-        booker: req.session.booker,
-        bookingJourney: req.session.bookingJourney,
+        prisonName: req.session.bookingJourney.prison.prisonName,
       })
     }
   }
@@ -21,13 +20,13 @@ export default class SelectAdditionalSupportController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
-        return res.redirect(`/book-a-visit/select-additional-support`)
+        return res.redirect(`/book-visit/additional-support`)
       }
 
       const { bookingJourney } = req.session
       bookingJourney.visitorSupport = req.body.additionalSupportRequired === 'no' ? '' : req.body.additionalSupport
 
-      return res.redirect('/book-a-visit/select-main-contact')
+      return res.redirect('/book-visit/main-contact')
     }
   }
 

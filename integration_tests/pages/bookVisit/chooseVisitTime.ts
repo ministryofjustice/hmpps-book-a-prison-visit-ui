@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../page'
 
-export default class SelectVisitDateTimePage extends Page {
+export default class ChooseVisitTimePage extends Page {
   constructor() {
     super('Choose the visit time')
   }

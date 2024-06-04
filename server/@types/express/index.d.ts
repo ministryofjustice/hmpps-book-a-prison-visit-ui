@@ -1,5 +1,5 @@
 import { ValidationError } from 'express-validator'
-import { Booker, BookingJourneyData } from '../bapv'
+import { Booker, BookingJourney } from '../bapv'
 
 export default {}
 
@@ -10,7 +10,7 @@ declare module 'express-session' {
     nowInMinutes: number
 
     booker: Booker
-    bookingJourney: BookingJourneyData
+    bookingJourney: BookingJourney
   }
 }
 

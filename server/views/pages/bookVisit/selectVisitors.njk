@@ -40,7 +40,7 @@
             text: visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge + ")"
           }), visitorList)%}
         {% endfor %}
-        <form action="/book-a-visit/select-visitors" method="POST" novalidate>
+        <form action="/book-visit/select-visitors" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
           {{ govukCheckboxes({

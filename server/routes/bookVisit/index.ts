@@ -5,9 +5,9 @@ import asyncMiddleware from '../../middleware/asyncMiddleware'
 import type { Services } from '../../services'
 import SelectPrisonerController from './selectPrisonerController'
 import SelectVisitorsController from './selectVisitorsController'
-import SelectVisitDateTimeController from './selectVisitDateTimeController'
-import SelectAdditionalSupportController from './selectAdditionalSupportController'
-import SelectMainContactController from './selectMainContactController'
+import ChooseVisitTimeController from './chooseVisitTimeController'
+import AdditionalSupportController from './additionalSupportController'
+import MainContactController from './mainContactController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -19,12 +19,9 @@ export default function routes(services: Services): Router {
 
   const selectPrisonerController = new SelectPrisonerController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
-  const selectVisitDateTimeController = new SelectVisitDateTimeController(
-    services.visitService,
-    services.visitSessionsService,
-  )
-  const selectAdditionalSupportController = new SelectAdditionalSupportController()
-  const selectMainContactController = new SelectMainContactController()
+  const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
+  const additionalSupportController = new AdditionalSupportController()
+  const mainContactController = new MainContactController()
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
 
@@ -34,22 +31,18 @@ export default function routes(services: Services): Router {
 
   postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
 
-  get('/select-date-and-time', selectVisitDateTimeController.view())
-  postWithValidation(
-    '/select-date-and-time',
-    selectVisitDateTimeController.validate(),
-    selectVisitDateTimeController.submit(),
-  )
+  get('/choose-visit-time', chooseVisitTimeController.view())
+  postWithValidation('/choose-visit-time', chooseVisitTimeController.validate(), chooseVisitTimeController.submit())
 
-  get('/select-additional-support', selectAdditionalSupportController.view())
+  get('/additional-support', additionalSupportController.view())
 
   postWithValidation(
-    '/select-additional-support',
-    selectAdditionalSupportController.validate(),
-    selectAdditionalSupportController.submit(),
+    '/additional-support',
+    additionalSupportController.validate(),
+    additionalSupportController.submit(),
   )
 
-  get('/select-main-contact', selectMainContactController.view())
+  get('/main-contact', mainContactController.view())
 
   return router
 }

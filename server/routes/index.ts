@@ -3,7 +3,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import HomeController from './homeController'
-import bookingJourneyRoutes from './bookingJourney'
+import bookingJourneyRoutes from './bookVisit'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -14,7 +14,7 @@ export default function routes(services: Services): Router {
 
   get('/', home.view())
 
-  router.use('/book-a-visit', bookingJourneyRoutes(services))
+  router.use('/book-visit', bookingJourneyRoutes(services))
 
   return router
 }

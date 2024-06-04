@@ -26,10 +26,10 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-a-visit/select-prisoner')
+      .post('/book-visit/select-prisoner')
       .send({ prisonerDisplayId: prisoner.prisonerDisplayId.toString() })
       .expect(302)
-      .expect('location', '/book-a-visit/select-visitors')
+      .expect('location', '/book-visit/select-visitors')
       .expect(() => {
         expect(sessionData).toStrictEqual({
           booker: {
@@ -51,7 +51,7 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-a-visit/select-prisoner')
+      .post('/book-visit/select-prisoner')
       .send({ prisonerDisplayId: 1000 })
       .expect(404)
       .expect(res => {
