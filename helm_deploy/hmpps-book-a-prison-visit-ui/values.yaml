@@ -18,6 +18,7 @@ generic-service:
     modsecurity_github_team: "hmpps-prison-visits-booking"
     annotations:
       nginx.ingress.kubernetes.io/limit-rpm: "120"
+      nginx.ingress.kubernetes.io/server-snippet: add_header X-Robots-Tag "noindex, nofollow";
 
   livenessProbe:
     httpGet:
