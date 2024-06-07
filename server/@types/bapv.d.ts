@@ -37,6 +37,13 @@ export type BookingJourney = {
 
   // visitor additional support
   visitorSupport?: string
+
+  // main contact object
+  mainContact?: {
+    contact?: Visitor
+    phoneNumber?: string
+    contactName?: string
+  }
 }
 
 export type FlashData = {

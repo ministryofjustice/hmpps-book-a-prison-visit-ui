@@ -1,4 +1,12 @@
-import { convertToTitleCase, formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
+import {
+  convertToTitleCase,
+  formatDate,
+  formatTime,
+  formatTimeDuration,
+  initialiseName,
+  isAdult,
+  pluralise,
+} from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -80,6 +88,18 @@ describe('pluralise', () => {
       ['should return plural form when count is 2', 'child', '2', 'children', 'children'],
     ])('%s pluralise(%s, %s) = %s', (_: string, word: string, count: string, plural: string, expected: string) => {
       expect(pluralise(word, count, plural)).toBe(expected)
+    })
+  })
+
+  describe('Check if adult', () => {
+    it('Is an adult - now', () => {
+      expect(isAdult('2000-01-01')).toEqual(true)
+    })
+    it('Is an adult - on given date', () => {
+      expect(isAdult('2000-01-02', new Date(2018, 0, 2))).toEqual(true)
+    })
+    it('Is a child - on given date', () => {
+      expect(isAdult('2000-01-02', new Date(2018, 0, 1))).toEqual(false)
     })
   })
 })

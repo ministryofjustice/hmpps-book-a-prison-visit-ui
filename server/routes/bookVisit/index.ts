@@ -8,6 +8,7 @@ import SelectVisitorsController from './selectVisitorsController'
 import ChooseVisitTimeController from './chooseVisitTimeController'
 import AdditionalSupportController from './additionalSupportController'
 import MainContactController from './mainContactController'
+import CheckVisitDetailsController from './checkVisitDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -22,6 +23,7 @@ export default function routes(services: Services): Router {
   const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
   const additionalSupportController = new AdditionalSupportController()
   const mainContactController = new MainContactController()
+  const checkVisitDetailsController = new CheckVisitDetailsController()
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
 
@@ -43,6 +45,10 @@ export default function routes(services: Services): Router {
   )
 
   get('/main-contact', mainContactController.view())
+
+  postWithValidation('/main-contact', mainContactController.validate(), mainContactController.submit())
+
+  get('/check-visit-details', checkVisitDetailsController.view())
 
   return router
 }

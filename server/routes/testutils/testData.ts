@@ -114,5 +114,6 @@ export default class TestData {
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<Visitor> = {}): Visitor => ({ visitorDisplayId, visitorId, lastName, firstName, dateOfBirth })
+    adult = true,
+  }: Partial<Visitor> = {}): Visitor => ({ visitorDisplayId, visitorId, lastName, firstName, dateOfBirth, adult })
 }

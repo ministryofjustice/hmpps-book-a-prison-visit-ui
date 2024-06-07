@@ -8,6 +8,7 @@ import ChooseVisitTimeNoSessionsPage from '../pages/bookVisit/chooseVisitTimeNoS
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
+import MainContactPage from '../pages/bookVisit/mainContact'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -128,6 +129,14 @@ context('Booking journey', () => {
     additionalSupportPage.selectYes()
     additionalSupportPage.enterSupportDetails('Wheelchair access')
     additionalSupportPage.continue()
+
+    // Main contact
+    const mainContactPage = Page.verifyOnPage(MainContactPage)
+    mainContactPage.getContactLabel(1).contains('Adult One')
+    mainContactPage.selectVisitor(1)
+    mainContactPage.checkHasPhoneNumber()
+    mainContactPage.enterPhoneNumber('01444 555888')
+    mainContactPage.continue()
 
     // TODO add to this test as booking journey implemented
   })
