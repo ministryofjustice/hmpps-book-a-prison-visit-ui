@@ -19,6 +19,7 @@ export default class MainContactController {
 
       res.render('pages/bookVisit/mainContact', {
         errors: req.flash('errors'),
+        formValues: req.flash('formValues')?.[0] || {},
         adultVisitors: adults,
       })
     }
@@ -41,11 +42,11 @@ export default class MainContactController {
 
       bookingJourney.mainContact = {
         contact: selectedContact,
-        phoneNumber: req.body.phoneNumber === 'hasPhoneNumber' ? req.body.phoneNumberInput : undefined,
+        phoneNumber: req.body.hasPhoneNumber === 'yes' ? req.body.phoneNumber : undefined,
         contactName: selectedContact === undefined ? req.body.someoneElseName : undefined,
       }
 
-      return res.redirect('/book-visit/check-your-booking')
+      return res.redirect('/book-visit/check-visit-details')
     }
   }
 
@@ -67,11 +68,11 @@ export default class MainContactController {
 
           return true
         }),
-      body('phoneNumber').isIn(['hasPhoneNumber', 'noPhoneNumber']).withMessage('No answer selected'),
-      body('phoneNumberInput')
+      body('hasPhoneNumber').isIn(['yes', 'no']).withMessage('No answer selected'),
+      body('phoneNumber')
         .trim()
         .custom((value: string, { req }) => {
-          if (req.body.phoneNumber === 'hasPhoneNumber') {
+          if (req.body.hasPhoneNumber === 'yes') {
             if (value === '') {
               throw new Error('Enter a phone number')
             }

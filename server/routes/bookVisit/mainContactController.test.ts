@@ -59,14 +59,14 @@ describe('Main contact', () => {
           expect($('input[name="contact"]').eq(0).prop('value')).toBe('1')
           expect($('input[name="contact"]').eq(1).prop('value')).toBe('someoneElse')
           expect($('#someoneElseName').prop('value')).toBeFalsy()
-          expect($('#phoneNumberInput').prop('value')).toBeFalsy()
+          expect($('#phoneNumber').prop('value')).toBeFalsy()
         })
     })
 
     it('should render validation errors from flash data for when no data entered', () => {
       flashData.errors = [
         { location: 'body', msg: 'No main contact selected', path: 'contact', type: 'field', value: undefined },
-        { location: 'body', msg: 'Enter a phone number', path: 'phoneNumberInput', type: 'field', value: undefined },
+        { location: 'body', msg: 'Enter a phone number', path: 'phoneNumber', type: 'field', value: undefined },
       ]
 
       return request(app)
@@ -79,11 +79,12 @@ describe('Main contact', () => {
           expect($('.govuk-error-summary__body').text()).toContain('No main contact selected')
           expect($('.govuk-error-summary__body a').eq(0).attr('href')).toBe('#contact-error')
           expect($('.govuk-error-summary__body').text()).toContain('Enter a phone number')
-          expect($('.govuk-error-summary__body a').eq(1).attr('href')).toBe('#phoneNumberInput-error')
+          expect($('.govuk-error-summary__body a').eq(1).attr('href')).toBe('#phoneNumber-error')
           expect($('#contact-error').text()).toContain('No main contact selected')
-          expect($('#phoneNumberInput-error').text()).toContain('Enter a phone number')
+          expect($('#phoneNumber-error').text()).toContain('Enter a phone number')
           expect(flashProvider).toHaveBeenCalledWith('errors')
-          expect(flashProvider).toHaveBeenCalledTimes(1)
+          expect(flashProvider).toHaveBeenCalledWith('formValues')
+          expect(flashProvider).toHaveBeenCalledTimes(2)
         })
     })
   })
@@ -114,12 +115,38 @@ describe('Main contact', () => {
       return request(app)
         .post(url)
         .send('contact=1')
-        .send('phoneNumber=hasPhoneNumber')
-        .send('phoneNumberInput=+0114+1234+567+')
+        .send('hasPhoneNumber=yes')
+        .send('phoneNumber=+0114+1234+567+')
         .expect(302)
-        .expect('location', `/book-visit/check-your-booking`)
+        .expect('location', `/book-visit/check-visit-details`)
         .expect(() => {
-          expect(sessionData.bookingJourney.mainContact).toEqual({
+          expect(sessionData.bookingJourney.mainContact).toStrictEqual({
+            contact: {
+              adult: true,
+              dateOfBirth: '1980-02-21',
+              firstName: 'Joan',
+              lastName: 'Phillips',
+              visitorDisplayId: 1,
+              visitorId: 1234,
+            },
+            contactName: undefined,
+            phoneNumber: '0114 1234 567',
+          })
+          expect(sessionData.bookingJourney.mainContact.phoneNumber).toBe('0114 1234 567')
+          expect(sessionData.bookingJourney.mainContact.contactName).toBe(undefined)
+        })
+    })
+
+    it('should redirect to request method page and store in session if contact selected and phone number entered', () => {
+      return request(app)
+        .post(url)
+        .send('contact=1')
+        .send('hasPhoneNumber=yes')
+        .send('phoneNumber=+0114+1234+567+')
+        .expect(302)
+        .expect('location', `/book-visit/check-visit-details`)
+        .expect(() => {
+          expect(sessionData.bookingJourney.mainContact).toStrictEqual({
             contact: {
               adult: true,
               dateOfBirth: '1980-02-21',
@@ -141,10 +168,10 @@ describe('Main contact', () => {
         .post(url)
         .send('contact=someoneElse')
         .send('someoneElseName=Keith+Richards')
-        .send('phoneNumber=hasPhoneNumber')
-        .send('phoneNumberInput=+0223+5827+011+')
+        .send('hasPhoneNumber=yes')
+        .send('phoneNumber=+0223+5827+011+')
         .expect(302)
-        .expect('location', `/book-visit/check-your-booking`)
+        .expect('location', `/book-visit/check-visit-details`)
         .expect(() => {
           expect(sessionData.bookingJourney.mainContact).toEqual({
             contact: undefined,

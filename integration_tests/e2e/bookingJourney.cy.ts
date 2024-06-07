@@ -132,16 +132,16 @@ context('Booking journey', () => {
 
     // Main contact
     const mainContactPage = Page.verifyOnPage(MainContactPage)
-    mainContactPage.firstVisitor().contains('Adult One')
-    mainContactPage.selectFirstVisitor()
-    mainContactPage.selectPhoneNumber()
+    mainContactPage.getContactLabel(1).contains('Adult One')
+    mainContactPage.selectVisitor(1)
+    mainContactPage.checkHasPhoneNumber()
     mainContactPage.enterPhoneNumber('01444 555888')
     mainContactPage.continue()
 
     // TODO add to this test as booking journey implemented
   })
 
-  describe.skip('Booking journey - drop-out points', () => {
+  describe('Booking journey - drop-out points', () => {
     it('should show drop-out page when no available visit sessions', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })

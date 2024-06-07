@@ -35,7 +35,7 @@
             id: "someoneElseName",
             name: "someoneElseName",
             type: "text",
-            classes: "govuk-!-width-one-third",
+            classes: "govuk-!-width-one-half",
             label: {
               text: "Name"
             },
@@ -77,18 +77,18 @@
             label: {
               text: "Number"
             },
-            id: "phoneNumberInput",
-            name: "phoneNumberInput",
-            value: formValues.phoneNumberInput,
+            id: "phoneNumber",
+            name: "phoneNumber",
+            value: formValues.phoneNumber,
             autocomplete: "off",
-            errorMessage: errors | findError('phoneNumberInput')
+            errorMessage: errors | findError('phoneNumber')
 
           }) }}
         {% endset %}
 
         {{ govukRadios({
-          idPrefix: "phoneNumber",
-          name: "phoneNumber",
+          idPrefix: "hasPhoneNumber",
+          name: "hasPhoneNumber",
           fieldset: {
             legend: {
               text: 'What is their phone number?',
@@ -101,7 +101,7 @@
           },
           items: [
           {
-            value: 'hasPhoneNumber',
+            value: 'yes',
             text: 'UK phone number',
             hint: {
               text: "If this is a UK mobile number, they will recieve a text message to confirm the booking"
@@ -109,18 +109,18 @@
             conditional: {
               html: inputPhoneNumberHtml
             },
-            checked: formValues.phoneNumber == 'hasPhoneNumber'
+            checked: formValues.hasPhoneNumber == 'yes'
           },
           {
-            value: 'noPhoneNumber',
+            value: 'no',
             text: 'No phone number provided',
             hint: {
               text: "We will not be able to contact visitors if there is a problem with the booking"
             },
-            checked: formValues.phoneNumber == 'noPhoneNumber'
+            checked: formValues.hasPhoneNumber == 'no'
           }
           ],
-          errorMessage: errors | findError('phoneNumber')
+          errorMessage: errors | findError('hasPhoneNumber')
         }) }}
           
         {{ govukButton({

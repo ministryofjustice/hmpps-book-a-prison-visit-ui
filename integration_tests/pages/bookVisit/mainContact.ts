@@ -9,18 +9,18 @@ export default class MainContactPage extends Page {
     })
   }
 
-  firstVisitor = (): PageElement =>
-    cy.get(':nth-child(2) > .govuk-fieldset > .govuk-radios > :nth-child(1) > .govuk-label')
+  getContactLabel = (contactDisplayId: number): PageElement =>
+    cy.get(`input[name=contact][value=${contactDisplayId}] + label`)
 
-  selectFirstVisitor = (): void => {
-    cy.get('#contact').check()
+  selectVisitor = (contactDisplayId: number): void => {
+    cy.get(`input[name=contact][value=${contactDisplayId}]`).check()
   }
 
-  selectPhoneNumber = (): void => {
-    cy.get('#phoneNumber').check()
+  checkHasPhoneNumber = (): void => {
+    cy.get('#hasPhoneNumber').check()
   }
 
-  enterPhoneNumber = (number: string): PageElement => cy.get('#phoneNumberInput').type(number)
+  enterPhoneNumber = (number: string): PageElement => cy.get('#phoneNumber').type(number)
 
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()
