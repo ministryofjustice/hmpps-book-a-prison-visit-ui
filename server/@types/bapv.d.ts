@@ -46,6 +46,12 @@ export type BookingJourney = {
   }
 }
 
+export type BookingConfirmed = {
+  prisonCode: string
+  prisonName: string
+  visitReference: string
+}
+
 export type FlashData = {
   errors?: FieldValidationError[]
   formValues?: Record<string, string | string[] | number[]>

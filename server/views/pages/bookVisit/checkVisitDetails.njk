@@ -1,3 +1,4 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 <pre>
   <h1>Check your booking</h1>
 
@@ -8,3 +9,14 @@
   {{ bookingJourney | dump(2) }}
   
 </pre>
+
+<form action="/book-visit/check-visit-details" method="POST" novalidate>
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  {{ govukButton({
+    text: "Submit booking",
+    classes: "govuk-!-margin-top-3",
+    preventDoubleClick: true,
+    attributes: { "data-test": "submit-booking" }
+  }) }}
+</form>
