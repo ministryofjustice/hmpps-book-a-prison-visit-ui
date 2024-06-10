@@ -5,9 +5,12 @@ import {
   AuthDetailDto,
   AvailableVisitSessionDto,
   BookerReference,
+  BookingOrchestrationRequestDto,
+  ChangeApplicationDto,
   CreateApplicationDto,
   PrisonDto,
   PrisonerInfoDto,
+  VisitDto,
   VisitorInfoDto,
 } from './orchestrationApiTypes'
 import { type SessionRestriction } from '../services/visitSessionsService'
@@ -19,7 +22,50 @@ export default class OrchestrationApiClient {
     this.restClient = new RestClient('orchestrationApiClient', config.apis.orchestration as ApiConfig, token)
   }
 
+  // orchestration-visits-controller
+
+  async bookVisit({ applicationReference }: { applicationReference: string }): Promise<VisitDto> {
+    return this.restClient.put({
+      path: `/visits/${applicationReference}/book`,
+      data: <BookingOrchestrationRequestDto>{
+        applicationMethodType: 'WEBSITE', // TODO - check this is correct
+        allowOverBooking: false,
+      },
+    })
+  }
+
   // orchestration-applications-controller
+
+  async changeVisitApplication({
+    applicationReference,
+    applicationRestriction,
+    sessionTemplateReference,
+    sessionDate,
+    visitContact,
+    visitors,
+    visitorSupport,
+  }: {
+    applicationReference: string
+    applicationRestriction: SessionRestriction
+    sessionTemplateReference: string
+    sessionDate: string
+    visitContact: ChangeApplicationDto['visitContact']
+    visitors: ChangeApplicationDto['visitors']
+    visitorSupport: ChangeApplicationDto['visitorSupport']
+  }): Promise<ApplicationDto> {
+    return this.restClient.put({
+      path: `/visits/application/${applicationReference}/slot/change`,
+      data: <ChangeApplicationDto>{
+        applicationRestriction,
+        sessionTemplateReference,
+        sessionDate,
+        visitContact,
+        visitors,
+        visitorSupport,
+        allowOverBooking: false,
+      },
+    })
+  }
 
   async createVisitApplication({
     prisonerId,

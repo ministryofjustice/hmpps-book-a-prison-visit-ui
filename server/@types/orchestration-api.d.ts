@@ -718,9 +718,9 @@ export interface components {
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       pageSize?: number
+      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
@@ -2182,6 +2182,8 @@ export interface operations {
          * @example 4729510,4729220
          */
         visitors?: number[]
+        /** @description Defaults to true if not passed. If true, will not return visit times that clash with higher priority legal or medical appointments. */
+        withAppointmentsCheck?: boolean
       }
     }
     responses: {
