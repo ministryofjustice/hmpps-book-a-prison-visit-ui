@@ -1,3 +1,4 @@
+import { BookingConfirmed } from '../../@types/bapv'
 import type {
   ApplicationDto,
   AuthDetailDto,
@@ -58,6 +59,12 @@ export default class TestData {
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
+
+  static bookingConfirmed = ({
+    prisonCode = this.prisonDto().code,
+    prisonName = this.prisonDto().prisonName,
+    visitReference = 'ab-cd-ef-gh',
+  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prisonCode, prisonName, visitReference })
 
   static prisonDto = ({
     code = 'HEI',

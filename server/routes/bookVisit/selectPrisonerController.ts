@@ -8,6 +8,7 @@ export default class SelectPrisonerController {
     return async (req, res) => {
       // clear booking journey in session
       delete req.session.bookingJourney
+      delete req.session.bookingConfirmed
 
       // FIXME move some of this to a session checking middleware
       if (!req.session.booker.prisoners || req.session.booker.prisoners.length === 0) {

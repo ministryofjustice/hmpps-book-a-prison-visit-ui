@@ -16,11 +16,13 @@ afterEach(() => {
 describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
   const prisoner = TestData.prisoner()
+  const bookingConfirmed = TestData.bookingConfirmed()
 
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
       bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as PrisonerInfoDto },
+      bookingConfirmed,
     } as SessionData
 
     app = appWithAllRoutes({ services: {}, sessionData })
