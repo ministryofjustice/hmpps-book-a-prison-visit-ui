@@ -96,10 +96,10 @@ describe('pluralise', () => {
       expect(isAdult('2000-01-01')).toEqual(true)
     })
     it('Is an adult - on given date', () => {
-      expect(isAdult('2000-01-02', new Date(2018, 0, 2))).toEqual(true)
+      expect(isAdult('2000-01-02', new Date('2018-01-02'))).toEqual(true)
     })
     it('Is a child - on given date', () => {
-      expect(isAdult('2000-01-02', new Date(2018, 0, 1))).toEqual(false)
+      expect(isAdult('2000-01-02', new Date('2018-01-01'))).toEqual(false)
     })
   })
 })

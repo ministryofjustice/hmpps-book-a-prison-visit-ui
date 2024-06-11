@@ -38,11 +38,10 @@ export type BookingJourney = {
   // visitor additional support
   visitorSupport?: string
 
-  // main contact object
+  // main contact
   mainContact?: {
-    contact?: Visitor
+    contact: Visitor | string // either known Visitor or 'other' name
     phoneNumber?: string
-    contactName?: string
   }
 }
 
