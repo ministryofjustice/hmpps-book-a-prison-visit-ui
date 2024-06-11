@@ -24,7 +24,7 @@ export default function routes(services: Services): Router {
   const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
   const additionalSupportController = new AdditionalSupportController()
   const mainContactController = new MainContactController(services.visitService)
-  const checkVisitDetailsController = new CheckVisitDetailsController()
+  const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
   const visitBookedController = new VisitBookedController()
 
   // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?

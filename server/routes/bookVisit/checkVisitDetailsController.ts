@@ -1,8 +1,9 @@
 import type { RequestHandler } from 'express'
 import { BookingConfirmed } from '../../@types/bapv'
+import { VisitService } from '../../services'
 
 export default class CheckVisitDetailsController {
-  public constructor() {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -14,21 +15,25 @@ export default class CheckVisitDetailsController {
   }
 
   public submit(): RequestHandler {
-    return async (req, res) => {
+    return async (req, res, next) => {
       const { bookingJourney } = req.session
 
-      // TODO try/catch book visit and get visit reference
+      try {
+        const visit = await this.visitService.bookVisit({ applicationReference: bookingJourney.applicationReference })
 
-      const bookingConfirmed: BookingConfirmed = {
-        prisonCode: bookingJourney.prison.code,
-        prisonName: bookingJourney.prison.prisonName,
-        visitReference: 'TEST_VISIT_REFERENCE',
+        const bookingConfirmed: BookingConfirmed = {
+          prisonCode: bookingJourney.prison.code,
+          prisonName: bookingJourney.prison.prisonName,
+          visitReference: visit.reference,
+        }
+        req.session.bookingConfirmed = bookingConfirmed
+
+        delete req.session.bookingJourney
+        return res.redirect('/book-visit/visit-booked')
+      } catch (error) {
+        // TODO handle errors (VB-3597)
+        return next(error)
       }
-      req.session.bookingConfirmed = bookingConfirmed
-
-      delete req.session.bookingJourney
-
-      res.redirect('/book-visit/visit-booked')
     }
   }
 }

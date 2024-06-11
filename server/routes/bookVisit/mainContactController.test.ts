@@ -103,7 +103,7 @@ describe('Main contact', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('should save selected contact and phone number to session and redirect to check visit details page', () => {
+    it('should save selected contact and phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
         .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: '01234 567 890' })
@@ -122,7 +122,7 @@ describe('Main contact', () => {
         })
     })
 
-    it('should save selected contact and no phone number to session and redirect to check visit details page', () => {
+    it('should save selected contact and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
         .send({ contact: '1', hasPhoneNumber: 'no' })
@@ -138,7 +138,7 @@ describe('Main contact', () => {
         })
     })
 
-    it('should save custom contact name and no phone number to session and redirect to check visit details page', () => {
+    it('should save custom contact name and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
         .send({

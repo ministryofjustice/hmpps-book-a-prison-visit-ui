@@ -5,9 +5,11 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookingConfirmed } from '../../@types/bapv'
+import { createMockVisitService } from '../../services/testutils/mocks'
 
 let app: Express
 
+const visitService = createMockVisitService()
 let sessionData: SessionData
 
 const url = '/book-visit/check-visit-details'
@@ -16,6 +18,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
+const application = TestData.applicationDto()
 
 beforeEach(() => {
   sessionData = {
@@ -26,9 +29,10 @@ beforeEach(() => {
       allVisitors: [visitor],
       selectedVisitors: [visitor],
       allVisitSessionIds: ['2024-05-30_a'],
+      sessionRestriction: 'OPEN',
       selectedSessionDate: '2024-05-30',
       selectedSessionTemplateReference: 'a',
-      applicationReference: TestData.applicationDto().reference,
+      applicationReference: application.reference,
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -63,11 +67,19 @@ describe('Check visit details', () => {
   })
 
   describe(`POST ${url}`, () => {
+    const visit = TestData.visitDto()
+
+    beforeEach(() => {
+      visitService.bookVisit.mockResolvedValue(visit)
+
+      app = appWithAllRoutes({ services: { visitService }, sessionData })
+    })
+
     it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page', () => {
       const expectedBookingConfirmed: BookingConfirmed = {
         prisonCode: sessionData.bookingJourney.prison.code,
         prisonName: sessionData.bookingJourney.prison.prisonName,
-        visitReference: 'TEST_VISIT_REFERENCE',
+        visitReference: visit.reference,
       }
 
       return request(app)
@@ -78,10 +90,12 @@ describe('Check visit details', () => {
           expect(sessionData.bookingJourney).toBe(undefined)
           expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
 
-          // TODO test for booking API calls
+          expect(visitService.bookVisit).toHaveBeenCalledWith({
+            applicationReference: application.reference,
+          })
         })
     })
 
-    // TODO test for handling booking error
+    // TODO test for handling booking error (VB-3597)
   })
 })
