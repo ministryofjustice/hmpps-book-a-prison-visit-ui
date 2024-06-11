@@ -1,8 +1,9 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
+import { VisitService } from '../../services'
 
 export default class MainContactController {
-  public constructor() {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -42,6 +43,8 @@ export default class MainContactController {
       if (req.body.hasPhoneNumber === 'yes') {
         bookingJourney.mainContact.phoneNumber = req.body.phoneNumber
       }
+
+      await this.visitService.changeVisitApplication({ bookingJourney })
 
       return res.redirect('/book-visit/check-visit-details')
     }

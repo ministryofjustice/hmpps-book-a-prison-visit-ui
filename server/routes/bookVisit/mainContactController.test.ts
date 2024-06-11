@@ -5,9 +5,11 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { FlashData } from '../../@types/bapv'
+import { createMockVisitService } from '../../services/testutils/mocks'
 
 let app: Express
 
+const visitService = createMockVisitService()
 let flashData: FlashData
 let sessionData: SessionData
 
@@ -31,6 +33,7 @@ beforeEach(() => {
       allVisitors: [adultVisitor, childVisitor],
       selectedVisitors: [adultVisitor, childVisitor],
       allVisitSessionIds: ['2024-05-30_a'],
+      sessionRestriction: 'OPEN',
       selectedSessionDate: '2024-05-30',
       selectedSessionTemplateReference: 'a',
       applicationReference: TestData.applicationDto().reference,
@@ -92,6 +95,14 @@ describe('Main contact', () => {
   })
 
   describe(`POST ${url}`, () => {
+    const application = TestData.applicationDto()
+
+    beforeEach(() => {
+      visitService.changeVisitApplication.mockResolvedValue(application)
+
+      app = appWithAllRoutes({ services: { visitService }, sessionData })
+    })
+
     it('should save selected contact and phone number to session and redirect to check visit details page', () => {
       return request(app)
         .post(url)
@@ -103,6 +114,10 @@ describe('Main contact', () => {
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({
             contact: adultVisitor,
             phoneNumber: '01234 567 890',
+          })
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
           })
         })
     })
@@ -116,6 +131,10 @@ describe('Main contact', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: adultVisitor })
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
+          })
         })
     })
 
@@ -132,6 +151,10 @@ describe('Main contact', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: 'Someone Else' })
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
+          })
         })
     })
 
@@ -155,6 +178,8 @@ describe('Main contact', () => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
 
@@ -182,6 +207,8 @@ describe('Main contact', () => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
 
@@ -208,6 +235,8 @@ describe('Main contact', () => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
     })
