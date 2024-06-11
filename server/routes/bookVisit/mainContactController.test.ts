@@ -5,9 +5,12 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { FlashData } from '../../@types/bapv'
+import { createMockVisitService } from '../../services/testutils/mocks'
 
 let app: Express
 
+const visitService = createMockVisitService()
+let flashData: FlashData
 let sessionData: SessionData
 
 const url = '/book-visit/main-contact'
@@ -15,37 +18,38 @@ const url = '/book-visit/main-contact'
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
-const visitor = TestData.visitor()
+const adultVisitor = TestData.visitor()
+const childVisitor = TestData.visitor({ dateOfBirth: `${new Date().getFullYear() - 2}-01-01`, adult: false })
+
+beforeEach(() => {
+  flashData = {}
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
+
+  sessionData = {
+    booker: { reference: bookerReference, prisoners: [prisoner] },
+    bookingJourney: {
+      prisoner,
+      prison,
+      allVisitors: [adultVisitor, childVisitor],
+      selectedVisitors: [adultVisitor, childVisitor],
+      allVisitSessionIds: ['2024-05-30_a'],
+      sessionRestriction: 'OPEN',
+      selectedSessionDate: '2024-05-30',
+      selectedSessionTemplateReference: 'a',
+      applicationReference: TestData.applicationDto().reference,
+      visitorSupport: '',
+    },
+  } as SessionData
+
+  app = appWithAllRoutes({ sessionData })
+})
 
 afterEach(() => {
   jest.resetAllMocks()
 })
 
 describe('Main contact', () => {
-  let flashData: FlashData
-
   describe(`GET ${url}`, () => {
-    beforeEach(() => {
-      flashData = {}
-      flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
-
-      sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: {
-          prisoner,
-          prison,
-          allVisitors: [visitor],
-          selectedVisitors: [visitor],
-          allVisitSessionIds: ['2024-05-30_a'],
-          selectedSessionDate: '2024-05-30',
-          selectedSessionTemplateReference: 'a',
-          applicationReference: TestData.applicationDto().reference,
-        },
-      } as SessionData
-
-      app = appWithAllRoutes({ sessionData })
-    })
-
     it('should render main contact page with all fields empty', () => {
       return request(app)
         .get(url)
@@ -53,17 +57,23 @@ describe('Main contact', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text().trim()).toBe('Who is the main contact for this booking?')
+          expect($('title').text()).toMatch(/^Who is the main contact for this booking\? -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/additional-support')
+          expect($('h1').text()).toBe('Who is the main contact for this booking?')
+
+          expect($('form[method=POST]').attr('action')).toBe('/book-visit/main-contact')
           expect($('input[name="contact"]').length).toBe(2)
           expect($('input[name="contact"]:checked').length).toBe(0)
-          expect($('input[name="contact"]').eq(0).prop('value')).toBe('1')
-          expect($('input[name="contact"]').eq(1).prop('value')).toBe('someoneElse')
+          expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
+          expect($('input[name="contact"][value=someoneElse] + label').text().trim()).toBe('Someone else')
           expect($('#someoneElseName').prop('value')).toBeFalsy()
+
+          expect($('input[name=hasPhoneNumber]:checked').length).toBe(0)
           expect($('#phoneNumber').prop('value')).toBeFalsy()
         })
     })
 
-    it('should render validation errors from flash data for when no data entered', () => {
+    it('should render validation errors', () => {
       flashData.errors = [
         { location: 'body', msg: 'No main contact selected', path: 'contact', type: 'field', value: undefined },
         { location: 'body', msg: 'Enter a phone number', path: 'phoneNumber', type: 'field', value: undefined },
@@ -75,112 +85,160 @@ describe('Main contact', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text().trim()).toBe('Who is the main contact for this booking?')
-          expect($('.govuk-error-summary__body').text()).toContain('No main contact selected')
-          expect($('.govuk-error-summary__body a').eq(0).attr('href')).toBe('#contact-error')
-          expect($('.govuk-error-summary__body').text()).toContain('Enter a phone number')
-          expect($('.govuk-error-summary__body a').eq(1).attr('href')).toBe('#phoneNumber-error')
+          expect($('title').text()).toMatch(/^Error: Who is the main contact for this booking\? -/)
+          expect($('.govuk-error-summary a[href=#contact-error]').text()).toBe('No main contact selected')
           expect($('#contact-error').text()).toContain('No main contact selected')
+          expect($('.govuk-error-summary a[href=#phoneNumber-error]').text()).toBe('Enter a phone number')
           expect($('#phoneNumber-error').text()).toContain('Enter a phone number')
-          expect(flashProvider).toHaveBeenCalledWith('errors')
-          expect(flashProvider).toHaveBeenCalledWith('formValues')
-          expect(flashProvider).toHaveBeenCalledTimes(2)
         })
     })
   })
 
   describe(`POST ${url}`, () => {
+    const application = TestData.applicationDto()
+
     beforeEach(() => {
-      flashData = {}
-      flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
+      visitService.changeVisitApplication.mockResolvedValue(application)
 
-      sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: {
-          prisoner,
-          prison,
-          allVisitors: [visitor],
-          selectedVisitors: [visitor],
-          allVisitSessionIds: ['2024-05-30_a'],
-          selectedSessionDate: '2024-05-30',
-          selectedSessionTemplateReference: 'a',
-          applicationReference: TestData.applicationDto().reference,
-        },
-      } as SessionData
-
-      app = appWithAllRoutes({ sessionData })
+      app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('should redirect to request method page and store in session if contact selected and phone number entered', () => {
+    it('should save selected contact and phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
-        .send('contact=1')
-        .send('hasPhoneNumber=yes')
-        .send('phoneNumber=+0114+1234+567+')
+        .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: '01234 567 890' })
         .expect(302)
         .expect('location', `/book-visit/check-visit-details`)
         .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({
-            contact: {
-              adult: true,
-              dateOfBirth: '1980-02-21',
-              firstName: 'Joan',
-              lastName: 'Phillips',
-              visitorDisplayId: 1,
-              visitorId: 1234,
-            },
-            contactName: undefined,
-            phoneNumber: '0114 1234 567',
+            contact: adultVisitor,
+            phoneNumber: '01234 567 890',
           })
-          expect(sessionData.bookingJourney.mainContact.phoneNumber).toBe('0114 1234 567')
-          expect(sessionData.bookingJourney.mainContact.contactName).toBe(undefined)
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
+          })
         })
     })
 
-    it('should redirect to request method page and store in session if contact selected and phone number entered', () => {
+    it('should save selected contact and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
-        .send('contact=1')
-        .send('hasPhoneNumber=yes')
-        .send('phoneNumber=+0114+1234+567+')
+        .send({ contact: '1', hasPhoneNumber: 'no' })
         .expect(302)
         .expect('location', `/book-visit/check-visit-details`)
         .expect(() => {
-          expect(sessionData.bookingJourney.mainContact).toStrictEqual({
-            contact: {
-              adult: true,
-              dateOfBirth: '1980-02-21',
-              firstName: 'Joan',
-              lastName: 'Phillips',
-              visitorDisplayId: 1,
-              visitorId: 1234,
-            },
-            contactName: undefined,
-            phoneNumber: '0114 1234 567',
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: adultVisitor })
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
           })
-          expect(sessionData.bookingJourney.mainContact.phoneNumber).toBe('0114 1234 567')
-          expect(sessionData.bookingJourney.mainContact.contactName).toBe(undefined)
         })
     })
 
-    it('should redirect to request method page and store in session if other contact selected and phone number entered', () => {
+    it('should save custom contact name and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(url)
-        .send('contact=someoneElse')
-        .send('someoneElseName=Keith+Richards')
-        .send('hasPhoneNumber=yes')
-        .send('phoneNumber=+0223+5827+011+')
+        .send({
+          contact: 'someoneElse',
+          someoneElseName: 'Someone Else',
+          hasPhoneNumber: 'no',
+        })
         .expect(302)
         .expect('location', `/book-visit/check-visit-details`)
         .expect(() => {
-          expect(sessionData.bookingJourney.mainContact).toEqual({
-            contact: undefined,
-            contactName: 'Keith Richards',
-            phoneNumber: '0223 5827 011',
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: 'Someone Else' })
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
           })
-          expect(sessionData.bookingJourney.mainContact.phoneNumber).toBe('0223 5827 011')
-          expect(sessionData.bookingJourney.mainContact.contactName).toBe('Keith Richards')
         })
+    })
+
+    describe('Validation errors', () => {
+      let expectedFlashData: FlashData
+
+      it('should set a validation error when no contact or phone choice selected and redirect to original page', () => {
+        expectedFlashData = {
+          errors: [
+            { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
+            { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
+          ],
+          formValues: { someoneElseName: '', phoneNumber: '' },
+        }
+
+        return request(app)
+          .post(url)
+          .expect(302)
+          .expect('location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
+
+      it('should set a validation error when other contact and phone choice selected but no answers and redirect to original page', () => {
+        expectedFlashData = {
+          errors: [
+            {
+              type: 'field',
+              location: 'body',
+              path: 'someoneElseName',
+              value: '',
+              msg: 'Enter the name of the main contact',
+            },
+            { type: 'field', location: 'body', path: 'phoneNumber', value: '', msg: 'Enter a phone number' },
+          ],
+          formValues: { contact: 'someoneElse', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: '' },
+        }
+
+        return request(app)
+          .post(url)
+          .send({ contact: 'someoneElse', hasPhoneNumber: 'yes' })
+          .expect(302)
+          .expect('location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
+
+      it('should set a validation error phone number invalid and redirect to original page', () => {
+        expectedFlashData = {
+          errors: [
+            {
+              type: 'field',
+              location: 'body',
+              path: 'phoneNumber',
+              value: 'abcd1234',
+              msg: 'Enter a UK phone number, like 07700 900 982 or 01632 960 001',
+            },
+          ],
+          formValues: { contact: '1', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' },
+        }
+
+        return request(app)
+          .post(url)
+          .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' })
+          .expect(302)
+          .expect('location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
     })
   })
 })

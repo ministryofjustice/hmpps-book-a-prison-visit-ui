@@ -1,4 +1,4 @@
-import BookerService from './bookerService'
+import BookerService, { Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 
@@ -37,7 +37,7 @@ describe('Booker service', () => {
   })
 
   describe('getPrisoners', () => {
-    it('should return prisoners for the given booker reference', async () => {
+    it('should return prisoners for the given booker reference, with sequential display ID added', async () => {
       const bookerReference = TestData.bookerReference()
       const prisonerInfoDtos = [TestData.prisonerInfoDto(), TestData.prisonerInfoDto({ prisonerNumber: 'A9999AB' })]
       const prisoners = [TestData.prisoner(), TestData.prisoner({ prisonerNumber: 'A9999AB', prisonerDisplayId: 2 })]
@@ -52,11 +52,17 @@ describe('Booker service', () => {
   })
 
   describe('getVisitors', () => {
-    it('should return visitors for the given booker reference and prisoner number', async () => {
+    it('should return visitors for the given booker reference and prisoner number, with sequential display ID and adult (boolean) added', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.prisonerInfoDto()
-      const visitorInfoDtos = [TestData.visitorInfoDto(), TestData.visitorInfoDto({ visitorId: 105231 })]
-      const visitors = [TestData.visitor(), TestData.visitor({ visitorId: 105231, visitorDisplayId: 2 })]
+      const visitorInfoDtos = [
+        TestData.visitorInfoDto({ visitorId: 100, dateOfBirth: '2000-01-01' }), // an adult
+        TestData.visitorInfoDto({ visitorId: 200, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
+      ]
+      const visitors: Visitor[] = [
+        { ...visitorInfoDtos[0], visitorDisplayId: 1, adult: true },
+        { ...visitorInfoDtos[1], visitorDisplayId: 2, adult: false },
+      ]
 
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 

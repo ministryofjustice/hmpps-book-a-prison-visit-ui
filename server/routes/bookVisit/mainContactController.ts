@@ -1,50 +1,50 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { Visitor } from '../../services/bookerService'
+import { VisitService } from '../../services'
 
 export default class MainContactController {
-  public constructor() {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { selectedVisitors } = req.session.bookingJourney
 
-      const adults = selectedVisitors.reduce((adultVisitors: Visitor[], visitor: Visitor) => {
-        if (visitor.adult ?? true) {
-          adultVisitors.push(visitor)
-        }
-
-        return adultVisitors
-      }, [])
+      const adultVisitors = selectedVisitors.filter(visitor => visitor.adult)
 
       res.render('pages/bookVisit/mainContact', {
         errors: req.flash('errors'),
         formValues: req.flash('formValues')?.[0] || {},
-        adultVisitors: adults,
+        adultVisitors,
       })
     }
   }
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { bookingJourney } = req.session
       const errors = validationResult(req)
-
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', req.body)
         return res.redirect(`/book-visit/main-contact`)
       }
 
-      const selectedContact = bookingJourney.selectedVisitors.find(
-        (visitor: Visitor) => req.body.contact === visitor.visitorDisplayId.toString(),
-      )
+      const { bookingJourney } = req.session
+      const { contact }: { contact: string } = req.body
 
-      bookingJourney.mainContact = {
-        contact: selectedContact,
-        phoneNumber: req.body.hasPhoneNumber === 'yes' ? req.body.phoneNumber : undefined,
-        contactName: selectedContact === undefined ? req.body.someoneElseName : undefined,
+      if (contact === 'someoneElse') {
+        bookingJourney.mainContact = { contact: req.body.someoneElseName }
+      } else {
+        const contactVisitor = bookingJourney.selectedVisitors.find(
+          visitor => visitor.visitorDisplayId.toString() === contact,
+        )
+        bookingJourney.mainContact = { contact: contactVisitor }
       }
+
+      if (req.body.hasPhoneNumber === 'yes') {
+        bookingJourney.mainContact.phoneNumber = req.body.phoneNumber
+      }
+
+      await this.visitService.changeVisitApplication({ bookingJourney })
 
       return res.redirect('/book-visit/check-visit-details')
     }
@@ -77,7 +77,7 @@ export default class MainContactController {
               throw new Error('Enter a phone number')
             }
             if (!/^(?:0|\+?44)(?:\d\s?){9,10}$/.test(value)) {
-              throw new Error('Enter a valid UK phone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192')
+              throw new Error('Enter a UK phone number, like 07700 900 982 or 01632 960 001')
             }
           }
           return true

@@ -6,6 +6,7 @@ import type {
   BookerReference,
   PrisonDto,
   PrisonerInfoDto,
+  VisitDto,
   VisitorInfoDto,
 } from '../../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
@@ -107,6 +108,45 @@ export default class TestData {
     lastName = 'SMITH',
     prisonCode = 'HEI',
   }: Partial<Prisoner> = {}): Prisoner => ({ prisonerDisplayId, prisonerNumber, firstName, lastName, prisonCode })
+
+  static visitDto = ({
+    applicationReference = 'aaa-bbb-ccc',
+    reference = 'ab-cd-ef-gh',
+    prisonerId = 'A1234BC',
+    prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)', // TODO does this come through (e.g. on /book)?
+    sessionTemplateReference = 'v9d.7ed.7u',
+    visitRoom = '',
+    visitType = 'SOCIAL',
+    visitStatus = 'BOOKED',
+    outcomeStatus = undefined,
+    visitRestriction = 'OPEN',
+    startTimestamp = '2024-05-30T10:00:00',
+    endTimestamp = '2024-05-30T11:30:00',
+    visitNotes = [],
+    visitContact = { name: 'Joan Phillips', telephone: '01234 567 890' },
+    visitors = [{ nomisPersonId: 1234, visitContact: true }],
+    visitorSupport = { description: 'wheelchair access' },
+  }: Partial<VisitDto> = {}): VisitDto =>
+    ({
+      applicationReference,
+      reference,
+      prisonerId,
+      prisonId,
+      prisonName,
+      sessionTemplateReference,
+      visitRoom,
+      visitType,
+      visitStatus,
+      outcomeStatus,
+      visitRestriction,
+      startTimestamp,
+      endTimestamp,
+      visitNotes,
+      visitContact,
+      visitors,
+      visitorSupport,
+    }) as VisitDto
 
   static visitorInfoDto = ({
     visitorId = 1234,

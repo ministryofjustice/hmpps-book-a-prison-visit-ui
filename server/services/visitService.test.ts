@@ -24,36 +24,114 @@ describe('Visit service', () => {
     jest.resetAllMocks()
   })
 
-  describe('createVisitApplication', () => {
+  describe('Booking journey', () => {
     const bookerReference = TestData.bookerReference().value
     const visitorOne = TestData.visitor({ visitorId: 100 })
     const visitorTwo = TestData.visitor({ visitorId: 200 })
-    const bookingJourney: BookingJourney = {
-      prisoner: TestData.prisoner(),
-      prison: TestData.prisonDto(),
-      allVisitors: [visitorOne, visitorTwo],
-      selectedVisitors: [visitorOne, visitorTwo],
-      allVisitSessionIds: ['2024-05-30_a'],
-      sessionRestriction: 'OPEN',
-      selectedSessionDate: '2024-05-30',
-      selectedSessionTemplateReference: 'a',
-    }
+    const visitorThree = TestData.visitor({ visitorId: 300 })
 
-    it('should create and return a visit application from booking journey data', async () => {
-      const application = TestData.applicationDto()
-      orchestrationApiClient.createVisitApplication.mockResolvedValue(application)
+    const application = TestData.applicationDto()
+    const visit = TestData.visitDto()
 
-      const results = await visitService.createVisitApplication({ bookingJourney, bookerReference })
+    let bookingJourney: BookingJourney
 
-      expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
-        prisonerId: bookingJourney.prisoner.prisonerNumber,
-        sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-        sessionDate: bookingJourney.selectedSessionDate,
-        applicationRestriction: bookingJourney.sessionRestriction,
-        visitorIds: [100, 200],
-        bookerReference,
+    beforeEach(() => {
+      bookingJourney = {
+        prisoner: TestData.prisoner(),
+        prison: TestData.prisonDto(),
+        allVisitors: [visitorOne, visitorTwo, visitorThree],
+        selectedVisitors: [visitorOne, visitorTwo],
+        allVisitSessionIds: ['2024-05-30_a'],
+        sessionRestriction: 'OPEN',
+        selectedSessionDate: '2024-05-30',
+        selectedSessionTemplateReference: 'a',
+        applicationReference: application.reference,
+        visitorSupport: 'wheelchair access',
+        mainContact: { contact: visitorOne, phoneNumber: '01234 567 890' },
+      }
+    })
+
+    describe('createVisitApplication', () => {
+      it('should create and return a visit application from booking journey data', async () => {
+        orchestrationApiClient.createVisitApplication.mockResolvedValue(application)
+
+        const results = await visitService.createVisitApplication({ bookingJourney, bookerReference })
+
+        expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
+          prisonerId: bookingJourney.prisoner.prisonerNumber,
+          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
+          sessionDate: bookingJourney.selectedSessionDate,
+          applicationRestriction: bookingJourney.sessionRestriction,
+          visitorIds: [100, 200],
+          bookerReference,
+        })
+        expect(results).toStrictEqual(application)
       })
-      expect(results).toStrictEqual(application)
+    })
+
+    describe('changeVisitApplication', () => {
+      it('should change an existing visit application to update it with booking journey data', async () => {
+        const visitContact = { name: 'Joan Phillips', telephone: '01234 567 890' }
+        const visitors = [
+          { nomisPersonId: 100, visitContact: true },
+          { nomisPersonId: 200, visitContact: false },
+        ]
+        const visitorSupport = { description: 'wheelchair access' }
+
+        orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
+
+        const results = await visitService.changeVisitApplication({ bookingJourney })
+
+        expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
+          applicationReference: bookingJourney.applicationReference,
+          applicationRestriction: bookingJourney.sessionRestriction,
+          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
+          sessionDate: bookingJourney.selectedSessionDate,
+          visitContact,
+          visitors,
+          visitorSupport,
+        })
+        expect(results).toStrictEqual(application)
+      })
+
+      it('should should handle a custom main contact and no phone number', async () => {
+        bookingJourney.mainContact = { contact: 'Someone Else' }
+
+        const visitContact = { name: 'Someone Else' }
+        const visitors = [
+          { nomisPersonId: 100, visitContact: false },
+          { nomisPersonId: 200, visitContact: false },
+        ]
+        const visitorSupport = { description: 'wheelchair access' }
+
+        orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
+
+        const results = await visitService.changeVisitApplication({ bookingJourney })
+
+        expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
+          applicationReference: bookingJourney.applicationReference,
+          applicationRestriction: bookingJourney.sessionRestriction,
+          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
+          sessionDate: bookingJourney.selectedSessionDate,
+          visitContact,
+          visitors,
+          visitorSupport,
+        })
+        expect(results).toStrictEqual(application)
+      })
+    })
+
+    describe('bookVisit', () => {
+      it('should book a visit from an application', async () => {
+        orchestrationApiClient.bookVisit.mockResolvedValue(visit)
+
+        const results = await visitService.bookVisit({ applicationReference: bookingJourney.applicationReference })
+
+        expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
+          applicationReference: bookingJourney.applicationReference,
+        })
+        expect(results).toStrictEqual(visit)
+      })
     })
   })
 })

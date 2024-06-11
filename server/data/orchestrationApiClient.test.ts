@@ -2,7 +2,14 @@ import nock from 'nock'
 import config from '../config'
 import OrchestrationApiClient from './orchestrationApiClient'
 import TestData from '../routes/testutils/testData'
-import { ApplicationDto, AvailableVisitSessionDto, CreateApplicationDto } from './orchestrationApiTypes'
+import {
+  ApplicationDto,
+  AvailableVisitSessionDto,
+  BookingOrchestrationRequestDto,
+  ChangeApplicationDto,
+  CreateApplicationDto,
+  VisitDto,
+} from './orchestrationApiTypes'
 import { SessionRestriction } from '../services/visitSessionsService'
 
 describe('orchestrationApiClient', () => {
@@ -22,6 +29,68 @@ describe('orchestrationApiClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
+  })
+
+  describe('bookVisit', () => {
+    it('should book a visit from an application', async () => {
+      const applicationReference = 'aaa-bbb-ccc'
+
+      const result = { reference: 'ab-cd-ef-gh' } as Partial<VisitDto>
+
+      fakeOrchestrationApi
+        .put(`/visits/${applicationReference}/book`, <BookingOrchestrationRequestDto>{
+          applicationMethodType: 'WEBSITE',
+          allowOverBooking: false,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, result)
+
+      const output = await orchestrationApiClient.bookVisit({ applicationReference })
+
+      expect(output).toStrictEqual(result)
+    })
+  })
+
+  describe('changeVisitApplication', () => {
+    it('should update an incomplete Visit Application', async () => {
+      const applicationReference = 'aaa-bbb-ccc'
+      const applicationRestriction: SessionRestriction = 'OPEN'
+      const sessionTemplateReference = 'v9d.7ed.7u'
+      const sessionDate = '2024-05-01'
+      const visitContact = { name: 'Visit Contact' }
+      const visitors = [
+        { nomisPersonId: 1, visitContact: true },
+        { nomisPersonId: 2, visitContact: false },
+      ]
+      const visitorSupport = { description: 'wheelchair' }
+
+      const result = { reference: 'aaa-bbb-ccc' } as ApplicationDto
+
+      fakeOrchestrationApi
+        .put(`/visits/application/${applicationReference}/slot/change`, <ChangeApplicationDto>{
+          applicationRestriction,
+          sessionTemplateReference,
+          sessionDate,
+          visitContact,
+          visitors,
+          visitorSupport,
+          allowOverBooking: false,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, result)
+
+      const output = await orchestrationApiClient.changeVisitApplication({
+        applicationReference,
+        applicationRestriction,
+        sessionTemplateReference,
+        sessionDate,
+        visitContact,
+        visitors,
+        visitorSupport,
+      })
+
+      expect(output).toStrictEqual(result)
+    })
   })
 
   describe('createVisitApplication', () => {
