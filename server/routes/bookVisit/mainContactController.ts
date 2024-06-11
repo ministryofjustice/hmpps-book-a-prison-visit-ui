@@ -1,7 +1,5 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, validationResult } from 'express-validator'
-import { Visitor } from '../../services/bookerService'
-import { BookingJourney } from '../../@types/bapv'
 
 export default class MainContactController {
   public constructor() {}
