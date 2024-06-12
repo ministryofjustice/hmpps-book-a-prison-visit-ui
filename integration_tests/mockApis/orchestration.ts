@@ -7,10 +7,64 @@ import {
   BookerReference,
   PrisonDto,
   PrisonerInfoDto,
+  VisitDto,
   VisitorInfoDto,
 } from '../../server/data/orchestrationApiTypes'
 
 export default {
+  // orchestration-visits-controller
+
+  stubBookVisit: (visit: VisitDto): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/visits/${visit.applicationReference}/book`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              applicationMethodType: 'WEBSITE',
+              allowOverBooking: false,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visit,
+      },
+    })
+  },
+
+  // orchestration-applications-controller
+
+  stubChangeVisitApplication: (application: ApplicationDto): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/visits/application/${application.reference}/slot/change`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              applicationRestriction: application.visitRestriction,
+              sessionTemplateReference: application.sessionTemplateReference,
+              sessionDate: application.startTimestamp.split('T')[0],
+              visitContact: application.visitContact,
+              visitors: application.visitors,
+              visitorSupport: application.visitorSupport,
+              allowOverBooking: false,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: application,
+      },
+    })
+  },
+
   stubCreateVisitApplication: ({
     application,
     bookerReference,
@@ -38,12 +92,14 @@ export default {
         ],
       },
       response: {
-        status: 200,
+        status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: application,
       },
     })
   },
+
+  // public-booker-controller
 
   stubGetBookerReference: (bookerReference = TestData.bookerReference()): SuperAgentRequest =>
     stubFor({
@@ -98,6 +154,8 @@ export default {
       },
     }),
 
+  // orchestration-sessions-controller
+
   stubGetVisitSessions: ({
     prisonId,
     prisonerId,
@@ -126,6 +184,8 @@ export default {
       },
     }),
 
+  // orchestration-prisons-config-controller
+
   stubGetPrison: (prisonDto: PrisonDto = TestData.prisonDto()): SuperAgentRequest =>
     stubFor({
       request: {
@@ -138,6 +198,8 @@ export default {
         jsonBody: prisonDto,
       },
     }),
+
+  // health check
 
   stubOrchestrationPing: (status = 200): SuperAgentRequest =>
     stubFor({

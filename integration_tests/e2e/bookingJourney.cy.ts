@@ -135,8 +135,21 @@ context('Booking journey', () => {
     mainContactPage.getContactLabel(1).contains('Adult One')
     mainContactPage.selectVisitor(1)
     mainContactPage.checkHasPhoneNumber()
-    mainContactPage.enterPhoneNumber('01444 555888')
+    mainContactPage.enterPhoneNumber('01234 567 890')
+    cy.task('stubChangeVisitApplication', {
+      ...application,
+      visitContact: { name: 'Adult One', telephone: '01234 567 890' },
+      visitors: [
+        { nomisPersonId: 1000, visitContact: true },
+        { nomisPersonId: 3000, visitContact: false },
+      ],
+      visitorSupport: { description: 'Wheelchair access' },
+    })
     mainContactPage.continue()
+
+    // Check visit details
+    cy.task('stubBookVisit', TestData.visitDto())
+    cy.get('[data-test="submit-booking"]').click() // TODO implement page class and add assertions (as part of VB-3481)
 
     // TODO add to this test as booking journey implemented
   })
