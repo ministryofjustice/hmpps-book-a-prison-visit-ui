@@ -1,14 +1,29 @@
 import type { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 
 export default class AdditionalSupportController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
+      const { visitorSupport } = req.session.bookingJourney
+
+      const selectedAdditionalSupport =
+        visitorSupport !== undefined
+          ? {
+              additionalSupportRequired: visitorSupport === '' ? 'no' : 'yes',
+              additionalSupport: visitorSupport,
+            }
+          : {}
+
+      const formValues = {
+        ...selectedAdditionalSupport,
+        ...req.flash('formValues')?.[0],
+      }
+
       res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
-        formValues: req.flash('formValues')?.[0] || {},
+        formValues,
         prisonName: req.session.bookingJourney.prison.prisonName,
       })
     }
@@ -19,12 +34,17 @@ export default class AdditionalSupportController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        req.flash('formValues', req.body)
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
         return res.redirect(`/book-visit/additional-support`)
       }
 
       const { bookingJourney } = req.session
-      bookingJourney.visitorSupport = req.body.additionalSupportRequired === 'no' ? '' : req.body.additionalSupport
+      const { additionalSupport, additionalSupportRequired } = matchedData<{
+        additionalSupport?: string
+        additionalSupportRequired?: 'yes' | 'no'
+      }>(req)
+
+      bookingJourney.visitorSupport = additionalSupportRequired === 'no' ? '' : additionalSupport
 
       return res.redirect('/book-visit/main-contact')
     }
