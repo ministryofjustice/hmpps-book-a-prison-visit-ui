@@ -20,64 +20,64 @@ const prisoner = TestData.prisonerInfoDto()
 const prison = TestData.prisonDto()
 
 const fakeDate = new Date('2024-05-02')
-const visitors = [
-  TestData.visitor({
-    visitorDisplayId: 1,
-    visitorId: 1000,
-    firstName: 'Visitor',
-    lastName: 'Age 20y',
-    dateOfBirth: '2004-04-01',
-  }),
-  TestData.visitor({
-    visitorDisplayId: 2,
-    visitorId: 2000,
-    firstName: 'Visitor',
-    lastName: 'Age 18y',
-    dateOfBirth: '2006-05-02', // 18 today
-  }),
-  TestData.visitor({
-    visitorDisplayId: 3,
-    visitorId: 3000,
-    firstName: 'Visitor',
-    lastName: 'Age 17y',
-    dateOfBirth: '2006-05-03', // 18 tomorrow
-  }),
-  TestData.visitor({
-    visitorDisplayId: 4,
-    visitorId: 4000,
-    firstName: 'Visitor',
-    lastName: 'Age 16y',
-    dateOfBirth: '2008-05-02', // 16 today
-  }),
-  TestData.visitor({
-    visitorDisplayId: 5,
-    visitorId: 5000,
-    firstName: 'Visitor',
-    lastName: 'Age 15y',
-    dateOfBirth: '2008-05-03', // 16 tomorrow
-  }),
-  TestData.visitor({
-    visitorDisplayId: 6,
-    visitorId: 6000,
-    firstName: 'Visitor',
-    lastName: 'Age 10y',
-    dateOfBirth: '2014-05-02',
-  }),
-  TestData.visitor({
-    visitorDisplayId: 7,
-    visitorId: 7000,
-    firstName: 'Visitor',
-    lastName: 'Age 1y',
-    dateOfBirth: '2023-05-02',
-  }),
-  TestData.visitor({
-    visitorDisplayId: 8,
-    visitorId: 8000,
-    firstName: 'Visitor',
-    lastName: 'Age 4m',
-    dateOfBirth: '2024-01-02',
-  }),
-]
+
+const visitor1 = TestData.visitor({
+  visitorDisplayId: 1,
+  visitorId: 1000,
+  firstName: 'Visitor',
+  lastName: 'Age 20y',
+  dateOfBirth: '2004-04-01',
+})
+const visitor2 = TestData.visitor({
+  visitorDisplayId: 2,
+  visitorId: 2000,
+  firstName: 'Visitor',
+  lastName: 'Age 18y',
+  dateOfBirth: '2006-05-02', // 18 today
+})
+const visitor3 = TestData.visitor({
+  visitorDisplayId: 3,
+  visitorId: 3000,
+  firstName: 'Visitor',
+  lastName: 'Age 17y',
+  dateOfBirth: '2006-05-03', // 18 tomorrow
+})
+const visitor4 = TestData.visitor({
+  visitorDisplayId: 4,
+  visitorId: 4000,
+  firstName: 'Visitor',
+  lastName: 'Age 16y',
+  dateOfBirth: '2008-05-02', // 16 today
+})
+const visitor5 = TestData.visitor({
+  visitorDisplayId: 5,
+  visitorId: 5000,
+  firstName: 'Visitor',
+  lastName: 'Age 15y',
+  dateOfBirth: '2008-05-03', // 16 tomorrow
+})
+const visitor6 = TestData.visitor({
+  visitorDisplayId: 6,
+  visitorId: 6000,
+  firstName: 'Visitor',
+  lastName: 'Age 10y',
+  dateOfBirth: '2014-05-02',
+})
+const visitor7 = TestData.visitor({
+  visitorDisplayId: 7,
+  visitorId: 7000,
+  firstName: 'Visitor',
+  lastName: 'Age 1y',
+  dateOfBirth: '2023-05-02',
+})
+const visitor8 = TestData.visitor({
+  visitorDisplayId: 8,
+  visitorId: 8000,
+  firstName: 'Visitor',
+  lastName: 'Age 4m',
+  dateOfBirth: '2024-01-02',
+})
+const visitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8]
 
 beforeEach(() => {
   jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
@@ -152,6 +152,39 @@ describe('Select visitors', () => {
               allVisitors: visitors,
             },
           } as SessionData)
+        })
+    })
+
+    it('should pre-populate with data in session', () => {
+      sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+
+      return request(app)
+        .get(url)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]:checked').length).toBe(3)
+          expect($('input[name=visitorDisplayIds][value=1]:checked + label').length).toBe(1)
+          expect($('input[name=visitorDisplayIds][value=4]:checked + label').length).toBe(1)
+          expect($('input[name=visitorDisplayIds][value=8]:checked + label').length).toBe(1)
+        })
+    })
+
+    it('should pre-populate with data in formValues overriding that in session', () => {
+      sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      const formValues = { visitorDisplayIds: [2, 7] }
+      flashData = { formValues: [formValues] }
+
+      return request(app)
+        .get(url)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]:checked').length).toBe(2)
+          expect($('input[name=visitorDisplayIds][value=2]:checked + label').length).toBe(1)
+          expect($('input[name=visitorDisplayIds][value=7]:checked + label').length).toBe(1)
         })
     })
 
@@ -243,7 +276,7 @@ describe('Select visitors', () => {
               prisoner,
               prison,
               allVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]],
+              selectedVisitors: [visitor1, visitor3],
             },
           } as SessionData)
         })

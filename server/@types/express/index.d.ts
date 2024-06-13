@@ -30,8 +30,8 @@ export declare global {
       id: string
       flash(type: 'errors'): ValidationError[]
       flash(type: 'errors', message: ValidationError[]): number
-      flash(type: 'formValues'): Record<string, string | string[]>[]
-      flash(type: 'formValues', message: Record<string, string | string[]>): number
+      flash(type: 'formValues'): Record<string, string | string[] | number[]>[]
+      flash(type: 'formValues', message: Record<string, string | string[] | number[]>): number
       logout(done: (err: unknown) => void): void
     }
 

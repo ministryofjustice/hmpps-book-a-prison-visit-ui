@@ -21,11 +21,17 @@ export default class SelectVisitorsController {
         ])
       }
 
-      // TODO pre-populate form (e.g. if coming from Back link or Change answers)
+      const selectedVisitorDisplayIds = {
+        visitorDisplayIds: bookingJourney.selectedVisitors?.map(visitor => visitor.visitorDisplayId) ?? [],
+      }
+      const formValues = {
+        ...selectedVisitorDisplayIds,
+        ...req.flash('formValues')?.[0],
+      }
 
       res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
-        formValues: req.flash('formValues')?.[0] || {},
+        formValues,
         prison: bookingJourney.prison,
         visitors: bookingJourney.allVisitors,
       })
