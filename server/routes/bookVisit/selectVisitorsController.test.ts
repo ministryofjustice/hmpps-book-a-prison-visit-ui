@@ -315,6 +315,22 @@ describe('Select visitors', () => {
         expectedFlashFormValues = { visitorDisplayIds: [] }
       })
 
+      it('should discard any unexpected form data', () => {
+        expectedFlashErrors[0].msg = 'No visitors selected'
+        expectedFlashFormValues.visitorDisplayIds = []
+
+        return request(app)
+          .post(url)
+          .send({ unexpected: 'data' })
+          .expect(302)
+          .expect('Location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+          })
+      })
+
       it('should set a validation error and redirect to original page when no visitors selected', () => {
         expectedFlashErrors[0].msg = 'No visitors selected'
         expectedFlashFormValues.visitorDisplayIds = []
