@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, body, validationResult } from 'express-validator'
+import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { differenceInYears } from 'date-fns'
 import { BookerService, PrisonService } from '../../services'
 import { pluralise } from '../../utils/utils'
@@ -21,11 +21,17 @@ export default class SelectVisitorsController {
         ])
       }
 
-      // TODO pre-populate form (e.g. if coming from Back link or Change answers)
+      const selectedVisitorDisplayIds = {
+        visitorDisplayIds: bookingJourney.selectedVisitors?.map(visitor => visitor.visitorDisplayId) ?? [],
+      }
+      const formValues = {
+        ...selectedVisitorDisplayIds,
+        ...req.flash('formValues')?.[0],
+      }
 
       res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
-        formValues: req.flash('formValues')?.[0] || {},
+        formValues,
         prison: bookingJourney.prison,
         visitors: bookingJourney.allVisitors,
       })
@@ -35,14 +41,15 @@ export default class SelectVisitorsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
+
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        req.flash('formValues', req.body)
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
         return res.redirect('/book-visit/select-visitors')
       }
 
       const { bookingJourney } = req.session
-      const { visitorDisplayIds }: { visitorDisplayIds: number[] } = req.body
+      const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: number[] }>(req)
 
       const selectedVisitors = bookingJourney.allVisitors.filter(visitor =>
         visitorDisplayIds.includes(visitor.visitorDisplayId),
