@@ -3,10 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
-import { FlashData } from '../../@types/bapv'
 
 let app: Express
 
@@ -90,9 +89,9 @@ afterEach(() => {
 })
 
 describe('Select visitors', () => {
-  let flashData: FlashData
-
   describe(`GET ${url}`, () => {
+    let flashData: FlashData
+
     beforeEach(() => {
       bookerService.getVisitors.mockResolvedValue(visitors)
       prisonService.getPrison.mockResolvedValue(prison)
@@ -127,6 +126,7 @@ describe('Select visitors', () => {
 
           expect($('form[method=POST]').attr('action')).toBe('/book-visit/select-visitors')
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]:checked').length).toBe(0)
           expect($('input[name=visitorDisplayIds][value=1]+label').text().trim()).toBe('Visitor Age 20y (20 years old)')
           expect($('input[name=visitorDisplayIds][value=2]+label').text().trim()).toBe('Visitor Age 18y (18 years old)')
           expect($('input[name=visitorDisplayIds][value=3]+label').text().trim()).toBe('Visitor Age 17y (17 years old)')
@@ -163,8 +163,8 @@ describe('Select visitors', () => {
         value: [],
         msg: 'No visitors selected',
       }
-
-      flashData = { errors: [validationError], formValues: { visitorDisplayIds: [] } }
+      const formValues = { visitorDisplayIds: <number[]>[] }
+      flashData = { errors: [validationError], formValues: [formValues] }
 
       return request(app)
         .get(url)
@@ -274,35 +274,34 @@ describe('Select visitors', () => {
 
     describe('Validation errors', () => {
       // Uses visitor age config in TestData.prisonDto()
-      let expectedFlashData: FlashData
+      let expectedFlashErrors: FlashErrors
+      let expectedFlashFormValues: FlashFormValues
 
       beforeEach(() => {
-        expectedFlashData = {
-          errors: [{ type: 'field', location: 'body', path: 'visitorDisplayIds', value: [], msg: '' }],
-          formValues: { visitorDisplayIds: [] },
-        }
+        expectedFlashErrors = [{ type: 'field', location: 'body', path: 'visitorDisplayIds', value: [], msg: '' }]
+        expectedFlashFormValues = { visitorDisplayIds: [] }
       })
 
       it('should set a validation error and redirect to original page when no visitors selected', () => {
-        expectedFlashData.errors[0].msg = 'No visitors selected'
-        expectedFlashData.formValues.visitorDisplayIds = []
+        expectedFlashErrors[0].msg = 'No visitors selected'
+        expectedFlashFormValues.visitorDisplayIds = []
 
         return request(app)
           .post(url)
           .expect(302)
           .expect('Location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
           })
       })
 
       it('should set a validation error and redirect to original page when max total visitors exceeded', () => {
         const visitorDisplayIds = [1, 2, 5, 6, 7]
-        expectedFlashData.errors[0].msg = 'Select no more than 4 visitors'
-        expectedFlashData.errors[0].value = visitorDisplayIds
-        expectedFlashData.formValues.visitorDisplayIds = visitorDisplayIds
+        expectedFlashErrors[0].msg = 'Select no more than 4 visitors'
+        expectedFlashErrors[0].value = visitorDisplayIds
+        expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
           .post(url)
@@ -310,17 +309,17 @@ describe('Select visitors', () => {
           .expect(302)
           .expect('Location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
           })
       })
 
       it('should set a validation error and redirect to original page when max total adult age visitors exceeded', () => {
         const visitorDisplayIds = [1, 2, 3]
-        expectedFlashData.errors[0].msg = 'Select no more than 2 visitors 16 years old or older'
-        expectedFlashData.errors[0].value = visitorDisplayIds
-        expectedFlashData.formValues.visitorDisplayIds = visitorDisplayIds
+        expectedFlashErrors[0].msg = 'Select no more than 2 visitors 16 years old or older'
+        expectedFlashErrors[0].value = visitorDisplayIds
+        expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
           .post(url)
@@ -328,17 +327,17 @@ describe('Select visitors', () => {
           .expect(302)
           .expect('Location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
           })
       })
 
       it('should set a validation error and redirect to original page when max total child age visitors exceeded', () => {
         const visitorDisplayIds = [5, 6, 7, 8]
-        expectedFlashData.errors[0].msg = 'Select no more than 3 visitors under 16 years old'
-        expectedFlashData.errors[0].value = visitorDisplayIds
-        expectedFlashData.formValues.visitorDisplayIds = visitorDisplayIds
+        expectedFlashErrors[0].msg = 'Select no more than 3 visitors under 16 years old'
+        expectedFlashErrors[0].value = visitorDisplayIds
+        expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
           .post(url)
@@ -346,17 +345,17 @@ describe('Select visitors', () => {
           .expect(302)
           .expect('Location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
           })
       })
 
       it('should set a validation error and redirect to original page no visitor over 18 is selected', () => {
         const visitorDisplayIds = [3]
-        expectedFlashData.errors[0].msg = 'Add a visitor who is 18 years old or older'
-        expectedFlashData.errors[0].value = visitorDisplayIds
-        expectedFlashData.formValues.visitorDisplayIds = visitorDisplayIds
+        expectedFlashErrors[0].msg = 'Add a visitor who is 18 years old or older'
+        expectedFlashErrors[0].value = visitorDisplayIds
+        expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
           .post(url)
@@ -364,8 +363,8 @@ describe('Select visitors', () => {
           .expect(302)
           .expect('Location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
           })
       })

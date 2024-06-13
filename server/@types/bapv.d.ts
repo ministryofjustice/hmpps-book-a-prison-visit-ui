@@ -1,4 +1,3 @@
-import { FieldValidationError } from 'express-validator'
 import { PrisonDto } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 import { SessionRestriction } from '../services/visitSessionsService'
@@ -49,9 +48,4 @@ export type BookingConfirmed = {
   prisonCode: string
   prisonName: string
   visitReference: string
-}
-
-export type FlashData = {
-  errors?: FieldValidationError[]
-  formValues?: Record<string, string | string[] | number[]>
 }

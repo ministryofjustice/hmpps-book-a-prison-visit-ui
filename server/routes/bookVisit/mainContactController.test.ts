@@ -2,15 +2,14 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FieldValidationError } from 'express-validator'
+import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { FlashData } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
 
 let app: Express
 
 const visitService = createMockVisitService()
-let flashData: FlashData
 let sessionData: SessionData
 
 const url = '/book-visit/main-contact'
@@ -22,9 +21,6 @@ const adultVisitor = TestData.visitor()
 const childVisitor = TestData.visitor({ dateOfBirth: `${new Date().getFullYear() - 2}-01-01`, adult: false })
 
 beforeEach(() => {
-  flashData = {}
-  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
-
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookingJourney: {
@@ -50,6 +46,13 @@ afterEach(() => {
 
 describe('Main contact', () => {
   describe(`GET ${url}`, () => {
+    let flashData: FlashData
+
+    beforeEach(() => {
+      flashData = {}
+      flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
+    })
+
     it('should render main contact page with all fields empty', () => {
       return request(app)
         .get(url)
@@ -74,10 +77,11 @@ describe('Main contact', () => {
     })
 
     it('should render validation errors', () => {
-      flashData.errors = [
+      const validationErrors: FieldValidationError[] = [
         { location: 'body', msg: 'No main contact selected', path: 'contact', type: 'field', value: undefined },
         { location: 'body', msg: 'Enter a phone number', path: 'phoneNumber', type: 'field', value: undefined },
       ]
+      flashData = { errors: validationErrors }
 
       return request(app)
         .get(url)
@@ -159,24 +163,23 @@ describe('Main contact', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashData: FlashData
+      let expectedFlashErrors: FlashErrors
+      let expectedFlashFormValues: FlashFormValues
 
       it('should set a validation error when no contact or phone choice selected and redirect to original page', () => {
-        expectedFlashData = {
-          errors: [
-            { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
-            { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
-          ],
-          formValues: { someoneElseName: '', phoneNumber: '' },
-        }
+        expectedFlashErrors = [
+          { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
+          { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
+        ]
+        expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
 
         return request(app)
           .post(url)
           .expect(302)
           .expect('location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
 
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
@@ -184,18 +187,21 @@ describe('Main contact', () => {
       })
 
       it('should set a validation error when other contact and phone choice selected but no answers and redirect to original page', () => {
-        expectedFlashData = {
-          errors: [
-            {
-              type: 'field',
-              location: 'body',
-              path: 'someoneElseName',
-              value: '',
-              msg: 'Enter the name of the main contact',
-            },
-            { type: 'field', location: 'body', path: 'phoneNumber', value: '', msg: 'Enter a phone number' },
-          ],
-          formValues: { contact: 'someoneElse', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: '' },
+        expectedFlashErrors = [
+          {
+            type: 'field',
+            location: 'body',
+            path: 'someoneElseName',
+            value: '',
+            msg: 'Enter the name of the main contact',
+          },
+          { type: 'field', location: 'body', path: 'phoneNumber', value: '', msg: 'Enter a phone number' },
+        ]
+        expectedFlashFormValues = {
+          contact: 'someoneElse',
+          someoneElseName: '',
+          hasPhoneNumber: 'yes',
+          phoneNumber: '',
         }
 
         return request(app)
@@ -204,8 +210,8 @@ describe('Main contact', () => {
           .expect(302)
           .expect('location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
 
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
@@ -213,18 +219,16 @@ describe('Main contact', () => {
       })
 
       it('should set a validation error phone number invalid and redirect to original page', () => {
-        expectedFlashData = {
-          errors: [
-            {
-              type: 'field',
-              location: 'body',
-              path: 'phoneNumber',
-              value: 'abcd1234',
-              msg: 'Enter a UK phone number, like 07700 900 982 or 01632 960 001',
-            },
-          ],
-          formValues: { contact: '1', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' },
-        }
+        expectedFlashErrors = [
+          {
+            type: 'field',
+            location: 'body',
+            path: 'phoneNumber',
+            value: 'abcd1234',
+            msg: 'Enter a UK phone number, like 07700 900 982 or 01632 960 001',
+          },
+        ]
+        expectedFlashFormValues = { contact: '1', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
 
         return request(app)
           .post(url)
@@ -232,8 +236,8 @@ describe('Main contact', () => {
           .expect(302)
           .expect('location', url)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(sessionData.bookingJourney.mainContact).toBe(undefined)
 
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()

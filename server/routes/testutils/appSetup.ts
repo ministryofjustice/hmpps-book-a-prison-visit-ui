@@ -17,6 +17,7 @@ jest.mock('../../applicationInfo', () => {
 import express, { Express } from 'express'
 import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
+import { FieldValidationError } from 'express-validator'
 
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
@@ -34,6 +35,12 @@ export const user: Express.User = {
 
 const bookerReference = TestData.bookerReference().value
 
+export type FlashErrors = FieldValidationError[]
+export type FlashFormValues = Record<string, string | string[] | number[]>
+export type FlashData = {
+  errors?: FlashErrors
+  formValues?: FlashFormValues[]
+}
 export const flashProvider = jest.fn()
 
 function appSetup(
