@@ -3,9 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { BookingJourney, FlashData } from '../../@types/bapv'
+import { BookingJourney } from '../../@types/bapv'
 
 let app: Express
 
@@ -23,9 +23,9 @@ afterEach(() => {
 })
 
 describe('Additional support needs', () => {
-  let flashData: FlashData
-
   describe(`GET ${url}`, () => {
+    let flashData: FlashData
+
     beforeEach(() => {
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
@@ -73,8 +73,8 @@ describe('Additional support needs', () => {
         value: [],
         msg: 'Enter details of the request',
       }
-
-      flashData = { errors: [validationError], formValues: { visitorIds: [] } }
+      const formValues = { additionalSupportRequired: 'yes' }
+      flashData = { errors: [validationError], formValues: [formValues] }
 
       return request(app)
         .get(url)
@@ -154,9 +154,12 @@ describe('Additional support needs', () => {
         })
     })
 
-    it('should set a validation error and redirect to original page when no options selected', () => {
-      const expectedFlashData: FlashData = {
-        errors: [
+    describe('Validation errors', () => {
+      let expectedFlashErrors: FlashErrors
+      let expectedFlashFormValues: FlashFormValues
+
+      it('should set a validation error and redirect to original page when no options selected', () => {
+        expectedFlashErrors = [
           {
             type: 'field',
             location: 'body',
@@ -164,25 +167,23 @@ describe('Additional support needs', () => {
             value: undefined,
             msg: 'No answer selected',
           },
-        ],
-        formValues: { additionalSupport: '' },
-      }
+        ]
+        expectedFlashFormValues = { additionalSupport: '' }
 
-      return request(app)
-        .post(url)
-        .expect(302)
-        .expect('Location', url)
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+        return request(app)
+          .post(url)
+          .expect(302)
+          .expect('Location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
 
-          expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
-        })
-    })
+            expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
+          })
+      })
 
-    it('should set a validation error and redirect to original page when text length validation fails', () => {
-      const expectedFlashData: FlashData = {
-        errors: [
+      it('should set a validation error and redirect to original page when text length validation fails', () => {
+        expectedFlashErrors = [
           {
             type: 'field',
             location: 'body',
@@ -190,21 +191,21 @@ describe('Additional support needs', () => {
             value: 'ab',
             msg: 'Please enter at least 3 and no more than 512 characters',
           },
-        ],
-        formValues: { additionalSupportRequired: 'yes', additionalSupport: 'ab' },
-      }
+        ]
+        expectedFlashFormValues = { additionalSupportRequired: 'yes', additionalSupport: 'ab' }
 
-      return request(app)
-        .post(url)
-        .send({ additionalSupportRequired: 'yes', additionalSupport: 'ab' })
-        .expect(302)
-        .expect('Location', url)
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
+        return request(app)
+          .post(url)
+          .send({ additionalSupportRequired: 'yes', additionalSupport: 'ab' })
+          .expect(302)
+          .expect('Location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
 
-          expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
-        })
+            expect(sessionData.bookingJourney).toStrictEqual(expectedBookingJourney)
+          })
+      })
     })
   })
 })

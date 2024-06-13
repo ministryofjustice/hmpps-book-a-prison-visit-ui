@@ -3,10 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
-import { FlashData } from '../../@types/bapv'
 import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
 
 let app: Express
@@ -54,9 +53,9 @@ afterEach(() => {
 })
 
 describe('Choose visit time', () => {
-  let flashData: FlashData
-
   describe(`GET ${url}`, () => {
+    let flashData: FlashData
+
     beforeEach(() => {
       visitSessionsService.getVisitSessionsCalendar.mockResolvedValue({
         calendar,
@@ -214,8 +213,9 @@ describe('Choose visit time', () => {
         value: [],
         msg: 'No visit time selected',
       }
+      const formValues = { visitSession: '' }
 
-      flashData = { errors: [validationError], formValues: { visitSession: '' } }
+      flashData = { errors: [validationError], formValues: [formValues] }
 
       return request(app)
         .get(url)
@@ -282,43 +282,36 @@ describe('Choose visit time', () => {
         })
     })
 
-    it('should set a validation error and redirect to original page when no visit time selected', () => {
-      const expectedFlashData: FlashData = {
-        errors: [
-          { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
-        ],
-        formValues: {},
-      }
+    describe('Validation errors', () => {
+      const expectedFlashErrors: FlashErrors = [
+        { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
+      ]
+      const expectedFlashFormValues: FlashFormValues = {}
 
-      return request(app)
-        .post(url)
-        .expect(302)
-        .expect('Location', url)
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
-          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
-        })
-    })
+      it('should set a validation error and redirect to original page when no visit time selected', () => {
+        return request(app)
+          .post(url)
+          .expect(302)
+          .expect('Location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+          })
+      })
 
-    it('should filter out an invalid visit session date/reference', () => {
-      const expectedFlashData: FlashData = {
-        errors: [
-          { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
-        ],
-        formValues: {},
-      }
-
-      return request(app)
-        .post(url)
-        .send({ visitSession: 'INVALID_VALUE' })
-        .expect(302)
-        .expect('Location', url)
-        .expect(() => {
-          expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashData.errors)
-          expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashData.formValues)
-          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
-        })
+      it('should filter out an invalid visit session date/reference', () => {
+        return request(app)
+          .post(url)
+          .send({ visitSession: 'INVALID_VALUE' })
+          .expect(302)
+          .expect('Location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+          })
+      })
     })
   })
 })
