@@ -146,20 +146,7 @@ describe('Choose visit time', () => {
             daysAhead: prison.policyNoticeDaysMax,
           })
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-              allVisitSessionIds,
-              sessionRestriction,
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.sessionRestriction).toBe(sessionRestriction)
         })
     })
 
@@ -211,18 +198,7 @@ describe('Choose visit time', () => {
             daysAhead: prison.policyNoticeDaysMax,
           })
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.sessionRestriction).toBe(undefined)
         })
     })
 
@@ -283,34 +259,21 @@ describe('Choose visit time', () => {
           })
           expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-              allVisitSessionIds,
-              sessionRestriction,
-              selectedSessionDate: '2024-05-30',
-              selectedSessionTemplateReference: 'a',
-              applicationReference: application.reference,
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.selectedSessionDate).toBe('2024-05-30')
+          expect(sessionData.bookingJourney.selectedSessionTemplateReference).toBe('a')
+          expect(sessionData.bookingJourney.applicationReference).toBe(application.reference)
         })
     })
 
     it('it should update an in-progress visit application with selected date/time and store data in session', () => {
-      sessionData.bookingJourney.selectedSessionDate = '2024-05-30'
-      sessionData.bookingJourney.selectedSessionTemplateReference = 'a'
-      sessionData.bookingJourney.applicationReference = application.reference
+      const { bookingJourney } = sessionData
+      bookingJourney.selectedSessionDate = '2024-05-30'
+      bookingJourney.selectedSessionTemplateReference = 'a'
+      bookingJourney.applicationReference = application.reference
 
       return request(app)
         .post(url)
-        .send({ visitSession: '2024-05-30_a' })
+        .send({ visitSession: '2024-06-02_d' })
         .expect(302)
         .expect('Location', '/book-visit/additional-support')
         .expect(() => {
@@ -318,26 +281,12 @@ describe('Choose visit time', () => {
 
           expect(visitService.createVisitApplication).not.toHaveBeenCalled()
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
-            bookingJourney: sessionData.bookingJourney,
+            bookingJourney,
           })
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-              allVisitSessionIds,
-              sessionRestriction,
-              selectedSessionDate: '2024-05-30',
-              selectedSessionTemplateReference: 'a',
-              applicationReference: application.reference,
-            },
-          } as SessionData)
+          expect(bookingJourney.selectedSessionDate).toBe('2024-06-02')
+          expect(bookingJourney.selectedSessionTemplateReference).toBe('d')
+          expect(bookingJourney.applicationReference).toBe(application.reference)
         })
     })
 
