@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, body, validationResult } from 'express-validator'
+import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 
 export default class ChooseVisitTimeController {
@@ -31,11 +31,17 @@ export default class ChooseVisitTimeController {
       bookingJourney.allVisitSessionIds = allVisitSessionIds
       bookingJourney.sessionRestriction = sessionRestriction
 
+      const { selectedSessionDate, selectedSessionTemplateReference } = bookingJourney
+      const formValues =
+        selectedSessionDate && selectedSessionTemplateReference
+          ? { visitSession: `${selectedSessionDate}_${selectedSessionTemplateReference}` }
+          : {}
+
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
-        formValues: req.flash('formValues')?.[0] || {},
+        formValues,
         calendar,
-        selectedDate: firstSessionDate,
+        selectedDate: selectedSessionDate ?? firstSessionDate,
         prisoner,
       })
     }
@@ -46,13 +52,12 @@ export default class ChooseVisitTimeController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        req.flash('formValues', req.body)
         return res.redirect('/book-visit/choose-visit-time')
       }
-
-      const visitSession = req.body.visitSession.split('_')
-      const selectedSessionDate = visitSession[0]
-      const selectedSessionTemplateReference = visitSession[1]
+      const { visitSession } = matchedData<{ visitSession: string }>(req)
+      const visitSessionSplit = visitSession.split('_')
+      const selectedSessionDate = visitSessionSplit[0]
+      const selectedSessionTemplateReference = visitSessionSplit[1]
 
       const { booker, bookingJourney } = req.session
       bookingJourney.selectedSessionDate = selectedSessionDate

@@ -131,6 +131,7 @@ describe('Choose visit time', () => {
           expect($('.visits-calendar__day-group legend').eq(2).text().trim()).toBe('Sunday 2 June 2024')
 
           expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]:checked').length).toBe(0)
           expect($('input[name=visitSession]').eq(0).attr('value')).toBe('2024-05-30_a')
           expect($('input[name=visitSession]').eq(1).attr('value')).toBe('2024-05-31_b')
           expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
@@ -159,6 +160,25 @@ describe('Choose visit time', () => {
               sessionRestriction,
             },
           } as SessionData)
+        })
+    })
+
+    it('should pre-populate with data in session', () => {
+      sessionData.bookingJourney.selectedSessionDate = '2024-05-31'
+      sessionData.bookingJourney.selectedSessionTemplateReference = 'c'
+
+      return request(app)
+        .get(url)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
+            '31 May - Friday - 2 visit times available',
+          )
+          expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]:checked').length).toBe(1)
+          expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
+          expect($('input[name=visitSession]').eq(2).prop('checked')).toBe(true)
         })
     })
 
@@ -213,9 +233,8 @@ describe('Choose visit time', () => {
         value: [],
         msg: 'No visit time selected',
       }
-      const formValues = { visitSession: '' }
 
-      flashData = { errors: [validationError], formValues: [formValues] }
+      flashData = { errors: [validationError] }
 
       return request(app)
         .get(url)
@@ -286,7 +305,6 @@ describe('Choose visit time', () => {
       const expectedFlashErrors: FlashErrors = [
         { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
       ]
-      const expectedFlashFormValues: FlashFormValues = {}
 
       it('should set a validation error and redirect to original page when no visit time selected', () => {
         return request(app)
@@ -295,7 +313,6 @@ describe('Choose visit time', () => {
           .expect('Location', url)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
           })
       })
@@ -308,7 +325,6 @@ describe('Choose visit time', () => {
           .expect('Location', url)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
           })
       })
