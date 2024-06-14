@@ -138,12 +138,12 @@ describe('Choose visit time', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith(
-            prison.code,
-            prisoner.prisonerNumber,
-            [visitor.visitorId],
-            prison.policyNoticeDaysMax,
-          )
+          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
+            prisonId: prison.code,
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor.visitorId],
+            daysAhead: prison.policyNoticeDaysMax,
+          })
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -183,12 +183,12 @@ describe('Choose visit time', () => {
           expect($('[data-test=return-to-home]').text()).toBe('return to the homepage')
           expect($('[data-test=return-to-home]').attr('href')).toBe('/')
 
-          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith(
-            prison.code,
-            prisoner.prisonerNumber,
-            [visitor.visitorId],
-            prison.policyNoticeDaysMax,
-          )
+          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
+            prisonId: prison.code,
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor.visitorId],
+            daysAhead: prison.policyNoticeDaysMax,
+          })
 
           expect(sessionData).toStrictEqual({
             booker: {

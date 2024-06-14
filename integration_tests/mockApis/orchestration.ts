@@ -161,11 +161,13 @@ export default {
     prisonerId,
     visitorIds,
     visitSessions,
+    excludedApplicationReference,
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
     visitSessions: AvailableVisitSessionDto[]
+    excludedApplicationReference?: string
   }): SuperAgentRequest =>
     stubFor({
       request: {
@@ -175,6 +177,7 @@ export default {
           prisonId: { equalTo: prisonId },
           prisonerId: { equalTo: prisonerId },
           visitors: { equalTo: visitorIds.join(',') },
+          ...(excludedApplicationReference && { excludedApplicationReference }),
         },
       },
       response: {

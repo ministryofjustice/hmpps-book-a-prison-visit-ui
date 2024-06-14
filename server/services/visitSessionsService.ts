@@ -16,18 +16,25 @@ export default class VisitSessionsService {
     private readonly hmppsAuthClient: HmppsAuthClient,
   ) {}
 
-  async getVisitSessionsCalendar(
-    prisonId: string,
-    prisonerId: string,
-    visitorIds: number[],
-    daysAhead: number,
-  ): Promise<{
+  async getVisitSessionsCalendar({
+    prisonId,
+    prisonerId,
+    visitorIds,
+    excludedApplicationReference,
+    daysAhead,
+  }: {
+    prisonId: string
+    prisonerId: string
+    visitorIds: number[]
+    excludedApplicationReference?: string
+    daysAhead: number
+  }): Promise<{
     calendar: VisitSessionsCalendar
     firstSessionDate: string
     allVisitSessionIds: string[]
     sessionRestriction: SessionRestriction
   }> {
-    const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds)
+    const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds, excludedApplicationReference)
 
     if (visitSessions.length === 0) {
       return { calendar: {}, firstSessionDate: '', allVisitSessionIds: [], sessionRestriction: undefined }
@@ -74,10 +81,16 @@ export default class VisitSessionsService {
     prisonId: string,
     prisonerId: string,
     visitorIds: number[],
+    excludedApplicationReference?: string,
   ): Promise<AvailableVisitSessionDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    return orchestrationApiClient.getVisitSessions(prisonId, prisonerId, visitorIds)
+    return orchestrationApiClient.getVisitSessions({
+      prisonId,
+      prisonerId,
+      visitorIds,
+      ...(excludedApplicationReference && { excludedApplicationReference }),
+    })
   }
 }

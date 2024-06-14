@@ -11,17 +11,18 @@ export default class ChooseVisitTimeController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { bookingJourney } = req.session
-      const { prison, prisoner, selectedVisitors } = bookingJourney
+      const { prisoner, prison, selectedVisitors, applicationReference } = bookingJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
       const { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction } =
-        await this.visitSessionsService.getVisitSessionsCalendar(
-          prisoner.prisonCode,
-          prisoner.prisonerNumber,
-          selectedVisitorIds,
-          prison.policyNoticeDaysMax,
-        )
+        await this.visitSessionsService.getVisitSessionsCalendar({
+          prisonId: prisoner.prisonCode,
+          prisonerId: prisoner.prisonerNumber,
+          visitorIds: selectedVisitorIds,
+          ...(applicationReference && { excludedApplicationReference: applicationReference }),
+          daysAhead: prison.policyNoticeDaysMax,
+        })
 
       if (allVisitSessionIds.length === 0) {
         return res.render('pages/bookVisit/chooseVisitTimeNoSessions')
