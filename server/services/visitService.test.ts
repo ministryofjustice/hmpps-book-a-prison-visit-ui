@@ -119,6 +119,31 @@ describe('Visit service', () => {
         })
         expect(results).toStrictEqual(application)
       })
+
+      it('should handle minimal available session data', async () => {
+        bookingJourney.visitorSupport = undefined
+        bookingJourney.mainContact = undefined
+
+        const visitors = [
+          { nomisPersonId: 100, visitContact: false },
+          { nomisPersonId: 200, visitContact: false },
+        ]
+
+        orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
+
+        const results = await visitService.changeVisitApplication({ bookingJourney })
+
+        expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
+          applicationReference: bookingJourney.applicationReference,
+          applicationRestriction: bookingJourney.sessionRestriction,
+          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
+          sessionDate: bookingJourney.selectedSessionDate,
+          visitContact: undefined,
+          visitors,
+          visitorSupport: undefined,
+        })
+        expect(results).toStrictEqual(application)
+      })
     })
 
     describe('bookVisit', () => {

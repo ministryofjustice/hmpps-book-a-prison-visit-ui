@@ -38,11 +38,15 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const { contact, phoneNumber } = bookingJourney.mainContact
-    const visitContact = {
-      name: typeof contact === 'string' ? contact : `${contact.firstName} ${contact.lastName}`,
-      ...(phoneNumber && { telephone: phoneNumber }),
-    }
+    const contact = bookingJourney.mainContact?.contact
+    const phoneNumber = bookingJourney.mainContact?.phoneNumber
+
+    const visitContact = bookingJourney.mainContact
+      ? {
+          name: typeof contact === 'string' ? contact : `${contact.firstName} ${contact.lastName}`,
+          ...(phoneNumber && { telephone: phoneNumber }),
+        }
+      : undefined
 
     const visitors = bookingJourney.selectedVisitors.map(visitor => {
       return {
@@ -51,6 +55,8 @@ export default class VisitService {
       }
     })
 
+    const visitorSupport = bookingJourney.visitorSupport ? { description: bookingJourney.visitorSupport } : undefined
+
     const application = orchestrationApiClient.changeVisitApplication({
       applicationReference: bookingJourney.applicationReference,
       applicationRestriction: bookingJourney.sessionRestriction,
@@ -58,7 +64,7 @@ export default class VisitService {
       sessionDate: bookingJourney.selectedSessionDate,
       visitContact,
       visitors,
-      visitorSupport: { description: bookingJourney.visitorSupport },
+      visitorSupport,
     })
     logger.info(`Visit application '${bookingJourney.applicationReference}' changed`)
     return application

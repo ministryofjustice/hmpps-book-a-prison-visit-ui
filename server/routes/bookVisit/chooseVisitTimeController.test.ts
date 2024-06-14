@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
@@ -166,6 +166,7 @@ describe('Choose visit time', () => {
     it('should pre-populate with data in session', () => {
       sessionData.bookingJourney.selectedSessionDate = '2024-05-31'
       sessionData.bookingJourney.selectedSessionTemplateReference = 'c'
+      sessionData.bookingJourney.applicationReference = application.reference
 
       return request(app)
         .get(url)
@@ -267,7 +268,7 @@ describe('Choose visit time', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('it should create a visit application for the selected session and store data in session', () => {
+    it('it should create a visit application for the selected date/time and store data in session', () => {
       return request(app)
         .post(url)
         .send({ visitSession: '2024-05-30_a' })
@@ -279,6 +280,45 @@ describe('Choose visit time', () => {
           expect(visitService.createVisitApplication).toHaveBeenCalledWith({
             bookingJourney: sessionData.bookingJourney,
             bookerReference,
+          })
+          expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+            bookingJourney: {
+              prisoner,
+              prison,
+              allVisitors: [visitor],
+              selectedVisitors: [visitor],
+              allVisitSessionIds,
+              sessionRestriction,
+              selectedSessionDate: '2024-05-30',
+              selectedSessionTemplateReference: 'a',
+              applicationReference: application.reference,
+            },
+          } as SessionData)
+        })
+    })
+
+    it('it should update an in-progress visit application with selected date/time and store data in session', () => {
+      sessionData.bookingJourney.selectedSessionDate = '2024-05-30'
+      sessionData.bookingJourney.selectedSessionTemplateReference = 'a'
+      sessionData.bookingJourney.applicationReference = application.reference
+
+      return request(app)
+        .post(url)
+        .send({ visitSession: '2024-05-30_a' })
+        .expect(302)
+        .expect('Location', '/book-visit/additional-support')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+
+          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
           })
 
           expect(sessionData).toStrictEqual({
@@ -314,6 +354,7 @@ describe('Choose visit time', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
 
@@ -326,6 +367,7 @@ describe('Choose visit time', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
     })

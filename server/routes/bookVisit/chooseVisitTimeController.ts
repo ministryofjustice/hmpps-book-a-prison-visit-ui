@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
+import logger from '../../../logger'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -64,14 +65,21 @@ export default class ChooseVisitTimeController {
       bookingJourney.selectedSessionTemplateReference = selectedSessionTemplateReference
 
       try {
-        const application = await this.visitService.createVisitApplication({
-          bookingJourney,
-          bookerReference: booker.reference,
-        })
+        // first time through: create an application
+        if (bookingJourney.applicationReference === undefined) {
+          const application = await this.visitService.createVisitApplication({
+            bookingJourney,
+            bookerReference: booker.reference,
+          })
 
-        bookingJourney.applicationReference = application.reference
+          bookingJourney.applicationReference = application.reference
+        } else {
+          // existing application so update it
+          await this.visitService.changeVisitApplication({ bookingJourney })
+        }
       } catch (error) {
         // TODO catch create application errors - VB-3777
+        logger.error(error)
         return res.redirect('/book-visit/choose-visit-time')
       }
 
