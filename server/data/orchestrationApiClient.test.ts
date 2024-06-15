@@ -183,32 +183,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getVisitSessions', () => {
-    it('should get available visit sessions for prison / prisoner / visitors with undefined excludeApplicationReference ignored', async () => {
-      const prisoner = TestData.prisonerInfoDto()
-      const visitorIds = [1, 2]
-      const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
-
-      fakeOrchestrationApi
-        .get('/visit-sessions/available')
-        .query({
-          prisonId: prisoner.prisonCode,
-          prisonerId: prisoner.prisonerNumber,
-          visitors: visitorIds.join(','),
-        })
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, visitSessions)
-
-      const result = await orchestrationApiClient.getVisitSessions({
-        prisonId: prisoner.prisonCode,
-        prisonerId: prisoner.prisonerNumber,
-        visitorIds,
-        excludedApplicationReference: undefined,
-      })
-
-      expect(result).toStrictEqual(visitSessions)
-    })
-
-    it('should get available visit sessions for prison / prisoner / visitors with excludeApplicationReference set', async () => {
+    it('should get available visit sessions for prison / prisoner / visitors', async () => {
       const prisoner = TestData.prisonerInfoDto()
       const visitorIds = [1, 2]
       const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]

@@ -161,7 +161,7 @@ export default {
     prisonerId,
     visitorIds,
     visitSessions,
-    excludedApplicationReference,
+    excludedApplicationReference = '',
   }: {
     prisonId: string
     prisonerId: string
@@ -177,7 +177,16 @@ export default {
           prisonId: { equalTo: prisonId },
           prisonerId: { equalTo: prisonerId },
           visitors: { equalTo: visitorIds.join(',') },
-          ...(excludedApplicationReference && { excludedApplicationReference }),
+          excludedApplicationReference: {
+            or: [
+              {
+                equalTo: excludedApplicationReference,
+              },
+              {
+                absent: true,
+              },
+            ],
+          },
         },
       },
       response: {

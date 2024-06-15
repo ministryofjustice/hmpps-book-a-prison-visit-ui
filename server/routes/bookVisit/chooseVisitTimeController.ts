@@ -21,7 +21,7 @@ export default class ChooseVisitTimeController {
           prisonId: prisoner.prisonCode,
           prisonerId: prisoner.prisonerNumber,
           visitorIds: selectedVisitorIds,
-          ...(applicationReference && { excludedApplicationReference: applicationReference }),
+          excludedApplicationReference: applicationReference,
           daysAhead: prison.policyNoticeDaysMax,
         })
 

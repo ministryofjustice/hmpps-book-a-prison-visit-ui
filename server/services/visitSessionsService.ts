@@ -90,7 +90,7 @@ export default class VisitSessionsService {
       prisonId,
       prisonerId,
       visitorIds,
-      ...(excludedApplicationReference && { excludedApplicationReference }),
+      excludedApplicationReference,
     })
   }
 }
