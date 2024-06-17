@@ -17,6 +17,8 @@ const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
 
+const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+
 afterEach(() => {
   jest.resetAllMocks()
 })
@@ -37,8 +39,8 @@ describe('Additional support needs', () => {
           allVisitors: [visitor],
           selectedVisitors: [visitor],
           allVisitSessionIds: ['2024-05-30_a'],
-          selectedSessionDate: '2024-05-30',
-          selectedSessionTemplateReference: 'a',
+          allVisitSessions: [visitSession],
+          selectedVisitSession: visitSession,
           applicationReference: TestData.applicationDto().reference,
         },
       } as SessionData
@@ -144,8 +146,8 @@ describe('Additional support needs', () => {
           allVisitors: [visitor],
           selectedVisitors: [visitor],
           allVisitSessionIds: ['2024-05-30_a'],
-          selectedSessionDate: '2024-05-30',
-          selectedSessionTemplateReference: 'a',
+          allVisitSessions: [visitSession],
+          selectedVisitSession: visitSession,
           applicationReference: TestData.applicationDto().reference,
         },
       } as SessionData

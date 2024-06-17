@@ -23,9 +23,9 @@ export default class VisitService {
 
     const application = await orchestrationApiClient.createVisitApplication({
       prisonerId: bookingJourney.prisoner.prisonerNumber,
-      sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-      sessionDate: bookingJourney.selectedSessionDate,
-      applicationRestriction: bookingJourney.sessionRestriction,
+      sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+      sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+      applicationRestriction: bookingJourney.selectedVisitSession.sessionRestriction,
       visitorIds,
       bookerReference,
     })
@@ -59,9 +59,9 @@ export default class VisitService {
 
     const application = orchestrationApiClient.changeVisitApplication({
       applicationReference: bookingJourney.applicationReference,
-      applicationRestriction: bookingJourney.sessionRestriction,
-      sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-      sessionDate: bookingJourney.selectedSessionDate,
+      applicationRestriction: bookingJourney.selectedVisitSession.sessionRestriction,
+      sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+      sessionDate: bookingJourney.selectedVisitSession.sessionDate,
       visitContact,
       visitors,
       visitorSupport,

@@ -1,6 +1,5 @@
-import { PrisonDto } from '../data/orchestrationApiTypes'
+import { AvailableVisitSessionDto, PrisonDto } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
-import { SessionRestriction } from '../services/visitSessionsService'
 
 export type Booker = {
   reference: string
@@ -24,12 +23,9 @@ export type BookingJourney = {
   // all available calendar / visit sessions (e.g. ['2024-05-28_session-ref'])
   allVisitSessionIds?: string[]
 
-  // whether this visit will be OPEN | CLOSED
-  sessionRestriction?: SessionRestriction
-
-  // selected visit session
-  selectedSessionDate?: string
-  selectedSessionTemplateReference?: string
+  // full selected visit session object
+  allVisitSessions?: AvailableVisitSessionDto[]
+  selectedVisitSession?: AvailableVisitSessionDto
 
   // visit application reference
   applicationReference?: string

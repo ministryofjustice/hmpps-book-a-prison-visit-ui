@@ -6,7 +6,7 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
-import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
+import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 
 let app: Express
 
@@ -38,7 +38,13 @@ const calendar: VisitSessionsCalendar = {
   },
 }
 const allVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
-const sessionRestriction: SessionRestriction = 'OPEN'
+
+const visitSessionA = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+const visitSessionB = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'b' })
+const visitSessionC = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'c' })
+const visitSessionD = TestData.availableVisitSessionDto({ sessionDate: '2024-06-02', sessionTemplateReference: 'd' })
+const allVisitSessions = [visitSessionA, visitSessionB, visitSessionC, visitSessionD]
+
 const application = TestData.applicationDto()
 
 const fakeDate = new Date('2024-05-28')
@@ -61,7 +67,7 @@ describe('Choose visit time', () => {
         calendar,
         firstSessionDate,
         allVisitSessionIds,
-        sessionRestriction,
+        allVisitSessions,
       })
 
       flashData = {}
@@ -77,6 +83,7 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          allVisitSessions,
         },
       } as SessionData
 
@@ -145,14 +152,11 @@ describe('Choose visit time', () => {
             visitorIds: [visitor.visitorId],
             daysAhead: prison.policyNoticeDaysMax,
           })
-
-          expect(sessionData.bookingJourney.sessionRestriction).toBe(sessionRestriction)
         })
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.bookingJourney.selectedSessionDate = '2024-05-31'
-      sessionData.bookingJourney.selectedSessionTemplateReference = 'c'
+      sessionData.bookingJourney.selectedVisitSession = visitSessionC
       sessionData.bookingJourney.applicationReference = application.reference
 
       return request(app)
@@ -175,7 +179,7 @@ describe('Choose visit time', () => {
         calendar: {},
         firstSessionDate: '',
         allVisitSessionIds: [],
-        sessionRestriction: undefined,
+        allVisitSessions: [],
       })
 
       return request(app)
@@ -197,8 +201,6 @@ describe('Choose visit time', () => {
             visitorIds: [visitor.visitorId],
             daysAhead: prison.policyNoticeDaysMax,
           })
-
-          expect(sessionData.bookingJourney.sessionRestriction).toBe(undefined)
         })
     })
 
@@ -237,14 +239,14 @@ describe('Choose visit time', () => {
           allVisitors: [visitor],
           selectedVisitors: [visitor],
           allVisitSessionIds,
-          sessionRestriction,
+          allVisitSessions,
         },
       } as SessionData
 
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('it should create a visit application for the selected date/time and store data in session', () => {
+    it('should create a visit application for the selected date/time and store data in session', () => {
       return request(app)
         .post(url)
         .send({ visitSession: '2024-05-30_a' })
@@ -259,16 +261,15 @@ describe('Choose visit time', () => {
           })
           expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
 
-          expect(sessionData.bookingJourney.selectedSessionDate).toBe('2024-05-30')
-          expect(sessionData.bookingJourney.selectedSessionTemplateReference).toBe('a')
+          expect(sessionData.bookingJourney.selectedVisitSession.sessionDate).toBe('2024-05-30')
+          expect(sessionData.bookingJourney.selectedVisitSession.sessionTemplateReference).toBe('a')
           expect(sessionData.bookingJourney.applicationReference).toBe(application.reference)
         })
     })
 
-    it('it should update an in-progress visit application with selected date/time and store data in session', () => {
+    it('should update an in-progress visit application with selected date/time and store data in session', () => {
       const { bookingJourney } = sessionData
-      bookingJourney.selectedSessionDate = '2024-05-30'
-      bookingJourney.selectedSessionTemplateReference = 'a'
+      bookingJourney.selectedVisitSession = visitSessionA
       bookingJourney.applicationReference = application.reference
 
       return request(app)
@@ -284,8 +285,8 @@ describe('Choose visit time', () => {
             bookingJourney,
           })
 
-          expect(bookingJourney.selectedSessionDate).toBe('2024-06-02')
-          expect(bookingJourney.selectedSessionTemplateReference).toBe('d')
+          expect(bookingJourney.selectedVisitSession.sessionDate).toBe('2024-06-02')
+          expect(bookingJourney.selectedVisitSession.sessionTemplateReference).toBe('d')
           expect(bookingJourney.applicationReference).toBe(application.reference)
         })
     })

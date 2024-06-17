@@ -19,6 +19,11 @@ const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
 const application = TestData.applicationDto()
+const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+const mainContact = {
+  contact: 'Mary Magdeline',
+  phoneNumber: '01234 567890',
+}
 
 beforeEach(() => {
   sessionData = {
@@ -29,10 +34,10 @@ beforeEach(() => {
       allVisitors: [visitor],
       selectedVisitors: [visitor],
       allVisitSessionIds: ['2024-05-30_a'],
-      sessionRestriction: 'OPEN',
-      selectedSessionDate: '2024-05-30',
-      selectedSessionTemplateReference: 'a',
+      allVisitSessions: [visitSession],
+      selectedVisitSession: visitSession,
       applicationReference: application.reference,
+      mainContact,
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -53,9 +58,9 @@ describe('Check visit details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          // expect($('title').text()).toMatch(/^Check the visit details before booking\? -/)
-          expect($('[data-test="back-link"]').length).toBe(0)
-          // expect($('h1').text()).toBe('Check the visit details before booking')
+          expect($('title').text()).toMatch(/^Check the visit details before booking -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/main-contact')
+          expect($('h1').text()).toBe('Check the visit details before booking')
 
           // TODO flesh out test for a 'full' visit
         })

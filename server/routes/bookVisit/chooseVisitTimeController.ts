@@ -16,7 +16,7 @@ export default class ChooseVisitTimeController {
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
 
-      const { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction } =
+      const { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions } =
         await this.visitSessionsService.getVisitSessionsCalendar({
           prisonId: prisoner.prisonCode,
           prisonerId: prisoner.prisonerNumber,
@@ -30,19 +30,19 @@ export default class ChooseVisitTimeController {
       }
 
       bookingJourney.allVisitSessionIds = allVisitSessionIds
-      bookingJourney.sessionRestriction = sessionRestriction
+      bookingJourney.allVisitSessions = allVisitSessions
 
-      const { selectedSessionDate, selectedSessionTemplateReference } = bookingJourney
-      const formValues =
-        selectedSessionDate && selectedSessionTemplateReference
-          ? { visitSession: `${selectedSessionDate}_${selectedSessionTemplateReference}` }
-          : {}
+      const { selectedVisitSession } = bookingJourney
+
+      const formValues = selectedVisitSession
+        ? { visitSession: `${selectedVisitSession.sessionDate}_${selectedVisitSession.sessionTemplateReference}` }
+        : {}
 
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
         calendar,
-        selectedDate: selectedSessionDate ?? firstSessionDate,
+        selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
         prisoner,
       })
     }
@@ -61,8 +61,14 @@ export default class ChooseVisitTimeController {
       const selectedSessionTemplateReference = visitSessionSplit[1]
 
       const { booker, bookingJourney } = req.session
-      bookingJourney.selectedSessionDate = selectedSessionDate
-      bookingJourney.selectedSessionTemplateReference = selectedSessionTemplateReference
+
+      const selectedVisitSession = bookingJourney.allVisitSessions.find(
+        singleVisitSession =>
+          singleVisitSession.sessionTemplateReference.includes(selectedSessionTemplateReference) &&
+          singleVisitSession.sessionDate.includes(selectedSessionDate),
+      )
+
+      bookingJourney.selectedVisitSession = selectedVisitSession
 
       try {
         // first time through: create an application

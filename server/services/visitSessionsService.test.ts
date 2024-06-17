@@ -83,7 +83,6 @@ describe('Visit sessions service', () => {
         },
       }
       const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
-      const expectedSessionRestriction: SessionRestriction = 'OPEN'
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
         prisonId: prisoner.prisonCode,
@@ -101,7 +100,7 @@ describe('Visit sessions service', () => {
         calendar: expectedCalendar,
         firstSessionDate: expectedFirstSessionDate,
         allVisitSessionIds: expectedAllVisitSessionIds,
-        sessionRestriction: expectedSessionRestriction,
+        allVisitSessions: visitSessions,
       })
     })
 
@@ -114,7 +113,6 @@ describe('Visit sessions service', () => {
       const expectedFirstSessionDate = ''
       const expectedCalendar: VisitSessionsCalendar = {}
       const expectedAllVisitSessionIds: string[] = []
-      const expectedSessionRestriction: SessionRestriction = undefined
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
         prisonId: prisoner.prisonCode,
@@ -132,7 +130,7 @@ describe('Visit sessions service', () => {
         calendar: expectedCalendar,
         firstSessionDate: expectedFirstSessionDate,
         allVisitSessionIds: expectedAllVisitSessionIds,
-        sessionRestriction: expectedSessionRestriction,
+        allVisitSessions: visitSessions,
       })
     })
 

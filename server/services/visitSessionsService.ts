@@ -32,16 +32,21 @@ export default class VisitSessionsService {
     calendar: VisitSessionsCalendar
     firstSessionDate: string
     allVisitSessionIds: string[]
-    sessionRestriction: SessionRestriction
+    allVisitSessions: AvailableVisitSessionDto[]
   }> {
-    const visitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds, excludedApplicationReference)
+    const allVisitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds, excludedApplicationReference)
 
-    if (visitSessions.length === 0) {
-      return { calendar: {}, firstSessionDate: '', allVisitSessionIds: [], sessionRestriction: undefined }
+    if (allVisitSessions.length === 0) {
+      return {
+        calendar: {},
+        firstSessionDate: '',
+        allVisitSessionIds: [],
+        allVisitSessions: [],
+      }
     }
 
     const calendar: VisitSessionsCalendar = {}
-    const firstSessionDate = visitSessions[0].sessionDate
+    const firstSessionDate = allVisitSessions[0].sessionDate
     const today = new Date()
 
     const allCalendarDates = eachDayOfInterval({
@@ -55,7 +60,7 @@ export default class VisitSessionsService {
 
       const currentMonth = calendar[monthKey] ?? (calendar[monthKey] = {})
 
-      const visitSessionsOnDate = visitSessions.filter(session => session.sessionDate === dateKey)
+      const visitSessionsOnDate = allVisitSessions.filter(session => session.sessionDate === dateKey)
 
       currentMonth[dateKey] = visitSessionsOnDate.map(session => {
         return {
@@ -67,14 +72,11 @@ export default class VisitSessionsService {
     })
 
     // array of valid visitSession IDs (e.g. '2025-05-25_session-ref')
-    const allVisitSessionIds: string[] = visitSessions.map(
+    const allVisitSessionIds: string[] = allVisitSessions.map(
       session => `${session.sessionDate}_${session.sessionTemplateReference}`,
     )
 
-    // take session restriction (OPEN | CLOSED) from first session as they should all be the same
-    const { sessionRestriction } = visitSessions[0]
-
-    return { calendar, firstSessionDate, allVisitSessionIds, sessionRestriction }
+    return { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions }
   }
 
   private async getVisitSessions(
