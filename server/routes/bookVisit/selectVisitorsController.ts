@@ -3,6 +3,7 @@ import { Meta, ValidationChain, body, matchedData, validationResult } from 'expr
 import { differenceInYears } from 'date-fns'
 import { BookerService, PrisonService } from '../../services'
 import { pluralise } from '../../utils/utils'
+import paths from '../../constants/paths'
 
 export default class SelectVisitorsController {
   public constructor(
@@ -45,7 +46,7 @@ export default class SelectVisitorsController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
-        return res.redirect('/book-visit/select-visitors')
+        return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 
       const { bookingJourney } = req.session

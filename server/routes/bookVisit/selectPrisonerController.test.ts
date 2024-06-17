@@ -5,6 +5,7 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { PrisonerInfoDto } from '../../data/orchestrationApiTypes'
+import paths from '../../constants/paths'
 
 let app: Express
 let sessionData: SessionData
@@ -28,10 +29,10 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-visit/select-prisoner')
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .send({ prisonerDisplayId: prisoner.prisonerDisplayId.toString() })
       .expect(302)
-      .expect('location', '/book-visit/select-visitors')
+      .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
       .expect(() => {
         expect(sessionData).toStrictEqual({
           booker: {
@@ -53,7 +54,7 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-visit/select-prisoner')
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .send({ prisonerDisplayId: 1000 })
       .expect(404)
       .expect(res => {

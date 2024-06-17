@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import { NotFound } from 'http-errors'
+import paths from '../../constants/paths'
 
 export default class SelectPrisonerController {
   public constructor() {}
@@ -24,7 +25,7 @@ export default class SelectPrisonerController {
 
       req.session.bookingJourney = { prisoner }
 
-      res.redirect('/book-visit/select-visitors')
+      res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
     }
   }
 }
