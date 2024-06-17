@@ -52,10 +52,15 @@ export default class ChooseVisitTimeController {
       const visitSession = req.body.visitSession.split('_')
       const selectedSessionDate = visitSession[0]
       const selectedSessionTemplateReference = visitSession[1]
+      const selectedSessionTimeSlot = {
+        startTimestamp: visitSession[2],
+        endTimestamp: visitSession[3],
+      }
 
       const { booker, bookingJourney } = req.session
       bookingJourney.selectedSessionDate = selectedSessionDate
       bookingJourney.selectedSessionTemplateReference = selectedSessionTemplateReference
+      bookingJourney.selectedSessionTimeSlot = selectedSessionTimeSlot
 
       try {
         const application = await this.visitService.createVisitApplication({

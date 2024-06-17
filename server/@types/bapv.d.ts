@@ -30,6 +30,10 @@ export type BookingJourney = {
 
   // selected visit session
   selectedSessionDate?: string
+  selectedSessionTimeSlot?: {
+    startTimestamp: string
+    endTimestamp: string
+  }
   selectedSessionTemplateReference?: string
 
   // visit application reference

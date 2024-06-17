@@ -61,7 +61,7 @@ export default class VisitSessionsService {
 
     // array of valid visitSession IDs (e.g. '2025-05-25_session-ref')
     const allVisitSessionIds: string[] = visitSessions.map(
-      session => `${session.sessionDate}_${session.sessionTemplateReference}`,
+      session => `${session.sessionDate}_${session.sessionTemplateReference}_${session.sessionTimeSlot.startTime}_${session.sessionTimeSlot.endTime}`,
     )
 
     // take session restriction (OPEN | CLOSED) from first session as they should all be the same

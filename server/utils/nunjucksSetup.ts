@@ -89,5 +89,9 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('pluralise', pluralise)
 
+  njkEnv.addFilter('formatTelephone', (telephoneNumber: string) => {
+    return telephoneNumber === 'UNKNOWN' || telephoneNumber === undefined ? 'No phone number provided' : telephoneNumber
+  })
+
   return njkEnv
 }

@@ -76,7 +76,7 @@
               {% set visitSessionItems = [] %}
               {% for session in sessions %}
                 {% set visitSessionItems = (visitSessionItems.push({
-                  value: date + "_" + session.reference,
+                  value: date + "_" + session.reference + "_" + session.startTime + "_" + session.endTime,
                   html: (session.startTime | formatTime) + " to " + (session.endTime | formatTime) +
                    ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>'
                 }), visitSessionItems) %}

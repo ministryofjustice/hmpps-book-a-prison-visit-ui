@@ -7,9 +7,23 @@ export default class CheckVisitDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
+      const { bookingJourney } = req.session
+      let mainContactName = ''
+      if (typeof bookingJourney.mainContact.contact === 'string') {
+        mainContactName = bookingJourney.mainContact.contact
+      } else {
+        mainContactName = `${bookingJourney.mainContact.contact.firstName} ${bookingJourney.mainContact.contact.lastName}`
+      }
       res.render('pages/bookVisit/checkVisitDetails', {
+        additionalSupport: bookingJourney.visitorSupport,
+        mainContactName,
+        mainContactNumber: bookingJourney.mainContact.phoneNumber,
+        visitSlot: bookingJourney.selectedSessionDate,
+        visitTimeslot: bookingJourney.selectedSessionTimeSlot,
+        visitors: bookingJourney.selectedVisitors,
+        prisoner: bookingJourney.prisoner,
         booker: req.session.booker,
-        bookingJourney: req.session.bookingJourney,
+        bookingJourney,
       })
     }
   }
