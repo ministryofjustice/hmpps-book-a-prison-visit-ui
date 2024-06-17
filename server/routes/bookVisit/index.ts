@@ -11,6 +11,7 @@ import MainContactController from './mainContactController'
 import CheckVisitDetailsController from './checkVisitDetailsController'
 import VisitBookedController from './visitBookedController'
 import paths from '../../constants/paths'
+import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidator'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -28,7 +29,7 @@ export default function routes(services: Services): Router {
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
   const visitBookedController = new VisitBookedController()
 
-  // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
+  router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
   post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
 

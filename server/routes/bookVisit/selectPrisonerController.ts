@@ -11,11 +11,6 @@ export default class SelectPrisonerController {
       delete req.session.bookingJourney
       delete req.session.bookingConfirmed
 
-      // FIXME move some of this to a session checking middleware
-      if (!req.session.booker.prisoners || req.session.booker.prisoners.length === 0) {
-        throw new Error('No prisoner')
-      }
-
       const prisoner = req.session.booker.prisoners[0]
 
       const { prisonerDisplayId } = req.body
