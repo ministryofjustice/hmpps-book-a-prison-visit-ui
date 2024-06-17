@@ -32,6 +32,7 @@ describe('Visit service', () => {
 
     const application = TestData.applicationDto()
     const visit = TestData.visitDto()
+    const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
 
     let bookingJourney: BookingJourney
 
@@ -42,9 +43,8 @@ describe('Visit service', () => {
         allVisitors: [visitorOne, visitorTwo, visitorThree],
         selectedVisitors: [visitorOne, visitorTwo],
         allVisitSessionIds: ['2024-05-30_a'],
-        sessionRestriction: 'OPEN',
-        selectedSessionDate: '2024-05-30',
-        selectedSessionTemplateReference: 'a',
+        allVisitSessions: [visitSession],
+        selectedVisitSession: visitSession,
         applicationReference: application.reference,
         visitorSupport: 'wheelchair access',
         mainContact: { contact: visitorOne, phoneNumber: '01234 567 890' },
@@ -59,9 +59,9 @@ describe('Visit service', () => {
 
         expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
           prisonerId: bookingJourney.prisoner.prisonerNumber,
-          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-          sessionDate: bookingJourney.selectedSessionDate,
-          applicationRestriction: bookingJourney.sessionRestriction,
+          applicationRestriction: 'OPEN',
+          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
           visitorIds: [100, 200],
           bookerReference,
         })
@@ -84,9 +84,9 @@ describe('Visit service', () => {
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
-          applicationRestriction: bookingJourney.sessionRestriction,
-          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-          sessionDate: bookingJourney.selectedSessionDate,
+          applicationRestriction: 'OPEN',
+          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -110,9 +110,9 @@ describe('Visit service', () => {
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
-          applicationRestriction: bookingJourney.sessionRestriction,
-          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-          sessionDate: bookingJourney.selectedSessionDate,
+          applicationRestriction: 'OPEN',
+          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -135,9 +135,9 @@ describe('Visit service', () => {
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
-          applicationRestriction: bookingJourney.sessionRestriction,
-          sessionTemplateReference: bookingJourney.selectedSessionTemplateReference,
-          sessionDate: bookingJourney.selectedSessionDate,
+          applicationRestriction: 'OPEN',
+          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
           visitContact: undefined,
           visitors,
           visitorSupport: undefined,

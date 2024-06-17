@@ -20,6 +20,8 @@ const prison = TestData.prisonDto()
 const adultVisitor = TestData.visitor()
 const childVisitor = TestData.visitor({ dateOfBirth: `${new Date().getFullYear() - 2}-01-01`, adult: false })
 
+const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+
 beforeEach(() => {
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
@@ -29,9 +31,8 @@ beforeEach(() => {
       allVisitors: [adultVisitor, childVisitor],
       selectedVisitors: [adultVisitor, childVisitor],
       allVisitSessionIds: ['2024-05-30_a'],
-      sessionRestriction: 'OPEN',
-      selectedSessionDate: '2024-05-30',
-      selectedSessionTemplateReference: 'a',
+      allVisitSessions: [visitSession],
+      selectedVisitSession: visitSession,
       applicationReference: TestData.applicationDto().reference,
       visitorSupport: '',
     },
