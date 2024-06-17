@@ -71,7 +71,10 @@
           
         {{ govukButton({
           text: "Continue",
-          attributes: { "data-test": "continue-button" },
+          attributes: {
+            "data-test": "continue-button",
+            "data-test-app-ref": applicationReference if showExtraTestAttrs
+          },
           preventDoubleClick: true
         }) }} 
       </form>

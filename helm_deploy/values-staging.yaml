@@ -14,6 +14,7 @@ generic-service:
     GOVUK_ONE_LOGIN_HOME_URL: "https://home.integration.account.gov.uk"
     GOVUK_ONE_LOGIN_VTR: "LOW"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
+    ENVIRONMENT_NAME: STAGING
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
   namespace_secrets:

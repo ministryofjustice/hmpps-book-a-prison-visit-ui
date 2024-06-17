@@ -16,7 +16,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Visit someone in prison'
   app.locals.environmentName = config.environmentName
-  app.locals.environmentNameColour = config.environmentName === 'PRE-PRODUCTION' ? 'govuk-tag--green' : ''
+  app.locals.showExtraTestAttrs = ['DEV', 'STAGING'].includes(config.environmentName)
   app.locals.oneLoginLink = config.apis.govukOneLogin.homeUrl
 
   // Cachebusting version string
