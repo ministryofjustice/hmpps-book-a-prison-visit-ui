@@ -13,10 +13,6 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      {% set additionalSupportRows %}
-      {% if additionalSupport | length %}{{ additionalSupport }}{% else %}None{% endif %}
-      {% endset %}
-
       {% set displayRows = [
         {
           key: {
@@ -94,7 +90,7 @@
             text: "Additional support requests"
           },
           value: {
-            html: '<p class="test-additional-support">' + additionalSupportRows + '</p>'
+            html: '<p class="test-additional-support">' + (additionalSupport | d("None", true)) + '</p>'
           },
           actions: {
             items: [
@@ -117,7 +113,7 @@
           },
           value: {
             html: '<p><span class="test-main-contact-name">' + mainContactName + '</span><br><span class="test-main-contact-number">' +
-              mainContactNumber | formatTelephone + "</span></p>"
+              mainContactNumber | d("No phone number provided") + "</span></p>"
           },
           actions: {
             items: [

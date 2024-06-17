@@ -63,9 +63,9 @@ export default class ChooseVisitTimeController {
       const { booker, bookingJourney } = req.session
 
       const selectedVisitSession = bookingJourney.allVisitSessions.find(
-        singleVisitSession =>
-          singleVisitSession.sessionTemplateReference.includes(selectedSessionTemplateReference) &&
-          singleVisitSession.sessionDate.includes(selectedSessionDate),
+        session =>
+          session.sessionTemplateReference === selectedSessionTemplateReference &&
+          session.sessionDate === selectedSessionDate,
       )
 
       bookingJourney.selectedVisitSession = selectedVisitSession
