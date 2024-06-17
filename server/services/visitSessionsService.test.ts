@@ -1,6 +1,6 @@
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import VisitSessionsService, { SessionRestriction, VisitSessionsCalendar } from './visitSessionsService'
+import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsService'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 
 const token = 'some token'
