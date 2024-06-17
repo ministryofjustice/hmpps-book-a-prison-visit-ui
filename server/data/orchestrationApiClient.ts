@@ -122,14 +122,25 @@ export default class OrchestrationApiClient {
 
   // orchestration-sessions-controller
 
-  async getVisitSessions(
-    prisonId: string,
-    prisonerId: string,
-    visitorIds: number[],
-  ): Promise<AvailableVisitSessionDto[]> {
+  async getVisitSessions({
+    prisonId,
+    prisonerId,
+    visitorIds,
+    excludedApplicationReference,
+  }: {
+    prisonId: string
+    prisonerId: string
+    visitorIds: number[]
+    excludedApplicationReference?: string
+  }): Promise<AvailableVisitSessionDto[]> {
     return this.restClient.get({
       path: '/visit-sessions/available',
-      query: new URLSearchParams({ prisonId, prisonerId, visitors: visitorIds.join(',') }).toString(),
+      query: new URLSearchParams({
+        prisonId,
+        prisonerId,
+        visitors: visitorIds.join(','),
+        ...(excludedApplicationReference && { excludedApplicationReference }),
+      }).toString(),
     })
   }
 

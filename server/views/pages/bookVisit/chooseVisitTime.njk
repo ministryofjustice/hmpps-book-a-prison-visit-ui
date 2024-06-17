@@ -75,10 +75,12 @@
             {% if sessions | length %}
               {% set visitSessionItems = [] %}
               {% for session in sessions %}
+                {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
-                  value: date + "_" + session.reference,
+                  value: radioValue,
                   html: (session.startTime | formatTime) + " to " + (session.endTime | formatTime) +
-                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>'
+                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>',
+                  checked: formValues.visitSession == radioValue
                 }), visitSessionItems) %}
               {% endfor %}
 

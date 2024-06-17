@@ -187,6 +187,7 @@ describe('orchestrationApiClient', () => {
       const prisoner = TestData.prisonerInfoDto()
       const visitorIds = [1, 2]
       const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
+      const excludedApplicationReference = 'aaa-bbb-ccc'
 
       fakeOrchestrationApi
         .get('/visit-sessions/available')
@@ -194,15 +195,17 @@ describe('orchestrationApiClient', () => {
           prisonId: prisoner.prisonCode,
           prisonerId: prisoner.prisonerNumber,
           visitors: visitorIds.join(','),
+          excludedApplicationReference,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, visitSessions)
 
-      const result = await orchestrationApiClient.getVisitSessions(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
+      const result = await orchestrationApiClient.getVisitSessions({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
         visitorIds,
-      )
+        excludedApplicationReference,
+      })
 
       expect(result).toStrictEqual(visitSessions)
     })

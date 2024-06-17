@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { SessionRestriction, VisitSessionsCalendar } from '../../services/visitSessionsService'
@@ -131,6 +131,7 @@ describe('Choose visit time', () => {
           expect($('.visits-calendar__day-group legend').eq(2).text().trim()).toBe('Sunday 2 June 2024')
 
           expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]:checked').length).toBe(0)
           expect($('input[name=visitSession]').eq(0).attr('value')).toBe('2024-05-30_a')
           expect($('input[name=visitSession]').eq(1).attr('value')).toBe('2024-05-31_b')
           expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
@@ -138,27 +139,34 @@ describe('Choose visit time', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith(
-            prison.code,
-            prisoner.prisonerNumber,
-            [visitor.visitorId],
-            prison.policyNoticeDaysMax,
-          )
+          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
+            prisonId: prison.code,
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor.visitorId],
+            daysAhead: prison.policyNoticeDaysMax,
+          })
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-              allVisitSessionIds,
-              sessionRestriction,
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.sessionRestriction).toBe(sessionRestriction)
+        })
+    })
+
+    it('should pre-populate with data in session', () => {
+      sessionData.bookingJourney.selectedSessionDate = '2024-05-31'
+      sessionData.bookingJourney.selectedSessionTemplateReference = 'c'
+      sessionData.bookingJourney.applicationReference = application.reference
+
+      return request(app)
+        .get(url)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
+            '31 May - Friday - 2 visit times available',
+          )
+          expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]:checked').length).toBe(1)
+          expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
+          expect($('input[name=visitSession]').eq(2).prop('checked')).toBe(true)
         })
     })
 
@@ -183,25 +191,14 @@ describe('Choose visit time', () => {
           expect($('[data-test=return-to-home]').text()).toBe('return to the homepage')
           expect($('[data-test=return-to-home]').attr('href')).toBe('/')
 
-          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith(
-            prison.code,
-            prisoner.prisonerNumber,
-            [visitor.visitorId],
-            prison.policyNoticeDaysMax,
-          )
+          expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
+            prisonId: prison.code,
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor.visitorId],
+            daysAhead: prison.policyNoticeDaysMax,
+          })
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.sessionRestriction).toBe(undefined)
         })
     })
 
@@ -213,9 +210,8 @@ describe('Choose visit time', () => {
         value: [],
         msg: 'No visit time selected',
       }
-      const formValues = { visitSession: '' }
 
-      flashData = { errors: [validationError], formValues: [formValues] }
+      flashData = { errors: [validationError] }
 
       return request(app)
         .get(url)
@@ -248,7 +244,7 @@ describe('Choose visit time', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('it should create a visit application for the selected session and store data in session', () => {
+    it('it should create a visit application for the selected date/time and store data in session', () => {
       return request(app)
         .post(url)
         .send({ visitSession: '2024-05-30_a' })
@@ -261,24 +257,36 @@ describe('Choose visit time', () => {
             bookingJourney: sessionData.bookingJourney,
             bookerReference,
           })
+          expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              allVisitors: [visitor],
-              selectedVisitors: [visitor],
-              allVisitSessionIds,
-              sessionRestriction,
-              selectedSessionDate: '2024-05-30',
-              selectedSessionTemplateReference: 'a',
-              applicationReference: application.reference,
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney.selectedSessionDate).toBe('2024-05-30')
+          expect(sessionData.bookingJourney.selectedSessionTemplateReference).toBe('a')
+          expect(sessionData.bookingJourney.applicationReference).toBe(application.reference)
+        })
+    })
+
+    it('it should update an in-progress visit application with selected date/time and store data in session', () => {
+      const { bookingJourney } = sessionData
+      bookingJourney.selectedSessionDate = '2024-05-30'
+      bookingJourney.selectedSessionTemplateReference = 'a'
+      bookingJourney.applicationReference = application.reference
+
+      return request(app)
+        .post(url)
+        .send({ visitSession: '2024-06-02_d' })
+        .expect(302)
+        .expect('Location', '/book-visit/additional-support')
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+
+          expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney,
+          })
+
+          expect(bookingJourney.selectedSessionDate).toBe('2024-06-02')
+          expect(bookingJourney.selectedSessionTemplateReference).toBe('d')
+          expect(bookingJourney.applicationReference).toBe(application.reference)
         })
     })
 
@@ -286,7 +294,6 @@ describe('Choose visit time', () => {
       const expectedFlashErrors: FlashErrors = [
         { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
       ]
-      const expectedFlashFormValues: FlashFormValues = {}
 
       it('should set a validation error and redirect to original page when no visit time selected', () => {
         return request(app)
@@ -295,8 +302,8 @@ describe('Choose visit time', () => {
           .expect('Location', url)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
 
@@ -308,8 +315,8 @@ describe('Choose visit time', () => {
           .expect('Location', url)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
       })
     })

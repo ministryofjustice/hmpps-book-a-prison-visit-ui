@@ -85,18 +85,18 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
       const expectedSessionRestriction: SessionRestriction = 'OPEN'
 
-      const results = await visitSessionsService.getVisitSessionsCalendar(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
+      const results = await visitSessionsService.getVisitSessionsCalendar({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
         visitorIds,
         daysAhead,
-      )
+      })
 
-      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
+      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
         visitorIds,
-      )
+      })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
         firstSessionDate: expectedFirstSessionDate,
@@ -116,23 +116,46 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = []
       const expectedSessionRestriction: SessionRestriction = undefined
 
-      const results = await visitSessionsService.getVisitSessionsCalendar(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
+      const results = await visitSessionsService.getVisitSessionsCalendar({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        28,
-      )
+        daysAhead: 28,
+      })
 
-      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith(
-        prisoner.prisonCode,
-        prisoner.prisonerNumber,
+      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
         visitorIds,
-      )
+      })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
         firstSessionDate: expectedFirstSessionDate,
         allVisitSessionIds: expectedAllVisitSessionIds,
         sessionRestriction: expectedSessionRestriction,
+      })
+    })
+
+    it('should pass excludeApplicationReference if present', async () => {
+      const prisoner = TestData.prisonerInfoDto()
+      const visitorIds = [1, 2]
+      const visitSessions: AvailableVisitSessionDto[] = []
+      const excludedApplicationReference = 'aaa-bbb-ccc'
+      orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
+
+      await visitSessionsService.getVisitSessionsCalendar({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+        excludedApplicationReference,
+        daysAhead: 28,
+      })
+
+      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+        excludedApplicationReference,
       })
     })
   })
