@@ -19,8 +19,7 @@ const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const adultVisitor = TestData.visitor()
 const childVisitor = TestData.visitor({ dateOfBirth: `${new Date().getFullYear() - 2}-01-01`, adult: false })
-
-const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+const visitSession = TestData.availableVisitSessionDto()
 
 beforeEach(() => {
   sessionData = {
@@ -73,6 +72,59 @@ describe('Main contact', () => {
           expect($('#someoneElseName').prop('value')).toBeFalsy()
 
           expect($('input[name=hasPhoneNumber]:checked').length).toBe(0)
+          expect($('#phoneNumber').prop('value')).toBeFalsy()
+        })
+    })
+
+    it('should pre-populate with data in session (contact and phone number)', () => {
+      sessionData.bookingJourney.mainContact = { contact: adultVisitor, phoneNumber: '01234 567 890' }
+
+      return request(app)
+        .get(url)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name="contact"][value=1]:checked').length).toBe(1)
+          expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
+
+          expect($('input[name=hasPhoneNumber][value=yes]:checked').length).toBe(1)
+          expect($('#phoneNumber').prop('value')).toBe('01234 567 890')
+        })
+    })
+
+    it('should pre-populate with data in session (other contact and no phone number)', () => {
+      sessionData.bookingJourney.mainContact = { contact: 'Different Person' }
+
+      return request(app)
+        .get(url)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name="contact"][value=someoneElse]:checked').length).toBe(1)
+          expect($('#someoneElseName').prop('value')).toBe('Different Person')
+
+          expect($('input[name=hasPhoneNumber][value=no]:checked').length).toBe(1)
+          expect($('#phoneNumber').prop('value')).toBeFalsy()
+        })
+    })
+
+    it('should pre-populate with data in formValues overriding that in session', () => {
+      sessionData.bookingJourney.mainContact = { contact: adultVisitor, phoneNumber: '01234 567 890' }
+      const formValues = { contact: 'someoneElse', someoneElseName: 'Different Person', hasPhoneNumber: 'no' }
+      flashData = { formValues: [formValues] }
+
+      return request(app)
+        .get(url)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name="contact"][value=someoneElse]:checked').length).toBe(1)
+          expect($('#someoneElseName').prop('value')).toBe('Different Person')
+
+          expect($('input[name=hasPhoneNumber][value=no]:checked').length).toBe(1)
           expect($('#phoneNumber').prop('value')).toBeFalsy()
         })
     })
@@ -166,6 +218,27 @@ describe('Main contact', () => {
     describe('Validation errors', () => {
       let expectedFlashErrors: FlashErrors
       let expectedFlashFormValues: FlashFormValues
+
+      it('should discard any unexpected form data', () => {
+        expectedFlashErrors = [
+          { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
+          { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
+        ]
+        expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
+
+        return request(app)
+          .post(url)
+          .send({ unexpected: 'data' })
+          .expect(302)
+          .expect('location', url)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
 
       it('should set a validation error when no contact or phone choice selected and redirect to original page', () => {
         expectedFlashErrors = [

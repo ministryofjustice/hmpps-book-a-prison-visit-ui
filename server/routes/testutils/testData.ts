@@ -48,8 +48,8 @@ export default class TestData {
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
 
   static availableVisitSessionDto = ({
-    sessionDate = '2024-05-01',
-    sessionTemplateReference = 'v9d.7ed.7u',
+    sessionDate = '2024-05-30',
+    sessionTemplateReference = 'a',
     sessionTimeSlot = { startTime: '10:00', endTime: '11:30' },
     sessionRestriction = 'OPEN',
   }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({

@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { ValidationChain, body, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService } from '../../services'
 
 export default class MainContactController {
@@ -7,13 +7,28 @@ export default class MainContactController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { selectedVisitors } = req.session.bookingJourney
+      const { selectedVisitors, mainContact } = req.session.bookingJourney
 
       const adultVisitors = selectedVisitors.filter(visitor => visitor.adult)
 
+      const selectedMainContact =
+        mainContact !== undefined
+          ? {
+              contact: typeof mainContact.contact === 'string' ? 'someoneElse' : mainContact.contact.visitorDisplayId,
+              someoneElseName: typeof mainContact.contact === 'string' ? mainContact.contact : '',
+              hasPhoneNumber: mainContact.phoneNumber ? 'yes' : 'no',
+              phoneNumber: mainContact.phoneNumber ?? '',
+            }
+          : {}
+
+      const formValues = {
+        ...selectedMainContact,
+        ...req.flash('formValues')?.[0],
+      }
+
       res.render('pages/bookVisit/mainContact', {
         errors: req.flash('errors'),
-        formValues: req.flash('formValues')?.[0] || {},
+        formValues,
         adultVisitors,
       })
     }
@@ -24,15 +39,20 @@ export default class MainContactController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        req.flash('formValues', req.body)
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
         return res.redirect(`/book-visit/main-contact`)
       }
 
       const { bookingJourney } = req.session
-      const { contact }: { contact: string } = req.body
+      const { contact, someoneElseName, hasPhoneNumber, phoneNumber } = matchedData<{
+        contact?: string
+        someoneElseName?: string
+        hasPhoneNumber?: 'yes' | 'no'
+        phoneNumber?: string
+      }>(req)
 
       if (contact === 'someoneElse') {
-        bookingJourney.mainContact = { contact: req.body.someoneElseName }
+        bookingJourney.mainContact = { contact: someoneElseName }
       } else {
         const contactVisitor = bookingJourney.selectedVisitors.find(
           visitor => visitor.visitorDisplayId.toString() === contact,
@@ -40,8 +60,8 @@ export default class MainContactController {
         bookingJourney.mainContact = { contact: contactVisitor }
       }
 
-      if (req.body.hasPhoneNumber === 'yes') {
-        bookingJourney.mainContact.phoneNumber = req.body.phoneNumber
+      if (hasPhoneNumber === 'yes') {
+        bookingJourney.mainContact.phoneNumber = phoneNumber
       }
 
       await this.visitService.changeVisitApplication({ bookingJourney })
