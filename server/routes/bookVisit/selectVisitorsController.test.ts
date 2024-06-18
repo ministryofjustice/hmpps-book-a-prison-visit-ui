@@ -278,7 +278,7 @@ describe('Select visitors', () => {
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
         .send({ visitorDisplayIds: [1, 3] })
         .expect(302)
-        .expect('Location', '/book-visit/choose-visit-time')
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
@@ -301,7 +301,7 @@ describe('Select visitors', () => {
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
         .send({ visitorDisplayIds: [1, 1, 999, 3] })
         .expect(302)
-        .expect('Location', '/book-visit/choose-visit-time')
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({

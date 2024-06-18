@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express'
 import { BookingConfirmed } from '../../@types/bapv'
 import { VisitService } from '../../services'
+import paths from '../../constants/paths'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -40,7 +41,7 @@ export default class CheckVisitDetailsController {
         req.session.bookingConfirmed = bookingConfirmed
 
         delete req.session.bookingJourney
-        return res.redirect('/book-visit/visit-booked')
+        return res.redirect(paths.BOOK_VISIT.BOOKED)
       } catch (error) {
         // TODO handle errors (VB-3597)
         return next(error)

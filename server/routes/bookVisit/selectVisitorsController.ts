@@ -58,7 +58,7 @@ export default class SelectVisitorsController {
 
       bookingJourney.selectedVisitors = selectedVisitors
 
-      return res.redirect('/book-visit/choose-visit-time')
+      return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
     }
   }
 

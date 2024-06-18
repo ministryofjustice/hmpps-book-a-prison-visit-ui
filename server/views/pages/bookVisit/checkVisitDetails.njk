@@ -3,7 +3,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% set pageTitle = "Check the visit details before booking" %}
 
-{% set backLinkHref = "/book-visit/main-contact" %}
+{% set backLinkHref = paths.BOOK_VISIT.MAIN_CONTACT %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -53,7 +53,7 @@
           actions: {
             items: [
               {
-                href: "book-visit/select-visitors",
+                href: paths.BOOK_VISIT.SELECT_VISITORS,
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "visitors",
@@ -76,7 +76,7 @@
           actions: {
             items: [
               {
-                href: "/book-visit/choose-visit-time",
+                href: paths.BOOK_VISIT.CHOOSE_TIME,
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "time",
@@ -95,7 +95,7 @@
           actions: {
             items: [
               {
-                href: "/book-visit/additional-support",
+                href: paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "additional support requests",
@@ -118,7 +118,7 @@
           actions: {
             items: [
               {
-                href: "book-visit/main-contact",
+                href: paths.BOOK_VISIT.MAIN_CONTACT,
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "main contact",
@@ -133,7 +133,7 @@
           rows: displayRows
       }) }}
 
-      <form action="/book-visit/check-visit-details" method="POST" novalidate>
+      <form action="{{ paths.BOOK_VISIT.CHECK_DETAILS }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({

@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService } from '../../services'
+import paths from '../../constants/paths'
 
 export default class MainContactController {
   public constructor(private readonly visitService: VisitService) {}
@@ -40,7 +41,7 @@ export default class MainContactController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
-        return res.redirect(`/book-visit/main-contact`)
+        return res.redirect(paths.BOOK_VISIT.MAIN_CONTACT)
       }
 
       const { bookingJourney } = req.session
@@ -66,7 +67,7 @@ export default class MainContactController {
 
       await this.visitService.changeVisitApplication({ bookingJourney })
 
-      return res.redirect('/book-visit/check-visit-details')
+      return res.redirect(paths.BOOK_VISIT.CHECK_DETAILS)
     }
   }
 

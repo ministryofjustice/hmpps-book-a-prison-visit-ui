@@ -16,8 +16,6 @@ let app: Express
 const visitService = createMockVisitService()
 let sessionData: SessionData
 
-const url = '/book-visit/check-visit-details'
-
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
@@ -54,7 +52,7 @@ afterEach(() => {
 })
 
 describe('Check visit details', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
     it('should use the session validation middleware', () => {
       sessionData.bookingJourney.prisoner = undefined
 
@@ -69,13 +67,13 @@ describe('Check visit details', () => {
 
     it('should render check visit details page', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Check the visit details before booking -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/main-contact')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('h1').text()).toBe('Check the visit details before booking')
 
           // TODO flesh out test for a 'full' visit
@@ -87,7 +85,7 @@ describe('Check visit details', () => {
     // TODO specific test for no phone number
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
     const visit = TestData.visitDto()
 
     beforeEach(() => {
@@ -104,9 +102,9 @@ describe('Check visit details', () => {
       }
 
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(302)
-        .expect('location', `/book-visit/visit-booked`)
+        .expect('location', paths.BOOK_VISIT.BOOKED)
         .expect(() => {
           expect(sessionData.bookingJourney).toBe(undefined)
           expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
