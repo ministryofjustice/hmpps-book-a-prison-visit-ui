@@ -79,7 +79,7 @@
             },
             id: "phoneNumber",
             name: "phoneNumber",
-            value: formValues.phoneNumber,
+            value: formValues.phoneNumber if formValues.hasPhoneNumber == 'yes',
             autocomplete: "off",
             errorMessage: errors | findError('phoneNumber')
 
