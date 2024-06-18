@@ -21,18 +21,22 @@ export default function bookVisitSessionValidator(): RequestHandler {
 
     const journeyStage = journeyOrder.indexOf(requestPath)
 
+    // Unknown path
     if (journeyStage === -1) {
-      return next(createError(404, 'Not found'))
+      return next(createError(404))
     }
 
+    // No booker prisoner - any path
     if (!booker.prisoners?.length) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookingJourney.prisoner) {
+    // Select visitors page
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookingJourney?.prisoner) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
+    // Select visitors page - POST only
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) &&
       method === 'POST' &&
@@ -41,12 +45,15 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
+    // Choose visit time page
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME) &&
       (!bookingJourney.prison || !bookingJourney.allVisitors?.length || !bookingJourney.selectedVisitors?.length)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
+
+    // TODO add more pages
 
     return next()
   }
