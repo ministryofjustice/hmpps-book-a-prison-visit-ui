@@ -19,7 +19,7 @@ const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
 const application = TestData.applicationDto()
-const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+const visitSession = TestData.availableVisitSessionDto()
 const mainContact = {
   contact: 'Mary Magdeline',
   phoneNumber: '01234 567890',

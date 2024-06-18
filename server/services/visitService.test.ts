@@ -32,7 +32,7 @@ describe('Visit service', () => {
 
     const application = TestData.applicationDto()
     const visit = TestData.visitDto()
-    const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+    const visitSession = TestData.availableVisitSessionDto()
 
     let bookingJourney: BookingJourney
 

@@ -16,8 +16,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
-
-const visitSession = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
+const visitSession = TestData.availableVisitSessionDto()
 
 afterEach(() => {
   jest.resetAllMocks()
