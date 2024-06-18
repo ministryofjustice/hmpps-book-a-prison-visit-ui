@@ -39,7 +39,7 @@ const calendar: VisitSessionsCalendar = {
 }
 const allVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
 
-const visitSessionA = TestData.availableVisitSessionDto()
+const visitSessionA = TestData.availableVisitSessionDto({ sessionDate: '2024-05-30', sessionTemplateReference: 'a' })
 const visitSessionB = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'b' })
 const visitSessionC = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'c' })
 const visitSessionD = TestData.availableVisitSessionDto({ sessionDate: '2024-06-02', sessionTemplateReference: 'd' })
