@@ -15,7 +15,7 @@ const journeyOrder: string[] = [
 
 export default function bookVisitSessionValidator(): RequestHandler {
   return (req, res, next) => {
-    const { booker, bookingJourney } = req.session
+    const { booker, bookingJourney, bookingConfirmed } = req.session
     const { baseUrl, method, path } = req
     const requestPath = baseUrl + path
 
@@ -29,6 +29,11 @@ export default function bookVisitSessionValidator(): RequestHandler {
     // No booker prisoner - any path
     if (!booker.prisoners?.length) {
       return logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Booking confirmed (check first because bookingJourney just before this stage)
+    if (requestPath === paths.BOOK_VISIT.BOOKED) {
+      return bookingConfirmed && !bookingJourney ? next() : logAndRedirect(res, method, requestPath, booker.reference)
     }
 
     // Select visitors page
@@ -53,7 +58,35 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // TODO add more pages
+    // Choose visit time page - POST only
+    if (
+      journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME) &&
+      method === 'POST' &&
+      (!bookingJourney.allVisitSessionIds?.length || !bookingJourney.allVisitSessions?.length)
+    ) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Additional support page
+    if (
+      journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.ADDITIONAL_SUPPORT) &&
+      (!bookingJourney.selectedVisitSession || !bookingJourney.applicationReference)
+    ) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Main contact page
+    if (
+      journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.MAIN_CONTACT) &&
+      typeof bookingJourney.visitorSupport !== 'string'
+    ) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Check details page
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHECK_DETAILS) && !bookingJourney.mainContact) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
 
     return next()
   }
