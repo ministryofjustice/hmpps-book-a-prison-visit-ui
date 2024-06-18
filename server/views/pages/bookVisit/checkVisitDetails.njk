@@ -3,8 +3,6 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% set pageTitle = "Check the visit details before booking" %}
 
-{% set backLinkHref = "/book-visit/main-contact" %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -19,26 +17,16 @@
             text: "Prisoner"
           },
           value: {
-            text: prisoner.firstName | capitalize + " " + prisoner.lastName | capitalize,
-            classes: "test-prisoner"
-          },
-          actions: {
-            items: [
-              {
-                href: "/",
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "time",
-                attributes: { "data-test": "change-time" }
-              }
-            ]
+            html: '<span data-test="prisoner-name">' +
+              prisoner.firstName | capitalize + " " + prisoner.lastName | capitalize + 
+              "</span>"
           }
         }
       ] %}
 
       {% set visitorsDisplay %}
         {% for visitor in visitors %}
-          <p><span class="test-visitor-name-{{ loop.index }}">{{ visitor.firstName | safe }} {{ visitor.lastName | safe }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
+          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName | safe }} {{ visitor.lastName | safe }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
         {% endfor %}
       {% endset %}
 
@@ -53,7 +41,7 @@
           actions: {
             items: [
               {
-                href: "book-visit/select-visitors",
+                href: "/book-visit/select-visitors",
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "visitors",
@@ -70,7 +58,7 @@
             text: "Date and time"
           },
           value: {
-            text: visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime,
+            html: visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime,
             classes: "test-visit-time"
           },
           actions: {
@@ -112,13 +100,13 @@
             text: "Main contact"
           },
           value: {
-            html: '<p><span class="test-main-contact-name">' + mainContactName + '</span><br><span class="test-main-contact-number">' +
+            html: '<p><span data-test="main-contact-name">' + mainContactName + '</span><br><span class="test-main-contact-number">' +
               mainContactNumber | d("No phone number provided") + "</span></p>"
           },
           actions: {
             items: [
               {
-                href: "book-visit/main-contact",
+                href: "/book-visit/main-contact",
                 text: "Change",
                 classes: "govuk-link--no-visited-state",
                 visuallyHiddenText: "main contact",

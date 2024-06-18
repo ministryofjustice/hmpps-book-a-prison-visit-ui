@@ -59,7 +59,7 @@ describe('Check visit details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Check the visit details before booking -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/main-contact')
+          expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text()).toBe('Check the visit details before booking')
 
           // TODO flesh out test for a 'full' visit
