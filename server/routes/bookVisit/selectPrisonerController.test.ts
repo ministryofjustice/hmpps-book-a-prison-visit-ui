@@ -6,6 +6,9 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { PrisonerInfoDto } from '../../data/orchestrationApiTypes'
 import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 let sessionData: SessionData
@@ -18,6 +21,22 @@ describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
   const prisoner = TestData.prisoner()
   const bookingConfirmed = TestData.bookingConfirmed()
+
+  it('should use the session validation middleware', () => {
+    sessionData = {
+      booker: { reference: bookerReference },
+    } as SessionData
+
+    app = appWithAllRoutes({ services: {}, sessionData })
+
+    return request(app)
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
+      .expect(302)
+      .expect('Location', paths.HOME)
+      .expect(res => {
+        expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+      })
+  })
 
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {

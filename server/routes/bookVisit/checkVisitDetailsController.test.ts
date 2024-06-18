@@ -6,6 +6,10 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookingConfirmed } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
@@ -51,6 +55,18 @@ afterEach(() => {
 
 describe('Check visit details', () => {
   describe(`GET ${url}`, () => {
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
+
     it('should render check visit details page', () => {
       return request(app)
         .get(url)

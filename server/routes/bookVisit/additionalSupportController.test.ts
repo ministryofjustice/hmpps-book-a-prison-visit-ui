@@ -5,6 +5,10 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
@@ -45,6 +49,17 @@ describe('Additional support needs', () => {
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })
+    })
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
     })
 
     it('should render additional support page', () => {

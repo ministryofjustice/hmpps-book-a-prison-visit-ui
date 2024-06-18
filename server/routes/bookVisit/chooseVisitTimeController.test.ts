@@ -7,6 +7,10 @@ import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../test
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
@@ -88,6 +92,18 @@ describe('Choose visit time', () => {
       } as SessionData
 
       app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
+    })
+
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
     })
 
     it('should render calendar for dates in the booking window with available sessions', () => {

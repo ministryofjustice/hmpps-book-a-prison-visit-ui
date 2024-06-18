@@ -7,6 +7,9 @@ import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvide
 import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
@@ -104,6 +107,18 @@ describe('Select visitors', () => {
       } as SessionData
 
       app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+    })
+
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
     })
 
     it('should render prison visitor rules, visitor list and save all visitors to session', () => {

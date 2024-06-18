@@ -6,6 +6,10 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { createMockVisitService } from '../../services/testutils/mocks'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
@@ -51,6 +55,18 @@ describe('Main contact', () => {
     beforeEach(() => {
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
+    })
+
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
     })
 
     it('should render main contact page with all fields empty', () => {
