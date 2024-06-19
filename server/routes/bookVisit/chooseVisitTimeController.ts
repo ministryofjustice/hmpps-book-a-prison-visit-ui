@@ -1,7 +1,6 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
-import logger from '../../../logger'
 import paths from '../../constants/paths'
 
 export default class ChooseVisitTimeController {
@@ -86,9 +85,13 @@ export default class ChooseVisitTimeController {
           await this.visitService.changeVisitApplication({ bookingJourney })
         }
       } catch (error) {
-        // TODO catch create application errors - VB-3777
-        logger.error(error)
-        return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
+        // HTTP 400 Bad Request is the response when a session is no longer available
+        if (error.status === 400) {
+          req.flash('message', 'Your visit time is no longer available. Select a new time.')
+          delete bookingJourney.selectedVisitSession
+          return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
+        }
+        throw error
       }
 
       return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
