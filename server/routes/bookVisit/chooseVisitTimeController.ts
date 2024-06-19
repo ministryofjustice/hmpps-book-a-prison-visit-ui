@@ -50,7 +50,7 @@ export default class ChooseVisitTimeController {
   }
 
   public submit(): RequestHandler {
-    return async (req, res) => {
+    return async (req, res, next) => {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
@@ -91,7 +91,7 @@ export default class ChooseVisitTimeController {
           delete bookingJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
-        throw error
+        return next(error)
       }
 
       return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)

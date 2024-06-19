@@ -2,7 +2,8 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from '../testutils/appSetup'
+import { BadRequest, InternalServerError } from 'http-errors'
+import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookingConfirmed } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
@@ -115,6 +116,40 @@ describe('Check visit details', () => {
         })
     })
 
-    // TODO test for handling booking error (VB-3597)
+    describe('Handle API errors', () => {
+      const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+
+      it('should set message in flash and redirect to choose visit time page when create application returns 400 Bad Request', () => {
+        visitService.bookVisit.mockRejectedValue(new BadRequest())
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+            expect(sessionData.bookingJourney).not.toBe(undefined)
+            expect(sessionData.bookingConfirmed).toBe(undefined)
+            expect(visitService.bookVisit).toHaveBeenCalledWith({
+              applicationReference: application.reference,
+            })
+            expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+          })
+      })
+
+      it('should throw any other API error response and not set a message in flash', () => {
+        visitService.bookVisit.mockRejectedValue(new InternalServerError())
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(500)
+          .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
+            expect(sessionData.bookingJourney).not.toBe(undefined)
+            expect(sessionData.bookingConfirmed).toBe(undefined)
+            expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+          })
+      })
+    })
   })
 })
