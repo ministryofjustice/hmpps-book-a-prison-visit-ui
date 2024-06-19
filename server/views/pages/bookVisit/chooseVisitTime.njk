@@ -2,6 +2,8 @@
 
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{%- from "components/moj/banner/macro.njk" import mojBanner -%}
 
 {% set pageTitle = "Choose the visit time" %}
 
@@ -15,6 +17,24 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">Choose the visit time</h1>
+    </div>
+  </div>
+
+  {% if message %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        {{ mojBanner({
+          type: "information",
+          html: '<h2 class="govuk-heading-m">' + message + '</h2>',
+          attributes: { "data-test": "message" }
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
       <p>Select one visit time. It will be reserved for 10 minutes.</p>
       <p>
         Only times that

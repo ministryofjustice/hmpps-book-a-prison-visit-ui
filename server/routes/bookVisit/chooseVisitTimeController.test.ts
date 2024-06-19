@@ -114,6 +114,7 @@ describe('Choose visit time', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('Choose the visit time')
 
+          expect($('[data-test="message"]').length).toBe(0)
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
 
           // calendar months, day listing and start day column
@@ -166,6 +167,19 @@ describe('Choose visit time', () => {
             visitorIds: [visitor.visitorId],
             daysAhead: prison.policyNoticeDaysMax,
           })
+        })
+    })
+
+    it('should render info message if set in flash', () => {
+      const message = 'Your visit time is no longer available. Select a new time.'
+      flashData = { message: [message] }
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="message"]').text().trim()).toBe(message)
         })
     })
 

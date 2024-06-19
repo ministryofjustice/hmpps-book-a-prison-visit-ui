@@ -42,6 +42,7 @@ export default class ChooseVisitTimeController {
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
+        message: req.flash('message')?.[0],
         calendar,
         selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
         prisoner,
