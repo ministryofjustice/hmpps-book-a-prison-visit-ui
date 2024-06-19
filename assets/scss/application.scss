@@ -4,6 +4,11 @@ $path: "/assets/images/";
 
 @import 'govuk/all';
 
+// MoJ components
+@import "moj/components/banner/banner";
+
+// GOV.UK One Login components
 @import './components/service-header-no-imports';
+
 @import './components/visitsCalendar.scss';
 @import './local';
