@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import paths from '../../constants/paths'
 
 export default class AdditionalSupportController {
   public constructor() {}
@@ -36,7 +37,7 @@ export default class AdditionalSupportController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
-        return res.redirect(`/book-visit/additional-support`)
+        return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
       }
 
       const { bookingJourney } = req.session
@@ -47,7 +48,7 @@ export default class AdditionalSupportController {
 
       bookingJourney.visitorSupport = additionalSupportRequired === 'no' ? '' : additionalSupport
 
-      return res.redirect('/book-visit/main-contact')
+      return res.redirect(paths.BOOK_VISIT.MAIN_CONTACT)
     }
   }
 

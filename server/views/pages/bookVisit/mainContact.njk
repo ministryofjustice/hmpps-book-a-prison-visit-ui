@@ -5,7 +5,7 @@
 
 {% set pageTitle = "Who is the main contact for this booking?" %}
 
-{% set backLinkHref = "/book-visit/additional-support" %}
+{% set backLinkHref = paths.BOOK_VISIT.ADDITIONAL_SUPPORT %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -15,7 +15,7 @@
 
       <h1 class="govuk-heading-l">Who is the main contact for this booking?</h1>
 
-      <form action="/book-visit/main-contact" method="POST" novalidate>
+      <form action="{{ paths.BOOK_VISIT.MAIN_CONTACT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {% set visitors = [] %}

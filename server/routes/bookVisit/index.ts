@@ -10,6 +10,8 @@ import AdditionalSupportController from './additionalSupportController'
 import MainContactController from './mainContactController'
 import CheckVisitDetailsController from './checkVisitDetailsController'
 import VisitBookedController from './visitBookedController'
+import paths from '../../constants/paths'
+import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidator'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -27,29 +29,37 @@ export default function routes(services: Services): Router {
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
   const visitBookedController = new VisitBookedController()
 
-  // TODO need session checks for each stage to validate what is in session - add middleware here to apply to all booking journey routes?
+  router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
-  post('/select-prisoner', selectPrisonerController.selectPrisoner())
+  post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
 
-  get('/select-visitors', selectVisitorsController.view())
-  postWithValidation('/select-visitors', selectVisitorsController.validate(), selectVisitorsController.submit())
-
-  get('/choose-visit-time', chooseVisitTimeController.view())
-  postWithValidation('/choose-visit-time', chooseVisitTimeController.validate(), chooseVisitTimeController.submit())
-
-  get('/additional-support', additionalSupportController.view())
+  get(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.view())
   postWithValidation(
-    '/additional-support',
+    paths.BOOK_VISIT.SELECT_VISITORS,
+    selectVisitorsController.validate(),
+    selectVisitorsController.submit(),
+  )
+
+  get(paths.BOOK_VISIT.CHOOSE_TIME, chooseVisitTimeController.view())
+  postWithValidation(
+    paths.BOOK_VISIT.CHOOSE_TIME,
+    chooseVisitTimeController.validate(),
+    chooseVisitTimeController.submit(),
+  )
+
+  get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT, additionalSupportController.view())
+  postWithValidation(
+    paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
     additionalSupportController.validate(),
     additionalSupportController.submit(),
   )
 
-  get('/main-contact', mainContactController.view())
-  postWithValidation('/main-contact', mainContactController.validate(), mainContactController.submit())
+  get(paths.BOOK_VISIT.MAIN_CONTACT, mainContactController.view())
+  postWithValidation(paths.BOOK_VISIT.MAIN_CONTACT, mainContactController.validate(), mainContactController.submit())
 
-  get('/check-visit-details', checkVisitDetailsController.view())
-  post('/check-visit-details', checkVisitDetailsController.submit())
+  get(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.view())
+  post(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.submit())
 
-  get('/visit-booked', visitBookedController.view())
+  get(paths.BOOK_VISIT.BOOKED, visitBookedController.view())
   return router
 }

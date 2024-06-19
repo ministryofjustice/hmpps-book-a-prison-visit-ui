@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 import logger from '../../../logger'
+import paths from '../../constants/paths'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -53,7 +54,7 @@ export default class ChooseVisitTimeController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        return res.redirect('/book-visit/choose-visit-time')
+        return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
       }
       const { visitSession } = matchedData<{ visitSession: string }>(req)
       const visitSessionSplit = visitSession.split('_')
@@ -86,10 +87,10 @@ export default class ChooseVisitTimeController {
       } catch (error) {
         // TODO catch create application errors - VB-3777
         logger.error(error)
-        return res.redirect('/book-visit/choose-visit-time')
+        return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
       }
 
-      return res.redirect('/book-visit/additional-support')
+      return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
     }
   }
 

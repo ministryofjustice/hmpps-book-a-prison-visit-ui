@@ -5,6 +5,10 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { PrisonerInfoDto } from '../../data/orchestrationApiTypes'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 let sessionData: SessionData
@@ -18,6 +22,22 @@ describe('Select prisoner', () => {
   const prisoner = TestData.prisoner()
   const bookingConfirmed = TestData.bookingConfirmed()
 
+  it('should use the session validation middleware', () => {
+    sessionData = {
+      booker: { reference: bookerReference },
+    } as SessionData
+
+    app = appWithAllRoutes({ services: {}, sessionData })
+
+    return request(app)
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
+      .expect(302)
+      .expect('Location', paths.HOME)
+      .expect(res => {
+        expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+      })
+  })
+
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
@@ -28,10 +48,10 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-visit/select-prisoner')
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .send({ prisonerDisplayId: prisoner.prisonerDisplayId.toString() })
       .expect(302)
-      .expect('location', '/book-visit/select-visitors')
+      .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
       .expect(() => {
         expect(sessionData).toStrictEqual({
           booker: {
@@ -53,7 +73,7 @@ describe('Select prisoner', () => {
     app = appWithAllRoutes({ services: {}, sessionData })
 
     return request(app)
-      .post('/book-visit/select-prisoner')
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .send({ prisonerDisplayId: 1000 })
       .expect(404)
       .expect(res => {

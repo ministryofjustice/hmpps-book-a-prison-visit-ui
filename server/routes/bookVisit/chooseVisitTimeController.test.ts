@@ -7,14 +7,16 @@ import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../test
 import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
 const visitService = createMockVisitService()
 const visitSessionsService = createMockVisitSessionService()
 let sessionData: SessionData
-
-const url = '/book-visit/choose-visit-time'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisonerInfoDto()
@@ -59,7 +61,7 @@ afterEach(() => {
 })
 
 describe('Choose visit time', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.CHOOSE_TIME}`, () => {
     let flashData: FlashData
 
     beforeEach(() => {
@@ -90,14 +92,26 @@ describe('Choose visit time', () => {
       app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
     })
 
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
+
     it('should render calendar for dates in the booking window with available sessions', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Choose the visit time -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/select-visitors')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('Choose the visit time')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
@@ -129,7 +143,7 @@ describe('Choose visit time', () => {
             '30 May - Thursday - 1 visit time available',
           )
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-visit/choose-visit-time')
+          expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
 
           // visit session radios per day
           expect($('.visits-calendar__day-group').length).toBe(3)
@@ -160,7 +174,7 @@ describe('Choose visit time', () => {
       sessionData.bookingJourney.applicationReference = application.reference
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -183,12 +197,12 @@ describe('Choose visit time', () => {
       })
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/select-visitors')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('main p').eq(0).text()).toContain('no available visit times')
@@ -216,7 +230,7 @@ describe('Choose visit time', () => {
       flashData = { errors: [validationError] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -227,7 +241,7 @@ describe('Choose visit time', () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.CHOOSE_TIME}`, () => {
     beforeEach(() => {
       visitService.createVisitApplication.mockResolvedValue(application)
 
@@ -248,10 +262,10 @@ describe('Choose visit time', () => {
 
     it('should create a visit application for the selected date/time and store data in session', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.CHOOSE_TIME)
         .send({ visitSession: '2024-05-30_a' })
         .expect(302)
-        .expect('Location', '/book-visit/additional-support')
+        .expect('Location', paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
 
@@ -273,10 +287,10 @@ describe('Choose visit time', () => {
       bookingJourney.applicationReference = application.reference
 
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.CHOOSE_TIME)
         .send({ visitSession: '2024-06-02_d' })
         .expect(302)
-        .expect('Location', '/book-visit/additional-support')
+        .expect('Location', paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
 
@@ -298,9 +312,9 @@ describe('Choose visit time', () => {
 
       it('should set a validation error and redirect to original page when no visit time selected', () => {
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.CHOOSE_TIME)
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
@@ -310,10 +324,10 @@ describe('Choose visit time', () => {
 
       it('should filter out an invalid visit session date/reference', () => {
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.CHOOSE_TIME)
           .send({ visitSession: 'INVALID_VALUE' })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()

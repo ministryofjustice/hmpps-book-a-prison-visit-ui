@@ -20,11 +20,11 @@ export type BookingJourney = {
   // selected visitors for this visit
   selectedVisitors?: Visitor[]
 
-  // all available calendar / visit sessions (e.g. ['2024-05-28_session-ref'])
-  allVisitSessionIds?: string[]
-
-  // full selected visit session object
+  // all available visit sessions
+  allVisitSessionIds?: string[] // e.g. ['2024-05-28_session-ref']
   allVisitSessions?: AvailableVisitSessionDto[]
+
+  // selected visit session
   selectedVisitSession?: AvailableVisitSessionDto
 
   // visit application reference

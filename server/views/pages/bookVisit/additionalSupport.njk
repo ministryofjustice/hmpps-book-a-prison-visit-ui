@@ -5,7 +5,7 @@
 
 {% set pageTitle = "Any additional support needs?" %}
 
-{% set backLinkHref = "/book-visit/choose-visit-time" %}
+{% set backLinkHref = paths.BOOK_VISIT.CHOOSE_TIME %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -18,7 +18,7 @@
       <p>Tell us about any support that visitors will need because of a health condition of disability. For example, wheelchair access.</p>
       <p data-test="prison-name">{{ prisonName }} will make reasonable adjustments for the visit, but may not be able to fulfil your request</p>
 
-      <form action="/book-visit/additional-support" method="POST" novalidate>
+      <form action="{{ paths.BOOK_VISIT.ADDITIONAL_SUPPORT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {% set supportDetailsHtml %}
           {{ govukInput({

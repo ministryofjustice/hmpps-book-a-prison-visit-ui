@@ -12,7 +12,7 @@
       {% if prisoners | length %}
         <p>Prisoner: <span data-test="prisoner-name">{{ prisoners[0].firstName | capitalize }} {{prisoners[0].lastName | capitalize }}</span></p>
 
-        <form action="/book-visit/select-prisoner" method="POST" novalidate>
+        <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
           <input type="hidden" name="prisonerDisplayId" value="{{ prisoners[0].prisonerDisplayId }}">

@@ -7,6 +7,7 @@ import { FieldValidationError } from 'express-validator'
 import { formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
+import paths from '../constants/paths'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -18,6 +19,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.environmentName = config.environmentName
   app.locals.showExtraTestAttrs = ['DEV', 'STAGING'].includes(config.environmentName)
   app.locals.oneLoginLink = config.apis.govukOneLogin.homeUrl
+  app.locals.paths = paths
 
   // Cachebusting version string
   if (production) {
