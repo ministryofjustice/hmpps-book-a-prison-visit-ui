@@ -9,6 +9,7 @@ import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
+import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -148,8 +149,18 @@ context('Booking journey', () => {
     mainContactPage.continue()
 
     // Check visit details
+    const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
+    checkVisitDetailsPage.prisonerName().contains('John Smith')
+    checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
+    checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
+    checkVisitDetailsPage.visitDate().contains('Monday 24 June 2024')
+    checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
+    checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
+    checkVisitDetailsPage.mainContactName().contains('Adult One')
+    checkVisitDetailsPage.mainContactNumber().contains('01234 567 890')
+
     cy.task('stubBookVisit', TestData.visitDto())
-    cy.get('[data-test="submit-booking"]').click() // TODO implement page class and add assertions (as part of VB-3481)
+    checkVisitDetailsPage.continue()
 
     // TODO add to this test as booking journey implemented
   })

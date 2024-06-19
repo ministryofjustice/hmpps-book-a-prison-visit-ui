@@ -58,8 +58,8 @@
             text: "Date and time"
           },
           value: {
-            html: visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime,
-            classes: "test-visit-time"
+            html: "<p><span data-test='visit-date'>" + visitSlot | formatDate("EEEE d MMMM yyyy") + "</span></p>
+              <p><span data-test='visit-time'>" + visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime + "</span></p>"
           },
           actions: {
             items: [
@@ -78,7 +78,7 @@
             text: "Additional support requests"
           },
           value: {
-            html: '<p class="test-additional-support">' + (additionalSupport | d("None", true)) + '</p>'
+            html: '<p data-test="additional-support">' + (additionalSupport | d("None", true)) + '</p>'
           },
           actions: {
             items: [
@@ -100,8 +100,8 @@
             text: "Main contact"
           },
           value: {
-            html: '<p><span data-test="main-contact-name">' + mainContactName + '</span><br><span class="test-main-contact-number">' +
-              mainContactNumber | d("No phone number provided") + "</span></p>"
+            html: '<p><span data-test="main-contact-name">' + mainContactName + '</span></p>
+              <p><span data-test="main-contact-number">' + mainContactNumber | d("No phone number provided") + "</span></p>"
           },
           actions: {
             items: [

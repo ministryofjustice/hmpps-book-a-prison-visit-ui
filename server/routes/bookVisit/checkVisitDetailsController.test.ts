@@ -61,14 +61,33 @@ describe('Check visit details', () => {
           expect($('title').text()).toMatch(/^Check the visit details before booking -/)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text()).toBe('Check the visit details before booking')
-
-          // TODO flesh out test for a 'full' visit
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="visitor-name-1"]').text()).toBe('Joan Phillips (44 years old)')
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-time"]').text()).toBe('10am to 11:30am')
+          expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access')
+          expect($('[data-test="main-contact-name"]').text()).toBe(mainContact.contact)
+          expect($('[data-test="main-contact-number"]').text()).toBe(mainContact.phoneNumber)
         })
     })
 
-    // TODO specific test for no additional support
-
-    // TODO specific test for no phone number
+    it('Should show alternative text when no additional support/phone number provided', () => {
+      sessionData.bookingJourney.visitorSupport = undefined
+      sessionData.bookingJourney.mainContact.phoneNumber = undefined
+      return request(app)
+        .get(url)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Check the visit details before booking -/)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text()).toBe('Check the visit details before booking')
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="additional-support"]').text()).toBe('None')
+          expect($('[data-test="main-contact-number"]').text()).toBe('No phone number provided')
+        })
+    })
   })
 
   describe(`POST ${url}`, () => {
