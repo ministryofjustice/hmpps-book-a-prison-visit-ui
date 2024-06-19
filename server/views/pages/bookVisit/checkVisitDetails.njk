@@ -3,8 +3,6 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% set pageTitle = "Check the visit details before booking" %}
 
-{% set backLinkHref = paths.BOOK_VISIT.MAIN_CONTACT %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -19,26 +17,16 @@
             text: "Prisoner"
           },
           value: {
-            text: prisoner.firstName | capitalize + " " + prisoner.lastName | capitalize,
-            classes: "test-prisoner"
-          },
-          actions: {
-            items: [
-              {
-                href: "/",
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "time",
-                attributes: { "data-test": "change-time" }
-              }
-            ]
+            html: '<span data-test="prisoner-name">' +
+              prisoner.firstName | capitalize + " " + prisoner.lastName | capitalize + 
+              "</span>"
           }
         }
       ] %}
 
       {% set visitorsDisplay %}
         {% for visitor in visitors %}
-          <p><span class="test-visitor-name-{{ loop.index }}">{{ visitor.firstName | safe }} {{ visitor.lastName | safe }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
+          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName | safe }} {{ visitor.lastName | safe }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
         {% endfor %}
       {% endset %}
 
@@ -70,8 +58,8 @@
             text: "Date and time"
           },
           value: {
-            text: visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime,
-            classes: "test-visit-time"
+            html: "<p><span data-test='visit-date'>" + visitSlot | formatDate("EEEE d MMMM yyyy") + "</span></p>
+              <p><span data-test='visit-time'>" + visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime + "</span></p>"
           },
           actions: {
             items: [
@@ -90,7 +78,7 @@
             text: "Additional support requests"
           },
           value: {
-            html: '<p class="test-additional-support">' + (additionalSupport | d("None", true)) + '</p>'
+            html: '<p data-test="additional-support">' + (additionalSupport | d("None", true)) + '</p>'
           },
           actions: {
             items: [
@@ -112,8 +100,8 @@
             text: "Main contact"
           },
           value: {
-            html: '<p><span class="test-main-contact-name">' + mainContactName + '</span><br><span class="test-main-contact-number">' +
-              mainContactNumber | d("No phone number provided") + "</span></p>"
+            html: '<p><span data-test="main-contact-name">' + mainContactName + '</span></p>
+              <p><span data-test="main-contact-number">' + mainContactNumber | d("No phone number provided") + "</span></p>"
           },
           actions: {
             items: [

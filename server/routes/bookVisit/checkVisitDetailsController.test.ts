@@ -74,16 +74,39 @@ describe('Check visit details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Check the visit details before booking -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
+          expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text()).toBe('Check the visit details before booking')
-
-          // TODO flesh out test for a 'full' visit
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="visitor-name-1"]').text()).toBe('Joan Phillips (44 years old)')
+          expect($('[data-test="change-visitors"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-time"]').text()).toBe('10am to 11:30am')
+          expect($('[data-test="change-time"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
+          expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access')
+          expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
+          expect($('[data-test="main-contact-name"]').text()).toBe(mainContact.contact)
+          expect($('[data-test="main-contact-number"]').text()).toBe(mainContact.phoneNumber)
+          expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })
 
-    // TODO specific test for no additional support
-
-    // TODO specific test for no phone number
+    it('Should show alternative text when no additional support/phone number provided', () => {
+      sessionData.bookingJourney.visitorSupport = ''
+      sessionData.bookingJourney.mainContact.phoneNumber = undefined
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Check the visit details before booking -/)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text()).toBe('Check the visit details before booking')
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="additional-support"]').text()).toBe('None')
+          expect($('[data-test="main-contact-number"]').text()).toBe('No phone number provided')
+        })
+    })
   })
 
   describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
