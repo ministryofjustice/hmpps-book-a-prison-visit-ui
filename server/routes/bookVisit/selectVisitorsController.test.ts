@@ -6,14 +6,16 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
 const bookerService = createMockBookerService()
 const prisonService = createMockPrisonService()
 let sessionData: SessionData
-
-const url = '/book-visit/select-visitors'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisonerInfoDto()
@@ -89,7 +91,7 @@ afterEach(() => {
 })
 
 describe('Select visitors', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
     let flashData: FlashData
 
     beforeEach(() => {
@@ -107,14 +109,26 @@ describe('Select visitors', () => {
       app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
     })
 
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
+
     it('should render prison visitor rules, visitor list and save all visitors to session', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').text()).toBe('4 people')
@@ -124,7 +138,7 @@ describe('Select visitors', () => {
           expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
           expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-visit/select-visitors')
+          expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(0)
           expect($('input[name=visitorDisplayIds][value=1]+label').text().trim()).toBe('Visitor Age 20y (20 years old)')
@@ -159,7 +173,7 @@ describe('Select visitors', () => {
       sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -177,7 +191,7 @@ describe('Select visitors', () => {
       flashData = { formValues: [formValues] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -200,7 +214,7 @@ describe('Select visitors', () => {
       flashData = { errors: [validationError], formValues: [formValues] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -214,12 +228,12 @@ describe('Select visitors', () => {
       bookerService.getVisitors.mockResolvedValue([])
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
@@ -249,7 +263,7 @@ describe('Select visitors', () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
     beforeEach(() => {
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
@@ -261,10 +275,10 @@ describe('Select visitors', () => {
 
     it('should should save selected visitors to session and redirect to select date and time page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
         .send({ visitorDisplayIds: [1, 3] })
         .expect(302)
-        .expect('Location', '/book-visit/choose-visit-time')
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
@@ -284,10 +298,10 @@ describe('Select visitors', () => {
 
     it('should filter out invalid or duplicate visitor IDs', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
         .send({ visitorDisplayIds: [1, 1, 999, 3] })
         .expect(302)
-        .expect('Location', '/book-visit/choose-visit-time')
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData).toStrictEqual({
@@ -320,10 +334,10 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = []
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .send({ unexpected: 'data' })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -336,9 +350,9 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = []
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -353,10 +367,10 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .send({ visitorDisplayIds })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -371,10 +385,10 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .send({ visitorDisplayIds })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -389,10 +403,10 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .send({ visitorDisplayIds })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -407,10 +421,10 @@ describe('Select visitors', () => {
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.SELECT_VISITORS)
           .send({ visitorDisplayIds })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)

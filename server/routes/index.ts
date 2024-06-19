@@ -4,6 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import HomeController from './homeController'
 import bookingJourneyRoutes from './bookVisit'
+import paths from '../constants/paths'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -12,9 +13,9 @@ export default function routes(services: Services): Router {
 
   const home = new HomeController(services.bookerService)
 
-  get('/', home.view())
+  get(paths.HOME, home.view())
 
-  router.use('/book-visit', bookingJourneyRoutes(services))
+  router.use(bookingJourneyRoutes(services))
 
   return router
 }

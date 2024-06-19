@@ -7,6 +7,7 @@ import { FieldValidationError } from 'express-validator'
 import { formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
+import paths from '../constants/paths'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -18,6 +19,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.environmentName = config.environmentName
   app.locals.showExtraTestAttrs = ['DEV', 'STAGING'].includes(config.environmentName)
   app.locals.oneLoginLink = config.apis.govukOneLogin.homeUrl
+  app.locals.paths = paths
 
   // Cachebusting version string
   if (production) {
@@ -31,10 +33,17 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     })
   }
 
-  const njkEnv = nunjucks.configure([path.join(__dirname, '../../server/views'), 'node_modules/govuk-frontend/dist/'], {
-    autoescape: true,
-    express: app,
-  })
+  const njkEnv = nunjucks.configure(
+    [
+      path.join(__dirname, '../../server/views'),
+      'node_modules/govuk-frontend/dist/',
+      'node_modules/@ministryofjustice/frontend/',
+    ],
+    {
+      autoescape: true,
+      express: app,
+    },
+  )
 
   njkEnv.addFilter('displayAge', (dateOfBirth: string) => {
     const dob = new Date(dateOfBirth)

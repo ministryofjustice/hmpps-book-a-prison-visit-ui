@@ -2,17 +2,20 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from '../testutils/appSetup'
+import { BadRequest, InternalServerError } from 'http-errors'
+import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookingConfirmed } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
 const visitService = createMockVisitService()
 let sessionData: SessionData
-
-const url = '/book-visit/check-visit-details'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
@@ -50,10 +53,22 @@ afterEach(() => {
 })
 
 describe('Check visit details', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
+
     it('should render check visit details page', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -72,10 +87,10 @@ describe('Check visit details', () => {
     })
 
     it('Should show alternative text when no additional support/phone number provided', () => {
-      sessionData.bookingJourney.visitorSupport = undefined
+      sessionData.bookingJourney.visitorSupport = ''
       sessionData.bookingJourney.mainContact.phoneNumber = undefined
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -90,7 +105,7 @@ describe('Check visit details', () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
     const visit = TestData.visitDto()
 
     beforeEach(() => {
@@ -107,9 +122,9 @@ describe('Check visit details', () => {
       }
 
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(302)
-        .expect('location', `/book-visit/visit-booked`)
+        .expect('location', paths.BOOK_VISIT.BOOKED)
         .expect(() => {
           expect(sessionData.bookingJourney).toBe(undefined)
           expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
@@ -120,6 +135,40 @@ describe('Check visit details', () => {
         })
     })
 
-    // TODO test for handling booking error (VB-3597)
+    describe('Handle API errors', () => {
+      const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+
+      it('should set message in flash and redirect to choose visit time page when create application returns 400 Bad Request', () => {
+        visitService.bookVisit.mockRejectedValue(new BadRequest())
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+            expect(sessionData.bookingJourney).not.toBe(undefined)
+            expect(sessionData.bookingConfirmed).toBe(undefined)
+            expect(visitService.bookVisit).toHaveBeenCalledWith({
+              applicationReference: application.reference,
+            })
+            expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+          })
+      })
+
+      it('should throw any other API error response and not set a message in flash', () => {
+        visitService.bookVisit.mockRejectedValue(new InternalServerError())
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(500)
+          .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
+            expect(sessionData.bookingJourney).not.toBe(undefined)
+            expect(sessionData.bookingConfirmed).toBe(undefined)
+            expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+          })
+      })
+    })
   })
 })

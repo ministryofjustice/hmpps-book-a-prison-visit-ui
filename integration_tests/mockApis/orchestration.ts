@@ -99,6 +99,19 @@ export default {
     })
   },
 
+  stubCreateVisitApplicationFail: (statusCode = 400): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        url: '/orchestration/visits/application/slot/reserve',
+      },
+      response: {
+        status: statusCode,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
+
   // public-booker-controller
 
   stubGetBookerReference: (bookerReference = TestData.bookerReference()): SuperAgentRequest =>

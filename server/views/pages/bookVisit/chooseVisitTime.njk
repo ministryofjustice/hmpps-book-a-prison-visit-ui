@@ -2,10 +2,11 @@
 
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "moj/components/banner/macro.njk" import mojBanner -%}
 
 {% set pageTitle = "Choose the visit time" %}
 
-{% set backLinkHref = "/book-visit/select-visitors" %}
+{% set backLinkHref = paths.BOOK_VISIT.SELECT_VISITORS %}
 
 {% block content %}
 
@@ -15,6 +16,24 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">Choose the visit time</h1>
+    </div>
+  </div>
+
+  {% if message %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        {{ mojBanner({
+          type: "information",
+          html: '<h2 class="govuk-heading-m">' + message + '</h2>',
+          attributes: { "data-test": "message" }
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
       <p>Select one visit time. It will be reserved for 10 minutes.</p>
       <p>
         Only times that
@@ -66,7 +85,7 @@
       </nav>
 
       {# if errors, add error ID so anchor link from error summary works #}
-      <form action="/book-visit/choose-visit-time" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
+      <form action="{{ paths.BOOK_VISIT.CHOOSE_TIME }}" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit session items from months/dates/sessions data #}

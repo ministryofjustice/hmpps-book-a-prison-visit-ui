@@ -198,5 +198,50 @@ context('Booking journey', () => {
       chooseVisitTimeNoSessionsPage.returnToHome()
       Page.verifyOnPage(HomePage)
     })
+
+    it('should return to choose time page with message when selected session no longer available', () => {
+      cy.task('stubGetBookerReference')
+      cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.signIn()
+
+      // Home page - prisoner shown
+      const homePage = Page.verifyOnPage(HomePage)
+
+      // Start booking journey
+      cy.task('stubGetPrison', prison)
+      cy.task('stubGetVisitors', { visitors })
+      homePage.startBooking()
+
+      // Select visitors page - choose visitors
+      const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
+      selectVisitorsPage.selectVisitor(1)
+      selectVisitorsPage.selectVisitor(3)
+
+      // Choose visit time
+      cy.task('stubGetVisitSessions', {
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds: [1000, 3000],
+        visitSessions,
+      })
+      selectVisitorsPage.continue()
+      const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
+      chooseVisitTimePage.clickCalendarDay(in10Days)
+      chooseVisitTimePage.selectSession(in10Days, 0)
+
+      // Mock create application fail and selected session no longer available
+      cy.task('stubCreateVisitApplicationFail')
+      cy.task('stubGetVisitSessions', {
+        prisonId: prisoner.prisonCode,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds: [1000, 3000],
+        visitSessions: [visitSessions[0]],
+      })
+
+      // Choose time - should be redirected back with info message shown
+      chooseVisitTimePage.continue()
+      chooseVisitTimePage.checkOnPage()
+      chooseVisitTimePage.getMessage().contains('Your visit time is no longer available. Select a new time.')
+    })
   })
 })

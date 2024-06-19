@@ -5,12 +5,14 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
 let sessionData: SessionData
-
-const url = '/book-visit/additional-support'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
@@ -23,7 +25,7 @@ afterEach(() => {
 })
 
 describe('Additional support needs', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.ADDITIONAL_SUPPORT}`, () => {
     let flashData: FlashData
 
     beforeEach(() => {
@@ -46,20 +48,31 @@ describe('Additional support needs', () => {
 
       app = appWithAllRoutes({ sessionData })
     })
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
 
     it('should render additional support page', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Any additional support needs\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/choose-visit-time')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
 
           expect($('[data-test=prison-name]').text().trim()).toContain('Hewell (HMP)')
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-visit/additional-support')
+          expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('input[name=additionalSupportRequired]:checked').length).toBe(0)
           expect($('input[name=additionalSupport]').val()).toBe(undefined)
 
@@ -71,7 +84,7 @@ describe('Additional support needs', () => {
       sessionData.bookingJourney.visitorSupport = ''
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -84,7 +97,7 @@ describe('Additional support needs', () => {
       sessionData.bookingJourney.visitorSupport = 'Wheelchair access'
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -99,7 +112,7 @@ describe('Additional support needs', () => {
       flashData = { formValues: [formValues] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -120,7 +133,7 @@ describe('Additional support needs', () => {
       flashData = { errors: [validationError], formValues: [formValues] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -132,7 +145,7 @@ describe('Additional support needs', () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.ADDITIONAL_SUPPORT}`, () => {
     beforeEach(() => {
       sessionData = {
         booker: {
@@ -156,10 +169,10 @@ describe('Additional support needs', () => {
 
     it('should should save entered additional support to session and redirect to main contact page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .send({ additionalSupportRequired: 'yes', additionalSupport: 'Wheelchair access' })
         .expect(302)
-        .expect('Location', '/book-visit/main-contact')
+        .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.visitorSupport).toBe('Wheelchair access')
@@ -168,10 +181,10 @@ describe('Additional support needs', () => {
 
     it('should should save no additional support choice to session and redirect to main contact page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .send({ additionalSupportRequired: 'no' })
         .expect(302)
-        .expect('Location', '/book-visit/main-contact')
+        .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.visitorSupport).toBe('')
@@ -195,10 +208,10 @@ describe('Additional support needs', () => {
         expectedFlashFormValues = { additionalSupport: '' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .send({ unexpected: 'data' })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -219,9 +232,9 @@ describe('Additional support needs', () => {
         expectedFlashFormValues = { additionalSupport: '' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -242,10 +255,10 @@ describe('Additional support needs', () => {
         expectedFlashFormValues = { additionalSupportRequired: 'yes', additionalSupport: 'ab' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .send({ additionalSupportRequired: 'yes', additionalSupport: 'ab' })
           .expect(302)
-          .expect('Location', url)
+          .expect('Location', paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)

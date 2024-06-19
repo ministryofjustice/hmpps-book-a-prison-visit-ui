@@ -6,13 +6,15 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { createMockVisitService } from '../../services/testutils/mocks'
+import paths from '../../constants/paths'
+import logger from '../../../logger'
+
+jest.mock('../../../logger')
 
 let app: Express
 
 const visitService = createMockVisitService()
 let sessionData: SessionData
-
-const url = '/book-visit/main-contact'
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
@@ -45,7 +47,7 @@ afterEach(() => {
 })
 
 describe('Main contact', () => {
-  describe(`GET ${url}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.MAIN_CONTACT}`, () => {
     let flashData: FlashData
 
     beforeEach(() => {
@@ -53,18 +55,30 @@ describe('Main contact', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
+    it('should use the session validation middleware', () => {
+      sessionData.bookingJourney.prisoner = undefined
+
+      return request(app)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
+        .expect(302)
+        .expect('Location', paths.HOME)
+        .expect(res => {
+          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
+        })
+    })
+
     it('should render main contact page with all fields empty', () => {
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is the main contact for this booking\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe('/book-visit/additional-support')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('h1').text()).toBe('Who is the main contact for this booking?')
 
-          expect($('form[method=POST]').attr('action')).toBe('/book-visit/main-contact')
+          expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('input[name="contact"]').length).toBe(2)
           expect($('input[name="contact"]:checked').length).toBe(0)
           expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
@@ -80,7 +94,7 @@ describe('Main contact', () => {
       sessionData.bookingJourney.mainContact = { contact: adultVisitor, phoneNumber: '01234 567 890' }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -97,7 +111,7 @@ describe('Main contact', () => {
       sessionData.bookingJourney.mainContact = { contact: 'Different Person' }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -116,7 +130,7 @@ describe('Main contact', () => {
       flashData = { formValues: [formValues] }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -137,7 +151,7 @@ describe('Main contact', () => {
       flashData = { errors: validationErrors }
 
       return request(app)
-        .get(url)
+        .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
         .expect('Content-Type', /html/)
         .expect(res => {
@@ -151,7 +165,7 @@ describe('Main contact', () => {
     })
   })
 
-  describe(`POST ${url}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.MAIN_CONTACT}`, () => {
     const application = TestData.applicationDto()
 
     beforeEach(() => {
@@ -162,10 +176,10 @@ describe('Main contact', () => {
 
     it('should save selected contact and phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.MAIN_CONTACT)
         .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: '01234 567 890' })
         .expect(302)
-        .expect('location', `/book-visit/check-visit-details`)
+        .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({
@@ -181,10 +195,10 @@ describe('Main contact', () => {
 
     it('should save selected contact and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.MAIN_CONTACT)
         .send({ contact: '1', hasPhoneNumber: 'no' })
         .expect(302)
-        .expect('location', `/book-visit/check-visit-details`)
+        .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: adultVisitor })
@@ -197,14 +211,14 @@ describe('Main contact', () => {
 
     it('should save custom contact name and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
-        .post(url)
+        .post(paths.BOOK_VISIT.MAIN_CONTACT)
         .send({
           contact: 'someoneElse',
           someoneElseName: 'Someone Else',
           hasPhoneNumber: 'no',
         })
         .expect(302)
-        .expect('location', `/book-visit/check-visit-details`)
+        .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: 'Someone Else' })
@@ -227,10 +241,10 @@ describe('Main contact', () => {
         expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
           .send({ unexpected: 'data' })
           .expect(302)
-          .expect('location', url)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -248,9 +262,9 @@ describe('Main contact', () => {
         expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(302)
-          .expect('location', url)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -279,10 +293,10 @@ describe('Main contact', () => {
         }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
           .send({ contact: 'someoneElse', hasPhoneNumber: 'yes' })
           .expect(302)
-          .expect('location', url)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
@@ -305,10 +319,10 @@ describe('Main contact', () => {
         expectedFlashFormValues = { contact: '1', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
 
         return request(app)
-          .post(url)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
           .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' })
           .expect(302)
-          .expect('location', url)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)

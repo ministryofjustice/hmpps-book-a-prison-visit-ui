@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
-import logger from '../../../logger'
+import paths from '../../constants/paths'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -41,6 +41,7 @@ export default class ChooseVisitTimeController {
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
+        message: req.flash('message')?.[0],
         calendar,
         selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
         prisoner,
@@ -49,11 +50,11 @@ export default class ChooseVisitTimeController {
   }
 
   public submit(): RequestHandler {
-    return async (req, res) => {
+    return async (req, res, next) => {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        return res.redirect('/book-visit/choose-visit-time')
+        return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
       }
       const { visitSession } = matchedData<{ visitSession: string }>(req)
       const visitSessionSplit = visitSession.split('_')
@@ -84,12 +85,16 @@ export default class ChooseVisitTimeController {
           await this.visitService.changeVisitApplication({ bookingJourney })
         }
       } catch (error) {
-        // TODO catch create application errors - VB-3777
-        logger.error(error)
-        return res.redirect('/book-visit/choose-visit-time')
+        // HTTP 400 Bad Request is the response when a session is no longer available
+        if (error.status === 400) {
+          req.flash('message', 'Your visit time is no longer available. Select a new time.')
+          delete bookingJourney.selectedVisitSession
+          return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
+        }
+        return next(error)
       }
 
-      return res.redirect('/book-visit/additional-support')
+      return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
     }
   }
 
