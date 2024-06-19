@@ -33,10 +33,17 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     })
   }
 
-  const njkEnv = nunjucks.configure([path.join(__dirname, '../../server/views'), 'node_modules/govuk-frontend/dist/'], {
-    autoescape: true,
-    express: app,
-  })
+  const njkEnv = nunjucks.configure(
+    [
+      path.join(__dirname, '../../server/views'),
+      'node_modules/govuk-frontend/dist/',
+      'node_modules/@ministryofjustice/frontend/',
+    ],
+    {
+      autoescape: true,
+      express: app,
+    },
+  )
 
   njkEnv.addFilter('displayAge', (dateOfBirth: string) => {
     const dob = new Date(dateOfBirth)

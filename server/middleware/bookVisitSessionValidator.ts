@@ -17,7 +17,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
   return (req, res, next) => {
     const { booker, bookingJourney, bookingConfirmed } = req.session
     const { baseUrl, method, path } = req
-    const requestPath = baseUrl + path
+    const requestPath = `${baseUrl}${path}`
 
     const journeyStage = journeyOrder.indexOf(requestPath)
 

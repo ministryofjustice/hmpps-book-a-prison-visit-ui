@@ -5,6 +5,8 @@ export default class ChooseVisitTimePage extends Page {
     super('Choose the visit time')
   }
 
+  getMessage = (): PageElement => cy.get('[data-test="message"]')
+
   clickCalendarDay = (date: string): void => {
     cy.get(`#day-link-${date}`).click()
   }

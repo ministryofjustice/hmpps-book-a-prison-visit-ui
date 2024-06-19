@@ -43,7 +43,12 @@ export default class CheckVisitDetailsController {
         delete req.session.bookingJourney
         return res.redirect(paths.BOOK_VISIT.BOOKED)
       } catch (error) {
-        // TODO handle errors (VB-3597)
+        // HTTP 400 Bad Request is the response when a session is no longer available
+        if (error.status === 400) {
+          req.flash('message', 'Your visit time is no longer available. Select a new time.')
+          delete bookingJourney.selectedVisitSession
+          return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
+        }
         return next(error)
       }
     }

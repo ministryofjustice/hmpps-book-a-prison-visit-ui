@@ -40,6 +40,7 @@ export type FlashFormValues = Record<string, string | string[] | number[]>
 export type FlashData = {
   errors?: FlashErrors
   formValues?: FlashFormValues[]
+  message?: [string]
 }
 export const flashProvider = jest.fn()
 
