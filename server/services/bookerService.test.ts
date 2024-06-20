@@ -1,4 +1,4 @@
-import BookerService, { Visitor } from './bookerService'
+import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 
@@ -39,22 +39,45 @@ describe('Booker service', () => {
   describe('getPrisoners', () => {
     it('should return prisoners for the given booker reference, with sequential display ID added', async () => {
       const bookerReference = TestData.bookerReference()
-      const prisonerInfoDtos = [TestData.prisonerInfoDto(), TestData.prisonerInfoDto({ prisonerNumber: 'A9999AB' })]
-      const prisoners = [TestData.prisoner(), TestData.prisoner({ prisonerNumber: 'A9999AB', prisonerDisplayId: 2 })]
+      const prisoner1 = {
+        prisonerNumber: 'A',
+        firstName: 'F1',
+        lastName: 'L1',
+        prisonId: 'P1',
+        availableVos: 1,
+        nextAvailableVoDate: '2024-06-01',
+      }
+      const prisoner2 = {
+        prisonerNumber: 'B',
+        firstName: 'F2',
+        lastName: 'L2',
+        prisonId: 'P2',
+        availableVos: 2,
+        nextAvailableVoDate: '2024-06-02',
+      }
+      const bookerPrisonerInfoDtos = [
+        TestData.bookerPrisonerInfoDto(prisoner1),
+        TestData.bookerPrisonerInfoDto(prisoner2),
+      ]
 
-      orchestrationApiClient.getPrisoners.mockResolvedValue(prisonerInfoDtos)
+      const expectedPrisoners: Prisoner[] = [
+        { prisonerDisplayId: 1, ...prisoner1 },
+        { prisonerDisplayId: 2, ...prisoner2 },
+      ]
+
+      orchestrationApiClient.getPrisoners.mockResolvedValue(bookerPrisonerInfoDtos)
 
       const results = await bookerService.getPrisoners(bookerReference.value)
 
       expect(orchestrationApiClient.getPrisoners).toHaveBeenCalledWith(bookerReference.value)
-      expect(results).toStrictEqual(prisoners)
+      expect(results).toStrictEqual(expectedPrisoners)
     })
   })
 
   describe('getVisitors', () => {
     it('should return visitors for the given booker reference and prisoner number, with sequential display ID and adult (boolean) added', async () => {
       const bookerReference = TestData.bookerReference()
-      const { prisonerNumber } = TestData.prisonerInfoDto()
+      const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
       const visitorInfoDtos = [
         TestData.visitorInfoDto({ visitorId: 100, dateOfBirth: '2000-01-01' }), // an adult
         TestData.visitorInfoDto({ visitorId: 200, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child

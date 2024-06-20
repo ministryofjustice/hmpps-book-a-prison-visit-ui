@@ -15,7 +15,7 @@ import VisitBookedPage from '../pages/bookVisit/visitBooked'
 context('Booking journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
-  const prisoner = TestData.prisonerInfoDto()
+  const prisoner = TestData.bookerPrisonerInfoDto()
   const visitors = [
     TestData.visitorInfoDto({
       visitorId: 1000,
@@ -113,8 +113,8 @@ context('Booking journey', () => {
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisonCode,
-      prisonerId: prisoner.prisonerNumber,
+      prisonId: prisoner.prisoner.prisonId,
+      prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       visitSessions,
     })
@@ -193,8 +193,8 @@ context('Booking journey', () => {
 
       // Choose visit time
       cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisonCode,
-        prisonerId: prisoner.prisonerNumber,
+        prisonId: prisoner.prisoner.prisonId,
+        prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000, 3000],
         visitSessions: [],
       })
@@ -226,8 +226,8 @@ context('Booking journey', () => {
 
       // Choose visit time
       cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisonCode,
-        prisonerId: prisoner.prisonerNumber,
+        prisonId: prisoner.prisoner.prisonId,
+        prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000, 3000],
         visitSessions,
       })
@@ -239,8 +239,8 @@ context('Booking journey', () => {
       // Mock create application fail and selected session no longer available
       cy.task('stubCreateVisitApplicationFail')
       cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisonCode,
-        prisonerId: prisoner.prisonerNumber,
+        prisonId: prisoner.prisoner.prisonId,
+        prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000, 3000],
         visitSessions: [visitSessions[0]],
       })

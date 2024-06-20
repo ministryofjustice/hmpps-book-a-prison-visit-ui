@@ -572,16 +572,9 @@ export interface components {
       /** @description allow over booking */
       allowOverBooking: boolean
     }
-    DlqMessage: {
-      body: {
-        [key: string]: Record<string, never>
-      }
-      messageId: string
-    }
     RetryDlqResult: {
       /** Format: int32 */
       messagesFoundCount: number
-      messages: components['schemas']['DlqMessage'][]
     }
     PurgeQueueResult: {
       /** Format: int32 */
@@ -840,7 +833,7 @@ export interface components {
        */
       endTimestamp: string
       /** @description Session conflicts */
-      sessionConflicts?: ('NON_ASSOCIATION' | 'DOUBLE_BOOKING_OR_RESERVATION')[]
+      sessionConflicts?: ('NON_ASSOCIATION' | 'DOUBLE_BOOKED')[]
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -933,6 +926,12 @@ export interface components {
        */
       sessionRestriction: 'OPEN' | 'CLOSED'
     }
+    DlqMessage: {
+      body: {
+        [key: string]: Record<string, never>
+      }
+      messageId: string
+    }
     GetDlqResult: {
       /** Format: int32 */
       messagesFoundCount: number
@@ -940,7 +939,51 @@ export interface components {
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
     }
-    PrisonerInfoDto: {
+    BookerPrisonerInfoDto: {
+      prisoner: components['schemas']['PrisonerDto']
+      /**
+       * Format: int32
+       * @description Available VOs - a total of VOs and PVOs
+       * @example 0
+       */
+      availableVos: number
+      /**
+       * Format: date
+       * @description Next available VO date
+       * @example 2024-08-01
+       */
+      nextAvailableVoDate: string
+    }
+    /** @description Incentive level */
+    CurrentIncentive: {
+      level: components['schemas']['IncentiveLevel']
+      /**
+       * Format: date-time
+       * @description Date time of the incentive
+       */
+      dateTime: string
+      /**
+       * Format: date
+       * @description Schedule new review date
+       * @example 2022-11-10
+       */
+      nextReviewDate: string
+    }
+    /** @description Incentive level */
+    IncentiveLevel: {
+      /**
+       * @description code
+       * @example STD
+       */
+      code?: string
+      /**
+       * @description description
+       * @example Standard
+       */
+      description: string
+    }
+    /** @description Prisoner Details */
+    PrisonerDto: {
       /**
        * @description Prisoner Number
        * @example A1234AA
@@ -957,10 +1000,27 @@ export interface components {
        */
       lastName: string
       /**
-       * @description Prison code
+       * Format: date
+       * @description Date of Birth
+       * @example 1975-04-02
+       */
+      dateOfBirth: string
+      /**
+       * @description Prison ID
        * @example MDI
        */
-      prisonCode: string
+      prisonId?: string
+      /**
+       * @description Prison Name
+       * @example HMP Leeds
+       */
+      prisonName?: string
+      /**
+       * @description In prison cell location
+       * @example A-1-002
+       */
+      cellLocation?: string
+      currentIncentive?: components['schemas']['CurrentIncentive']
     }
     /** @description A visitor for a prisoner */
     VisitorInfoDto: {
@@ -2184,11 +2244,6 @@ export interface operations {
         visitors?: number[]
         /** @description Defaults to true if not passed. If true, will not return visit times that clash with higher priority legal or medical appointments. */
         withAppointmentsCheck?: boolean
-        /**
-         * @description The current application reference to be excluded from capacity count and double booking
-         * @example dfs-wjs-eqr
-         */
-        excludedApplicationReference?: string
       }
     }
     responses: {
@@ -2248,7 +2303,7 @@ export interface operations {
       /** @description Returned prisoners associated with a booker */
       200: {
         content: {
-          '*/*': components['schemas']['PrisonerInfoDto'][]
+          '*/*': components['schemas']['BookerPrisonerInfoDto'][]
         }
       }
       /** @description Incorrect request to get prisoners associated with a booker */

@@ -36,7 +36,7 @@ describe('Visit sessions service', () => {
     })
 
     it('should return a VisitSessionsCalendar with visit sessions for prison / prisoner / visitors', async () => {
-      const prisoner = TestData.prisonerInfoDto()
+      const prisoner = TestData.prisoner()
       const visitorIds = [1, 2]
       const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison
       const visitSessions: AvailableVisitSessionDto[] = [
@@ -85,14 +85,14 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         daysAhead,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
       })
@@ -105,7 +105,7 @@ describe('Visit sessions service', () => {
     })
 
     it('should return an empty VisitSessionsCalendar if no available visit sessions', async () => {
-      const prisoner = TestData.prisonerInfoDto()
+      const prisoner = TestData.prisoner()
       const visitorIds = [1, 2]
       const visitSessions: AvailableVisitSessionDto[] = []
       orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
@@ -115,14 +115,14 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = []
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         daysAhead: 28,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
       })
@@ -135,14 +135,14 @@ describe('Visit sessions service', () => {
     })
 
     it('should pass excludeApplicationReference if present', async () => {
-      const prisoner = TestData.prisonerInfoDto()
+      const prisoner = TestData.prisoner()
       const visitorIds = [1, 2]
       const visitSessions: AvailableVisitSessionDto[] = []
       const excludedApplicationReference = 'aaa-bbb-ccc'
       orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
 
       await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         excludedApplicationReference,
@@ -150,7 +150,7 @@ describe('Visit sessions service', () => {
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         excludedApplicationReference,
