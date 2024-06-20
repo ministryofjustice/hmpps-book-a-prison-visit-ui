@@ -20,7 +20,11 @@ export default class SelectPrisonerController {
 
       req.session.bookingJourney = { prisoner }
 
-      res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
+      if (prisoner.availableVos <= 0) {
+        return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
+      }
+
+      return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
     }
   }
 }
