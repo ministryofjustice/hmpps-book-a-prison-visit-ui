@@ -58,8 +58,8 @@
             text: "Date and time"
           },
           value: {
-            html: "<p><span data-test='visit-date'>" + visitSlot | formatDate("EEEE d MMMM yyyy") + "</span></p>
-              <p><span data-test='visit-time'>" + visitTimeslot.startTime | formatTime + " to " + visitTimeslot.endTime | formatTime + "</span></p>"
+            html: "<p><span data-test='visit-date'>" + sessionDate | formatDate(dateFormats.PRETTY_DATE) + "</span></p>
+              <p><span data-test='visit-time'>" + sessionTimeSlot.startTime | formatTime + " to " + sessionTimeSlot.endTime | formatTime + "</span></p>"
           },
           actions: {
             items: [

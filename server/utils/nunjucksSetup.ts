@@ -8,6 +8,7 @@ import { formatDate, formatTime, formatTimeDuration, initialiseName, pluralise }
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 import paths from '../constants/paths'
+import { DateFormats } from '../constants/dateFormats'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -20,6 +21,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.showExtraTestAttrs = ['DEV', 'STAGING'].includes(config.environmentName)
   app.locals.oneLoginLink = config.apis.govukOneLogin.homeUrl
   app.locals.paths = paths
+  app.locals.dateFormats = DateFormats
 
   // Cachebusting version string
   if (production) {
