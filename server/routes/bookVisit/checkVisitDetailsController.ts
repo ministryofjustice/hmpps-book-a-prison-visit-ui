@@ -18,8 +18,8 @@ export default class CheckVisitDetailsController {
         additionalSupport: bookingJourney.visitorSupport,
         mainContactName,
         mainContactNumber: bookingJourney.mainContact.phoneNumber,
-        visitSlot: bookingJourney.selectedVisitSession.sessionDate,
-        visitTimeslot: bookingJourney.selectedVisitSession.sessionTimeSlot,
+        sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+        sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
         visitors: bookingJourney.selectedVisitors,
         prisoner: bookingJourney.prisoner,
       })

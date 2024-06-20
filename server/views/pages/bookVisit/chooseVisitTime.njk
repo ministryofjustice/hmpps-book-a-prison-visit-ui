@@ -118,7 +118,7 @@
                 fieldset: {
                   attributes: { id: 'day-group-' + date },
                   legend: {
-                    text: date | formatDate("EEEE d MMMM yyyy"),
+                    text: date | formatDate(dateFormats.PRETTY_DATE),
                     classes: "govuk-fieldset__legend--s"
                   }
                 },

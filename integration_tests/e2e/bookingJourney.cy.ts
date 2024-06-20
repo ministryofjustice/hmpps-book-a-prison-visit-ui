@@ -1,6 +1,6 @@
 import { addDays, format, subYears } from 'date-fns'
 import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiTypes'
-import { DateFormats } from '../../server/utils/constants'
+import { DateFormats } from '../../server/constants/dateFormats'
 import TestData from '../../server/routes/testutils/testData'
 import AdditionalSupportPage from '../pages/bookVisit/additionalSupport'
 import ChooseVisitTimePage from '../pages/bookVisit/chooseVisitTime'
@@ -153,7 +153,7 @@ context('Booking journey', () => {
     checkVisitDetailsPage.prisonerName().contains('John Smith')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
-    checkVisitDetailsPage.visitDate().contains('Monday 24 June 2024')
+    checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
     checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
     checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
