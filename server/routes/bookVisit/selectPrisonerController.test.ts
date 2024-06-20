@@ -87,4 +87,30 @@ describe('Select prisoner', () => {
         } as SessionData)
       })
   })
+
+  it('should redirect to Visit cannot be booked page if selected prisoner has no VOs', () => {
+    const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
+    sessionData = {
+      booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
+    } as SessionData
+
+    app = appWithAllRoutes({ services: {}, sessionData })
+
+    return request(app)
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
+      .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+      .expect(302)
+      .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+      .expect(() => {
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [prisonerWithNoVos],
+          },
+          bookingJourney: {
+            prisoner: prisonerWithNoVos,
+          },
+        } as SessionData)
+      })
+  })
 })

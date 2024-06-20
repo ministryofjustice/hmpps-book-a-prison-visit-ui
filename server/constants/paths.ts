@@ -8,6 +8,7 @@ const paths = {
   BOOK_VISIT: {
     ROOT: '/book-visit',
     SELECT_PRISONER: '/book-visit/select-prisoner',
+    CANNOT_BOOK: '/book-visit/visit-cannot-be-booked',
     SELECT_VISITORS: '/book-visit/select-visitors',
     CHOOSE_TIME: '/book-visit/choose-visit-time',
     ADDITIONAL_SUPPORT: '/book-visit/additional-support',
