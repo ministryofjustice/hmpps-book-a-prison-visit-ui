@@ -6,7 +6,7 @@ import type {
   BookerReference,
   OrchestrationVisitDto,
   PrisonDto,
-  PrisonerInfoDto,
+  BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
 } from '../../data/orchestrationApiTypes'
@@ -60,6 +60,26 @@ export default class TestData {
     sessionRestriction,
   })
 
+  static bookerPrisonerInfoDto = ({
+    prisonerNumber = 'A1234BC',
+    firstName = 'JOHN',
+    lastName = 'SMITH',
+    prisonId = 'HEI',
+    availableVos = 2,
+    nextAvailableVoDate = '2024-07-01',
+  }: Partial<{
+    prisonerNumber: string
+    firstName: string
+    lastName: string
+    prisonId: string
+    availableVos: number
+    nextAvailableVoDate: string
+  }> = {}): BookerPrisonerInfoDto => ({
+    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId },
+    availableVos,
+    nextAvailableVoDate,
+  })
+
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static bookingConfirmed = ({
@@ -96,20 +116,23 @@ export default class TestData {
       clients,
     }) as PrisonDto
 
-  static prisonerInfoDto = ({
-    prisonerNumber = 'A1234BC',
-    firstName = 'JOHN',
-    lastName = 'SMITH',
-    prisonCode = 'HEI',
-  }: Partial<PrisonerInfoDto> = {}): PrisonerInfoDto => ({ prisonerNumber, firstName, lastName, prisonCode })
-
   static prisoner = ({
     prisonerDisplayId = 1,
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
-    prisonCode = 'HEI',
-  }: Partial<Prisoner> = {}): Prisoner => ({ prisonerDisplayId, prisonerNumber, firstName, lastName, prisonCode })
+    prisonId = 'HEI',
+    availableVos = 2,
+    nextAvailableVoDate = '2024-07-01',
+  }: Partial<Prisoner> = {}): Prisoner => ({
+    prisonerDisplayId,
+    prisonerNumber,
+    firstName,
+    lastName,
+    prisonId,
+    availableVos,
+    nextAvailableVoDate,
+  })
 
   static visitDto = ({
     applicationReference = 'aaa-bbb-ccc',

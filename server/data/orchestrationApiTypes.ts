@@ -16,7 +16,7 @@ export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
 export type PrisonDto = components['schemas']['PrisonDto']
 
-export type PrisonerInfoDto = components['schemas']['PrisonerInfoDto']
+export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
 
 export type VisitDto = components['schemas']['VisitDto']
 

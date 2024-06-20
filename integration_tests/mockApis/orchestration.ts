@@ -6,7 +6,7 @@ import {
   AvailableVisitSessionDto,
   BookerReference,
   PrisonDto,
-  PrisonerInfoDto,
+  BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
 } from '../../server/data/orchestrationApiTypes'
@@ -152,7 +152,7 @@ export default {
     prisoners = [],
   }: {
     bookerReference: BookerReference
-    prisoners: PrisonerInfoDto[]
+    prisoners: BookerPrisonerInfoDto[]
   }): SuperAgentRequest =>
     stubFor({
       request: {
@@ -168,7 +168,7 @@ export default {
 
   stubGetVisitors: ({
     bookerReference = TestData.bookerReference(),
-    prisonerNumber = TestData.prisonerInfoDto().prisonerNumber,
+    prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     visitors = [TestData.visitorInfoDto()],
   }: {
     bookerReference: BookerReference

@@ -4,9 +4,9 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { PrisonerInfoDto } from '../../data/orchestrationApiTypes'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { Prisoner } from '../../services/bookerService'
 
 jest.mock('../../../logger')
 
@@ -41,7 +41,7 @@ describe('Select prisoner', () => {
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
-      bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as PrisonerInfoDto },
+      bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
       bookingConfirmed,
     } as SessionData
 

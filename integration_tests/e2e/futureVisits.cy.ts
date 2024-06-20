@@ -5,7 +5,7 @@ import VisitDetailsPage from '../pages/bookings/visit'
 import Page from '../pages/page'
 
 context('Bookings home page', () => {
-  const prisoner = TestData.prisonerInfoDto({ prisonCode: 'DHI' })
+  const prisoner = TestData.bookerPrisonerInfoDto({ prisonId: 'DHI' })
   const orchestrationVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',

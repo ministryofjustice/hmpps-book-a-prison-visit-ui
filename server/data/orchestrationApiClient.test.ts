@@ -166,7 +166,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getPrisoners', () => {
     it('should retrieve prisoners associated with a booker', async () => {
-      const prisoners = [TestData.prisonerInfoDto()]
+      const prisoners = [TestData.bookerPrisonerInfoDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/permitted/prisoners`)
@@ -175,13 +175,13 @@ describe('orchestrationApiClient', () => {
 
       const result = await orchestrationApiClient.getPrisoners(bookerReference.value)
 
-      expect(result).toStrictEqual(prisoners)
+      expect(result).toEqual(prisoners)
     })
   })
 
   describe('getVisitors', () => {
     it('should retrieve visitors associated with a booker and prisoner', async () => {
-      const { prisonerNumber } = TestData.prisonerInfoDto()
+      const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
       const visitors = [TestData.visitorInfoDto()]
 
       fakeOrchestrationApi
@@ -197,7 +197,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getVisitSessions', () => {
     it('should get available visit sessions for prison / prisoner / visitors', async () => {
-      const prisoner = TestData.prisonerInfoDto()
+      const { prisoner } = TestData.bookerPrisonerInfoDto()
       const visitorIds = [1, 2]
       const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
       const excludedApplicationReference = 'aaa-bbb-ccc'
@@ -205,7 +205,7 @@ describe('orchestrationApiClient', () => {
       fakeOrchestrationApi
         .get('/visit-sessions/available')
         .query({
-          prisonId: prisoner.prisonCode,
+          prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
           visitors: visitorIds.join(','),
           excludedApplicationReference,
@@ -214,7 +214,7 @@ describe('orchestrationApiClient', () => {
         .reply(200, visitSessions)
 
       const result = await orchestrationApiClient.getVisitSessions({
-        prisonId: prisoner.prisonCode,
+        prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         excludedApplicationReference,
