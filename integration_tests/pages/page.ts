@@ -43,6 +43,8 @@ export default abstract class Page {
 
   signOut = (): PageElement => cy.get('.one-login-header a[href="/sign-out"]')
 
+  backLink = (): PageElement => cy.get('[data-test="back-link"]')
+
   goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains(name).click()
 
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {

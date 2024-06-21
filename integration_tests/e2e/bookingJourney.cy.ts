@@ -11,6 +11,7 @@ import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
 import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 import VisitBookedPage from '../pages/bookVisit/visitBooked'
+import CannotBookPage from '../pages/bookVisit/cannotBook'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -249,6 +250,31 @@ context('Booking journey', () => {
       chooseVisitTimePage.continue()
       chooseVisitTimePage.checkOnPage()
       chooseVisitTimePage.getMessage().contains('Your visit time is no longer available. Select a new time.')
+    })
+
+    it('should show drop-out page when prisoner has no VOs', () => {
+      const prisonerWithoutVOs = TestData.bookerPrisonerInfoDto({ availableVos: 0, nextAvailableVoDate: in10Days })
+
+      cy.task('stubGetBookerReference')
+      cy.task('stubGetPrisoners', { prisoners: [prisonerWithoutVOs] })
+      cy.signIn()
+
+      // Home page - prisoner shown
+      const homePage = Page.verifyOnPage(HomePage)
+
+      // Start booking journey
+      cy.task('stubGetPrison', prison)
+      cy.task('stubGetVisitors', { visitors })
+      homePage.startBooking()
+
+      // Visit cannot be booked page
+      const cannotBookPage = Page.verifyOnPage(CannotBookPage)
+      cannotBookPage.getPrisonerName().contains('John Smith')
+      cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
+
+      // Back link back to Home page
+      cannotBookPage.backLink().click()
+      Page.verifyOnPage(HomePage)
     })
   })
 })
