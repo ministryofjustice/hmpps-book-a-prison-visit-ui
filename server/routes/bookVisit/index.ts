@@ -12,6 +12,7 @@ import CheckVisitDetailsController from './checkVisitDetailsController'
 import VisitBookedController from './visitBookedController'
 import paths from '../../constants/paths'
 import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidator'
+import CannotBookController from './cannotBookController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -22,6 +23,7 @@ export default function routes(services: Services): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const selectPrisonerController = new SelectPrisonerController()
+  const cannotBookController = new CannotBookController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.prisonService)
   const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
   const additionalSupportController = new AdditionalSupportController()
@@ -32,6 +34,8 @@ export default function routes(services: Services): Router {
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
   post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
+
+  get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
 
   get(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.view())
   postWithValidation(
