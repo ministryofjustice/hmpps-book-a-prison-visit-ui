@@ -39,6 +39,7 @@ export default class CheckVisitDetailsController {
           visitReference: visit.reference,
           hasPhoneNumber: !!bookingJourney.mainContact.phoneNumber,
         }
+        console.log(req.session.bookingJourney)
         req.session.bookingConfirmed = bookingConfirmed
 
         delete req.session.bookingJourney

@@ -13,7 +13,7 @@ export default class VisitBookedController {
           ? 'https://www.gov.uk/guidance/foston-hall-prison'
           : 'https://www.gov.uk/guidance/drake-hall-prison'
 
-      const supportedPrison = !!(bookingConfirmed.prisonCode === 'DHI' || bookingConfirmed.prisonCode === 'FHI')
+      const supportedPrison = bookingConfirmed.prisonCode === 'DHI' || bookingConfirmed.prisonCode === 'FHI'
       res.render('pages/bookVisit/visitBooked', {
         bookingConfirmed,
         visitReference: bookingConfirmed.visitReference,
