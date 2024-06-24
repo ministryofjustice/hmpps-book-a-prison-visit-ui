@@ -15,5 +15,10 @@ export default function routes(): Router {
     res.render('pages/privacyPolicy')
   })
 
+  // Terms and conditions
+  router.get(paths.TERMS, (req, res) => {
+    res.render('pages/termsAndConditions')
+  })
+
   return router
 }
