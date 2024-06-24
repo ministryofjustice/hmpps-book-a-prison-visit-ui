@@ -3,6 +3,7 @@ import TestData from '../../server/routes/testutils/testData'
 import AccessibilityStatementPage from '../pages/accessibilityStatement'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
+import PrivacyPolicyPage from '../pages/privacyPolicy'
 
 context('Static content pages', () => {
   describe('Unauthenticated user', () => {
@@ -34,6 +35,10 @@ context('Static content pages', () => {
       // Select 'Accessibility' in footer
       homePage.goToFooterLinkByName('Accessibility')
       Page.verifyOnPage(AccessibilityStatementPage)
+
+      // Select 'Privacy' in footer
+      homePage.goToFooterLinkByName('Privacy')
+      Page.verifyOnPage(PrivacyPolicyPage)
     })
   })
 })
