@@ -10,6 +10,7 @@ import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
 import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
+import VisitBookedPage from '../pages/bookVisit/visitBooked'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -162,7 +163,13 @@ context('Booking journey', () => {
     cy.task('stubBookVisit', TestData.visitDto())
     checkVisitDetailsPage.continue()
 
-    // TODO add to this test as booking journey implemented
+    const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
+    visitBookedPage.bookingReference().contains('ab-cd-ef-gh')
+    visitBookedPage
+      .phoneNumberText()
+      .contains(
+        'A text message confirming the visit will be sent to the main contact. This will include the booking reference.',
+      )
   })
 
   describe('Booking journey - drop-out points', () => {

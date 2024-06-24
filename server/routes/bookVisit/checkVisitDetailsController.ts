@@ -37,6 +37,7 @@ export default class CheckVisitDetailsController {
           prisonCode: bookingJourney.prison.code,
           prisonName: bookingJourney.prison.prisonName,
           visitReference: visit.reference,
+          hasPhoneNumber: !!bookingJourney.mainContact.phoneNumber,
         }
         req.session.bookingConfirmed = bookingConfirmed
 

@@ -65,7 +65,8 @@ export default class TestData {
     prisonCode = this.prisonDto().code,
     prisonName = this.prisonDto().prisonName,
     visitReference = 'ab-cd-ef-gh',
-  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prisonCode, prisonName, visitReference })
+    hasPhoneNumber = true,
+  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prisonCode, prisonName, visitReference, hasPhoneNumber })
 
   static prisonDto = ({
     code = 'HEI',
@@ -124,7 +125,7 @@ export default class TestData {
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitNotes = [],
-    visitContact = { name: 'Joan Phillips', telephone: '01234 567 890' },
+    visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
     visitors = [{ nomisPersonId: 1234, visitContact: true }],
     visitorSupport = { description: 'wheelchair access' },
   }: Partial<VisitDto> = {}): VisitDto =>

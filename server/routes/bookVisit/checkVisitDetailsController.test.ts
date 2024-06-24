@@ -40,7 +40,10 @@ beforeEach(() => {
       allVisitSessions: [visitSession],
       selectedVisitSession: visitSession,
       applicationReference: application.reference,
-      mainContact,
+      mainContact: {
+        contact: mainContact.contact,
+        phoneNumber: mainContact.phoneNumber,
+      },
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -123,6 +126,7 @@ describe('Check visit details', () => {
         prisonCode: sessionData.bookingJourney.prison.code,
         prisonName: sessionData.bookingJourney.prison.prisonName,
         visitReference: visit.reference,
+        hasPhoneNumber: true,
       }
 
       return request(app)
