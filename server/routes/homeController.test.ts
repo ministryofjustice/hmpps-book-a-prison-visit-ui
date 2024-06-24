@@ -98,4 +98,17 @@ describe('Page header', () => {
         expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
       })
   })
+
+  it('should render the phase banner', () => {
+    bookerService.getPrisoners.mockResolvedValue([])
+
+    return request(app)
+      .get(paths.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+        expect($('.govuk-phase-banner').text()).toContain('Beta')
+      })
+  })
 })
