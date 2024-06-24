@@ -19,6 +19,7 @@ import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 
+import unauthenticatedRoutes from '../unauthenticatedRoutes'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -70,6 +71,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.use(unauthenticatedRoutes())
   app.use(routes(services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))

@@ -1,7 +1,7 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
 {% from "../components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
 
 {% set navigationItems = [
   {
@@ -23,13 +23,22 @@
 {%- endblock %}
 
 {% block header %}
+{# If user authenticated then use GOVUK One Login Header; otherwise default header #}
+{% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
     navigationItems: navigationItems,
     serviceName: serviceName,
     activeLinkId: activeLinkId,
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink
-  })}}
+  }) }}
+{% else %}
+  {{ govukHeader({
+    homepageUrl: "/",
+    serviceName: applicationName,
+    serviceUrl: "/"
+  }) }}
+{% endif %}
 {% endblock %}
 
 {% block beforeContent %}
@@ -42,6 +51,19 @@
       }) }}
     {% endif %}
   </div>
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: paths.ACCESSIBILITY,
+          text: "Accessibility"
+        }
+      ]
+    }
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}
