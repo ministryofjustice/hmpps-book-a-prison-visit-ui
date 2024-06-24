@@ -3,18 +3,18 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = "Booking confirmed" %}
+{% set pageTitle = "Visit booked" %}
 
 {% block content %}
   <div class="govuk-grid-row">
 
     {{ govukPanel({
       titleText: pageTitle,
-      html: 'The booking reference is<br><strong data-test="booking-reference">' + visitReference + "</strong>"
+      html: 'Your booking reference is<br><strong data-test="booking-reference">' + visitReference + "</strong>"
     }) }}
 
     {% if hasPhoneNumber %}
-      <p data-test="phone-number-text">If you provided a phone number, a text message confirming your visit will be sent to the main contact. This will include the booking reference.</p>
+      <p data-test="phone-number-text">A text message confirming your visit will be sent to the main contact. This will include the booking reference.</p>
     {% endif %}
 
     <p>When signed in to GOV.UK OneLogin, you can <a class="govuk-link--no-visited-state" href="/bookings">check the details of your bookings</a>.</p>
