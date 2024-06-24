@@ -168,7 +168,7 @@ context('Booking journey', () => {
     visitBookedPage
       .phoneNumberText()
       .contains(
-        'A text message confirming your visit will be sent to the main contact. This will include the booking reference.',
+        'A text message confirming the visit will be sent to the main contact. This will include the booking reference.',
       )
   })
 
