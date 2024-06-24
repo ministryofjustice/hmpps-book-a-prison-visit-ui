@@ -10,32 +10,32 @@
 
     {{ govukPanel({
       titleText: pageTitle,
-      html: 'Your booking reference is<br><strong data-test="booking-reference">' + visitReference + "</strong>"
+      html: 'Your booking reference is<br><strong data-test="booking-reference">' + bookingConfirmed.visitReference + "</strong>"
     }) }}
 
-    {% if hasPhoneNumber %}
-      <p data-test="phone-number-text">A text message confirming your visit will be sent to the main contact. This will include the booking reference.</p>
+    {% if bookingConfirmed.hasPhoneNumber %}
+      <p data-test="phone-number-text">A text message confirming the visit will be sent to the main contact. This will include the booking reference.</p>
     {% endif %}
 
-    <p>When signed in to GOV.UK OneLogin, you can <a class="govuk-link--no-visited-state" href="/bookings">check the details of your bookings</a>.</p>
+    <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="/bookings">check the details of your bookings</a>.</p>
 
-    <p>You can help us to improve this service by giving <a class="govuk-link--no-visited-state" href="/feedback-form">feedback</a>.</p>
+    <p>You can help us to improve this service by giving <a href="https://visit-someone-in-prison-test-feedback.form.service.justice.gov.uk/">feedback</a>.</p>
 
     {% if supportedPrison %}
       <div data-test="prison-specific-content">
         <h2 class="govuk-heading-m">How to change your booking</h2>
 
-        <p>To update or cancel your booking, call <span data-test="prison-name-and-number">{{ prisonName }} on {{ prisonPhoneNumber }}</span> between 9am and 5pm, Monday to Friday.</p>
+        <p>To update or cancel your booking, call <span data-test="prison-name">{{ bookingConfirmed.prisonName }}</span> on <span data-test="prison-number">{{ prisonPhoneNumber }}</span> between 9am and 5pm, Monday to Friday.</p>
 
         <p>You will need the booking reference to make changes.</p>
 
-        <h2 class="govuk-heading-m">Prepare for visiting {{ prisonName }}</h2>
+        <h2 class="govuk-heading-m">Prepare for visiting {{ bookingConfirmed.prisonName }}</h2>
 
         <p>All visitors over 16 years old must show <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a" target="_blank">acceptable forms of ID to enter the prison</a>.</p> 
 
         <p>Visitors should arrive <span data-test="minutes-before-visit">45</span> minutes before the visit starts.</p>
 
-        <p>You can read more about <a href="{{ prisonWebsite }}" data-test="prison-website" target="_blank">visits at {{ prisonName }}</a>. This includes information on getting to the prison and visiting facilities.</p>
+        <p>You can read more about <a href="{{ prisonWebsite }}" data-test="prison-website" target="_blank">visits at {{ bookingConfirmed.prisonName }}</a>. This includes information on getting to the prison and visiting facilities.</p>
 
         <h2 class="govuk-heading-m">What to expect when visiting a prison</h2>
 
