@@ -7,6 +7,7 @@ import errorHandler from './errorHandler'
 import { metricsMiddleware } from './monitoring/metricsApp'
 
 import setupGovukOneLogin from './middleware/setUpGovukOneLogin'
+import govukOneLogin from './authentication/govukOneLogin'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
@@ -14,6 +15,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
+import unauthenticatedRoutes from './routes/unauthenticatedRoutes'
 import routes from './routes'
 
 import type { Services } from './services'
@@ -34,6 +36,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
   app.use(setupGovukOneLogin())
+  app.use(unauthenticatedRoutes())
+  app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
   app.use(setUpCsrf())
 

@@ -11,6 +11,9 @@ const paths = {
     CHECK_DETAILS: '/book-visit/check-visit-details',
     BOOKED: '/book-visit/visit-booked',
   },
+
+  // Footer links
+  ACCESSIBILITY: '/accessibility-statement',
 } as const
 
 export default paths
