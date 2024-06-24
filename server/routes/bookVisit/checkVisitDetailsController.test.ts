@@ -123,6 +123,7 @@ describe('Check visit details', () => {
         prisonCode: sessionData.bookingJourney.prison.code,
         prisonName: sessionData.bookingJourney.prison.prisonName,
         visitReference: visit.reference,
+        hasPhoneNumber: false,
       }
 
       return request(app)

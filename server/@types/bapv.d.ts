@@ -44,4 +44,5 @@ export type BookingConfirmed = {
   prisonCode: string
   prisonName: string
   visitReference: string
+  hasPhoneNumber: boolean
 }
