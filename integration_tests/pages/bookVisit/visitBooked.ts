@@ -7,5 +7,5 @@ export default class VisitBookedPage extends Page {
 
   bookingReference = (): PageElement => cy.get('[data-test="booking-reference"]')
 
-  prisonSpecificContent = (): PageElement => cy.get('[data-test="prison-specific-content"]')
+  phoneNumberText = (): PageElement => cy.get('[data-test="phone-number-text"]')
 }

@@ -165,6 +165,11 @@ context('Booking journey', () => {
 
     const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
     visitBookedPage.bookingReference().contains('ab-cd-ef-gh')
+    visitBookedPage
+      .phoneNumberText()
+      .contains(
+        'If you provided a phone number, a text message confirming your visit will be sent to the main contact. This will include the booking reference.',
+      )
   })
 
   describe('Booking journey - drop-out points', () => {
