@@ -24,7 +24,7 @@ context('Static content pages', () => {
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners', { prisoners: [TestData.prisonerInfoDto] })
+      cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
       cy.signIn()
 
       // Home page

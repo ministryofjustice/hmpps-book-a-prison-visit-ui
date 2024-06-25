@@ -9,7 +9,7 @@ import {
   ChangeApplicationDto,
   CreateApplicationDto,
   PrisonDto,
-  PrisonerInfoDto,
+  BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
 } from './orchestrationApiTypes'
@@ -110,7 +110,7 @@ export default class OrchestrationApiClient {
     })
   }
 
-  async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
+  async getPrisoners(bookerReference: string): Promise<BookerPrisonerInfoDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` })
   }
 

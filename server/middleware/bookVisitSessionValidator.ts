@@ -5,6 +5,7 @@ import logger from '../../logger'
 
 const journeyOrder: string[] = [
   paths.BOOK_VISIT.SELECT_PRISONER,
+  paths.BOOK_VISIT.CANNOT_BOOK,
   paths.BOOK_VISIT.SELECT_VISITORS,
   paths.BOOK_VISIT.CHOOSE_TIME,
   paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
@@ -31,13 +32,13 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // Booking confirmed (check first because bookingJourney just before this stage)
+    // Booking confirmed (check first because bookingJourney cleared just before this stage)
     if (requestPath === paths.BOOK_VISIT.BOOKED) {
       return bookingConfirmed && !bookingJourney ? next() : logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // Select visitors page
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookingJourney?.prisoner) {
+    // Select visitors / Cannot book page
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CANNOT_BOOK) && !bookingJourney?.prisoner) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 

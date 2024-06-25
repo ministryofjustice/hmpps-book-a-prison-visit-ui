@@ -17,7 +17,7 @@ export default class SelectVisitorsController {
 
       if (!bookingJourney.prison) {
         ;[bookingJourney.prison, bookingJourney.allVisitors] = await Promise.all([
-          this.prisonService.getPrison(bookingJourney.prisoner.prisonCode),
+          this.prisonService.getPrison(bookingJourney.prisoner.prisonId),
           this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber),
         ])
       }
