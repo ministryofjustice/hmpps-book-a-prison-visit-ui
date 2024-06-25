@@ -2,6 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% set navigationItems = [
   {
@@ -42,6 +43,16 @@
 {% endblock %}
 
 {% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "Beta"
+    },
+    attributes: {
+      role: "complementary"
+    },
+    html: 'This is a new service – your <a href="https://visit-someone-in-prison-test-feedback.form.service.justice.gov.uk/" target="_blank">feedback</a> will help us to improve it.'
+  }) }}
+
   <div role="navigation">
     {% if backLinkHref %}
       {{ govukBackLink({
@@ -60,6 +71,14 @@
         {
           href: paths.ACCESSIBILITY,
           text: "Accessibility"
+        },
+        {
+          href: paths.PRIVACY,
+          text: "Privacy"
+        },
+        {
+          href: paths.TERMS,
+          text: "Terms and conditions"
         }
       ]
     }

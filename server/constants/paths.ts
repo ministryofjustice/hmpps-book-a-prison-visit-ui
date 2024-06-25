@@ -14,6 +14,9 @@ const paths = {
 
   // Footer links
   ACCESSIBILITY: '/accessibility-statement',
+  COOKIES: '/cookies-policy',
+  PRIVACY: '/privacy-policy',
+  TERMS: '/terms-and-conditions',
 } as const
 
 export default paths

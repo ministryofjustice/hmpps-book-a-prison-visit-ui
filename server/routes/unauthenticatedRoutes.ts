@@ -10,5 +10,15 @@ export default function routes(): Router {
     res.render('pages/accessibilityStatement')
   })
 
+  // Privacy policy
+  router.get(paths.PRIVACY, (req, res) => {
+    res.render('pages/privacyPolicy')
+  })
+
+  // Terms and conditions
+  router.get(paths.TERMS, (req, res) => {
+    res.render('pages/termsAndConditions')
+  })
+
   return router
 }
