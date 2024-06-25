@@ -11,7 +11,7 @@ export default class HomeController {
       const prisoners = await this.bookerService.getPrisoners(booker.reference)
       booker.prisoners = prisoners
 
-      res.render('pages/home', { prisoners: booker.prisoners })
+      res.render('pages/home', { prisoners: booker.prisoners, showServiceNav: true })
     }
   }
 }

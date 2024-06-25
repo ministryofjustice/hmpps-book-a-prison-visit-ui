@@ -7,17 +7,17 @@ export default function routes(): Router {
 
   // Accessibility statement
   router.get(paths.ACCESSIBILITY, (req, res) => {
-    res.render('pages/accessibilityStatement')
+    res.render('pages/accessibilityStatement', { showServiceNav: true })
   })
 
   // Privacy policy
   router.get(paths.PRIVACY, (req, res) => {
-    res.render('pages/privacyPolicy')
+    res.render('pages/privacyPolicy', { showServiceNav: true })
   })
 
   // Terms and conditions
   router.get(paths.TERMS, (req, res) => {
-    res.render('pages/termsAndConditions')
+    res.render('pages/termsAndConditions', { showServiceNav: true })
   })
 
   return router

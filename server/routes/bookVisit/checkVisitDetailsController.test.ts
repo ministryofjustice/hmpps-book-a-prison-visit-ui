@@ -77,6 +77,7 @@ describe('Check visit details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Check the visit details before booking -/)
+          expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text()).toBe('Check the visit details before booking')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')

@@ -112,6 +112,7 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Choose the visit time -/)
+          expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('Choose the visit time')
 
@@ -217,6 +218,7 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
