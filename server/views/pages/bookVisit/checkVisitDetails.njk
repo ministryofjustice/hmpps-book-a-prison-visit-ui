@@ -121,7 +121,7 @@
           rows: displayRows
       }) }}
 
-      <form action="{{ paths.BOOK_VISIT.CHECK_DETAILS }}" method="POST" novalidate>
+      <form action="{{ paths.BOOK_VISIT.CHECK_DETAILS }}" method="POST" novalidate class="disable-button-on-submit">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
@@ -134,4 +134,8 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/disableButtonOnSubmit.js"></script>
 {% endblock %}

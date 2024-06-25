@@ -44,4 +44,15 @@ export default abstract class Page {
   signOut = (): PageElement => cy.get('.one-login-header a[href="/sign-out"]')
 
   goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains(name).click()
+
+  protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
+    cy.get(`[data-test=${dataTestName}]`).within(bookButton => {
+      // set a one-off event listener for window unload to check
+      // submit booking button is disabled after it is clicked
+      cy.once('window:before:unload', () => {
+        expect(bookButton.attr('disabled')).to.eq('disabled')
+      })
+      cy.wrap(bookButton).click()
+    })
+  }
 }

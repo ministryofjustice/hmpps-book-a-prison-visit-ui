@@ -18,7 +18,5 @@ export default class ChooseVisitTimePage extends Page {
     cy.get(`#day-group-${date} input`).eq(index).click()
   }
 
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
+  continue = (): void => this.clickDisabledOnSubmitButton('continue-button')
 }

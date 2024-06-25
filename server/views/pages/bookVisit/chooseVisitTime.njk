@@ -85,7 +85,7 @@
       </nav>
 
       {# if errors, add error ID so anchor link from error summary works #}
-      <form action="{{ paths.BOOK_VISIT.CHOOSE_TIME }}" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %}>
+      <form action="{{ paths.BOOK_VISIT.CHOOSE_TIME }}" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %} class="disable-button-on-submit">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit session items from months/dates/sessions data #}
@@ -147,4 +147,5 @@
 
 {% block pageScripts %}
 <script src="/assets/visitsCalendar.js"></script>
+<script src="/assets/disableButtonOnSubmit.js"></script>
 {% endblock %}
