@@ -23,6 +23,7 @@ export default class VisitBookedController {
         prisonPhoneNumber,
         prisonWebsite,
         supportedPrison,
+        showServiceNav: true,
       })
     }
   }

@@ -44,6 +44,7 @@ describe('Visit booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit booked -/)
+          expect($('#service-header__nav').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visit booked')
           expect($('[data-test="phone-number-text"]').length).toBe(1)
