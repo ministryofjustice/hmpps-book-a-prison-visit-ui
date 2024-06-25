@@ -19,7 +19,5 @@ export default class CheckVisitDetailsPage extends Page {
 
   mainContactNumber = (): PageElement => cy.get('[data-test="main-contact-number"]')
 
-  continue = (): void => {
-    cy.get('[data-test="submit-booking"]').click()
-  }
+  continue = (): void => this.clickDisabledOnSubmitButton('submit-booking')
 }
