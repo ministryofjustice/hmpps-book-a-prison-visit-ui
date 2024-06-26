@@ -77,7 +77,6 @@ generic-service:
       REDIS_AUTH_TOKEN: "auth_token"
 
   allowlist:
-    moj-official-tgw-prod: 51.149.250.0/24
     groups:
       - internal
 
