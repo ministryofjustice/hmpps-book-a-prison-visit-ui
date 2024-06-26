@@ -13,6 +13,7 @@ generic-service:
     GOVUK_ONE_LOGIN_URL: "https://oidc.integration.account.gov.uk"
     GOVUK_ONE_LOGIN_HOME_URL: "https://home.integration.account.gov.uk"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-preprod.prison.service.justice.gov.uk"
+    GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
