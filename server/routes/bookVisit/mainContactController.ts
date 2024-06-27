@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 
@@ -73,36 +73,32 @@ export default class MainContactController {
 
   validate(): ValidationChain[] {
     return [
-      body('contact').custom((value: string) => {
-        if (!value) {
-          throw new Error('No main contact selected')
-        }
-
-        return true
-      }),
-      body('someoneElseName')
-        .trim()
-        .custom((value: string, { req }) => {
-          if (value === '' && req.body.contact === 'someoneElse') {
-            throw new Error('Enter the name of the main contact')
+      body('contact', 'No main contact selected')
+        // filter invalid values - it should be a selected adult visitor or 'someoneElse'
+        .customSanitizer((contact: string, { req }: Meta & { req: Express.Request }) => {
+          if (contact === 'someoneElse') {
+            return contact
           }
 
-          return true
-        }),
-      body('hasPhoneNumber').isIn(['yes', 'no']).withMessage('No answer selected'),
-      body('phoneNumber')
+          const selectedAdultVisitorIds = req.session.bookingJourney.selectedVisitors
+            .filter(visitor => visitor.adult)
+            .map(visitor => visitor.visitorDisplayId.toString())
+
+          return selectedAdultVisitorIds.includes(contact) ? contact : undefined
+        })
+        .notEmpty(),
+      body('someoneElseName', 'Enter the name of the main contact')
+        .if(body('contact').equals('someoneElse'))
         .trim()
-        .custom((value: string, { req }) => {
-          if (req.body.hasPhoneNumber === 'yes') {
-            if (value === '') {
-              throw new Error('Enter a phone number')
-            }
-            if (!/^(?:0|\+?44)(?:\d\s?){9,10}$/.test(value)) {
-              throw new Error('Enter a UK phone number, like 07700 900 982 or 01632 960 001')
-            }
-          }
-          return true
-        }),
+        .notEmpty(),
+      body('hasPhoneNumber', 'No answer selected').isIn(['yes', 'no']),
+      body('phoneNumber', 'Enter a phone number')
+        .if(body('hasPhoneNumber').equals('yes'))
+        .trim()
+        .notEmpty()
+        .bail()
+        .matches(/^(?:0|\+?44)(?:\d\s?){9,10}$/)
+        .withMessage('Enter a UK phone number, like 07700 900 982 or 01632 960 001'),
     ]
   }
 }
