@@ -19,8 +19,14 @@ let sessionData: SessionData
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
-const adultVisitor = TestData.visitor()
-const childVisitor = TestData.visitor({ dateOfBirth: `${new Date().getFullYear() - 2}-01-01`, adult: false })
+const adultVisitor1 = TestData.visitor({ visitorDisplayId: 1, visitorId: 100 })
+const adultVisitor2 = TestData.visitor({ visitorDisplayId: 2, visitorId: 200 })
+const childVisitor = TestData.visitor({
+  visitorDisplayId: 3,
+  visitorId: 300,
+  dateOfBirth: `${new Date().getFullYear() - 2}-01-01`,
+  adult: false,
+})
 const visitSession = TestData.availableVisitSessionDto()
 
 beforeEach(() => {
@@ -29,8 +35,8 @@ beforeEach(() => {
     bookingJourney: {
       prisoner,
       prison,
-      allVisitors: [adultVisitor, childVisitor],
-      selectedVisitors: [adultVisitor, childVisitor],
+      allVisitors: [adultVisitor1, adultVisitor2, childVisitor],
+      selectedVisitors: [adultVisitor1, childVisitor],
       allVisitSessionIds: ['2024-05-30_a'],
       allVisitSessions: [visitSession],
       selectedVisitSession: visitSession,
@@ -67,7 +73,7 @@ describe('Main contact', () => {
         })
     })
 
-    it('should render main contact page with all fields empty', () => {
+    it('should render main contact page with selected adult visitors and all fields empty', () => {
       return request(app)
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(200)
@@ -80,7 +86,7 @@ describe('Main contact', () => {
           expect($('h1').text()).toBe('Who is the main contact for this booking?')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
-          expect($('input[name="contact"]').length).toBe(2)
+          expect($('input[name="contact"]').length).toBe(2) // Only adult visitor and 'Someone else'
           expect($('input[name="contact"]:checked').length).toBe(0)
           expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
           expect($('input[name="contact"][value=someoneElse] + label').text().trim()).toBe('Someone else')
@@ -92,7 +98,7 @@ describe('Main contact', () => {
     })
 
     it('should pre-populate with data in session (contact and phone number)', () => {
-      sessionData.bookingJourney.mainContact = { contact: adultVisitor, phoneNumber: '01234 567 890' }
+      sessionData.bookingJourney.mainContact = { contact: adultVisitor1, phoneNumber: '01234 567 890' }
 
       return request(app)
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -126,7 +132,7 @@ describe('Main contact', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookingJourney.mainContact = { contact: adultVisitor, phoneNumber: '01234 567 890' }
+      sessionData.bookingJourney.mainContact = { contact: adultVisitor1, phoneNumber: '01234 567 890' }
       const formValues = { contact: 'someoneElse', someoneElseName: 'Different Person', hasPhoneNumber: 'no' }
       flashData = { formValues: [formValues] }
 
@@ -178,13 +184,17 @@ describe('Main contact', () => {
     it('should save selected contact and phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(paths.BOOK_VISIT.MAIN_CONTACT)
-        .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: '01234 567 890' })
+        .send({
+          contact: adultVisitor1.visitorDisplayId.toString(),
+          hasPhoneNumber: 'yes',
+          phoneNumber: '01234 567 890',
+        })
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContact).toStrictEqual({
-            contact: adultVisitor,
+            contact: adultVisitor1,
             phoneNumber: '01234 567 890',
           })
 
@@ -197,12 +207,12 @@ describe('Main contact', () => {
     it('should save selected contact and no phone number to session, update application and redirect to check visit details page', () => {
       return request(app)
         .post(paths.BOOK_VISIT.MAIN_CONTACT)
-        .send({ contact: '1', hasPhoneNumber: 'no' })
+        .send({ contact: adultVisitor1.visitorDisplayId.toString(), hasPhoneNumber: 'no' })
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: adultVisitor })
+          expect(sessionData.bookingJourney.mainContact).toStrictEqual({ contact: adultVisitor1 })
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookingJourney: sessionData.bookingJourney,
@@ -239,7 +249,7 @@ describe('Main contact', () => {
           { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
           { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
         ]
-        expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
+        expectedFlashFormValues = {}
 
         return request(app)
           .post(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -260,7 +270,7 @@ describe('Main contact', () => {
           { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
           { type: 'field', location: 'body', path: 'hasPhoneNumber', value: undefined, msg: 'No answer selected' },
         ]
-        expectedFlashFormValues = { someoneElseName: '', phoneNumber: '' }
+        expectedFlashFormValues = {}
 
         return request(app)
           .post(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -307,7 +317,7 @@ describe('Main contact', () => {
           })
       })
 
-      it('should set a validation error phone number invalid and redirect to original page', () => {
+      it('should set a validation error when phone number invalid and redirect to original page', () => {
         expectedFlashErrors = [
           {
             type: 'field',
@@ -317,11 +327,61 @@ describe('Main contact', () => {
             msg: 'Enter a UK phone number, like 07700 900 982 or 01632 960 001',
           },
         ]
-        expectedFlashFormValues = { contact: '1', someoneElseName: '', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
+        expectedFlashFormValues = { contact: '1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
 
         return request(app)
           .post(paths.BOOK_VISIT.MAIN_CONTACT)
-          .send({ contact: '1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' })
+          .send({ contact: adultVisitor1.visitorDisplayId.toString(), hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' })
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
+
+      it('should filter out an invalid contact selection (child visitor)', () => {
+        expectedFlashErrors = [
+          { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
+        ]
+        expectedFlashFormValues = {
+          contact: undefined,
+          someoneElseName: undefined,
+          hasPhoneNumber: 'no',
+          phoneNumber: undefined,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
+          .send({ contact: childVisitor.visitorDisplayId.toString(), hasPhoneNumber: 'no' })
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
+
+      it('should filter out an invalid contact selection (unrecognised visitor ID)', () => {
+        expectedFlashErrors = [
+          { type: 'field', location: 'body', path: 'contact', value: undefined, msg: 'No main contact selected' },
+        ]
+        expectedFlashFormValues = {
+          contact: undefined,
+          someoneElseName: undefined,
+          hasPhoneNumber: 'no',
+          phoneNumber: undefined,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.MAIN_CONTACT)
+          .send({ contact: '999', hasPhoneNumber: 'no' })
           .expect(302)
           .expect('location', paths.BOOK_VISIT.MAIN_CONTACT)
           .expect(() => {
