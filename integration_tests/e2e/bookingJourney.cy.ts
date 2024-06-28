@@ -160,7 +160,7 @@ context('Booking journey', () => {
     checkVisitDetailsPage.mainContactName().contains('Adult One')
     checkVisitDetailsPage.mainContactNumber().contains('01234 567 890')
 
-    cy.task('stubBookVisit', TestData.visitDto())
+    cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
     checkVisitDetailsPage.continue()
 
     const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
