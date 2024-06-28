@@ -24,14 +24,25 @@ export default class OrchestrationApiClient {
 
   // orchestration-visits-controller
 
-  async bookVisit({ applicationReference }: { applicationReference: string }): Promise<VisitDto> {
+  async bookVisit({
+    applicationReference,
+    actionedBy,
+  }: {
+    applicationReference: string
+    actionedBy: string
+  }): Promise<VisitDto> {
     return this.restClient.put({
       path: `/visits/${applicationReference}/book`,
       data: <BookingOrchestrationRequestDto>{
         applicationMethodType: 'WEBSITE', // TODO - check this is correct
         allowOverBooking: false,
+        actionedBy,
       },
     })
+  }
+
+  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
+    return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/booked/future` })
   }
 
   // orchestration-applications-controller

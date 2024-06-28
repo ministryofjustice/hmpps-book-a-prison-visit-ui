@@ -1,3 +1,11 @@
 .govuk-main-wrapper {
   min-height: 300px;
 }
+
+.bookings-content-block > p, .bookings-content-block > h3 {
+  margin-bottom: govuk-spacing(1);
+}
+.bookings-content-block {
+  margin-top: govuk-spacing(4);
+  margin-bottom: govuk-spacing(6);
+}

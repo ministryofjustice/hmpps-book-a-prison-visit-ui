@@ -36,6 +36,25 @@ export default {
     })
   },
 
+  stubGetFuturePublicVisit: ({
+    bookerReference = TestData.bookerReference(),
+    visits = [],
+  }: {
+    bookerReference: BookerReference
+    visits: VisitDto[]
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference}/visits/booked/future`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visits,
+      },
+    }),
+
   // orchestration-applications-controller
 
   stubChangeVisitApplication: (application: ApplicationDto): SuperAgentRequest => {

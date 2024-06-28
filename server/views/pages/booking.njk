@@ -1,0 +1,54 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = "Bookings" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Bookings</h1>
+
+      <p>Only bookings made using GOV.UK One Login are shown.</p>
+
+
+      {% if visits | length %}
+        <form action="{{ paths.BOOKINGS }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        <h2 class="govuk-heading-m">Future visits</h2>
+
+        {% for visit in visits %}
+          <div class="bookings-content-block">
+            <h3 class="govuk-heading-s" data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+            <p>
+              <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+              to
+              <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+            </p>
+            <p>Booking reference: <span data-test="visit-reference">{{ visit.reference }}</span></p>  
+            <a href="{{ paths.BOOKINGS }}/{{ visit.reference }}">View booking details</a>
+          </div>
+          
+        {% endfor %}
+      {% else %}
+        <p data-test="no-visits">No visits found.</p>
+      {% endif %}
+
+      <h3 class="govuk-heading-s">How to change your booking</h3>
+      <p>
+        To update or cancel your booking, call
+        <span data-test="prison-name">{{ prisonName }}</span>
+        on <span data-test="prison-phone-number">{{ prisonPhoneNumber }}</span>
+        between 9am and 5pm, Monday to Friday
+      </p>
+      <p>You will need the booking reference to make changes</p>
+
+      <h3 class="govuk-heading-s">Past and Cancelled visits</h3>
+      <a href="#">View past visits</a>
+      <br>
+      <a href="#">View cancelled visits</a>
+      
+    </div>
+  </div>
+
+{% endblock %}

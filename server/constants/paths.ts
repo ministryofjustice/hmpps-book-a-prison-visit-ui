@@ -1,5 +1,6 @@
 const paths = {
   HOME: '/',
+  BOOKINGS: '/bookings',
 
   BOOK_VISIT: {
     ROOT: '/book-visit',

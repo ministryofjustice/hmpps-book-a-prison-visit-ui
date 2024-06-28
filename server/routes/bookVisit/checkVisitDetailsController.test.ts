@@ -140,6 +140,7 @@ describe('Check visit details', () => {
 
           expect(visitService.bookVisit).toHaveBeenCalledWith({
             applicationReference: application.reference,
+            actionedBy: bookerReference,
           })
         })
     })
@@ -160,6 +161,7 @@ describe('Check visit details', () => {
             expect(sessionData.bookingConfirmed).toBe(undefined)
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
+              actionedBy: bookerReference,
             })
             expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
           })
