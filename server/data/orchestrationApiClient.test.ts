@@ -55,7 +55,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getFuturePublicVisits', () => {
     it('should retrieve all future visits associated with a booker', async () => {
-      const visits = [TestData.visitDto()]
+      const visits = [TestData.visitDto({ outcomeStatus: null })]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/visits/booked/future`)
@@ -149,7 +149,7 @@ describe('orchestrationApiClient', () => {
     })
   })
 
-  describe('getbookerReference', () => {
+  describe('getBookerReference', () => {
     it('should send details received from One Login to retrieve bookerReference', async () => {
       const authDetailDto = TestData.authDetailDto()
 

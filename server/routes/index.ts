@@ -16,7 +16,7 @@ export default function routes(services: Services): Router {
   const booking = new BookingController(services.visitService)
 
   get(paths.HOME, home.view())
-  get(paths.BOOKINGS, booking.view())
+  get(paths.BOOKINGS.HOME, booking.view())
 
   router.use(bookingJourneyRoutes(services))
 

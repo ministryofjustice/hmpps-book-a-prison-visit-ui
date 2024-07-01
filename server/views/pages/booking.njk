@@ -12,36 +12,37 @@
 
 
       {% if visits | length %}
-        <form action="{{ paths.BOOKINGS }}" method="POST" novalidate>
+        <form action="{{ paths.BOOKINGS.HOME }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         <h2 class="govuk-heading-m">Future visits</h2>
 
         {% for visit in visits %}
           <div class="bookings-content-block">
-            <h3 class="govuk-heading-s" data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
             <p>
-              <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
               to
-              <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </p>
-            <p>Booking reference: <span data-test="visit-reference">{{ visit.reference }}</span></p>  
-            <a href="{{ paths.BOOKINGS }}/{{ visit.reference }}">View booking details</a>
+            <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
+            <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}">View booking details</a>
           </div>
           
         {% endfor %}
-      {% else %}
-        <p data-test="no-visits">No visits found.</p>
-      {% endif %}
 
       <h3 class="govuk-heading-s">How to change your booking</h3>
       <p>
         To update or cancel your booking, call
         <span data-test="prison-name">{{ prisonName }}</span>
         on <span data-test="prison-phone-number">{{ prisonPhoneNumber }}</span>
-        between 9am and 5pm, Monday to Friday
+        between 9am and 5pm, Monday to Friday.
       </p>
-      <p>You will need the booking reference to make changes</p>
+      <p>You will need the booking reference to make changes.</p>
+
+      {% else %}
+        <p data-test="no-visits">You do not have any future bookings.</p>
+      {% endif %}
 
       <h3 class="govuk-heading-s">Past and Cancelled visits</h3>
       <a href="#">View past visits</a>

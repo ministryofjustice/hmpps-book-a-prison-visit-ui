@@ -164,10 +164,10 @@ describe('Visit service', () => {
     })
 
     describe('getFuturePublicVisits', () => {
-      it('should retrieve all visits for a booker', async () => {
+      it('should retrieve all future visits for a booker', async () => {
         orchestrationApiClient.getFuturePublicVisits.mockResolvedValue([visit])
 
-        const results = await visitService.getFuturePublicVisit(bookerReference)
+        const results = await visitService.getFuturePublicVisits(bookerReference)
 
         expect(orchestrationApiClient.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
         expect(results).toStrictEqual([visit])

@@ -8,16 +8,16 @@ export default class BookingController {
     return async (req, res) => {
       const { booker } = req.session
 
-      const visits = await this.visitService.getFuturePublicVisit(booker.reference)
+      const visits = await this.visitService.getFuturePublicVisits(booker.reference)
       const { prisonCode } = booker.prisoners[0]
       let prisonName = ''
       let prisonPhoneNumber = ''
       if (prisonCode === 'DHI') {
         prisonName = 'Drake Hall (HMP)'
-        prisonPhoneNumber = '09876543210'
+        prisonPhoneNumber = '0121 661 2101'
       } else if (prisonCode === 'FHI') {
         prisonName = 'Foston Hall (HMP)'
-        prisonPhoneNumber = '01234567890'
+        prisonPhoneNumber = '0121 661 2101'
       }
 
       res.render('pages/booking', { visits, prisonName, prisonPhoneNumber, showServiceNav: true })

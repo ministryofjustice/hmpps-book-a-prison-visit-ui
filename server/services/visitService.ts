@@ -86,7 +86,7 @@ export default class VisitService {
     return visit
   }
 
-  async getFuturePublicVisit(bookerReference: string): Promise<VisitDto[]> {
+  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 

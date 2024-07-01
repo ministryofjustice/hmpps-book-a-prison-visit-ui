@@ -37,7 +37,7 @@ export default {
     })
   },
 
-  stubGetFuturePublicVisit: ({
+  stubGetFuturePublicVisits: ({
     bookerReference = TestData.bookerReference(),
     visits = [],
   }: {
