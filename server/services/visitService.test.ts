@@ -150,12 +150,27 @@ describe('Visit service', () => {
       it('should book a visit from an application', async () => {
         orchestrationApiClient.bookVisit.mockResolvedValue(visit)
 
-        const results = await visitService.bookVisit({ applicationReference: bookingJourney.applicationReference })
+        const results = await visitService.bookVisit({
+          applicationReference: bookingJourney.applicationReference,
+          actionedBy: 'aaaa-bbbb-cccc',
+        })
 
         expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
+          actionedBy: 'aaaa-bbbb-cccc',
         })
         expect(results).toStrictEqual(visit)
+      })
+    })
+
+    describe('getFuturePublicVisits', () => {
+      it('should retrieve all future visits for a booker', async () => {
+        orchestrationApiClient.getFuturePublicVisits.mockResolvedValue([visit])
+
+        const results = await visitService.getFuturePublicVisits(bookerReference)
+
+        expect(orchestrationApiClient.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
+        expect(results).toStrictEqual([visit])
       })
     })
   })

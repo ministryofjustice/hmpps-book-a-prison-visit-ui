@@ -28,10 +28,13 @@ export default class CheckVisitDetailsController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { bookingJourney } = req.session
+      const { bookingJourney, booker } = req.session
 
       try {
-        const visit = await this.visitService.bookVisit({ applicationReference: bookingJourney.applicationReference })
+        const visit = await this.visitService.bookVisit({
+          applicationReference: bookingJourney.applicationReference,
+          actionedBy: booker.reference,
+        })
 
         const bookingConfirmed: BookingConfirmed = {
           prisonCode: bookingJourney.prison.code,

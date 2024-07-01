@@ -4,7 +4,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { FieldValidationError } from 'express-validator'
-import { formatDate, formatTime, formatTimeDuration, initialiseName, pluralise } from './utils'
+import { formatDate, formatTime, formatTimeDuration, formatTimeFromDateTime, initialiseName, pluralise } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 import paths from '../constants/paths'
@@ -94,6 +94,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatDate', formatDate)
 
   njkEnv.addFilter('formatTime', formatTime)
+
+  njkEnv.addFilter('formatTimeFromDateTime', formatTimeFromDateTime)
 
   njkEnv.addFilter('formatTimeDuration', formatTimeDuration)
 

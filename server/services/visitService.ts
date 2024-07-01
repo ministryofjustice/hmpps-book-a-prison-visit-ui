@@ -70,13 +70,29 @@ export default class VisitService {
     return application
   }
 
-  async bookVisit({ applicationReference }: { applicationReference: string }): Promise<VisitDto> {
+  async bookVisit({
+    applicationReference,
+    actionedBy,
+  }: {
+    applicationReference: string
+    actionedBy: string
+  }): Promise<VisitDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visit = orchestrationApiClient.bookVisit({ applicationReference })
+    const visit = orchestrationApiClient.bookVisit({ applicationReference, actionedBy })
 
     logger.info(`Visit application '${applicationReference}' booked as visit '${(await visit).reference}'`)
     return visit
+  }
+
+  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const visits = await orchestrationApiClient.getFuturePublicVisits(bookerReference)
+
+    logger.info(`Visits for booker reference ${bookerReference} retrieved`)
+    return visits
   }
 }

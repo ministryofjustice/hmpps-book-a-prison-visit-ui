@@ -3,6 +3,7 @@ import {
   formatDate,
   formatTime,
   formatTimeDuration,
+  formatTimeFromDateTime,
   initialiseName,
   isAdult,
   pluralise,
@@ -57,6 +58,18 @@ describe('formatTime', () => {
     ['Invalid date', 'not a date', ''],
   ])('%s formatTime(%s) = %s', (_: string, date: string, expected: string) => {
     expect(formatTime(date)).toEqual(expected)
+  })
+})
+
+describe('formatDateTime', () => {
+  it.each([
+    ['Morning date time', '2022-02-14T10:30', '10:30am'],
+    ['Afternoon date time', '2022-02-14T14:30:00', '2:30pm'],
+    ['Truncate whole hour', '2022-02-14T09:00:00', '9am'],
+    ['Empty', '', null],
+    ['Invalid date', 'not a date', ''],
+  ])('%s formatTimeFromDateTime(%s) = %s', (_: string, date: string, expected: string) => {
+    expect(formatTimeFromDateTime(date)).toEqual(expected)
   })
 })
 

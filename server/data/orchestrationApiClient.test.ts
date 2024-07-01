@@ -16,6 +16,7 @@ describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
   let orchestrationApiClient: OrchestrationApiClient
   const token = 'token-1'
+  const bookerReference = TestData.bookerReference()
 
   beforeEach(() => {
     fakeOrchestrationApi = nock(config.apis.orchestration.url)
@@ -41,13 +42,29 @@ describe('orchestrationApiClient', () => {
         .put(`/visits/${applicationReference}/book`, <BookingOrchestrationRequestDto>{
           applicationMethodType: 'WEBSITE',
           allowOverBooking: false,
+          actionedBy: bookerReference.value,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, result)
 
-      const output = await orchestrationApiClient.bookVisit({ applicationReference })
+      const output = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy: bookerReference.value })
 
       expect(output).toStrictEqual(result)
+    })
+  })
+
+  describe('getFuturePublicVisits', () => {
+    it('should retrieve all future visits associated with a booker', async () => {
+      const visits = [TestData.visitDto({ outcomeStatus: null })]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/visits/booked/future`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visits)
+
+      const result = await orchestrationApiClient.getFuturePublicVisits(bookerReference.value)
+
+      expect(result).toStrictEqual(visits)
     })
   })
 
@@ -100,7 +117,6 @@ describe('orchestrationApiClient', () => {
       const sessionDate = '2024-05-01'
       const applicationRestriction: SessionRestriction = 'OPEN'
       const visitorIds = [1234, 2345]
-      const bookerReference = 'aaaa-bbbb-cccc'
 
       const result = { reference: 'aaa-bbb-ccc' } as ApplicationDto
 
@@ -114,7 +130,7 @@ describe('orchestrationApiClient', () => {
             return { nomisPersonId: id }
           }),
           userType: 'PUBLIC',
-          actionedBy: bookerReference,
+          actionedBy: bookerReference.value,
           allowOverBooking: false,
         })
         .matchHeader('authorization', `Bearer ${token}`)
@@ -126,7 +142,7 @@ describe('orchestrationApiClient', () => {
         sessionDate,
         applicationRestriction,
         visitorIds,
-        bookerReference,
+        bookerReference: bookerReference.value,
       })
 
       expect(output).toStrictEqual(result)
@@ -134,9 +150,8 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getBookerReference', () => {
-    it('should send details received from One Login to retrieve BookerReference', async () => {
+    it('should send details received from One Login to retrieve bookerReference', async () => {
       const authDetailDto = TestData.authDetailDto()
-      const bookerReference = TestData.bookerReference()
 
       fakeOrchestrationApi
         .put('/public/booker/register/auth', authDetailDto)
@@ -151,7 +166,6 @@ describe('orchestrationApiClient', () => {
 
   describe('getPrisoners', () => {
     it('should retrieve prisoners associated with a booker', async () => {
-      const bookerReference = TestData.bookerReference()
       const prisoners = [TestData.prisonerInfoDto()]
 
       fakeOrchestrationApi
@@ -167,7 +181,6 @@ describe('orchestrationApiClient', () => {
 
   describe('getVisitors', () => {
     it('should retrieve visitors associated with a booker and prisoner', async () => {
-      const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.prisonerInfoDto()
       const visitors = [TestData.visitorInfoDto()]
 

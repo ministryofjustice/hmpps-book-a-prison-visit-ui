@@ -42,6 +42,14 @@ export const formatTime = (time: string): string => {
   }
 }
 
+export const formatTimeFromDateTime = (dateTime: string): string => {
+  try {
+    return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : null
+  } catch (error) {
+    return ''
+  }
+}
+
 export const formatTimeDuration = (startTime: string, endTime: string): string => {
   try {
     const referenceDate = new Date()

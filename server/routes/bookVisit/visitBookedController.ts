@@ -10,10 +10,10 @@ export default class VisitBookedController {
       let prisonPhoneNumber = ''
       let prisonWebsite = ''
       if (bookingConfirmed.prisonCode === 'FHI') {
-        prisonPhoneNumber = '01234567890'
+        prisonPhoneNumber = '0121 661 2101'
         prisonWebsite = 'https://www.gov.uk/guidance/foston-hall-prison'
       } else if (bookingConfirmed.prisonCode === 'DHI') {
-        prisonPhoneNumber = '09876543210'
+        prisonPhoneNumber = '0121 661 2101'
         prisonWebsite = 'https://www.gov.uk/guidance/drake-hall-prison'
       }
 

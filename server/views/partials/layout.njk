@@ -9,9 +9,17 @@
     href: "/",
     text: 'Home',
     id: 'home-link'
-  }] if showServiceNav
+  },
+  {
+    href: '/bookings',
+    text: 'Bookings',
+    id: 'bookings-link'
+  }
+  ] if showServiceNav
 %}
-{% set activeLinkId = "home-link" %}
+{% set activeLinkId -%}
+  {{- activeLink if activeLink else 'home-link' -}}
+{%- endset %}
 {% set serviceName = applicationName %}
 {% set signOutLink = "/sign-out" %}
 

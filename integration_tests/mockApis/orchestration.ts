@@ -14,7 +14,7 @@ import {
 export default {
   // orchestration-visits-controller
 
-  stubBookVisit: (visit: VisitDto): SuperAgentRequest => {
+  stubBookVisit: ({ visit, bookerReference }: { visit: VisitDto; bookerReference: string }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
@@ -24,6 +24,7 @@ export default {
             equalToJson: {
               applicationMethodType: 'WEBSITE',
               allowOverBooking: false,
+              actionedBy: bookerReference,
             },
           },
         ],
@@ -35,6 +36,25 @@ export default {
       },
     })
   },
+
+  stubGetFuturePublicVisits: ({
+    bookerReference = TestData.bookerReference(),
+    visits = [],
+  }: {
+    bookerReference: BookerReference
+    visits: VisitDto[]
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference}/visits/booked/future`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visits,
+      },
+    }),
 
   // orchestration-applications-controller
 
