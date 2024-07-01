@@ -5,11 +5,11 @@ export default class BookingsPage extends Page {
     super('Booking')
   }
 
-  visitDate = (): PageElement => cy.get('[data-test=visit-date]')
+  visitDate = (index: number): PageElement => cy.get(`[data-test=visit-date-${index}]`)
 
-  visitStartTime = (): PageElement => cy.get('[data-test=visit-start-time]')
+  visitStartTime = (index: number): PageElement => cy.get(`[data-test=visit-start-time-${index}]`)
 
-  visitEndTime = (): PageElement => cy.get('[data-test=visit-end-time]')
+  visitEndTime = (index: number): PageElement => cy.get(`[data-test=visit-end-time-${index}]`)
 
-  visitReference = (): PageElement => cy.get('[data-test=visit-reference]')
+  visitReference = (index: number): PageElement => cy.get(`[data-test=visit-reference-${index}]`)
 }

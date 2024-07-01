@@ -26,9 +26,9 @@ context('Bookings home page', () => {
 
     cy.visit(paths.BOOKINGS.HOME)
     const bookingsPage = Page.verifyOnPage(BookingsPage)
-    bookingsPage.visitDate().contains('Thursday 21 May 2026')
-    bookingsPage.visitStartTime().contains('10am')
-    bookingsPage.visitEndTime().contains('11:30am')
-    bookingsPage.visitReference().contains('ab-cd-ef-gh')
+    bookingsPage.visitDate(1).contains('Thursday 21 May 2026')
+    bookingsPage.visitStartTime(1).contains('10am')
+    bookingsPage.visitEndTime(1).contains('11:30am')
+    bookingsPage.visitReference(1).contains('ab-cd-ef-gh')
   })
 })
