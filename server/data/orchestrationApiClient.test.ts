@@ -64,7 +64,7 @@ describe('orchestrationApiClient', () => {
 
       const result = await orchestrationApiClient.getFuturePublicVisits(bookerReference.value)
 
-      expect(result).toEqual(visits)
+      expect(result).toStrictEqual(visits)
     })
   })
 
