@@ -27,7 +27,9 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </p>
             <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
-            <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}">View booking details</a>
+            <p>
+              <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}">View booking details</a>
+            </p>
           </div>
           
         {% endfor %}
@@ -46,9 +48,12 @@
       {% endif %}
 
       <h3 class="govuk-heading-s">Past and Cancelled visits</h3>
-      <a href="#">View past visits</a>
-      <br>
-      <a href="#">View cancelled visits</a>
+      <p>
+        <a href="#">View past visits</a>
+      </p>
+      <p>
+        <a href="#">View cancelled visits</a>
+      </p>
       
     </div>
   </div>
