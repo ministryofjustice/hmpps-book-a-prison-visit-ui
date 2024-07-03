@@ -11,12 +11,11 @@
 
       <p>Only bookings made using GOV.UK One Login are shown.</p>
 
+      <h2 class="govuk-heading-m">Future visits</h2>
 
       {% if visits | length %}
         <form action="{{ paths.BOOKINGS.HOME }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-        <h2 class="govuk-heading-m">Future visits</h2>
 
         {% for visit in visits %}
           <div class="bookings-content-block">
@@ -28,7 +27,7 @@
             </p>
             <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
             <p>
-              <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}">View booking details</a>
+              <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}" class="govuk-link--no-visited-state">View booking details</a>
             </p>
           </div>
           
@@ -49,10 +48,10 @@
 
       <h2 class="govuk-heading-m">Past and cancelled visits</h2>
       <p>
-        <a href="#">View past visits</a>
+        <a href="#" class="govuk-link--no-visited-state">View past visits</a>
       </p>
       <p>
-        <a href="#">View cancelled visits</a>
+        <a href="#" class="govuk-link--no-visited-state">View cancelled visits</a>
       </p>
       
     </div>
