@@ -76,3 +76,5 @@ This application has several changes to core files inherited from the HMPPS Type
 * an additional Kubernetes secret `govuk-one-login` in the namespace to store the private key, etc.
 * client and server public/private key pairs (in `./integration_tests/testKeys/`) for integration testing
 * a new NPM task (`oidc-wiremock`) and customisations to `start-feature` and `watch-node-feature` that ensure the OIDC Discovery Endpoint mock and a private key is available before the application starts
+
+This project is tested with BrowserStack
