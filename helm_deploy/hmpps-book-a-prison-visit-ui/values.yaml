@@ -58,7 +58,8 @@ generic-service:
 
   allowlist:
     groups:
-      - internal
+      - digital_staff_and_mojo
+      - moj_cloud_platform
 
 generic-prometheus-alerts:
   targetApplication: hmpps-book-a-prison-visit-ui
