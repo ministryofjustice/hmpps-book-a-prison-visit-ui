@@ -23,8 +23,10 @@ generic-service:
       APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
 
   allowlist:
+    pen-test: "80.195.27.199"
     groups:
-      - internal
+      - digital_staff_and_mojo
+      - moj_cloud_platform
       - circleci
 
 generic-prometheus-alerts:
