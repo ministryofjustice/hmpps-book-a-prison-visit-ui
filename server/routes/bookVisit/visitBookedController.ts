@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express'
+import getPrisonInformation from '../../constants/prisonInformation'
 
 export default class VisitBookedController {
   public constructor() {}
@@ -7,15 +8,7 @@ export default class VisitBookedController {
     return async (req, res) => {
       const { bookingConfirmed } = req.session
 
-      let prisonPhoneNumber = ''
-      let prisonWebsite = ''
-      if (bookingConfirmed.prisonCode === 'FHI') {
-        prisonPhoneNumber = '0121 661 2101'
-        prisonWebsite = 'https://www.gov.uk/guidance/foston-hall-prison'
-      } else if (bookingConfirmed.prisonCode === 'DHI') {
-        prisonPhoneNumber = '0121 661 2101'
-        prisonWebsite = 'https://www.gov.uk/guidance/drake-hall-prison'
-      }
+      const { prisonPhoneNumber, prisonWebsite } = getPrisonInformation(bookingConfirmed.prisonCode)
 
       const supportedPrison = bookingConfirmed.prisonCode === 'DHI' || bookingConfirmed.prisonCode === 'FHI'
       res.render('pages/bookVisit/visitBooked', {

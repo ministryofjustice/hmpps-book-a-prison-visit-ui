@@ -2,6 +2,7 @@ const paths = {
   HOME: '/',
   BOOKINGS: {
     HOME: '/bookings',
+    VISIT: '/bookings/details',
   },
 
   BOOK_VISIT: {

@@ -2,16 +2,16 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from './testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../services/testutils/mocks'
-import TestData from './testutils/testData'
-import paths from '../constants/paths'
+import { appWithAllRoutes } from '../testutils/appSetup'
+import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
+import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
 
 let app: Express
 
 const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
-const visits = [TestData.visitDto()]
+const visit = TestData.visitDto()
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonCode: 'DHI' })
 let sessionData: SessionData
@@ -22,6 +22,7 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
+    bookings: [visit],
   } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
@@ -33,7 +34,7 @@ afterEach(() => {
 
 describe('Bookings homepage', () => {
   it('should render the bookings home page - with a future visit', () => {
-    visitService.getFuturePublicVisits.mockResolvedValue(visits)
+    visitService.getFuturePublicVisits.mockResolvedValue([visit])
     return request(app)
       .get(paths.BOOKINGS.HOME)
       .expect('Content-Type', /html/)
@@ -56,6 +57,7 @@ describe('Bookings homepage', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
+          bookings: [visit],
         } as SessionData)
       })
   })

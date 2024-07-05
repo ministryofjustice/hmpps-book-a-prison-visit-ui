@@ -126,7 +126,7 @@ export default class TestData {
     endTimestamp = '2024-05-30T11:30:00',
     visitNotes = [],
     visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
-    visitors = [{ nomisPersonId: 1234, visitContact: true }],
+    visitors = [{ nomisPersonId: 1234, visitContact: true, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'wheelchair access' },
   }: Partial<VisitDto> = {}): VisitDto =>
     ({

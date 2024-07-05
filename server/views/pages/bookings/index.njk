@@ -1,5 +1,5 @@
 {% set activeLink = 'bookings-link' %}
-{% extends "../partials/layout.njk" %}
+{% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = "Bookings" %}
 
@@ -27,7 +27,7 @@
             </p>
             <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
             <p>
-              <a href="{{ paths.BOOKINGS.HOME }}/{{ visit.reference }}" class="govuk-link--no-visited-state">View booking details</a>
+              <a href="{{ paths.BOOKINGS.VISIT }}/{{ loop.index }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
             </p>
           </div>
           
