@@ -1,7 +1,6 @@
 import type { RequestHandler } from 'express'
 import { VisitService } from '../../services'
 import getPrisonInformation from '../../constants/prisonInformation'
-import paths from '../../constants/paths'
 
 export default class BookingsController {
   public constructor(private readonly visitService: VisitService) {}

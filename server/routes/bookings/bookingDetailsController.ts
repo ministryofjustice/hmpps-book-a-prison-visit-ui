@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, param, validationResult } from 'express-validator'
+import { ValidationChain, param, validationResult } from 'express-validator'
 import { VisitService } from '../../services'
 import getPrisonInformation from '../../constants/prisonInformation'
 import paths from '../../constants/paths'
