@@ -38,7 +38,7 @@ context('Bookings home page', () => {
 
     bookingsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.visitDate().contains('Thursday 30 May 2024')
+    visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
     visitDetailsPage.prisonerName().contains('John Smith')
