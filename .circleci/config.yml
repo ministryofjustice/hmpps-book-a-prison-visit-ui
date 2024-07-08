@@ -18,12 +18,12 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: prison-visit-booking-alerts
+    default: visits-alerts
 
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: prison-visit-booking-alerts
+    default: visits-alerts
 
   node-version:
     type: string
