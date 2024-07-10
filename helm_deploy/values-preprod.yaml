@@ -15,5 +15,10 @@ generic-service:
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-preprod.prison.service.justice.gov.uk"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev

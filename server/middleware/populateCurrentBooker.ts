@@ -2,6 +2,7 @@ import { RequestHandler } from 'express'
 import logger from '../../logger'
 import BookerService from '../services/bookerService'
 import { AuthDetailDto } from '../data/orchestrationApiTypes'
+import paths from '../constants/paths'
 
 export default function populateCurrentBooker(bookerService: BookerService): RequestHandler {
   return async (req, res, next) => {
@@ -24,7 +25,7 @@ export default function populateCurrentBooker(bookerService: BookerService): Req
     } catch (error) {
       if (error.status === 404) {
         logger.info(`Failed to retrieve booker reference for: ${res.locals.user.sub}`)
-        return res.redirect('/autherror')
+        return req.path === paths.ACCESS_DENIED ? next() : res.redirect('/access-denied')
       }
 
       return next(error)

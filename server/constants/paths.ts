@@ -16,6 +16,8 @@ const paths = {
     BOOKED: '/book-visit/visit-booked',
   },
 
+  ACCESS_DENIED: '/access-denied',
+
   // Footer links
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies-policy',

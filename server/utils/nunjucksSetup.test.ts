@@ -1,10 +1,29 @@
 import express from 'express'
 import { FieldValidationError } from 'express-validator'
 import nunjucksSetup from './nunjucksSetup'
+import config from '../config'
 
 describe('Nunjucks Filters', () => {
   const app = express()
   const njk = nunjucksSetup(app, null)
+
+  describe('set show extra test attributes flag in DEV and STAGING', () => {
+    it.each([
+      ['', false],
+      ['DEV', true],
+      ['STAGING', true],
+      ['PRODUCTION', false],
+    ])(
+      "when environmentName is '%s', showExtraTestAttrs should be %s",
+      (environmentName: string, expected: boolean) => {
+        const replacedProp = jest.replaceProperty(config, 'environmentName', environmentName)
+        const appWithEnv = express()
+        nunjucksSetup(appWithEnv, null)
+        expect(appWithEnv.locals.showExtraTestAttrs).toBe(expected)
+        replacedProp.replaceValue('environmentName')
+      },
+    )
+  })
 
   describe('displayAge', () => {
     beforeAll(() => {
