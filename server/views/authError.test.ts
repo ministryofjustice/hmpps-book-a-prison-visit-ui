@@ -7,14 +7,14 @@ describe('Authorisation error page', () => {
   nunjucksSetup(app, null)
 
   it('should render a default GOVUK Header on the authorisation error page', () => {
-    app.render('autherror', (err: Error, html: string) => {
+    app.render('authError', (err: Error, html: string) => {
       const $ = cheerio.load(html)
-      expect($('head title').text()).toBe('Visit someone in prison - GOV.UK')
+      expect($('head title').text()).toMatch(/^Sorry, there is a problem with the service -/)
 
       expect($('header.govuk-header').length).toBe(1)
       expect($('header .one-login-header').length).toBe(0)
       expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
-      expect($('h1').text().trim()).toBe('Authorisation Error')
+      expect($('h1').text().trim()).toBe('Sorry, there is a problem with the service')
     })
   })
 })

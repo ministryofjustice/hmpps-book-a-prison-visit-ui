@@ -21,9 +21,9 @@ export default function setUpGovukOneLogin(): Router {
     router.use(passport.session())
     router.use(flash())
 
-    router.get('/autherror', (req, res) => {
+    router.get('/auth-error', (req, res) => {
       res.status(401)
-      return res.render('autherror')
+      return res.render('authError')
     })
 
     router.get('/sign-in', (req, res, next) => {
@@ -34,7 +34,7 @@ export default function setUpGovukOneLogin(): Router {
       passport.authenticate('oidc', {
         nonce: generators.nonce(),
         successReturnToOrRedirect: req.session.returnTo || '/',
-        failureRedirect: '/autherror',
+        failureRedirect: '/auth-error',
       })(req, res, next)
     })
 
