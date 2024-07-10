@@ -4,6 +4,7 @@ import type {
   AuthDetailDto,
   AvailableVisitSessionDto,
   BookerReference,
+  OrchestrationVisitDto,
   PrisonDto,
   PrisonerInfoDto,
   VisitDto,
@@ -164,4 +165,29 @@ export default class TestData {
     dateOfBirth = '1980-02-21',
     adult = true,
   }: Partial<Visitor> = {}): Visitor => ({ visitorDisplayId, visitorId, lastName, firstName, dateOfBirth, adult })
+
+  static orchestrationVisitDto = ({
+    reference = 'ab-cd-ef-gh',
+    prisonerId = 'A1234BC',
+    prisonId = 'HEI',
+    visitStatus = 'BOOKED',
+    outcomeStatus = undefined,
+    startTimestamp = '2024-05-30T10:00:00',
+    endTimestamp = '2024-05-30T11:30:00',
+    visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
+    visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
+    visitorSupport = { description: 'wheelchair access' },
+  }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
+    ({
+      reference,
+      prisonerId,
+      prisonId,
+      visitStatus,
+      outcomeStatus,
+      startTimestamp,
+      endTimestamp,
+      visitContact,
+      visitors,
+      visitorSupport,
+    }) as OrchestrationVisitDto
 }

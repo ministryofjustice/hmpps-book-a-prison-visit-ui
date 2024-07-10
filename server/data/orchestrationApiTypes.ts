@@ -21,3 +21,5 @@ export type PrisonerInfoDto = components['schemas']['PrisonerInfoDto']
 export type VisitDto = components['schemas']['VisitDto']
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']
+
+export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
