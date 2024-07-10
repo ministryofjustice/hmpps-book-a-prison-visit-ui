@@ -4,9 +4,9 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { PrisonerInfoDto } from '../../data/orchestrationApiTypes'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { Prisoner } from '../../services/bookerService'
 
 jest.mock('../../../logger')
 
@@ -41,7 +41,7 @@ describe('Select prisoner', () => {
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
-      bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as PrisonerInfoDto },
+      bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
       bookingConfirmed,
     } as SessionData
 
@@ -83,6 +83,32 @@ describe('Select prisoner', () => {
           booker: {
             reference: bookerReference,
             prisoners: [prisoner],
+          },
+        } as SessionData)
+      })
+  })
+
+  it('should redirect to Visit cannot be booked page if selected prisoner has no VOs', () => {
+    const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
+    sessionData = {
+      booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
+    } as SessionData
+
+    app = appWithAllRoutes({ services: {}, sessionData })
+
+    return request(app)
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
+      .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+      .expect(302)
+      .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+      .expect(() => {
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [prisonerWithNoVos],
+          },
+          bookingJourney: {
+            prisoner: prisonerWithNoVos,
           },
         } as SessionData)
       })

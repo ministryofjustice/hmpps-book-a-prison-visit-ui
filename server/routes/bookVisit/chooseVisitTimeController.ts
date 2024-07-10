@@ -18,7 +18,7 @@ export default class ChooseVisitTimeController {
 
       const { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions } =
         await this.visitSessionsService.getVisitSessionsCalendar({
-          prisonId: prisoner.prisonCode,
+          prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
           visitorIds: selectedVisitorIds,
           excludedApplicationReference: applicationReference,

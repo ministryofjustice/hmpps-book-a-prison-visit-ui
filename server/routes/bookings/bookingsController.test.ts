@@ -13,7 +13,7 @@ const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner({ prisonCode: 'DHI' })
+const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
 
 beforeEach(() => {

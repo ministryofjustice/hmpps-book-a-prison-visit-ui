@@ -20,7 +20,7 @@ const visitSessionsService = createMockVisitSessionService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisonerInfoDto()
+const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto({ policyNoticeDaysMax: 6 }) // small booking window for testing
 const visitor = TestData.visitorInfoDto()
 const firstSessionDate = '2024-05-30'

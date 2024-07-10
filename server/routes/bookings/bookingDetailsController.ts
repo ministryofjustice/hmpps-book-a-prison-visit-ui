@@ -26,7 +26,7 @@ export default class BookingDetailsController {
 
       const prisoner = booker.prisoners[0]
 
-      const { prisonName, prisonPhoneNumber, prisonWebsite } = getPrisonInformation(prisoner.prisonCode)
+      const { prisonName, prisonPhoneNumber, prisonWebsite } = getPrisonInformation(prisoner.prisonId)
 
       return res.render('pages/bookings/visit', {
         visit,
