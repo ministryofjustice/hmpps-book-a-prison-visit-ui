@@ -40,7 +40,7 @@ describe('View single booking', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visit booking details -/)
-        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
         expect($('h1').text()).toBe('Visit booking details')
         expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')
         expect($('[data-test="visit-date"]').text()).toContain('Thursday 30 May 2024')

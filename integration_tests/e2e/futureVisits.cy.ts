@@ -19,7 +19,7 @@ context('Bookings home page', () => {
     cy.task('stubHmppsAuthToken')
   })
 
-  it('should show Bookings home page with future visits', () => {
+  it('should show Bookings home page with future visits and navigate to view the visit details', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
