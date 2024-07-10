@@ -4,6 +4,7 @@ import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from '../routes/testutils/testData'
 import populateCurrentBooker from './populateCurrentBooker'
 import logger from '../../logger'
+import paths from '../constants/paths'
 
 jest.mock('../../logger')
 
@@ -66,7 +67,7 @@ describe('populateCurrentBooker', () => {
     expect(next).not.toHaveBeenCalled()
   })
 
-  it('should handle the booker not being found (404 error) by logging and redirecting to /autherror', async () => {
+  it('should handle the booker not being found (404 error) by logging and redirecting to /access-denied', async () => {
     bookerService.getBookerReference.mockRejectedValue(new NotFound())
 
     await populateCurrentBooker(bookerService)(req, res, next)
@@ -76,8 +77,24 @@ describe('populateCurrentBooker', () => {
       email: res.locals.user.email,
       phoneNumber: res.locals.user.phone_number,
     })
-    expect(res.redirect).toHaveBeenCalledWith('/autherror')
+    expect(res.redirect).toHaveBeenCalledWith('/access-denied')
     expect(next).not.toHaveBeenCalled()
+    expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker reference for: user1')
+  })
+
+  it('should call next() if booker not found (404 error) and request path is already /access-denied', async () => {
+    bookerService.getBookerReference.mockRejectedValue(new NotFound())
+    req = { session: {}, path: paths.ACCESS_DENIED } as unknown as Request
+
+    await populateCurrentBooker(bookerService)(req, res, next)
+
+    expect(bookerService.getBookerReference).toHaveBeenCalledWith({
+      oneLoginSub: res.locals.user.sub,
+      email: res.locals.user.email,
+      phoneNumber: res.locals.user.phone_number,
+    })
+    expect(res.redirect).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker reference for: user1')
   })
 
