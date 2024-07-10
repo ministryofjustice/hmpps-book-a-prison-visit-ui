@@ -1,7 +1,7 @@
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
-import { ApplicationDto, VisitDto } from '../data/orchestrationApiTypes'
+import { ApplicationDto, OrchestrationVisitDto, VisitDto } from '../data/orchestrationApiTypes'
 
 export default class VisitService {
   constructor(
@@ -86,7 +86,7 @@ export default class VisitService {
     return visit
   }
 
-  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
+  async getFuturePublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 

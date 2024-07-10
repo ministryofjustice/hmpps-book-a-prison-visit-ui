@@ -43,6 +43,6 @@ export default class BookingDetailsController {
   }
 
   public validate(): ValidationChain[] {
-    return [param('visitNumber').exists().notEmpty().toInt().isInt({ min: 1 })]
+    return [param('visitNumber').toInt().isInt({ min: 1 })]
   }
 }

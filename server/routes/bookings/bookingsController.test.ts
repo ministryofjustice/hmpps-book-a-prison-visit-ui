@@ -11,7 +11,7 @@ let app: Express
 
 const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
-const visit = TestData.visitDto()
+const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonCode: 'DHI' })
 let sessionData: SessionData
@@ -22,7 +22,7 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings: [visit],
+    bookings: [orchestrationVisitDto],
   } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
@@ -34,7 +34,7 @@ afterEach(() => {
 
 describe('Bookings homepage', () => {
   it('should render the bookings home page - with a future visit', () => {
-    visitService.getFuturePublicVisits.mockResolvedValue([visit])
+    visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
     return request(app)
       .get(paths.BOOKINGS.HOME)
       .expect('Content-Type', /html/)
@@ -57,7 +57,7 @@ describe('Bookings homepage', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookings: [visit],
+          bookings: [orchestrationVisitDto],
         } as SessionData)
       })
   })

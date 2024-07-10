@@ -11,7 +11,7 @@ let app: Express
 
 const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
-const visit = TestData.visitDto()
+const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonCode: 'DHI' })
 let sessionData: SessionData
@@ -22,9 +22,9 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings: [visit],
+    bookings: [orchestrationVisitDto],
   } as SessionData
-  visitService.getFuturePublicVisits.mockResolvedValue([visit])
+  visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
   app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
 })
 
@@ -39,7 +39,7 @@ describe('View single booking', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Bookings -/)
+        expect($('title').text()).toMatch(/^Visit booking details -/)
         expect($('[data-test="back-link"]').length).toBe(1)
         expect($('h1').text()).toBe('Visit booking details')
         expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')

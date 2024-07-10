@@ -55,7 +55,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getFuturePublicVisits', () => {
     it('should retrieve all future visits associated with a booker', async () => {
-      const visits = [TestData.visitDto({ outcomeStatus: null })]
+      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/visits/booked/future`)

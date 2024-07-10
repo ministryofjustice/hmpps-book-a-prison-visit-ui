@@ -823,8 +823,6 @@ export interface components {
        * @example true
        */
       visitContact?: boolean
-      firstName?: string
-      lastName?: string
     }
     /** @description Visitor support */
     VisitorSupportDto: {
@@ -1131,33 +1129,33 @@ export interface components {
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
-      first?: boolean
-      last?: boolean
-      /** Format: int32 */
-      size?: number
+      /** Format: int64 */
+      totalElements?: number
       content?: components['schemas']['VisitDto'][]
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       number?: number
+      first?: boolean
+      last?: boolean
+      /** Format: int32 */
+      size?: number
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject'][]
+      unpaged?: boolean
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
       /** Format: int32 */
       pageSize?: number
-      unpaged?: boolean
     }
     SortObject: {
       direction?: string
@@ -1381,6 +1379,89 @@ export interface components {
       /** Format: int32 */
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
+    }
+    /** @description Visit */
+    OrchestrationVisitDto: {
+      /**
+       * @description Visit Reference
+       * @example v9-d7-ed-7u
+       */
+      reference: string
+      /**
+       * @description Prisoner Id
+       * @example AF34567G
+       */
+      prisonerId: string
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+      /**
+       * @description Visit Status
+       * @example BOOKED
+       * @enum {string}
+       */
+      visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Outcome Status
+       * @example VISITOR_CANCELLED
+       * @enum {string}
+       */
+      outcomeStatus?:
+        | 'ADMINISTRATIVE_CANCELLATION'
+        | 'ADMINISTRATIVE_ERROR'
+        | 'BATCH_CANCELLATION'
+        | 'CANCELLATION'
+        | 'COMPLETED_NORMALLY'
+        | 'ESTABLISHMENT_CANCELLED'
+        | 'NOT_RECORDED'
+        | 'NO_VISITING_ORDER'
+        | 'PRISONER_CANCELLED'
+        | 'PRISONER_COMPLETED_EARLY'
+        | 'PRISONER_REFUSED_TO_ATTEND'
+        | 'TERMINATED_BY_STAFF'
+        | 'VISITOR_CANCELLED'
+        | 'VISITOR_COMPLETED_EARLY'
+        | 'VISITOR_DECLINED_ENTRY'
+        | 'VISITOR_DID_NOT_ARRIVE'
+        | 'VISITOR_FAILED_SECURITY_CHECKS'
+        | 'VISIT_ORDER_CANCELLED'
+        | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
+      /**
+       * Format: date-time
+       * @description The date and time of the visit
+       */
+      startTimestamp: string
+      /**
+       * Format: date-time
+       * @description The finishing date and time of the visit
+       */
+      endTimestamp: string
+      visitContact: components['schemas']['ContactDto']
+      /** @description List of visitors associated with the visit */
+      visitors: components['schemas']['OrchestrationVisitorDto'][]
+      visitorSupport?: components['schemas']['VisitorSupportDto']
+    }
+    /** @description Visitor */
+    OrchestrationVisitorDto: {
+      /**
+       * Format: int64
+       * @description Person ID (nomis) of the visitor
+       * @example 1234
+       */
+      nomisPersonId: number
+      /**
+       * @description Visitor's first name
+       * @example James
+       */
+      firstName?: string
+      /**
+       * @description Visitor's last name
+       * @example James
+       */
+      lastName?: string
     }
     PrisonerInfoDto: {
       /**
@@ -2976,7 +3057,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get cancelled public visits by booker reference */
@@ -3029,7 +3110,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get past public visits by booker reference */
@@ -3082,7 +3163,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get future booked visits by booker reference */

@@ -1,7 +1,7 @@
 {% set activeLink = 'bookings-link' %}
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Bookings" %}
+{% set pageTitle = "Visit booking details" %}
 
 {% set backLinkHref = paths.BOOKINGS.HOME %}
 
@@ -10,7 +10,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Visit booking details</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>Booking reference: <span data-test="booking-reference">{{ visit.reference }}</span></p>
 
@@ -37,7 +37,7 @@
         {% endfor %}
       </div>
 
-      <h2 class="govuk-heading-m">Additional Support</h2>
+      <h2 class="govuk-heading-m">Additional support requests</h2>
 
       <p data-test="additional-support"> {{ additionalSupport | d("None", true) }}</p>
       

@@ -8,6 +8,7 @@ import {
   BookingOrchestrationRequestDto,
   ChangeApplicationDto,
   CreateApplicationDto,
+  OrchestrationVisitDto,
   PrisonDto,
   PrisonerInfoDto,
   VisitDto,
@@ -41,7 +42,7 @@ export default class OrchestrationApiClient {
     })
   }
 
-  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
+  async getFuturePublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/booked/future` })
   }
 

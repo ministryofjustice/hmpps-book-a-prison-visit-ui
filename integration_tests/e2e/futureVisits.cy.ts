@@ -6,7 +6,7 @@ import Page from '../pages/page'
 
 context('Bookings home page', () => {
   const prisoner = TestData.prisonerInfoDto({ prisonCode: 'DHI' })
-  const visit = TestData.visitDto({
+  const orchestrationVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',
     prisonId: 'DHI',
@@ -26,7 +26,7 @@ context('Bookings home page', () => {
 
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
-      visits: [visit],
+      visits: [orchestrationVisitDto],
     })
 
     cy.visit(paths.BOOKINGS.HOME)
