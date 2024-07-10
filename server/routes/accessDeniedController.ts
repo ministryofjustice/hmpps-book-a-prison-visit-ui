@@ -6,11 +6,7 @@ export default class AccessDeniedController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      if (req.session.booker) {
-        return res.redirect(paths.HOME)
-      }
-
-      return res.render('accessDenied')
+      return req.session.booker ? res.redirect(paths.HOME) : res.render('accessDenied')
     }
   }
 }
