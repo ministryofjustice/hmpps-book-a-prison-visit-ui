@@ -13,7 +13,7 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Who is the main contact for this booking?</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <form action="{{ paths.BOOK_VISIT.MAIN_CONTACT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">

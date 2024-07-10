@@ -7,7 +7,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Book a visit</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       {% if prisoners | length %}
         <p>Prisoner: <span data-test="prisoner-name">{{ prisoners[0].firstName | capitalize }} {{prisoners[0].lastName | capitalize }}</span></p>

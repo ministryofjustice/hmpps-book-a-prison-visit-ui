@@ -68,8 +68,8 @@ describe('Accessibility statement', () => {
   })
 })
 
-describe('Privacy policy', () => {
-  it('should render privacy policy with GOVUK One Login Header for an authenticated user with booker record', () => {
+describe('Privacy notice', () => {
+  it('should render privacy notice with GOVUK One Login Header for an authenticated user with booker record', () => {
     userSupplier = () => user
     app = appWithAllRoutes({ userSupplier })
 
@@ -78,9 +78,9 @@ describe('Privacy policy', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy policy -/)
+        expect($('title').text()).toMatch(/^Privacy notice -/)
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Privacy policy')
+        expect($('h1').text()).toBe('Privacy notice')
 
         expect($('header .one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
@@ -91,7 +91,7 @@ describe('Privacy policy', () => {
       })
   })
 
-  it('should render privacy policy with GOVUK One Login Header and no service nav for an authenticated user with no booker record', () => {
+  it('should render privacy notice with GOVUK One Login Header and no service nav for an authenticated user with no booker record', () => {
     userSupplier = () => user
     app = appWithAllRoutes({ userSupplier, populateBooker: false })
 
@@ -100,12 +100,12 @@ describe('Privacy policy', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy policy -/)
+        expect($('title').text()).toMatch(/^Privacy notice -/)
         expect($('.service-header__nav-list-item-link').length).toBe(0)
       })
   })
 
-  it('should render privacy policy with fallback header for an unauthenticated user', () => {
+  it('should render privacy notice with fallback header for an unauthenticated user', () => {
     userSupplier = () => undefined
     app = appWithAllRoutes({ userSupplier })
 
@@ -114,9 +114,9 @@ describe('Privacy policy', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy policy -/)
+        expect($('title').text()).toMatch(/^Privacy notice -/)
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Privacy policy')
+        expect($('h1').text()).toBe('Privacy notice')
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
