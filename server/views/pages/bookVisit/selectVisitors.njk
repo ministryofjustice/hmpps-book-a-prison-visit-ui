@@ -69,11 +69,10 @@
         <p data-test="no-visitors">No visitor details found.</p>
       {% endif %}
 
-      {# TODO Get correct link for form #}
       {{ govukDetails({
         summaryText: "Add a new visitor",
         html: "<p>The person you want to book for must be on the prisoner's visitor list</p>" +
-          "<p>To make a request to book for someone new, <a href='#'>complete the form (opens in a new tab)</a>. We will respond within [x] working days</p>"
+          "<p>To make a request to book for someone new, <a href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" target="_blank" rel="noopener noreferrer">complete the form (opens in a new tab)</a>. We will respond within 5 working days</p>"
       }) }}
 
     </div>
