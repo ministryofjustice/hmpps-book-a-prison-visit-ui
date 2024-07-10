@@ -10,9 +10,9 @@ export default function routes(): Router {
     res.render('pages/accessibilityStatement', { showServiceNav: !!req.session.booker })
   })
 
-  // Privacy policy
+  // Privacy notice
   router.get(paths.PRIVACY, (req, res) => {
-    res.render('pages/privacyPolicy', { showServiceNav: !!req.session.booker })
+    res.render('pages/privacyNotice', { showServiceNav: !!req.session.booker })
   })
 
   // Terms and conditions
