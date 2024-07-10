@@ -3,7 +3,7 @@ import TestData from '../../server/routes/testutils/testData'
 import AccessibilityStatementPage from '../pages/accessibilityStatement'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
-import PrivacyPolicyPage from '../pages/privacyPolicy'
+import PrivacyNoticePage from '../pages/privacyNotice'
 import TermsAndConditionsPage from '../pages/termsAndConditions'
 
 context('Static content pages', () => {
@@ -39,7 +39,7 @@ context('Static content pages', () => {
 
       // Select 'Privacy' in footer
       homePage.goToFooterLinkByName('Privacy')
-      Page.verifyOnPage(PrivacyPolicyPage)
+      Page.verifyOnPage(PrivacyNoticePage)
 
       // Select 'Terms and conditions' in footer
       homePage.goToFooterLinkByName('Terms and conditions')
