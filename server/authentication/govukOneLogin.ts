@@ -19,6 +19,7 @@ passport.deserializeUser((user, done) => {
 const authenticationMiddleware = (): RequestHandler => {
   return async (req, res, next) => {
     if (req.isAuthenticated()) {
+      res.locals.user = req.user
       return next()
     }
 

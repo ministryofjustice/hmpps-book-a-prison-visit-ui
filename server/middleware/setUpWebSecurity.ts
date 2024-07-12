@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import express, { Router, Request, Response, NextFunction } from 'express'
 import helmet from 'helmet'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -36,7 +37,7 @@ export default function setUpWebSecurity(): Router {
             'https://*.analytics.google.com',
             'https://*.googletagmanager.com',
           ],
-          formAction: [`'self'`],
+          formAction: [`'self' ${config.apis.govukOneLogin.url}`],
           upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
       },
