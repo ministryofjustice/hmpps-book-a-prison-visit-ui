@@ -3,7 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% set pageTitle = "Any additional support needs?" %}
+{% set pageTitle = "Is additional support needed for any of the visitors?" %}
 
 {% set backLinkHref = paths.BOOK_VISIT.CHOOSE_TIME %}
 
@@ -13,9 +13,10 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Is additional support needed for any of the visitors?</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>Tell us about any support that visitors will need because of a health condition of disability. For example, wheelchair access.</p>
+
       <p data-test="prison-name">{{ prisonName }} will make reasonable adjustments for the visit, but may not be able to fulfil your request.</p>
 
       <form action="{{ paths.BOOK_VISIT.ADDITIONAL_SUPPORT }}" method="POST" novalidate>
@@ -40,9 +41,8 @@
           name: "additionalSupportRequired",
           fieldset: {
             legend: {
-              text: pageHeaderTitle,
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
+              text: pageTitle,
+              classes: "govuk-visually-hidden"
             }
           },
           items: [

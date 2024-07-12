@@ -13,8 +13,6 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-
       <form action="{{ paths.BOOK_VISIT.MAIN_CONTACT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -62,7 +60,7 @@
           name: "contact",
           fieldset: {
             legend: {
-              text: pageHeaderTitle,
+              text: pageTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
