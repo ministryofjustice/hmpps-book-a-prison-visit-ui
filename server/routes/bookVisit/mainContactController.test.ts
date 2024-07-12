@@ -83,7 +83,7 @@ describe('Main contact', () => {
           expect($('title').text()).toMatch(/^Who is the main contact for this booking\? -/)
           expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
-          expect($('h1').text()).toBe('Who is the main contact for this booking?')
+          expect($('h1').text().trim()).toBe('Who is the main contact for this booking?')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('input[name="contact"]').length).toBe(2) // Only adult visitor and 'Someone else'
