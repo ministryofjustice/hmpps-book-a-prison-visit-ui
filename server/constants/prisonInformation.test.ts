@@ -4,7 +4,7 @@ describe('Prison configuration', () => {
   it('should return correct prison information for requested prisonId', () => {
     const prisonConfiguration = getPrisonInformation('DHI')
 
-    expect(prisonConfiguration.prisonName).toBe('Drake Hall (HMP)')
+    expect(prisonConfiguration.prisonName).toBe('Drake Hall (HMP & YOI)')
     expect(prisonConfiguration.prisonPhoneNumber).toBe('0121 661 2101')
     expect(prisonConfiguration.prisonWebsite).toBe('https://www.gov.uk/guidance/drake-hall-prison')
   })

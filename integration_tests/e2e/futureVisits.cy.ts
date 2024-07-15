@@ -46,7 +46,7 @@ context('Bookings home page', () => {
     visitDetailsPage.additionalSupport().contains('None')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
     visitDetailsPage.mainContactNumber().contains('01234 567890')
-    visitDetailsPage.prisonName().contains('Drake Hall (HMP)')
+    visitDetailsPage.prisonName().contains('Drake Hall (HMP & YOI)')
     visitDetailsPage.prisonPhoneNumber().contains('0121 661 2101')
   })
 })
