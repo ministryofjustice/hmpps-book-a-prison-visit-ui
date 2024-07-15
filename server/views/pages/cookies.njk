@@ -1,0 +1,51 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Cookies" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p>Cookie policy content...</p>
+
+      <form action="{{ paths.COOKIES }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukRadios({
+            classes: "govuk-radios--inline",
+            name: "acceptAnalytics",
+            fieldset: {
+              legend: {
+                text: "Do you want to accept analytics cookies?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: [
+              {
+                value: "yes",
+                text: "Yes"
+              },
+              {
+                value: "no",
+                text: "No"
+              }
+            ],
+            errorMessage: errors | findError("acceptAnalytics")
+          }) }}
+
+          {{ govukButton({
+            text: "Save cookie settings",
+            classes: "govuk-!-margin-top-3",
+            preventDoubleClick: true,
+            attributes: { "data-test": "save-cookie-settings" }
+          }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
