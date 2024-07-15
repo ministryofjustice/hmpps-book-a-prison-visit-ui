@@ -37,7 +37,11 @@ export default function setUpWebSecurity(): Router {
             'https://*.analytics.google.com',
             'https://*.googletagmanager.com',
           ],
-          formAction: [`'self' ${config.apis.govukOneLogin.url}`],
+          formAction: [
+            "'self'",
+            config.apis.govukOneLogin.url,
+            config.apis.govukOneLogin.url.replace('oidc', 'signin'),
+          ],
           upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
       },
