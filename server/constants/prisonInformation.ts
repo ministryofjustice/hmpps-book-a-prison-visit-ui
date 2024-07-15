@@ -6,12 +6,12 @@ type PrisonInformation = {
 
 const prisonInformation: Record<string, PrisonInformation> = {
   DHI: {
-    prisonName: 'Drake Hall (HMP)',
+    prisonName: 'Drake Hall (HMP & YOI)',
     prisonPhoneNumber: '0121 661 2101',
     prisonWebsite: 'https://www.gov.uk/guidance/drake-hall-prison',
   },
   FHI: {
-    prisonName: 'Foston Hall (HMP)',
+    prisonName: 'Foston Hall (HMP & YOI)',
     prisonPhoneNumber: '0121 661 2101',
     prisonWebsite: 'https://www.gov.uk/guidance/foston-hall-prison',
   },
