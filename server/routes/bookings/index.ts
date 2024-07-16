@@ -15,7 +15,7 @@ export default function routes(services: Services): Router {
     router.get(path, ...validationChain, asyncMiddleware(handler))
 
   const bookings = new BookingsController(services.visitService, services.bookerService)
-  const bookingDetailsController = new BookingDetailsController(services.visitService, services.bookerService)
+  const bookingDetailsController = new BookingDetailsController(services.bookerService)
 
   get(paths.BOOKINGS.HOME, bookings.view())
   getWithValidation(

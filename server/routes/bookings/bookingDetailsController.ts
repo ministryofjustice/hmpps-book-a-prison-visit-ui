@@ -1,14 +1,11 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, param, validationResult } from 'express-validator'
-import { BookerService, VisitService } from '../../services'
+import { BookerService } from '../../services'
 import getPrisonInformation from '../../constants/prisonInformation'
 import paths from '../../constants/paths'
 
 export default class BookingDetailsController {
-  public constructor(
-    private readonly visitService: VisitService,
-    private readonly bookerService: BookerService,
-  ) {}
+  public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -29,7 +26,7 @@ export default class BookingDetailsController {
       }
       const visit = bookings[visitNumber - 1]
 
-      const { prisonName, prisonPhoneNumber, prisonWebsite } = getPrisonInformation(prisoner[0].prisonId)
+      const { prisonName, prisonPhoneNumber, prisonWebsite } = getPrisonInformation(visit.prisonId)
 
       return res.render('pages/bookings/visit', {
         visit,

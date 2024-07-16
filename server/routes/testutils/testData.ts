@@ -192,7 +192,7 @@ export default class TestData {
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
-    prisonId = 'HEI',
+    prisonId = 'DHI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',

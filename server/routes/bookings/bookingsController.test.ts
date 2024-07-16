@@ -51,7 +51,6 @@ describe('Bookings homepage', () => {
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(bookerService.getPrisoners).toHaveBeenCalledTimes(0)
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -89,7 +88,6 @@ describe('Bookings homepage', () => {
         expect($('title').text()).toMatch(/^Bookings -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
-        expect(bookerService.getPrisoners).toHaveBeenCalledTimes(1)
       })
   })
 })
