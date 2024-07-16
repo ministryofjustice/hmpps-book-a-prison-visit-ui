@@ -1,12 +1,9 @@
 import type { RequestHandler } from 'express'
-import { BookerService, VisitService } from '../../services'
+import { VisitService } from '../../services'
 import getPrisonInformation from '../../constants/prisonInformation'
 
 export default class BookingsController {
-  public constructor(
-    private readonly visitService: VisitService,
-    private readonly bookerService: BookerService,
-  ) {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
