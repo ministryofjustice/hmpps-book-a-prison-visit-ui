@@ -16,7 +16,9 @@ export default class BookingDetailsController {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
-      const prisoner = booker.prisoners ? booker.prisoners : await this.bookerService.getPrisoners(booker.reference)
+      const prisoner = booker.prisoners?.[0]
+        ? booker.prisoners?.[0]
+        : (await this.bookerService.getPrisoners(booker.reference))?.[0]
 
       const { visitNumber } = matchedData<{ visitNumber: number }>(req)
       // if manual number entered (larger than current number of visits in session data)
@@ -31,7 +33,7 @@ export default class BookingDetailsController {
       return res.render('pages/bookings/visit', {
         visit,
         booker,
-        prisoner: prisoner[0],
+        prisoner,
         prisonName,
         prisonPhoneNumber,
         prisonWebsite,

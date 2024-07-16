@@ -3,13 +3,12 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
+import { createMockVisitService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
@@ -25,7 +24,7 @@ beforeEach(() => {
     bookings: [orchestrationVisitDto],
   } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {
@@ -73,21 +72,6 @@ describe('Bookings homepage', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
         expect($('h2').text()).not.toContain('How to change your booking')
-      })
-  })
-
-  it('should render the bookings home page - if no prisoner was present on initial call', () => {
-    sessionData.booker.prisoners = undefined
-    visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
-    return request(app)
-      .get(paths.BOOKINGS.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Bookings -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Bookings')
       })
   })
 })
