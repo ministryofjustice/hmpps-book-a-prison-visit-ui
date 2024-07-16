@@ -17,7 +17,7 @@ export default class BookingsController {
       const visits = await this.visitService.getFuturePublicVisits(booker.reference)
       req.session.bookings = visits
 
-      const { prisonName, prisonPhoneNumber } = getPrisonInformation(prisoner[0].prisonId)
+      const { prisonName, prisonPhoneNumber } = getPrisonInformation(prisoner[0]?.prisonId)
 
       res.render('pages/bookings/index', { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
     }

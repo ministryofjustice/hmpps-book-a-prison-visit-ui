@@ -12,10 +12,9 @@ export default class BookingDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
-
+      const { booker, bookings } = req.session
       const errors = validationResult(req)
-      if (!errors.isEmpty()) {
+      if (!errors.isEmpty() || !bookings?.length) {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
@@ -24,8 +23,6 @@ export default class BookingDetailsController {
         : await this.visitService.getFuturePublicVisits(booker.reference)
 
       const prisoner = booker.prisoners ? booker.prisoners : await this.bookerService.getPrisoners(booker.reference)
-
-      const { bookings } = req.session
 
       const { visitNumber } = matchedData<{ visitNumber: number }>(req)
       // if manual number entered (larger than current number of visits in session data)

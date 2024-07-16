@@ -51,6 +51,7 @@ describe('Bookings homepage', () => {
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
+        expect(bookerService.getPrisoners).toHaveBeenCalledTimes(0)
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -73,6 +74,22 @@ describe('Bookings homepage', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
         expect($('h2').text()).not.toContain('How to change your booking')
+      })
+  })
+
+  it('should render the bookings home page - if no prisoner was present on initial call', () => {
+    sessionData.booker.prisoners = undefined
+    visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
+    bookerService.getPrisoners.mockResolvedValue([prisoner])
+    return request(app)
+      .get(paths.BOOKINGS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Bookings -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Bookings')
+        expect(bookerService.getPrisoners).toHaveBeenCalledTimes(1)
       })
   })
 })
