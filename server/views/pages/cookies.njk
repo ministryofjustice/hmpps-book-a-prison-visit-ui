@@ -29,11 +29,13 @@
             items: [
               {
                 value: "yes",
-                text: "Yes"
+                text: "Yes",
+                checked: analyticsEnabled == true
               },
               {
                 value: "no",
-                text: "No"
+                text: "No",
+                checked: analyticsEnabled == false
               }
             ],
             errorMessage: errors | findError("acceptAnalytics")
