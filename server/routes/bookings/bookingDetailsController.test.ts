@@ -11,7 +11,11 @@ let app: Express
 
 const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
-const orchestrationVisitDto = TestData.orchestrationVisitDto()
+const orchestrationVisitDto = TestData.orchestrationVisitDto({
+  visitorSupport: {
+    description: 'Wheelchair access required',
+  },
+})
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
@@ -48,7 +52,7 @@ describe('View single booking', () => {
         expect($('[data-test="visit-end-time"]').text()).toContain('11:30am')
         expect($('[data-test="prisoner-name"]').text()).toContain('John Smith')
         expect($('[data-test="visitor-name-1"]').text()).toContain('Keith Phillips')
-        expect($('[data-test="additional-support"]').text()).toContain('None')
+        expect($('[data-test="additional-support"]').text()).toContain('Wheelchair access required')
         expect($('[data-test="main-contact-name"]').text()).toContain('Joan Phillips')
         expect($('[data-test="main-contact-number"]').text()).toContain('01234 567890')
         expect($('[data-test="prison-name"]').text()).toContain('Drake Hall (HMP)')
