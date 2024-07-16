@@ -43,7 +43,7 @@ context('Bookings home page', () => {
     visitDetailsPage.visitEndTime().contains('11:30am')
     visitDetailsPage.prisonerName().contains('John Smith')
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
-    visitDetailsPage.additionalSupport().contains('None')
+    visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
     visitDetailsPage.mainContactNumber().contains('01234 567890')
     visitDetailsPage.prisonName().contains('Drake Hall (HMP & YOI)')

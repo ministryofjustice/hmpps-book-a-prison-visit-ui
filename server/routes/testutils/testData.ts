@@ -199,7 +199,7 @@ export default class TestData {
     endTimestamp = '2024-05-30T11:30:00',
     visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
-    visitorSupport = { description: 'wheelchair access' },
+    visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
     ({
       reference,
