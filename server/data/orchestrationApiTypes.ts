@@ -2,8 +2,7 @@ import { components } from '../@types/orchestration-api'
 
 export type ApplicationDto = components['schemas']['ApplicationDto']
 
-export type ApplicationValidationError =
-  components['schemas']['ApplicationValidationErrorResponse']['validationErrors'][number]
+export type ApplicationValidationErrorResponse = components['schemas']['ApplicationValidationErrorResponse']
 
 export type AuthDetailDto = components['schemas']['AuthDetailDto']
 
