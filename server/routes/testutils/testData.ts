@@ -192,14 +192,14 @@ export default class TestData {
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
-    prisonId = 'HEI',
+    prisonId = 'DHI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
-    visitorSupport = { description: 'wheelchair access' },
+    visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
     ({
       reference,

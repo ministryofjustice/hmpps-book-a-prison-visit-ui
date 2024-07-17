@@ -3,13 +3,12 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
+import { createMockVisitService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
@@ -25,7 +24,7 @@ beforeEach(() => {
     bookings: [orchestrationVisitDto],
   } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {

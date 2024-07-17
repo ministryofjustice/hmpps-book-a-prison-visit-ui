@@ -7,7 +7,6 @@ export default class HomeController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker } = req.session
-
       const prisoners = await this.bookerService.getPrisoners(booker.reference)
       booker.prisoners = prisoners
 
