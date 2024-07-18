@@ -22,7 +22,7 @@ export default function routes(): Router {
 
   // Signed out
   router.get(paths.SIGNED_OUT, (req, res) => {
-    res.render('pages/signedOut', { showServiceNav: false })
+    res.render('pages/signedOut')
   })
 
   return router
