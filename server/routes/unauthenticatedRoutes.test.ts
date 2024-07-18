@@ -125,6 +125,27 @@ describe('Privacy notice', () => {
   })
 })
 
+describe('Signed out', () => {
+  it('should render signed out page with fallback header', () => {
+    userSupplier = () => undefined
+    app = appWithAllRoutes({ userSupplier })
+
+    return request(app)
+      .get(paths.SIGNED_OUT)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^You have signed out -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('You have signed out')
+
+        expect($('header.govuk-header').length).toBe(1)
+        expect($('header .one-login-header').length).toBe(0)
+        expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
+      })
+  })
+})
+
 describe('Terms and conditions', () => {
   it('should render terms and conditions with GOVUK One Login Header for an authenticated user with booker record', () => {
     userSupplier = () => user

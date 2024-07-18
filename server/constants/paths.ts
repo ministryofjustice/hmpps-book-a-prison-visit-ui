@@ -23,6 +23,7 @@ const paths = {
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies-policy',
   PRIVACY: '/privacy-notice',
+  SIGNED_OUT: '/signed_out',
   TERMS: '/terms-and-conditions',
 } as const
 
