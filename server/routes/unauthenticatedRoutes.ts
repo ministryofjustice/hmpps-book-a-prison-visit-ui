@@ -20,5 +20,10 @@ export default function routes(): Router {
     res.render('pages/termsAndConditions', { showServiceNav: !!req.session.booker })
   })
 
+  // Signed out
+  router.get(paths.SIGNED_OUT, (req, res) => {
+    res.render('pages/signedOut', { showServiceNav: !!req.session.booker })
+  })
+
   return router
 }
