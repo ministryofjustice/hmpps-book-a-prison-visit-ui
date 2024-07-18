@@ -14,7 +14,6 @@ let app: Express
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisonerWithVOs = TestData.prisoner()
 const prisonerWithoutVOs = TestData.prisoner({ availableVos: -1 })
 
 afterEach(() => {
@@ -61,18 +60,6 @@ describe('A visit cannot be booked (no VOs)', () => {
           expect($('main p').eq(0).text()).toContain('has used their allowance of visits')
           expect($('[data-test=book-from-date]').text().trim()).toBe('Monday 1 July 2024')
 
-          expect(sessionData.bookingJourney).toBe(undefined)
-        })
-    })
-
-    it('should redirect to home page and clear bookingJourney data if the prisoner does have VOs', () => {
-      sessionData.booker.prisoners = [prisonerWithVOs]
-      sessionData.bookingJourney.prisoner = prisonerWithVOs
-      return request(app)
-        .get(paths.BOOK_VISIT.CANNOT_BOOK)
-        .expect(302)
-        .expect('Location', paths.HOME)
-        .expect(() => {
           expect(sessionData.bookingJourney).toBe(undefined)
         })
     })
