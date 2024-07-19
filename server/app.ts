@@ -38,10 +38,10 @@ export default function createApp(services: Services): express.Application {
   nunjucksSetup(app, services.applicationInfo)
   app.use(setupGovukOneLogin())
   app.use(analyticsConsent())
+  app.use(setUpCsrf())
   app.use(unauthenticatedRoutes())
   app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
-  app.use(setUpCsrf())
 
   app.use(routes(services))
 
