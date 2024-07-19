@@ -29,11 +29,13 @@
       actions: [
         {
           text: "Accept analytics cookies",
-          type: "button"
+          type: "button",
+          value: "yes"
         },
         {
           text: "Reject analytics cookies",
-          type: "button"
+          type: "button",
+          value: "no"
         },
         {
           text: "View cookies",
@@ -46,7 +48,6 @@
       attributes: {
         id: "cookie-banner-accepted"
       },
-      role: "alert",
       hidden: true,
       actions: [
         {
@@ -60,7 +61,6 @@
       attributes: {
         id: "cookie-banner-rejected"
       },
-      role: "alert",
       hidden: true,
       actions: [
         {
