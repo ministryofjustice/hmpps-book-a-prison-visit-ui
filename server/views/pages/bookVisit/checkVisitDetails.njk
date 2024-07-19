@@ -7,7 +7,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">Check the visit details before booking</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       {% include "partials/errorSummary.njk" %}
 
@@ -18,7 +18,7 @@
           },
           value: {
             html: '<span data-test="prisoner-name">' +
-              prisoner.firstName | capitalize + " " + prisoner.lastName | capitalize + 
+              prisoner.firstName | capitalize | escape + " " + prisoner.lastName | capitalize | escape + 
               "</span>"
           }
         }
@@ -26,7 +26,7 @@
 
       {% set visitorsDisplay %}
         {% for visitor in visitors %}
-          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName | safe }} {{ visitor.lastName | safe }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
+          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
         {% endfor %}
       {% endset %}
 
@@ -78,7 +78,7 @@
             text: "Additional support requests"
           },
           value: {
-            html: '<p data-test="additional-support">' + (additionalSupport | d("None", true)) + '</p>'
+            html: '<p data-test="additional-support">' + additionalSupport | d("None", true) | escape + '</p>'
           },
           actions: {
             items: [
@@ -100,8 +100,8 @@
             text: "Main contact"
           },
           value: {
-            html: '<p><span data-test="main-contact-name">' + mainContactName + '</span></p>
-              <p><span data-test="main-contact-number">' + mainContactNumber | d("No phone number provided") + "</span></p>"
+            html: '<p><span data-test="main-contact-name">' + mainContactName | escape + '</span></p>
+              <p><span data-test="main-contact-number">' + mainContactNumber | d("No phone number provided") | escape + "</span></p>"
           },
           actions: {
             items: [

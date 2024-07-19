@@ -76,10 +76,5 @@ generic-service:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
 
-  allowlist:
-    groups:
-      - digital_staff_and_mojo
-      - moj_cloud_platform
-
 generic-prometheus-alerts:
   targetApplication: hmpps-book-a-prison-visit-ui

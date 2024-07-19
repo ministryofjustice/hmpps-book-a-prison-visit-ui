@@ -1,0 +1,18 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "You have signed out" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p>
+        You can book a visit or view your bookings by
+        <a href="/sign-in" class="govuk-link--no-visited-state">signing into the service using GOV.UK One Login</a>.
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

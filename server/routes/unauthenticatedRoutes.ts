@@ -7,17 +7,22 @@ export default function routes(): Router {
 
   // Accessibility statement
   router.get(paths.ACCESSIBILITY, (req, res) => {
-    res.render('pages/accessibilityStatement', { showServiceNav: true })
+    res.render('pages/accessibilityStatement', { showServiceNav: !!req.session.booker })
   })
 
-  // Privacy policy
+  // Privacy notice
   router.get(paths.PRIVACY, (req, res) => {
-    res.render('pages/privacyPolicy', { showServiceNav: true })
+    res.render('pages/privacyNotice', { showServiceNav: !!req.session.booker })
   })
 
   // Terms and conditions
   router.get(paths.TERMS, (req, res) => {
-    res.render('pages/termsAndConditions', { showServiceNav: true })
+    res.render('pages/termsAndConditions', { showServiceNav: !!req.session.booker })
+  })
+
+  // Signed out
+  router.get(paths.SIGNED_OUT, (req, res) => {
+    res.render('pages/signedOut')
   })
 
   return router

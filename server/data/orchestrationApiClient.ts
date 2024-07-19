@@ -8,8 +8,9 @@ import {
   BookingOrchestrationRequestDto,
   ChangeApplicationDto,
   CreateApplicationDto,
+  OrchestrationVisitDto,
   PrisonDto,
-  PrisonerInfoDto,
+  BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
 } from './orchestrationApiTypes'
@@ -34,14 +35,14 @@ export default class OrchestrationApiClient {
     return this.restClient.put({
       path: `/visits/${applicationReference}/book`,
       data: <BookingOrchestrationRequestDto>{
-        applicationMethodType: 'WEBSITE', // TODO - check this is correct
+        applicationMethodType: 'WEBSITE',
         allowOverBooking: false,
         actionedBy,
       },
     })
   }
 
-  async getFuturePublicVisits(bookerReference: string): Promise<VisitDto[]> {
+  async getFuturePublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/booked/future` })
   }
 
@@ -121,7 +122,7 @@ export default class OrchestrationApiClient {
     })
   }
 
-  async getPrisoners(bookerReference: string): Promise<PrisonerInfoDto[]> {
+  async getPrisoners(bookerReference: string): Promise<BookerPrisonerInfoDto[]> {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` })
   }
 

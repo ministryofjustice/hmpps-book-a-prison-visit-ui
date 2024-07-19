@@ -673,7 +673,6 @@ export interface components {
       errorCode?: number
       userMessage?: string
       developerMessage?: string
-      moreInfo?: string
     }
     /** @description Contact */
     ContactDto: {
@@ -823,8 +822,6 @@ export interface components {
        * @example true
        */
       visitContact?: boolean
-      firstName?: string
-      lastName?: string
     }
     /** @description Visitor support */
     VisitorSupportDto: {
@@ -833,6 +830,24 @@ export interface components {
        * @example visually impaired assistance
        */
       description: string
+    }
+    ApplicationValidationErrorResponse: {
+      /** Format: int32 */
+      status: number
+      /** Format: int32 */
+      errorCode?: number
+      userMessage?: string
+      developerMessage?: string
+      validationErrors: (
+        | 'APPLICATION_INVALID_PRISONER_NOT_FOUND'
+        | 'APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'
+        | 'APPLICATION_INVALID_SESSION_NOT_AVAILABLE'
+        | 'APPLICATION_INVALID_SESSION_TEMPLATE_NOT_FOUND'
+        | 'APPLICATION_INVALID_NON_ASSOCIATION_VISITS'
+        | 'APPLICATION_INVALID_VISIT_ALREADY_BOOKED'
+        | 'APPLICATION_INVALID_NO_VO_BALANCE'
+        | 'APPLICATION_INVALID_NO_SLOT_CAPACITY'
+      )[]
     }
     BookingOrchestrationRequestDto: {
       /** @description Username or Identifier for user who actioned this request */
@@ -1135,17 +1150,17 @@ export interface components {
       totalElements?: number
       /** Format: int32 */
       totalPages?: number
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
-      sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       number?: number
+      sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
@@ -1382,7 +1397,134 @@ export interface components {
       messagesReturnedCount: number
       messages: components['schemas']['DlqMessage'][]
     }
-    PrisonerInfoDto: {
+    /** @description Visit */
+    OrchestrationVisitDto: {
+      /**
+       * @description Visit Reference
+       * @example v9-d7-ed-7u
+       */
+      reference: string
+      /**
+       * @description Prisoner Id
+       * @example AF34567G
+       */
+      prisonerId: string
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+      /**
+       * @description Visit Status
+       * @example BOOKED
+       * @enum {string}
+       */
+      visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Outcome Status
+       * @example VISITOR_CANCELLED
+       * @enum {string}
+       */
+      outcomeStatus?:
+        | 'ADMINISTRATIVE_CANCELLATION'
+        | 'ADMINISTRATIVE_ERROR'
+        | 'BATCH_CANCELLATION'
+        | 'CANCELLATION'
+        | 'COMPLETED_NORMALLY'
+        | 'ESTABLISHMENT_CANCELLED'
+        | 'NOT_RECORDED'
+        | 'NO_VISITING_ORDER'
+        | 'PRISONER_CANCELLED'
+        | 'PRISONER_COMPLETED_EARLY'
+        | 'PRISONER_REFUSED_TO_ATTEND'
+        | 'TERMINATED_BY_STAFF'
+        | 'VISITOR_CANCELLED'
+        | 'VISITOR_COMPLETED_EARLY'
+        | 'VISITOR_DECLINED_ENTRY'
+        | 'VISITOR_DID_NOT_ARRIVE'
+        | 'VISITOR_FAILED_SECURITY_CHECKS'
+        | 'VISIT_ORDER_CANCELLED'
+        | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
+      /**
+       * Format: date-time
+       * @description The date and time of the visit
+       */
+      startTimestamp: string
+      /**
+       * Format: date-time
+       * @description The finishing date and time of the visit
+       */
+      endTimestamp: string
+      visitContact: components['schemas']['ContactDto']
+      /** @description List of visitors associated with the visit */
+      visitors: components['schemas']['OrchestrationVisitorDto'][]
+      visitorSupport?: components['schemas']['VisitorSupportDto']
+    }
+    /** @description Visitor */
+    OrchestrationVisitorDto: {
+      /**
+       * Format: int64
+       * @description Person ID (nomis) of the visitor
+       * @example 1234
+       */
+      nomisPersonId: number
+      /**
+       * @description Visitor's first name
+       * @example James
+       */
+      firstName?: string
+      /**
+       * @description Visitor's last name
+       * @example James
+       */
+      lastName?: string
+    }
+    BookerPrisonerInfoDto: {
+      prisoner: components['schemas']['PrisonerDto']
+      /**
+       * Format: int32
+       * @description Available VOs - a total of VOs and PVOs
+       * @example 0
+       */
+      availableVos: number
+      /**
+       * Format: date
+       * @description Next available VO date
+       * @example 2024-08-01
+       */
+      nextAvailableVoDate: string
+    }
+    /** @description Incentive level */
+    CurrentIncentive: {
+      level: components['schemas']['IncentiveLevel']
+      /**
+       * Format: date-time
+       * @description Date time of the incentive
+       */
+      dateTime: string
+      /**
+       * Format: date
+       * @description Schedule new review date
+       * @example 2022-11-10
+       */
+      nextReviewDate: string
+    }
+    /** @description Incentive level */
+    IncentiveLevel: {
+      /**
+       * @description code
+       * @example STD
+       */
+      code?: string
+      /**
+       * @description description
+       * @example Standard
+       */
+      description: string
+    }
+    /** @description Prisoner Details */
+    PrisonerDto: {
       /**
        * @description Prisoner Number
        * @example A1234AA
@@ -1399,10 +1541,27 @@ export interface components {
        */
       lastName: string
       /**
-       * @description Prison code
+       * Format: date
+       * @description Date of Birth
+       * @example 1975-04-02
+       */
+      dateOfBirth: string
+      /**
+       * @description Prison ID
        * @example MDI
        */
-      prisonCode: string
+      prisonId?: string
+      /**
+       * @description Prison Name
+       * @example HMP Leeds
+       */
+      prisonName?: string
+      /**
+       * @description In prison cell location
+       * @example A-1-002
+       */
+      cellLocation?: string
+      currentIncentive?: components['schemas']['CurrentIncentive']
     }
     /** @description A visitor for a prisoner */
     VisitorInfoDto: {
@@ -1834,6 +1993,15 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Application validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApplicationValidationErrorResponse']
         }
       }
     }
@@ -2895,6 +3063,8 @@ export interface operations {
          * @example dfs-wjs-eqr
          */
         excludedApplicationReference?: string
+        /** @description Advances the available visits slots sought from date by n days. Defaults to 0 if not passed. */
+        advanceFromDateByDays?: number
       }
       header?: never
       path?: never
@@ -2976,7 +3146,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get cancelled public visits by booker reference */
@@ -3029,7 +3199,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get past public visits by booker reference */
@@ -3082,7 +3252,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['VisitDto'][]
+          '*/*': components['schemas']['OrchestrationVisitDto'][]
         }
       }
       /** @description Incorrect request to get future booked visits by booker reference */
@@ -3135,7 +3305,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['PrisonerInfoDto'][]
+          '*/*': components['schemas']['BookerPrisonerInfoDto'][]
         }
       }
       /** @description Incorrect request to get prisoners associated with a booker */

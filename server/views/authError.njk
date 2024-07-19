@@ -1,0 +1,18 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Sorry, there is a problem with the service" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p>
+        Try again later by
+        <a href="/sign-in">signing into the service using GOV.UK One Login</a>.
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

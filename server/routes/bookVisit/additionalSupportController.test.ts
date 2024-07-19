@@ -7,6 +7,7 @@ import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvide
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import config from '../../config'
 
 jest.mock('../../../logger')
 
@@ -66,7 +67,7 @@ describe('Additional support needs', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Any additional support needs\? -/)
+          expect($('title').text()).toMatch(/^Is additional support needed for any of the visitors?\? -/)
           expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
@@ -78,6 +79,36 @@ describe('Additional support needs', () => {
           expect($('input[name=additionalSupport]').val()).toBe(undefined)
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+        })
+    })
+
+    it('should add application reference as a test data attribute in dev', () => {
+      const replacedProp = jest.replaceProperty(config, 'environmentName', 'DEV')
+      app = appWithAllRoutes({ sessionData })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test-app-ref]').attr('data-test-app-ref')).toBe(
+            sessionData.bookingJourney.applicationReference,
+          )
+          replacedProp.replaceValue('environmentName')
+        })
+    })
+
+    it('should not add application reference as a test data attribute in production', () => {
+      const replacedProp = jest.replaceProperty(config, 'environmentName', 'PRODUCTION')
+      app = appWithAllRoutes({ sessionData })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test-app-ref]').attr('data-test-app-ref')).toBe('')
+          replacedProp.replaceValue('environmentName')
         })
     })
 

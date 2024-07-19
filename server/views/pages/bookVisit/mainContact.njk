@@ -13,8 +13,6 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Who is the main contact for this booking?</h1>
-
       <form action="{{ paths.BOOK_VISIT.MAIN_CONTACT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -62,7 +60,7 @@
           name: "contact",
           fieldset: {
             legend: {
-              text: pageHeaderTitle,
+              text: pageTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
@@ -80,7 +78,8 @@
             id: "phoneNumber",
             name: "phoneNumber",
             value: formValues.phoneNumber if formValues.hasPhoneNumber == 'yes',
-            autocomplete: "off",
+            type: "tel",
+            autocomplete: "tel",
             errorMessage: errors | findError('phoneNumber')
 
           }) }}

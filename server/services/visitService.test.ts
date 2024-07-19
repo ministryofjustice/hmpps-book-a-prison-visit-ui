@@ -32,6 +32,7 @@ describe('Visit service', () => {
 
     const application = TestData.applicationDto()
     const visit = TestData.visitDto()
+    const orchestrationVisitDto = TestData.orchestrationVisitDto()
     const visitSession = TestData.availableVisitSessionDto()
 
     let bookingJourney: BookingJourney
@@ -165,12 +166,12 @@ describe('Visit service', () => {
 
     describe('getFuturePublicVisits', () => {
       it('should retrieve all future visits for a booker', async () => {
-        orchestrationApiClient.getFuturePublicVisits.mockResolvedValue([visit])
+        orchestrationApiClient.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
 
         const results = await visitService.getFuturePublicVisits(bookerReference)
 
         expect(orchestrationApiClient.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(results).toStrictEqual([visit])
+        expect(results).toStrictEqual([orchestrationVisitDto])
       })
     })
   })

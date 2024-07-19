@@ -1,10 +1,16 @@
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, PrisonerInfoDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
+import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 
-export interface Prisoner extends PrisonerInfoDto {
+export type Prisoner = {
   prisonerDisplayId: number
+  prisonerNumber: string
+  firstName: string
+  lastName: string
+  prisonId: string
+  availableVos: number
+  nextAvailableVoDate: string
 }
 export interface Visitor extends VisitorInfoDto {
   visitorDisplayId: number
@@ -33,7 +39,15 @@ export default class BookerService {
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
     return prisoners.map((prisoner, index) => {
-      return { ...prisoner, prisonerDisplayId: index + 1 }
+      return {
+        prisonerDisplayId: index + 1,
+        prisonerNumber: prisoner.prisoner.prisonerNumber,
+        firstName: prisoner.prisoner.firstName,
+        lastName: prisoner.prisoner.lastName,
+        prisonId: prisoner.prisoner.prisonId,
+        availableVos: prisoner.availableVos,
+        nextAvailableVoDate: prisoner.nextAvailableVoDate,
+      }
     })
   }
 

@@ -2,18 +2,17 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from './testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../services/testutils/mocks'
-import TestData from './testutils/testData'
-import paths from '../constants/paths'
+import { appWithAllRoutes } from '../testutils/appSetup'
+import { createMockVisitService } from '../../services/testutils/mocks'
+import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
-const visits = [TestData.visitDto()]
+const orchestrationVisitDto = TestData.orchestrationVisitDto()
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner({ prisonCode: 'DHI' })
+const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
 
 beforeEach(() => {
@@ -22,9 +21,10 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
+    bookings: [orchestrationVisitDto],
   } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {
@@ -33,7 +33,7 @@ afterEach(() => {
 
 describe('Bookings homepage', () => {
   it('should render the bookings home page - with a future visit', () => {
-    visitService.getFuturePublicVisits.mockResolvedValue(visits)
+    visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
     return request(app)
       .get(paths.BOOKINGS.HOME)
       .expect('Content-Type', /html/)
@@ -56,6 +56,7 @@ describe('Bookings homepage', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
+          bookings: [orchestrationVisitDto],
         } as SessionData)
       })
   })

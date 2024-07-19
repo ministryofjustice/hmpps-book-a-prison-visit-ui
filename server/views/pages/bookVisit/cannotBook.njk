@@ -1,0 +1,25 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "A visit cannot be booked" %}
+
+{% set backLinkHref = paths.HOME %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p>
+        <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+        has used their allowance of visits for this month.
+      </p>
+
+      <p>
+        You can book a visit from
+        <span data-test="book-from-date">{{ prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }}</span>.
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

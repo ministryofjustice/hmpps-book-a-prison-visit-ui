@@ -18,7 +18,7 @@ const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisonerInfoDto()
+const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 
 const fakeDate = new Date('2024-05-02')
@@ -154,7 +154,7 @@ describe('Select visitors', () => {
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
           expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonCode)
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -247,7 +247,7 @@ describe('Select visitors', () => {
           expect($('[data-test="continue-button"]').length).toBe(0)
 
           expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonCode)
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
             booker: {

@@ -15,7 +15,7 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Choose the visit time</h1>
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
     </div>
   </div>
 
@@ -24,7 +24,7 @@
       <div class="govuk-grid-column-three-quarters">
         {{ mojBanner({
           type: "information",
-          html: '<h2 class="govuk-heading-m">' + message + '</h2>',
+          html: '<h2 class="govuk-heading-m">' + message | escape + '</h2>',
           attributes: { "data-test": "message" }
         }) }}
       </div>

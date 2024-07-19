@@ -1,11 +1,18 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Error" %}
+{% set pageTitle = message %}
 
 {% block content %}
 
   <h1 class="govuk-heading-l">{{ message }}</h1>
   <h2 class="govuk-heading-m">{{ status }}</h2>
   <pre>{{ stack }}</pre>
+
+  {% if production %}
+    <p>The error has been logged.</p>
+    <p>You can try reloading the page or
+      <a href="{{ paths.HOME }}" class="govuk-link--no-visited-state">start again</a>.
+    </p>
+  {% endif %}
 
 {% endblock %}

@@ -2,13 +2,15 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { BadRequest, InternalServerError } from 'http-errors'
+import { InternalServerError } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookingConfirmed } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
+import { SanitisedError } from '../../sanitisedError'
 
 jest.mock('../../../logger')
 
@@ -146,25 +148,134 @@ describe('Check visit details', () => {
     })
 
     describe('Handle API errors', () => {
-      const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+      describe('HTTP 422 Response', () => {
+        it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
+          const error: SanitisedError<ApplicationValidationErrorResponse> = {
+            name: 'Error',
+            status: 422,
+            message: 'Unprocessable Entity',
+            stack: 'Error: Unprocessable Entity',
+            data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISONER_NOT_FOUND'] },
+          }
+          visitService.bookVisit.mockRejectedValue(error)
 
-      it('should set message in flash and redirect to choose visit time page when create application returns 400 Bad Request', () => {
-        visitService.bookVisit.mockRejectedValue(new BadRequest())
-
-        return request(app)
-          .post(paths.BOOK_VISIT.CHECK_DETAILS)
-          .expect(302)
-          .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
-          .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
-            expect(sessionData.bookingJourney).not.toBe(undefined)
-            expect(sessionData.bookingConfirmed).toBe(undefined)
-            expect(visitService.bookVisit).toHaveBeenCalledWith({
-              applicationReference: application.reference,
-              actionedBy: bookerReference,
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(422)
+            .expect(() => {
+              expect(flashProvider).not.toHaveBeenCalled()
+              expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
             })
-            expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
-          })
+        })
+        it('should throw error APPLICATION_INVALID_PRISON_PRISONER_MISMATCH and not set flash message', () => {
+          const error: SanitisedError<ApplicationValidationErrorResponse> = {
+            name: 'Error',
+            status: 422,
+            message: 'Unprocessable Entity',
+            stack: 'Error: Unprocessable Entity',
+            data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'] },
+          }
+          visitService.bookVisit.mockRejectedValue(error)
+
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(422)
+            .expect(() => {
+              expect(flashProvider).not.toHaveBeenCalled()
+              expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+            })
+        })
+
+        it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_NO_VO_BALANCE', () => {
+          const error: SanitisedError<ApplicationValidationErrorResponse> = {
+            name: 'Error',
+            status: 422,
+            message: 'Unprocessable Entity',
+            stack: 'Error: Unprocessable Entity',
+            data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_VO_BALANCE'] },
+          }
+          visitService.bookVisit.mockRejectedValue(error)
+
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(302)
+            .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+            .expect(() => {
+              expect(flashProvider).not.toHaveBeenCalled()
+              expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(visitService.bookVisit).toHaveBeenCalledWith({
+                applicationReference: application.reference,
+                actionedBy: bookerReference,
+              })
+            })
+        })
+
+        it('should set flash message and redirect to choose visit time page for error APPLICATION_INVALID_NO_SLOT_CAPACITY', () => {
+          const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+
+          const error: SanitisedError<ApplicationValidationErrorResponse> = {
+            name: 'Error',
+            status: 422,
+            message: 'Unprocessable Entity',
+            stack: 'Error: Unprocessable Entity',
+            data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_SLOT_CAPACITY'] },
+          }
+          visitService.bookVisit.mockRejectedValue(error)
+
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(302)
+            .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
+            .expect(() => {
+              expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+              expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(visitService.bookVisit).toHaveBeenCalledWith({
+                applicationReference: application.reference,
+                actionedBy: bookerReference,
+              })
+              expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+            })
+        })
+
+        it('should set flash message and redirect to choose visit time page for any other error set', () => {
+          const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+
+          const error: SanitisedError<ApplicationValidationErrorResponse> = {
+            name: 'Error',
+            status: 422,
+            message: 'Unprocessable Entity',
+            stack: 'Error: Unprocessable Entity',
+            data: {
+              status: 422,
+              validationErrors: [
+                'APPLICATION_INVALID_NON_ASSOCIATION_VISITS',
+                'APPLICATION_INVALID_VISIT_ALREADY_BOOKED',
+              ],
+            },
+          }
+          visitService.bookVisit.mockRejectedValue(error)
+
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(302)
+            .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
+            .expect(() => {
+              expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+              expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(visitService.bookVisit).toHaveBeenCalledWith({
+                applicationReference: application.reference,
+                actionedBy: bookerReference,
+              })
+              expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+            })
+        })
       })
 
       it('should throw any other API error response and not set a message in flash', () => {
