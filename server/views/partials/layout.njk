@@ -43,6 +43,12 @@
   {{ "Error: " if errors | length }}{{ pageTitle + " - " if pageTitle }}{{ applicationName }} - GOV.UK
 {%- endblock %}
 
+{% block bodyStart %}
+  {% if analyticsEnabled == undefined %}
+    {%- include "partials/cookieBanner.njk" -%}
+  {% endif %}
+{% endblock %}
+
 {% block header %}
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
@@ -114,6 +120,7 @@
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/service-header.js"></script>
   <script src="/assets/init-service-header.js"></script>
+  <script src="/assets/cookieBanner.js"></script>
 {% block pageScripts %}
 {% endblock %}
 {% endblock %}
