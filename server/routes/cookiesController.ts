@@ -8,7 +8,10 @@ export default class CookiesController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/cookies', { errors: req.flash('errors') })
+      return res.render('pages/cookies', {
+        errors: req.flash('errors'),
+        showServiceNav: !!req.session.booker,
+      })
     }
   }
 
