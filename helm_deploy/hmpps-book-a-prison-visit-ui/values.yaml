@@ -27,6 +27,7 @@ generic-service:
       SecRuleUpdateActionById 959100 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
       SecRuleUpdateTargetById 942100 "!REQUEST_COOKIES:/prison-visits.session/"
       SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/prison-visits.session/"
+      SecRuleUpdateTargetById 942340 "!REQUEST_COOKIES:/cookie_policy/"
       SecRuleUpdateTargetById 942100 "!ARGS:_csrf"
       SecRuleUpdateTargetById 942440 "!ARGS:_csrf"
       SecAction \
