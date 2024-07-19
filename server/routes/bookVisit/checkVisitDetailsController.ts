@@ -2,6 +2,8 @@ import type { RequestHandler } from 'express'
 import { BookingConfirmed } from '../../@types/bapv'
 import { VisitService } from '../../services'
 import paths from '../../constants/paths'
+import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
+import { SanitisedError } from '../../sanitisedError'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -47,12 +49,26 @@ export default class CheckVisitDetailsController {
         delete req.session.bookingJourney
         return res.redirect(paths.BOOK_VISIT.BOOKED)
       } catch (error) {
-        // HTTP 400 Bad Request is the response when a session is no longer available
-        if (error.status === 400) {
+        if (error.status === 422) {
+          const validationErrors =
+            (error as SanitisedError<ApplicationValidationErrorResponse>)?.data?.validationErrors ?? []
+
+          if (
+            validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND') ||
+            validationErrors.includes('APPLICATION_INVALID_PRISON_PRISONER_MISMATCH')
+          ) {
+            return next(error)
+          }
+
+          if (validationErrors.includes('APPLICATION_INVALID_NO_VO_BALANCE')) {
+            return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
+          }
+
           req.flash('message', 'Your visit time is no longer available. Select a new time.')
           delete bookingJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
+
         return next(error)
       }
     }

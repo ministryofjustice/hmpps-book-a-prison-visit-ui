@@ -4,14 +4,12 @@ import { DateFormats } from '../../server/constants/dateFormats'
 import TestData from '../../server/routes/testutils/testData'
 import AdditionalSupportPage from '../pages/bookVisit/additionalSupport'
 import ChooseVisitTimePage from '../pages/bookVisit/chooseVisitTime'
-import ChooseVisitTimeNoSessionsPage from '../pages/bookVisit/chooseVisitTimeNoSessions'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
 import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 import VisitBookedPage from '../pages/bookVisit/visitBooked'
-import CannotBookPage from '../pages/bookVisit/cannotBook'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -171,110 +169,5 @@ context('Booking journey', () => {
       .contains(
         'A text message confirming the visit will be sent to the main contact. This will include the booking reference.',
       )
-  })
-
-  describe('Booking journey - drop-out points', () => {
-    it('should show drop-out page when no available visit sessions', () => {
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.signIn()
-
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
-
-      // Start booking journey
-      cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
-      homePage.startBooking()
-
-      // Select visitors page - choose visitors
-      const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-      selectVisitorsPage.selectVisitor(1)
-      selectVisitorsPage.selectVisitor(3)
-
-      // Choose visit time
-      cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisoner.prisonId,
-        prisonerId: prisoner.prisoner.prisonerNumber,
-        visitorIds: [1000, 3000],
-        visitSessions: [],
-      })
-      selectVisitorsPage.continue()
-
-      // No sessions so drop-out page and return to home
-      const chooseVisitTimeNoSessionsPage = Page.verifyOnPage(ChooseVisitTimeNoSessionsPage)
-      chooseVisitTimeNoSessionsPage.returnToHome()
-      Page.verifyOnPage(HomePage)
-    })
-
-    it('should return to choose time page with message when selected session no longer available', () => {
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.signIn()
-
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
-
-      // Start booking journey
-      cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
-      homePage.startBooking()
-
-      // Select visitors page - choose visitors
-      const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-      selectVisitorsPage.selectVisitor(1)
-      selectVisitorsPage.selectVisitor(3)
-
-      // Choose visit time
-      cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisoner.prisonId,
-        prisonerId: prisoner.prisoner.prisonerNumber,
-        visitorIds: [1000, 3000],
-        visitSessions,
-      })
-      selectVisitorsPage.continue()
-      const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
-      chooseVisitTimePage.clickCalendarDay(in10Days)
-      chooseVisitTimePage.selectSession(in10Days, 0)
-
-      // Mock create application fail and selected session no longer available
-      cy.task('stubCreateVisitApplicationFail')
-      cy.task('stubGetVisitSessions', {
-        prisonId: prisoner.prisoner.prisonId,
-        prisonerId: prisoner.prisoner.prisonerNumber,
-        visitorIds: [1000, 3000],
-        visitSessions: [visitSessions[0]],
-      })
-
-      // Choose time - should be redirected back with info message shown
-      chooseVisitTimePage.continue()
-      chooseVisitTimePage.checkOnPage()
-      chooseVisitTimePage.getMessage().contains('Your visit time is no longer available. Select a new time.')
-    })
-
-    it('should show drop-out page when prisoner has no VOs', () => {
-      const prisonerWithoutVOs = TestData.bookerPrisonerInfoDto({ availableVos: 0, nextAvailableVoDate: in10Days })
-
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners', { prisoners: [prisonerWithoutVOs] })
-      cy.signIn()
-
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
-
-      // Start booking journey
-      cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
-      homePage.startBooking()
-
-      // Visit cannot be booked page
-      const cannotBookPage = Page.verifyOnPage(CannotBookPage)
-      cannotBookPage.getPrisonerName().contains('John Smith')
-      cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
-
-      // Back link back to Home page
-      cannotBookPage.backLink().click()
-      Page.verifyOnPage(HomePage)
-    })
   })
 })

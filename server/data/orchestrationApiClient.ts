@@ -35,7 +35,7 @@ export default class OrchestrationApiClient {
     return this.restClient.put({
       path: `/visits/${applicationReference}/book`,
       data: <BookingOrchestrationRequestDto>{
-        applicationMethodType: 'WEBSITE', // TODO - check this is correct
+        applicationMethodType: 'WEBSITE',
         allowOverBooking: false,
         actionedBy,
       },

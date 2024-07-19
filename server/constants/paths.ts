@@ -1,5 +1,6 @@
 const paths = {
   HOME: '/',
+
   BOOKINGS: {
     HOME: '/bookings',
     VISIT: '/bookings/details',
@@ -18,12 +19,10 @@ const paths = {
   },
 
   ACCESS_DENIED: '/access-denied',
-
-  // Footer links
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies-policy',
   PRIVACY: '/privacy-notice',
-  SIGNED_OUT: '/signed_out',
+  SIGNED_OUT: '/signed-out',
   TERMS: '/terms-and-conditions',
 } as const
 

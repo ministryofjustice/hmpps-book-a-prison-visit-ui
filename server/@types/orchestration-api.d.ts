@@ -673,7 +673,6 @@ export interface components {
       errorCode?: number
       userMessage?: string
       developerMessage?: string
-      moreInfo?: string
     }
     /** @description Contact */
     ContactDto: {
@@ -831,6 +830,24 @@ export interface components {
        * @example visually impaired assistance
        */
       description: string
+    }
+    ApplicationValidationErrorResponse: {
+      /** Format: int32 */
+      status: number
+      /** Format: int32 */
+      errorCode?: number
+      userMessage?: string
+      developerMessage?: string
+      validationErrors: (
+        | 'APPLICATION_INVALID_PRISONER_NOT_FOUND'
+        | 'APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'
+        | 'APPLICATION_INVALID_SESSION_NOT_AVAILABLE'
+        | 'APPLICATION_INVALID_SESSION_TEMPLATE_NOT_FOUND'
+        | 'APPLICATION_INVALID_NON_ASSOCIATION_VISITS'
+        | 'APPLICATION_INVALID_VISIT_ALREADY_BOOKED'
+        | 'APPLICATION_INVALID_NO_VO_BALANCE'
+        | 'APPLICATION_INVALID_NO_SLOT_CAPACITY'
+      )[]
     }
     BookingOrchestrationRequestDto: {
       /** @description Username or Identifier for user who actioned this request */
@@ -1129,21 +1146,21 @@ export interface components {
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     PageVisitDto: {
-      /** Format: int32 */
-      totalPages?: number
       /** Format: int64 */
       totalElements?: number
-      first?: boolean
-      last?: boolean
-      sort?: components['schemas']['SortObject'][]
+      /** Format: int32 */
+      totalPages?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
-      pageable?: components['schemas']['PageableObject']
+      sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
@@ -1976,6 +1993,15 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Application validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApplicationValidationErrorResponse']
         }
       }
     }

@@ -2,11 +2,15 @@ import { components } from '../@types/orchestration-api'
 
 export type ApplicationDto = components['schemas']['ApplicationDto']
 
+export type ApplicationValidationErrorResponse = components['schemas']['ApplicationValidationErrorResponse']
+
 export type AuthDetailDto = components['schemas']['AuthDetailDto']
 
 export type AvailableVisitSessionDto = components['schemas']['AvailableVisitSessionDto']
 
 export type BookingOrchestrationRequestDto = components['schemas']['BookingOrchestrationRequestDto']
+
+export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
 
 export type BookerReference = components['schemas']['BookerReference']
 
@@ -14,12 +18,10 @@ export type ChangeApplicationDto = components['schemas']['ChangeApplicationDto']
 
 export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
-export type PrisonDto = components['schemas']['PrisonDto']
+export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
 
-export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
+export type PrisonDto = components['schemas']['PrisonDto']
 
 export type VisitDto = components['schemas']['VisitDto']
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']
-
-export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
