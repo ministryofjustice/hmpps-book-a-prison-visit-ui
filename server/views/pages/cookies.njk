@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageTitle = "Cookies" %}
 
@@ -11,8 +12,103 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+      <p>Cookies are small files saved on your phone, tablet or computer when you visit a website.</p>
+      <p>We use cookies to make ‘Visit someone in prison’ work and collect information about how you use the service.</p>
 
-      <p>Cookie policy content...</p>
+
+      <h2 class="govuk-heading-m">Essential cookies</h2>
+      <p>Essential cookies keep your information secure while you use the service. We do not need to ask permission to use them.</p>
+
+      {{ govukTable({
+        head: [
+          {
+            text: "Name"
+          },
+          {
+            text: "Purpose"
+          },
+          {
+            text: "Expires"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "prison_visits.session"
+            },
+            {
+              text: "Used to keep you signed in"
+            },
+            {
+              text: "20 minutes"
+            }
+          ],
+          [
+            {
+              text: "cookie_policy"
+            },
+            {
+              text: "Saves your cookie consent settings"
+            },
+            {
+              text: "1 year"
+            }
+          ]
+        ]
+      }) }}
+
+
+      <h2 class="govuk-heading-m">Analytics cookies (optional)</h2>
+      <p>
+        With your permission, we use Google Analytics to collect data about how you use
+        ‘Visit someone in prison’. This information helps us to improve the service.
+      </p>
+      <p>Google is not allowed to use or share our analytics data with anyone.</p>
+      <p>Google Analytics stores anonymised information about:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>how you got to the service</li>
+        <li>the pages you visit on the service and how long you spend on them</li>
+        <li>any errors you see while using the service</li>
+        <li>Google Analytics sets the following cookies.</li>
+      </ul>
+
+      {{ govukTable({
+        head: [
+          {
+            text: "Name"
+          },
+          {
+            text: "Purpose"
+          },
+          {
+            text: "Expires"
+          }
+        ],
+        rows: [
+          [
+            {
+              text: "_ga"
+            },
+            {
+              text: "Checks if you’ve visited the service before. This helps us count how many people visit our site."
+            },
+            {
+              text: "2 years"
+            }
+          ],
+          [
+            {
+              text: "_ga_" + (googleAnalyticsId | replace("G-", ""))
+            },
+            {
+              text: "Used by Google Analytics to find and track an individual session with your device."
+            },
+            {
+              text: "2 years"
+            }
+          ]
+        ]
+      }) }}
 
       <form action="{{ paths.COOKIES }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -23,7 +119,7 @@
             fieldset: {
               legend: {
                 text: "Do you want to accept analytics cookies?",
-                classes: "govuk-fieldset__legend--m"
+                classes: "govuk-fieldset__legend--s"
               }
             },
             items: [
