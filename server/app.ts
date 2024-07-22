@@ -20,6 +20,7 @@ import routes from './routes'
 
 import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
+import analyticsConsent from './middleware/analyticsConsent'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -36,10 +37,11 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
   app.use(setupGovukOneLogin())
+  app.use(analyticsConsent())
+  app.use(setUpCsrf())
   app.use(unauthenticatedRoutes())
   app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
-  app.use(setUpCsrf())
 
   app.use(routes(services))
 

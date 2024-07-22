@@ -24,15 +24,17 @@
 {% set signOutLink = "/sign-out" %}
 
 {% block head %}
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsId }}"></script>
-  <script nonce="{{ cspNonce }}">
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  {% if analyticsEnabled %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsId }}"></script>
+    <script nonce="{{ cspNonce }}">
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    gtag('config', '{{ googleAnalyticsId }}');
-  </script>
+      gtag('config', '{{ googleAnalyticsId }}');
+    </script>
+  {% endif %}
 
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
 {% endblock %}
@@ -40,6 +42,12 @@
 {% block pageTitle -%}
   {{ "Error: " if errors | length }}{{ pageTitle + " - " if pageTitle }}{{ applicationName }} - GOV.UK
 {%- endblock %}
+
+{% block bodyStart %}
+  {% if analyticsEnabled == undefined %}
+    {%- include "partials/cookieBanner.njk" -%}
+  {% endif %}
+{% endblock %}
 
 {% block header %}
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
@@ -91,6 +99,10 @@
           text: "Accessibility"
         },
         {
+          href: paths.COOKIES,
+          text: "Cookies"
+        },
+        {
           href: paths.PRIVACY,
           text: "Privacy"
         },
@@ -108,6 +120,7 @@
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/service-header.js"></script>
   <script src="/assets/init-service-header.js"></script>
+  <script src="/assets/cookieBanner.js"></script>
 {% block pageScripts %}
 {% endblock %}
 {% endblock %}

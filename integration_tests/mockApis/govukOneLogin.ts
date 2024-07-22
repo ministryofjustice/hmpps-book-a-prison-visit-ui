@@ -63,8 +63,7 @@ const getSignInUrl = (nonce?: string): Promise<string> =>
     const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     const nonceForToken = nonce || requests[requests.length - 1].queryParams.nonce.values[0]
     // set up /token response while we have access to the nonce
-    Promise.resolve(token(nonceForToken))
-    return `/auth/callback?code=AUTHORIZATION_CODE&state=${stateValue}`
+    return token(nonceForToken).then(() => `/auth/callback?code=AUTHORIZATION_CODE&state=${stateValue}`)
   })
 
 const createIdToken = (nonce: string) => {

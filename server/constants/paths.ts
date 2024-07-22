@@ -20,7 +20,7 @@ const paths = {
 
   ACCESS_DENIED: '/access-denied',
   ACCESSIBILITY: '/accessibility-statement',
-  COOKIES: '/cookies-policy',
+  COOKIES: '/cookies',
   PRIVACY: '/privacy-notice',
   SIGNED_OUT: '/signed-out',
   TERMS: '/terms-and-conditions',
