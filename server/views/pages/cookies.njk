@@ -69,8 +69,8 @@
         <li>how you got to the service</li>
         <li>the pages you visit on the service and how long you spend on them</li>
         <li>any errors you see while using the service</li>
-        <li>Google Analytics sets the following cookies.</li>
       </ul>
+      <p>Google Analytics sets the following cookies.</p>
 
       {{ govukTable({
         head: [
@@ -98,7 +98,10 @@
           ],
           [
             {
-              text: "_ga_" + (googleAnalyticsId | replace("G-", ""))
+              text: "_ga_" + (googleAnalyticsId | replace("G-", "")),
+              attributes: {
+                "data-test": "ga-cookie-name"
+              }
             },
             {
               text: "Used by Google Analytics to find and track an individual session with your device."
