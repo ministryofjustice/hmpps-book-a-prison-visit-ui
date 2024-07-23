@@ -1,6 +1,11 @@
 const paths = {
   HOME: '/',
 
+  ACCESS_DENIED: '/access-denied',
+  SIGN_IN: '/sign-in',
+  SIGN_OUT: '/sign-out',
+  SIGNED_OUT: '/signed-out',
+
   BOOKINGS: {
     HOME: '/bookings',
     VISIT: '/bookings/details',
@@ -18,11 +23,9 @@ const paths = {
     BOOKED: '/book-visit/visit-booked',
   },
 
-  ACCESS_DENIED: '/access-denied',
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies',
   PRIVACY: '/privacy-notice',
-  SIGNED_OUT: '/signed-out',
   TERMS: '/terms-and-conditions',
 } as const
 

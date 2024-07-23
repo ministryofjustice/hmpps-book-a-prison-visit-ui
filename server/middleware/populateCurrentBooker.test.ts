@@ -63,7 +63,7 @@ describe('populateCurrentBooker', () => {
     await populateCurrentBooker(bookerService)(req, res, next)
 
     expect(bookerService.getBookerReference).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith('/sign-out')
+    expect(res.redirect).toHaveBeenCalledWith(paths.SIGN_OUT)
     expect(next).not.toHaveBeenCalled()
   })
 
@@ -77,7 +77,7 @@ describe('populateCurrentBooker', () => {
       email: res.locals.user.email,
       phoneNumber: res.locals.user.phone_number,
     })
-    expect(res.redirect).toHaveBeenCalledWith('/access-denied')
+    expect(res.redirect).toHaveBeenCalledWith(paths.ACCESS_DENIED)
     expect(next).not.toHaveBeenCalled()
     expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker reference for: user1')
   })

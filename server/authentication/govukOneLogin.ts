@@ -7,6 +7,7 @@ import config from '../config'
 import logger from '../../logger'
 import TokenStore from '../data/tokenStore/tokenStore'
 import tokenStoreFactory from '../data/tokenStore/tokenStoreFactory'
+import paths from '../constants/paths'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -25,7 +26,7 @@ const authenticationMiddleware = (): RequestHandler => {
     }
 
     req.session.returnTo = req.originalUrl
-    return res.redirect('/sign-in')
+    return res.redirect(paths.SIGN_IN)
   }
 }
 

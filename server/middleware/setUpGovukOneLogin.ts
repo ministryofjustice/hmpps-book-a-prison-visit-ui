@@ -28,7 +28,7 @@ export default function setUpGovukOneLogin(): Router {
       return res.render('authError')
     })
 
-    router.get('/sign-in', (req, res, next) => {
+    router.get(paths.SIGN_IN, (req, res, next) => {
       passport.authenticate('oidc', { nonce: generators.nonce() })(req, res, next)
     })
 
@@ -40,7 +40,7 @@ export default function setUpGovukOneLogin(): Router {
       })(req, res, next)
     })
 
-    router.use('/sign-out', async (req, res, next) => {
+    router.use(paths.SIGN_OUT, async (req, res, next) => {
       if (req.user) {
         const idToken = await idTokenStore.getToken(encodeURIComponent(req.user.sub))
         req.logout(err => {
