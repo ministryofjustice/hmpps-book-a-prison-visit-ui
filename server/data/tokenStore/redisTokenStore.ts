@@ -4,9 +4,10 @@ import logger from '../../../logger'
 import TokenStore from './tokenStore'
 
 export default class RedisTokenStore implements TokenStore {
-  private readonly prefix = 'systemToken:'
-
-  constructor(private readonly client: RedisClient) {
+  constructor(
+    private readonly client: RedisClient,
+    private readonly prefix: string,
+  ) {
     client.on('error', error => {
       logger.error(error, `Redis error`)
     })
