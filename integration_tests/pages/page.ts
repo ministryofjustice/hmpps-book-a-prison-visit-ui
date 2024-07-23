@@ -43,7 +43,9 @@ export default abstract class Page {
     )
   }
 
-  signOut = (): PageElement => cy.get('.one-login-header a[href="/sign-out"]')
+  oneLoginHeader = (): PageElement => cy.get('.one-login-header')
+
+  signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out')
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 

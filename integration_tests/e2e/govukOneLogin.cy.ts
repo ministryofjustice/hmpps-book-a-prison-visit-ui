@@ -1,6 +1,8 @@
 import HomePage from '../pages/home'
 import GovukOneLoginPage from '../pages/govukOneLogin'
 import Page from '../pages/page'
+import SignedOutPage from '../pages/signedOut'
+import paths from '../../server/constants/paths'
 
 context('Sign in with GOV.UK One Login', () => {
   beforeEach(() => {
@@ -14,7 +16,7 @@ context('Sign in with GOV.UK One Login', () => {
   })
 
   it('Unauthenticated user redirected to GOV.UK One Login - sign-in URL', () => {
-    cy.visit('/auth/sign-in')
+    cy.visit(paths.SIGN_IN)
     Page.verifyOnPage(GovukOneLoginPage)
   })
 
@@ -58,8 +60,10 @@ context('Sign in with GOV.UK One Login', () => {
     cy.task('stubGetPrisoners', {})
     cy.signIn()
     const indexPage = Page.verifyOnPage(HomePage)
+
+    cy.task('stubSignOut')
     indexPage.signOut().click()
-    Page.verifyOnPage(GovukOneLoginPage)
-    cy.contains('You have been logged out.')
+    const signedOutPage = Page.verifyOnPage(SignedOutPage)
+    signedOutPage.signInLink().should('have.attr', 'href', paths.SIGN_IN)
   })
 })
