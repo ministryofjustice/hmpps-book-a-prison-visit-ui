@@ -5,6 +5,8 @@ import { createPrivateKey } from 'crypto'
 
 import config from '../config'
 import logger from '../../logger'
+import TokenStore from '../data/tokenStore/tokenStore'
+import tokenStoreFactory from '../data/tokenStore/tokenStoreFactory'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -27,11 +29,13 @@ const authenticationMiddleware = (): RequestHandler => {
   }
 }
 
-async function init(): Promise<Client> {
+async function init(): Promise<{ client: Client; idTokenStore: TokenStore }> {
   const discoveryEndpoint = `${config.apis.govukOneLogin.url}/.well-known/openid-configuration`
 
   const issuer = await Issuer.discover(discoveryEndpoint)
   logger.info(`GOV.UK One Login issuer discovered: ${issuer.metadata.issuer}`)
+
+  const idTokenStore = tokenStoreFactory('idToken:')
 
   // convert private key in PEM format to JWK
   const privateKeyJwk = createPrivateKey({
@@ -52,6 +56,8 @@ async function init(): Promise<Client> {
 
   const verify: StrategyVerifyCallbackUserInfo<UserinfoResponse> = (tokenSet, userInfo, done) => {
     logger.info(`GOV.UK One Login user verified, sub: ${userInfo.sub}`)
+
+    idTokenStore.setToken(encodeURIComponent(userInfo.sub), tokenSet.id_token, config.session.expiryMinutes * 60)
     return done(null, userInfo)
   }
 
@@ -70,7 +76,7 @@ async function init(): Promise<Client> {
 
   passport.use('oidc', strategy)
 
-  return client
+  return { client, idTokenStore }
 }
 
 export default {

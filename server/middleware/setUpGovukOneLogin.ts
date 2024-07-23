@@ -4,6 +4,8 @@ import passport from 'passport'
 import flash from 'connect-flash'
 import { generators } from 'openid-client'
 import govukOneLogin from '../authentication/govukOneLogin'
+import config from '../config'
+import paths from '../constants/paths'
 
 // Add property used in 'passport.authenticate(strategy, options, callback)'
 // strategy options for 'oicd' that is missing from @types/passport
@@ -16,7 +18,7 @@ declare module 'passport' {
 const router = express.Router()
 
 export default function setUpGovukOneLogin(): Router {
-  govukOneLogin.init().then(client => {
+  govukOneLogin.init().then(({ client, idTokenStore }) => {
     router.use(passport.initialize())
     router.use(passport.session())
     router.use(flash())
@@ -38,11 +40,19 @@ export default function setUpGovukOneLogin(): Router {
       })(req, res, next)
     })
 
-    router.use('/sign-out', (req, res, next) => {
+    router.use('/sign-out', async (req, res, next) => {
       if (req.user) {
+        const idToken = await idTokenStore.getToken(encodeURIComponent(req.user.sub))
         req.logout(err => {
           if (err) return next(err)
-          return req.session.destroy(() => res.redirect(client.endSessionUrl()))
+          return req.session.destroy(() =>
+            res.redirect(
+              client.endSessionUrl({
+                id_token_hint: idToken,
+                post_logout_redirect_uri: `${config.domain}${paths.SIGNED_OUT}`,
+              }),
+            ),
+          )
         })
       } else res.redirect(client.endSessionUrl())
     })
