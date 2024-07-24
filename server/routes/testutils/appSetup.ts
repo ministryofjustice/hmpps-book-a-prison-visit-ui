@@ -14,7 +14,7 @@ jest.mock('../../applicationInfo', () => {
   return jest.fn(() => testAppInfo)
 })
 
-import express, { Express } from 'express'
+import express, { Express, Request } from 'express'
 import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
@@ -25,6 +25,7 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
 import TestData from './testData'
+import analyticsConsent from '../../middleware/analyticsConsent'
 
 export const user: Express.User = {
   sub: 'user1',
@@ -51,6 +52,7 @@ function appSetup(
   userSupplier: () => Express.User,
   populateBooker: boolean,
   sessionData: SessionData,
+  cookies: Request['cookies'],
 ): Express {
   const app = express()
 
@@ -65,6 +67,7 @@ function appSetup(
     req.session = sessionData as Session & Partial<SessionData>
     req.user = userSupplier()
     req.flash = flashProvider
+    req.cookies = cookies
     res.locals = {
       user: { ...req.user },
     }
@@ -72,6 +75,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.use(analyticsConsent())
   app.use(unauthenticatedRoutes())
   app.use(routes(services))
   app.use((req, res, next) => next(new NotFound()))
@@ -86,12 +90,14 @@ export function appWithAllRoutes({
   userSupplier = () => user,
   populateBooker = true,
   sessionData = {} as SessionData,
+  cookies = {} as Request['cookies'],
 }: {
   production?: boolean
   services?: Partial<Services>
   userSupplier?: () => Express.User
   populateBooker?: boolean
   sessionData?: SessionData
+  cookies?: Request['cookies']
 }): Express {
-  return appSetup(services as Services, production, userSupplier, populateBooker, sessionData)
+  return appSetup(services as Services, production, userSupplier, populateBooker, sessionData, cookies)
 }
