@@ -68,6 +68,36 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('getCancelledPublicVisits', () => {
+    it('should retrieve all cancelled visits associated with a booker', async () => {
+      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/visits/cancelled`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visits)
+
+      const result = await orchestrationApiClient.getCancelledPublicVisits(bookerReference.value)
+
+      expect(result).toStrictEqual(visits)
+    })
+  })
+
+  describe('getPastPublicVisits', () => {
+    it('should retrieve all past visits associated with a booker', async () => {
+      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/visits/booked/past`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visits)
+
+      const result = await orchestrationApiClient.getPastPublicVisits(bookerReference.value)
+
+      expect(result).toStrictEqual(visits)
+    })
+  })
+
   describe('changeVisitApplication', () => {
     it('should update an incomplete Visit Application', async () => {
       const applicationReference = 'aaa-bbb-ccc'
