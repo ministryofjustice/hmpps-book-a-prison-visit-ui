@@ -22,11 +22,11 @@ generic-service:
     hmpps-book-a-prison-visit-ui:
       APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
 
-  # allowlist:
-  #   groups:
-  #     - digital_staff_and_mojo
-  #     - moj_cloud_platform
-  #     - circleci
+   allowlist:
+     groups:
+       - digital_staff_and_mojo
+       - moj_cloud_platform
+       - circleci
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
