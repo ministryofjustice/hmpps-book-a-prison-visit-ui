@@ -92,7 +92,27 @@ export default class VisitService {
 
     const visits = await orchestrationApiClient.getFuturePublicVisits(bookerReference)
 
-    logger.info(`Visits for booker reference ${bookerReference} retrieved`)
+    logger.info(`Future visits for booker reference ${bookerReference} retrieved`)
+    return visits
+  }
+
+  async getPastPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const visits = await orchestrationApiClient.getPastPublicVisits(bookerReference)
+
+    logger.info(`Past visits for booker reference ${bookerReference} retrieved`)
+    return visits
+  }
+
+  async getCancelledPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const visits = await orchestrationApiClient.getCancelledPublicVisits(bookerReference)
+
+    logger.info(`Cancelled visits for booker reference ${bookerReference} retrieved`)
     return visits
   }
 }

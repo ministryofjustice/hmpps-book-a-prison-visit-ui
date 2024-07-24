@@ -9,7 +9,7 @@ export default class BookingDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker, bookings } = req.session
+      const { booker, bookings, fromController } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || !bookings?.length) {
@@ -37,6 +37,7 @@ export default class BookingDetailsController {
         prisonName,
         prisonPhoneNumber,
         prisonWebsite,
+        fromController,
         showServiceNav: true,
       })
     }

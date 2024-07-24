@@ -12,6 +12,7 @@ declare module 'express-session' {
 
     booker: Booker
     bookings?: OrchestrationVisitDto[]
+    fromController?: string
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
   }

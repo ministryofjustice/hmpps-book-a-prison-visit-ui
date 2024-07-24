@@ -17,7 +17,9 @@ export default function routes(services: Services): Router {
   const bookings = new BookingsController(services.visitService)
   const bookingDetailsController = new BookingDetailsController(services.bookerService)
 
-  get(paths.BOOKINGS.HOME, bookings.view())
+  get(paths.BOOKINGS.PAST, bookings.viewPast())
+  get(paths.BOOKINGS.CANCELLED, bookings.viewCancelled())
+  get(paths.BOOKINGS.HOME, bookings.viewFuture())
   getWithValidation(
     `${paths.BOOKINGS.VISIT}/:visitNumber`,
     bookingDetailsController.validate(),

@@ -8,6 +8,8 @@ const paths = {
 
   BOOKINGS: {
     HOME: '/bookings',
+    PAST: '/bookings/past-visits',
+    CANCELLED: '/bookings/cancelled-visits',
     VISIT: '/bookings/details',
   },
 

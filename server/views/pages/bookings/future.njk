@@ -14,9 +14,6 @@
       <h2 class="govuk-heading-m">Future visits</h2>
 
       {% if visits | length %}
-        <form action="{{ paths.BOOKINGS.HOME }}" method="POST" novalidate>
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
         {% for visit in visits %}
           <div class="bookings-content-block">
             <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
@@ -46,13 +43,13 @@
         <p data-test="no-visits">You do not have any future bookings.</p>
       {% endif %}
 
-      {# <h2 class="govuk-heading-m">Past and cancelled visits</h2>
+      <h2 class="govuk-heading-m">Past and cancelled visits</h2>
       <p>
-        <a href="#" class="govuk-link--no-visited-state">View past visits</a>
+        <a href="{{ paths.BOOKINGS.PAST }}" class="govuk-link--no-visited-state">View past visits</a>
       </p>
       <p>
-        <a href="#" class="govuk-link--no-visited-state">View cancelled visits</a>
-      </p> #}
+        <a href="{{ paths.BOOKINGS.CANCELLED }}" class="govuk-link--no-visited-state">View cancelled visits</a>
+      </p>
       
     </div>
   </div>
