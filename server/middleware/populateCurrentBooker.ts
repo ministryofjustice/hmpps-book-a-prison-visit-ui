@@ -8,7 +8,7 @@ export default function populateCurrentBooker(bookerService: BookerService): Req
   return async (req, res, next) => {
     try {
       if (!res.locals.user || !res.locals.user.sub || !res.locals.user.email) {
-        return res.redirect('/sign-out')
+        return res.redirect(paths.SIGN_OUT)
       }
 
       if (!req.session.booker) {
@@ -25,7 +25,7 @@ export default function populateCurrentBooker(bookerService: BookerService): Req
     } catch (error) {
       if (error.status === 404) {
         logger.info(`Failed to retrieve booker reference for: ${res.locals.user.sub}`)
-        return req.path === paths.ACCESS_DENIED ? next() : res.redirect('/access-denied')
+        return req.path === paths.ACCESS_DENIED ? next() : res.redirect(paths.ACCESS_DENIED)
       }
 
       return next(error)

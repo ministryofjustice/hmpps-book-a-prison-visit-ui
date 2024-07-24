@@ -6,7 +6,7 @@ import TokenStore from './tokenStore/redisTokenStore'
 
 jest.mock('./tokenStore/redisTokenStore')
 
-const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
+const tokenStore = new TokenStore(null, 'systemToken:') as jest.Mocked<TokenStore>
 
 const token = { access_token: 'token-1', expires_in: 300 }
 

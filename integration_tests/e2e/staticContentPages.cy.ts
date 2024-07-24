@@ -11,9 +11,15 @@ context('Static content pages', () => {
     it('should be able to access static content pages', () => {
       cy.visit(paths.ACCESSIBILITY)
       const accessibilityStatementPage = Page.verifyOnPage(AccessibilityStatementPage)
+      accessibilityStatementPage.oneLoginHeader().should('not.exist')
 
-      // should not have the GOVUK One Login header
-      accessibilityStatementPage.signOut().should('not.exist')
+      cy.visit(paths.PRIVACY)
+      const privacyNoticePage = Page.verifyOnPage(PrivacyNoticePage)
+      privacyNoticePage.oneLoginHeader().should('not.exist')
+
+      cy.visit(paths.TERMS)
+      const termsAndConditionsPage = Page.verifyOnPage(TermsAndConditionsPage)
+      termsAndConditionsPage.oneLoginHeader().should('not.exist')
     })
   })
 
@@ -31,7 +37,7 @@ context('Static content pages', () => {
       const homePage = Page.verifyOnPage(HomePage)
 
       // should have the GOVUK One Login header
-      homePage.signOut().should('exist')
+      homePage.oneLoginHeader().contains('GOV.UK One Login')
 
       // Select 'Accessibility' in footer
       homePage.goToFooterLinkByName('Accessibility')

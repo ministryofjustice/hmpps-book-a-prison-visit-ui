@@ -21,7 +21,7 @@
   {{- activeLink if activeLink else 'home-link' -}}
 {%- endset %}
 {% set serviceName = applicationName %}
-{% set signOutLink = "/sign-out" %}
+{% set signOutLink = paths.SIGN_OUT %}
 
 {% block head %}
   {% if analyticsEnabled %}

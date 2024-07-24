@@ -4,6 +4,8 @@ import { Response } from 'superagent'
 import { createPublicKey } from 'crypto'
 import { getMatchingRequests, stubFor } from './wiremock'
 
+let idToken: string
+
 const oidcConfig = JSON.parse(
   fs.readFileSync('integration_tests/mockApis/mappings/openid-configuration.json').toString(),
 )
@@ -80,12 +82,13 @@ const createIdToken = (nonce: string) => {
   }
 
   const privateKey = fs.readFileSync('integration_tests/testKeys/server_private_key.pem')
-  const idToken = jwt.sign(payload, privateKey, { algorithm: 'ES256' })
-  return idToken
+  idToken = jwt.sign(payload, privateKey, { algorithm: 'ES256' })
 }
 
-const token = (nonce: string) =>
-  stubFor({
+const token = (nonce: string) => {
+  createIdToken(nonce)
+
+  return stubFor({
     request: {
       method: 'POST',
       url: '/govukOneLogin/token',
@@ -109,10 +112,11 @@ const token = (nonce: string) =>
         access_token: 'ACCESS_TOKEN',
         token_type: 'Bearer',
         expiresIn: 180,
-        id_token: createIdToken(nonce),
+        id_token: idToken,
       },
     },
   })
+}
 
 // get the client assertion JWT used for /token request and
 // verify its signature with the client's public key
@@ -160,21 +164,22 @@ const signOut = () =>
       method: 'GET',
       urlPath: '/govukOneLogin/logout',
       queryParameters: {
-        client_id: { equalTo: 'clientId' },
+        id_token_hint: { equalTo: idToken },
+        post_logout_redirect_uri: { equalTo: 'http://localhost:3007/signed-out' },
       },
     },
     response: {
-      status: 200,
+      status: 302,
       headers: {
-        'Content-Type': 'text/html',
+        Location: 'http://localhost:3007/signed-out',
       },
-      body: '<html><body><h1>GOV.UK One Login</h1><p>You have been logged out.</p></body></html>',
     },
   })
 
 export default {
   getSignInUrl,
   verifyJwtAssertionForToken,
-  stubSignIn: (): Promise<[Response, Response, Response, Response, Response]> =>
-    Promise.all([stubOidcDiscovery(), stubJwks(), redirect(), stubUserInfo(), signOut()]),
+  stubSignIn: (): Promise<[Response, Response, Response, Response]> =>
+    Promise.all([stubOidcDiscovery(), stubJwks(), redirect(), stubUserInfo()]),
+  stubSignOut: (): Promise<Response> => signOut(),
 }
