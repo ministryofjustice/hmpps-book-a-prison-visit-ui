@@ -193,12 +193,14 @@ export default {
     prisonId,
     prisonerId,
     visitorIds,
+    username = 'aaa-bbb-ccc',
     visitSessions,
     excludedApplicationReference = '',
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
+    username: string
     visitSessions: AvailableVisitSessionDto[]
     excludedApplicationReference?: string
   }): SuperAgentRequest =>
@@ -210,6 +212,7 @@ export default {
           prisonId: { equalTo: prisonId },
           prisonerId: { equalTo: prisonerId },
           visitors: { equalTo: visitorIds.join(',') },
+          username,
           excludedApplicationReference: {
             or: [
               {
