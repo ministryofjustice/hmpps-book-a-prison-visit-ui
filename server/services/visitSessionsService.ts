@@ -20,12 +20,14 @@ export default class VisitSessionsService {
     prisonId,
     prisonerId,
     visitorIds,
+    username,
     excludedApplicationReference,
     daysAhead,
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
+    username: string
     excludedApplicationReference?: string
     daysAhead: number
   }): Promise<{
@@ -34,7 +36,13 @@ export default class VisitSessionsService {
     allVisitSessionIds: string[]
     allVisitSessions: AvailableVisitSessionDto[]
   }> {
-    const allVisitSessions = await this.getVisitSessions(prisonId, prisonerId, visitorIds, excludedApplicationReference)
+    const allVisitSessions = await this.getVisitSessions(
+      prisonId,
+      prisonerId,
+      visitorIds,
+      username,
+      excludedApplicationReference,
+    )
 
     if (allVisitSessions.length === 0) {
       return {
@@ -83,6 +91,7 @@ export default class VisitSessionsService {
     prisonId: string,
     prisonerId: string,
     visitorIds: number[],
+    username: string,
     excludedApplicationReference?: string,
   ): Promise<AvailableVisitSessionDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
@@ -92,6 +101,7 @@ export default class VisitSessionsService {
       prisonId,
       prisonerId,
       visitorIds,
+      username,
       excludedApplicationReference,
     })
   }

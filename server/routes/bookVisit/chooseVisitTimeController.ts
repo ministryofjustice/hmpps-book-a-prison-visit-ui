@@ -11,7 +11,7 @@ export default class ChooseVisitTimeController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookingJourney } = req.session
+      const { bookingJourney, booker } = req.session
       const { prisoner, prison, selectedVisitors, applicationReference } = bookingJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
@@ -21,6 +21,7 @@ export default class ChooseVisitTimeController {
           prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
           visitorIds: selectedVisitorIds,
+          username: booker.reference,
           excludedApplicationReference: applicationReference,
           daysAhead: prison.policyNoticeDaysMax,
         })

@@ -139,11 +139,13 @@ export default class OrchestrationApiClient {
     prisonerId,
     visitorIds,
     excludedApplicationReference,
+    username,
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
     excludedApplicationReference?: string
+    username: string
   }): Promise<AvailableVisitSessionDto[]> {
     return this.restClient.get({
       path: '/visit-sessions/available',
@@ -151,6 +153,7 @@ export default class OrchestrationApiClient {
         prisonId,
         prisonerId,
         visitors: visitorIds.join(','),
+        username,
         ...(excludedApplicationReference && { excludedApplicationReference }),
       }).toString(),
     })
