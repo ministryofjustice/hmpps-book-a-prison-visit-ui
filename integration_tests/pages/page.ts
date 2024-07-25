@@ -43,6 +43,26 @@ export default abstract class Page {
     )
   }
 
+  googleAnalytics = (): PageElement => cy.get('[data-test=google-analytics]')
+
+  cookieBanner = (): PageElement => cy.get('#cookie-banner')
+
+  acceptAnalytics = (): void => {
+    cy.get('[data-test=accept-analytics]').click()
+  }
+
+  rejectAnalytics = (): void => {
+    cy.get('[data-test=reject-analytics]').click()
+  }
+
+  hideAnalyticsAcceptedMessage = (): void => {
+    cy.get('[data-test=hide-cookies-accepted]').click()
+  }
+
+  hideAnalyticsRejectedMessage = (): void => {
+    cy.get('[data-test=hide-cookies-rejected]').click()
+  }
+
   oneLoginHeader = (): PageElement => cy.get('.one-login-header')
 
   signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out')
