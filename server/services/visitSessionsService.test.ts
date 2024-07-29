@@ -4,7 +4,7 @@ import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsServ
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 
 const token = 'some token'
-const username = 'aaa-bbb-ccc'
+const bookerReference = TestData.bookerReference().value
 
 describe('Visit sessions service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
@@ -89,7 +89,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
         daysAhead,
       })
 
@@ -97,7 +97,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -121,7 +121,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
         daysAhead: 28,
       })
 
@@ -129,7 +129,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -150,7 +150,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
         excludedApplicationReference,
         daysAhead: 28,
       })
@@ -159,7 +159,7 @@ describe('Visit sessions service', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference,
         excludedApplicationReference,
       })
     })

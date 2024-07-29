@@ -17,7 +17,6 @@ describe('orchestrationApiClient', () => {
   let orchestrationApiClient: OrchestrationApiClient
   const token = 'token-1'
   const bookerReference = TestData.bookerReference()
-  const username = 'aaa-bbb-ccc'
 
   beforeEach(() => {
     fakeOrchestrationApi = nock(config.apis.orchestration.url)
@@ -209,7 +208,7 @@ describe('orchestrationApiClient', () => {
           prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
           visitors: visitorIds.join(','),
-          username,
+          username: bookerReference.value,
           excludedApplicationReference,
         })
         .matchHeader('authorization', `Bearer ${token}`)
@@ -219,7 +218,7 @@ describe('orchestrationApiClient', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
-        username,
+        bookerReference: bookerReference.value,
         excludedApplicationReference,
       })
 
