@@ -54,6 +54,31 @@ context('Cookie consent and analytics', () => {
       cookiesPage.cookieBanner().should('not.exist')
       cookiesPage.rejectAnalyticsRadio().should('be.checked')
     })
+
+    it('should remove previously set analytics cookies when rejecting', () => {
+      // Home page - accept analytics
+      const homePage = Page.verifyOnPage(HomePage)
+      homePage.acceptAnalytics()
+      homePage.hideAnalyticsAcceptedMessage()
+      checkCookie({ acceptAnalytics: 'yes' })
+
+      // go to Cookies page - analytics cookies should be present
+      homePage.goToFooterLinkByName('Cookies')
+      const cookiesPage = Page.verifyOnPage(CookiesPage)
+      cookiesPage.cookieBanner().should('not.exist')
+      cy.getCookie('_ga').should('exist')
+      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
+
+      // reject analytics
+      cookiesPage.rejectAnalyticsRadio().check()
+      cookiesPage.saveCookieSettings()
+
+      // cookie preference should be set and analytics cookies removed
+      cookiesPage.checkOnPage()
+      checkCookie({ acceptAnalytics: 'no' })
+      cy.getCookie('_ga').should('not.exist')
+      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+    })
   })
 })
 
