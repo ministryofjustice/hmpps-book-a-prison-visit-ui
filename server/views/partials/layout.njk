@@ -23,6 +23,10 @@
 {% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 
+{% set bodyAttributes = {
+  "data-google-analytics-id": googleAnalyticsId
+} %}
+
 {% block head %}
   {% if analyticsEnabled %}
     <!-- Google tag (gtag.js) -->
