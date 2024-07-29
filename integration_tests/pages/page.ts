@@ -65,11 +65,13 @@ export default abstract class Page {
 
   oneLoginHeader = (): PageElement => cy.get('.one-login-header')
 
-  signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out')
+  signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out').click()
+
+  goToServiceHeaderLinkByName = (name: string): PageElement => cy.get('.service-header').contains('a', name).click()
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 
-  goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains(name).click()
+  goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains('a', name).click()
 
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
     cy.get(`[data-test=${dataTestName}]`).within(bookButton => {

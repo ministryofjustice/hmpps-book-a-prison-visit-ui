@@ -55,8 +55,8 @@ context('Cookie consent and analytics', () => {
       cookiesPage.rejectAnalyticsRadio().should('be.checked')
     })
 
-    it('should remove previously set analytics cookies when rejecting', () => {
-      // Home page - accept analytics
+    it('should remove previously set analytics cookies when rejecting (via cookies page form)', () => {
+      // Home page - accept analytics via banner
       const homePage = Page.verifyOnPage(HomePage)
       homePage.acceptAnalytics()
       homePage.hideAnalyticsAcceptedMessage()
@@ -69,13 +69,48 @@ context('Cookie consent and analytics', () => {
       cy.getCookie('_ga').should('exist')
       cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
 
-      // reject analytics
+      // reject analytics via cookies page form
       cookiesPage.rejectAnalyticsRadio().check()
       cookiesPage.saveCookieSettings()
 
       // cookie preference should be set and analytics cookies removed
       cookiesPage.checkOnPage()
       checkCookie({ acceptAnalytics: 'no' })
+      cy.getCookie('_ga').should('not.exist')
+      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+    })
+
+    it('should remove previously set analytics cookies when rejecting (via cookie banner)', () => {
+      // Home page
+      const homePage = Page.verifyOnPage(HomePage)
+      homePage.cookieBanner().should('be.visible')
+
+      // Go to Cookies page and accept analytics - _ga cookies set
+      homePage.goToFooterLinkByName('Cookies')
+      const cookiesPage = Page.verifyOnPage(CookiesPage)
+      cookiesPage.acceptAnalyticsRadio().check()
+      cookiesPage.saveCookieSettings()
+      cookiesPage.cookieBanner().should('not.exist')
+      checkCookie({ acceptAnalytics: 'yes' })
+      cy.getCookie('_ga').should('exist')
+      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
+
+      // Remove 'cookie_policy' cookie (to trigger banner) and go to home page
+      cy.clearCookie('cookie_policy')
+      cookiesPage.goToServiceHeaderLinkByName('Home')
+      homePage.checkOnPage()
+      homePage.cookieBanner().should('be.visible')
+      homePage.googleAnalytics().should('not.exist')
+
+      // Reject cookies via banner
+      homePage.rejectAnalytics()
+      homePage.hideAnalyticsRejectedMessage()
+      checkCookie({ acceptAnalytics: 'no' })
+
+      // Go to cookies page - _ga cookies should not be set
+      homePage.goToFooterLinkByName('Cookies')
+      cookiesPage.checkOnPage()
+      cookiesPage.rejectAnalyticsRadio().should('be.checked')
       cy.getCookie('_ga').should('not.exist')
       cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
     })
