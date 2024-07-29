@@ -26,12 +26,12 @@
 
       {% if visit.visitStatus === "CANCELLED" %}
 
-        {% set status = visit.outcomeStatus.split("_") %}
+        {% set status = visit.outcomeStatus %}
             
         {% set cancelledBy %}
-          {% if status[0] === 'VISITOR' %}
+          {% if status === 'VISITOR_CANCELLED' %}
             {{- 'This visit was cancelled by a visitor.' -}}
-          {% elif status[0] === 'PRISONER' %}
+          {% elif status === 'PRISONER_CANCELLED' %}
             {{- 'This visit was cancelled by the prisoner.' -}}
           {% else %}
             {{- 'This visit was cancelled by the prison.' -}}

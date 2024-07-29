@@ -11,6 +11,11 @@ let app: Express
 
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
+const pastVisitDto = TestData.orchestrationVisitDto({
+  startTimestamp: '2023-05-30T10:00:00',
+  endTimestamp: '2023-05-30T11:30:00',
+})
+const cancelledVisitDto = TestData.orchestrationVisitDto({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
@@ -21,8 +26,6 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings: [orchestrationVisitDto],
-    fromController: 'future',
   } as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
@@ -56,8 +59,7 @@ describe('Bookings homepage', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookings: [orchestrationVisitDto],
-          fromController: 'future',
+          bookingsFuture: [orchestrationVisitDto],
         } as SessionData)
       })
   })
@@ -80,7 +82,7 @@ describe('Bookings homepage', () => {
 
 describe('Cancelled visits page', () => {
   it('should render the cancelled visits page', () => {
-    visitService.getCancelledPublicVisits.mockResolvedValue([orchestrationVisitDto])
+    visitService.getCancelledPublicVisits.mockResolvedValue([cancelledVisitDto])
     return request(app)
       .get(paths.BOOKINGS.CANCELLED)
       .expect('Content-Type', /html/)
@@ -100,13 +102,12 @@ describe('Cancelled visits page', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookings: [orchestrationVisitDto],
-          fromController: 'cancelled',
+          bookingsCancelled: [cancelledVisitDto],
         } as SessionData)
       })
   })
 
-  it('should render the cancelled visits page - with no future visits', () => {
+  it('should render the cancelled visits page - with no cancelled visits', () => {
     visitService.getCancelledPublicVisits.mockResolvedValue([])
     return request(app)
       .get(paths.BOOKINGS.CANCELLED)
@@ -123,7 +124,7 @@ describe('Cancelled visits page', () => {
 
 describe('Past visits page', () => {
   it('should render the past visits page', () => {
-    visitService.getPastPublicVisits.mockResolvedValue([orchestrationVisitDto])
+    visitService.getPastPublicVisits.mockResolvedValue([pastVisitDto])
     return request(app)
       .get(paths.BOOKINGS.PAST)
       .expect('Content-Type', /html/)
@@ -132,7 +133,7 @@ describe('Past visits page', () => {
         expect($('title').text()).toMatch(/^Past visits -/)
         expect($('[data-test="back-link"]').length).toBe(1)
         expect($('h1').text()).toBe('Past visits')
-        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Tuesday 30 May 2023')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
 
@@ -143,13 +144,12 @@ describe('Past visits page', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookings: [orchestrationVisitDto],
-          fromController: 'past',
+          bookingsPast: [pastVisitDto],
         } as SessionData)
       })
   })
 
-  it('should render the past visits page - with no future visits', () => {
+  it('should render the past visits page - with no past visits', () => {
     visitService.getPastPublicVisits.mockResolvedValue([])
     return request(app)
       .get(paths.BOOKINGS.PAST)

@@ -11,8 +11,11 @@ declare module 'express-session' {
     nowInMinutes: number
 
     booker: Booker
-    bookings?: OrchestrationVisitDto[]
-    fromController?: string
+
+    bookingsFuture?: OrchestrationVisitDto[]
+    bookingsPast?: OrchestrationVisitDto[]
+    bookingsCancelled?: OrchestrationVisitDto[]
+
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
   }

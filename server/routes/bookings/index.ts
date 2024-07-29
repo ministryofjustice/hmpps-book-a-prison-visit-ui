@@ -20,10 +20,23 @@ export default function routes(services: Services): Router {
   get(paths.BOOKINGS.PAST, bookings.viewPast())
   get(paths.BOOKINGS.CANCELLED, bookings.viewCancelled())
   get(paths.BOOKINGS.HOME, bookings.viewFuture())
+
   getWithValidation(
     `${paths.BOOKINGS.VISIT}/:visitNumber`,
     bookingDetailsController.validate(),
-    bookingDetailsController.view(),
+    bookingDetailsController.viewFuture(),
+  )
+
+  getWithValidation(
+    `${paths.BOOKINGS.VISIT_PAST}/:visitNumber`,
+    bookingDetailsController.validate(),
+    bookingDetailsController.viewPast(),
+  )
+
+  getWithValidation(
+    `${paths.BOOKINGS.VISIT_CANCELLED}/:visitNumber`,
+    bookingDetailsController.validate(),
+    bookingDetailsController.viewCancelled(),
   )
 
   return router
