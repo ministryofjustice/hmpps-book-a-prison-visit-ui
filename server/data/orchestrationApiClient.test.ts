@@ -238,6 +238,7 @@ describe('orchestrationApiClient', () => {
           prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
           visitors: visitorIds.join(','),
+          username: bookerReference.value,
           excludedApplicationReference,
         })
         .matchHeader('authorization', `Bearer ${token}`)
@@ -247,6 +248,7 @@ describe('orchestrationApiClient', () => {
         prisonId: prisoner.prisonId,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
+        bookerReference: bookerReference.value,
         excludedApplicationReference,
       })
 

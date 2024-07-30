@@ -1150,14 +1150,14 @@ export interface components {
       totalPages?: number
       /** Format: int64 */
       totalElements?: number
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
+      first?: boolean
+      last?: boolean
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
@@ -1169,9 +1169,9 @@ export interface components {
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       pageSize?: number
+      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
@@ -3065,6 +3065,11 @@ export interface operations {
         excludedApplicationReference?: string
         /** @description Advances the available visits slots sought from date by n days. Defaults to 0 if not passed. */
         advanceFromDateByDays?: number
+        /**
+         * @description Username for the user making the request. Optional, ignored if not passed in.
+         * @example user-1
+         */
+        username?: string
       }
       header?: never
       path?: never

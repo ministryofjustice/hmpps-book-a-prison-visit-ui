@@ -167,6 +167,7 @@ describe('Choose visit time', () => {
             prisonId: prison.code,
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
+            bookerReference,
             daysAhead: prison.policyNoticeDaysMax,
           })
         })
@@ -230,6 +231,7 @@ describe('Choose visit time', () => {
             prisonId: prison.code,
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
+            bookerReference,
             daysAhead: prison.policyNoticeDaysMax,
           })
         })
