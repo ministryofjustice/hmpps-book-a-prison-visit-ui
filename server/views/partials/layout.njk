@@ -23,10 +23,14 @@
 {% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 
+{% set bodyAttributes = {
+  "data-google-analytics-id": googleAnalyticsId
+} %}
+
 {% block head %}
   {% if analyticsEnabled %}
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsId }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsId }}" data-test="google-analytics"></script>
     <script nonce="{{ cspNonce }}">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}

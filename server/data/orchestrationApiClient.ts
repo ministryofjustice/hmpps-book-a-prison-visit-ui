@@ -46,6 +46,14 @@ export default class OrchestrationApiClient {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/booked/future` })
   }
 
+  async getPastPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+    return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/booked/past` })
+  }
+
+  async getCancelledPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+    return this.restClient.get({ path: `/public/booker/${bookerReference}/visits/cancelled` })
+  }
+
   // orchestration-applications-controller
 
   async changeVisitApplication({

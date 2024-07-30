@@ -11,6 +11,11 @@ let app: Express
 
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
+const pastVisitDto = TestData.orchestrationVisitDto({
+  startTimestamp: '2023-05-30T10:00:00',
+  endTimestamp: '2023-05-30T11:30:00',
+})
+const cancelledVisitDto = TestData.orchestrationVisitDto({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
@@ -21,7 +26,6 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings: [orchestrationVisitDto],
   } as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
@@ -43,7 +47,6 @@ describe('Bookings homepage', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
         expect($('h2').text()).toContain('How to change your booking')
-        expect($('form[method=POST]').attr('action')).toBe(paths.BOOKINGS.HOME)
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
@@ -56,7 +59,7 @@ describe('Bookings homepage', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookings: [orchestrationVisitDto],
+          bookingsFuture: [orchestrationVisitDto],
         } as SessionData)
       })
   })
@@ -72,6 +75,91 @@ describe('Bookings homepage', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
         expect($('h2').text()).not.toContain('How to change your booking')
+        expect($('[data-test="no-visits"]').text()).toBe('You do not have any future bookings.')
+      })
+  })
+})
+
+describe('Cancelled visits page', () => {
+  it('should render the cancelled visits page', () => {
+    visitService.getCancelledPublicVisits.mockResolvedValue([cancelledVisitDto])
+    return request(app)
+      .get(paths.BOOKINGS.CANCELLED)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Cancelled visits -/)
+        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
+        expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
+
+        expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [prisoner],
+          },
+          bookingsCancelled: [cancelledVisitDto],
+        } as SessionData)
+      })
+  })
+
+  it('should render the cancelled visits page - with no cancelled visits', () => {
+    visitService.getCancelledPublicVisits.mockResolvedValue([])
+    return request(app)
+      .get(paths.BOOKINGS.CANCELLED)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Cancelled visits -/)
+        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('[data-test="no-visits"]').text()).toBe('You do not have any cancelled bookings.')
+      })
+  })
+})
+
+describe('Past visits page', () => {
+  it('should render the past visits page', () => {
+    visitService.getPastPublicVisits.mockResolvedValue([pastVisitDto])
+    return request(app)
+      .get(paths.BOOKINGS.PAST)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Past visits -/)
+        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('h1').text()).toBe('Past visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Tuesday 30 May 2023')
+        expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
+        expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
+
+        expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+            prisoners: [prisoner],
+          },
+          bookingsPast: [pastVisitDto],
+        } as SessionData)
+      })
+  })
+
+  it('should render the past visits page - with no past visits', () => {
+    visitService.getPastPublicVisits.mockResolvedValue([])
+    return request(app)
+      .get(paths.BOOKINGS.PAST)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Past visits -/)
+        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('h1').text()).toBe('Past visits')
+        expect($('[data-test="no-visits"]').text()).toBe('You do not have any past bookings.')
       })
   })
 })
