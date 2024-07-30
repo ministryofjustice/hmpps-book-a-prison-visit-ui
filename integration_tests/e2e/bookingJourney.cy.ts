@@ -87,6 +87,8 @@ context('Booking journey', () => {
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
 
+    const bookerReference = TestData.bookerReference().value
+
     // Home page - prisoner shown
     const homePage = Page.verifyOnPage(HomePage)
     homePage.prisonerName().contains('John Smith')
@@ -115,6 +117,7 @@ context('Booking journey', () => {
       prisonId: prisoner.prisoner.prisonId,
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
+      bookerReference,
       visitSessions,
     })
     selectVisitorsPage.continue()
@@ -122,7 +125,7 @@ context('Booking journey', () => {
     chooseVisitTimePage.clickCalendarDay(in5Days)
     chooseVisitTimePage.getSessionLabel(in5Days, 1).contains('2pm to 3pm (1 hour)')
     chooseVisitTimePage.selectSession(in5Days, 1)
-    cy.task('stubCreateVisitApplication', { application, bookerReference: TestData.bookerReference().value })
+    cy.task('stubCreateVisitApplication', { application, bookerReference })
     chooseVisitTimePage.continue()
 
     // Additional support
