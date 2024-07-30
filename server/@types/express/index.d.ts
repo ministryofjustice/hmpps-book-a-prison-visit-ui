@@ -11,7 +11,11 @@ declare module 'express-session' {
     nowInMinutes: number
 
     booker: Booker
-    bookings?: OrchestrationVisitDto[]
+
+    bookingsFuture?: OrchestrationVisitDto[]
+    bookingsPast?: OrchestrationVisitDto[]
+    bookingsCancelled?: OrchestrationVisitDto[]
+
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
   }

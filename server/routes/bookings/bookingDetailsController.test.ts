@@ -12,6 +12,14 @@ let app: Express
 const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 const orchestrationVisitDto = TestData.orchestrationVisitDto()
+const pastVisitDto = TestData.orchestrationVisitDto({
+  startTimestamp: '2023-05-30T10:00:00',
+  endTimestamp: '2023-05-30T11:30:00',
+})
+const cancelledVisitDto = TestData.orchestrationVisitDto({
+  visitStatus: 'CANCELLED',
+  outcomeStatus: 'ESTABLISHMENT_CANCELLED',
+})
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 let sessionData: SessionData
@@ -22,7 +30,9 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings: [orchestrationVisitDto],
+    bookingsFuture: [orchestrationVisitDto],
+    bookingsPast: [pastVisitDto],
+    bookingsCancelled: [cancelledVisitDto],
   } as SessionData
   visitService.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
   app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
@@ -57,6 +67,75 @@ describe('View single booking', () => {
         expect($('[data-test="prison-website"]').attr('href')).toContain(
           'https://www.gov.uk/guidance/drake-hall-prison',
         )
+      })
+  })
+
+  it('should render the booking details page - visit date in the past', () => {
+    return request(app)
+      .get(`${paths.BOOKINGS.VISIT_PAST}/1`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visit booking details -/)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.PAST)
+        expect($('h1').text()).toBe('Visit booking details')
+        expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')
+        expect($('[data-test="visit-date"]').text()).toContain('Tuesday 30 May 2023')
+        expect($('[data-test="prison-name"]').text()).not.toContain('Drake Hall (HMP & YOI)')
+        expect($('[data-test="prison-website"]').length).toBe(0)
+      })
+  })
+
+  it('should render the booking details page - cancelled by prison', () => {
+    return request(app)
+      .get(`${paths.BOOKINGS.VISIT_CANCELLED}/1`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visit booking details -/)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
+        expect($('h1').text()).toBe('Visit booking details')
+        expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')
+        expect($('[data-test="visit-date"]').text()).toContain('Thursday 30 May 2024')
+        expect($('[data-test="prison-name"]').text()).not.toContain('Drake Hall (HMP & YOI)')
+        expect($('[data-test="prison-website"]').length).toBe(0)
+        expect($('[data-test="visit-cancelled-type"]').text()).toContain('This visit was cancelled by the prison.')
+      })
+  })
+
+  it('should render the booking details page - cancelled by prisoner', () => {
+    sessionData.bookingsCancelled[0].outcomeStatus = 'PRISONER_CANCELLED'
+    return request(app)
+      .get(`${paths.BOOKINGS.VISIT_CANCELLED}/1`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visit booking details -/)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
+        expect($('h1').text()).toBe('Visit booking details')
+        expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')
+        expect($('[data-test="visit-date"]').text()).toContain('Thursday 30 May 2024')
+        expect($('[data-test="prison-name"]').text()).not.toContain('Drake Hall (HMP & YOI)')
+        expect($('[data-test="prison-website"]').length).toBe(0)
+        expect($('[data-test="visit-cancelled-type"]').text()).toContain('This visit was cancelled by the prisoner.')
+      })
+  })
+
+  it('should render the booking details page - cancelled by visitor', () => {
+    sessionData.bookingsCancelled[0].outcomeStatus = 'VISITOR_CANCELLED'
+    return request(app)
+      .get(`${paths.BOOKINGS.VISIT_CANCELLED}/1`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visit booking details -/)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
+        expect($('h1').text()).toBe('Visit booking details')
+        expect($('[data-test="booking-reference"]').text()).toContain('ab-cd-ef-gh')
+        expect($('[data-test="visit-date"]').text()).toContain('Thursday 30 May 2024')
+        expect($('[data-test="prison-name"]').text()).not.toContain('Drake Hall (HMP & YOI)')
+        expect($('[data-test="prison-website"]').length).toBe(0)
+        expect($('[data-test="visit-cancelled-type"]').text()).toContain('This visit was cancelled by a visitor.')
       })
   })
 
