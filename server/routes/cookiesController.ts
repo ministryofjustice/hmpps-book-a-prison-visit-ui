@@ -35,6 +35,18 @@ export default class CookiesController {
         httpOnly: false,
         encode: String,
       })
+
+      if (acceptAnalytics === 'no') {
+        const domain = config.domain.includes('localhost') ? 'localhost' : 'justice.gov.uk'
+
+        res.clearCookie('_ga', { domain, secure: false, httpOnly: false })
+        res.clearCookie(`_ga_${config.analytics.googleAnalyticsId.replace('G-', '')}`, {
+          domain,
+          secure: false,
+          httpOnly: false,
+        })
+      }
+
       return res.redirect(paths.COOKIES)
     }
   }

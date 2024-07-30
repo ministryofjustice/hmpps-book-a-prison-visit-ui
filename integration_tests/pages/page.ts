@@ -43,13 +43,35 @@ export default abstract class Page {
     )
   }
 
+  googleAnalytics = (): PageElement => cy.get('[data-test=google-analytics]')
+
+  cookieBanner = (): PageElement => cy.get('#cookie-banner')
+
+  acceptAnalytics = (): void => {
+    cy.get('[data-test=accept-analytics]').click()
+  }
+
+  rejectAnalytics = (): void => {
+    cy.get('[data-test=reject-analytics]').click()
+  }
+
+  hideAnalyticsAcceptedMessage = (): void => {
+    cy.get('[data-test=hide-cookies-accepted]').click()
+  }
+
+  hideAnalyticsRejectedMessage = (): void => {
+    cy.get('[data-test=hide-cookies-rejected]').click()
+  }
+
   oneLoginHeader = (): PageElement => cy.get('.one-login-header')
 
-  signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out')
+  signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out').click()
+
+  goToServiceHeaderLinkByName = (name: string): PageElement => cy.get('.service-header').contains('a', name).click()
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 
-  goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains(name).click()
+  goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains('a', name).click()
 
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
     cy.get(`[data-test=${dataTestName}]`).within(bookButton => {

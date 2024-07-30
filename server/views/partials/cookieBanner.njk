@@ -30,12 +30,18 @@
         {
           text: "Accept analytics cookies",
           type: "button",
-          value: "yes"
+          value: "yes",
+          attributes: {
+            "data-test": "accept-analytics"
+          }
         },
         {
           text: "Reject analytics cookies",
           type: "button",
-          value: "no"
+          value: "no",
+          attributes: {
+            "data-test": "reject-analytics"
+          }
         },
         {
           text: "View cookies",
@@ -52,7 +58,10 @@
       actions: [
         {
           text: "Hide cookie message",
-          type: "button"
+          type: "button",
+          attributes: {
+            "data-test": "hide-cookies-accepted"
+          }
         }
       ]
     },
@@ -65,7 +74,10 @@
       actions: [
         {
           text: "Hide cookie message",
-          type: "button"
+          type: "button",
+          attributes: {
+            "data-test": "hide-cookies-rejected"
+          }
         }
       ]
     }

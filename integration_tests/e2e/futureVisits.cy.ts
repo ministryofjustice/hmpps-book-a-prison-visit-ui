@@ -1,7 +1,7 @@
-import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import BookingsPage from '../pages/bookings'
 import VisitDetailsPage from '../pages/bookings/visit'
+import HomePage from '../pages/home'
 import Page from '../pages/page'
 
 context('Bookings home page', () => {
@@ -29,7 +29,8 @@ context('Bookings home page', () => {
       visits: [orchestrationVisitDto],
     })
 
-    cy.visit(paths.BOOKINGS.HOME)
+    const homePage = Page.verifyOnPage(HomePage)
+    homePage.goToServiceHeaderLinkByName('Bookings')
     const bookingsPage = Page.verifyOnPage(BookingsPage)
     bookingsPage.visitDate(1).contains('Thursday 21 May 2026')
     bookingsPage.visitStartTime(1).contains('10am')
