@@ -56,6 +56,44 @@ export default {
       },
     }),
 
+  stubGetPastPublicVisits: ({
+    bookerReference = TestData.bookerReference(),
+    visits = [],
+  }: {
+    bookerReference: BookerReference
+    visits: VisitDto[]
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference}/visits/booked/past`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visits,
+      },
+    }),
+
+  stubGetCancelledPublicVisits: ({
+    bookerReference = TestData.bookerReference(),
+    visits = [],
+  }: {
+    bookerReference: BookerReference
+    visits: VisitDto[]
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference}/visits/cancelled`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visits,
+      },
+    }),
+
   // orchestration-applications-controller
 
   stubChangeVisitApplication: (application: ApplicationDto): SuperAgentRequest => {
