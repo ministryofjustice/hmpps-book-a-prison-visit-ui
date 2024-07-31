@@ -33,13 +33,12 @@ context('Bookings home page', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
-  })
-
-  it('should show Bookings home page with future visits and navigate to view the visit details', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
+  })
 
+  it('should show Bookings home page with future visits and navigate to view the visit details', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -69,10 +68,6 @@ context('Bookings home page', () => {
   })
 
   it('should show Past visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -103,10 +98,6 @@ context('Bookings home page', () => {
   })
 
   it('should show Cancelled visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
