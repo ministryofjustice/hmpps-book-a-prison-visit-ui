@@ -122,7 +122,7 @@ jobs:
       - store_artifacts:
           path: integration_tests/screenshots
 
-  acceptance_tests_public_ui_main:
+  acceptance_tests_public_ui:
     docker:
       - image: mcr.microsoft.com/playwright:v1.44.1-jammy
     circleci_ip_ranges: true
@@ -208,7 +208,7 @@ workflows:
           requires:
             - request-staging-preview-approval
 
-      - acceptance_tests_public_ui_staging_preview:
+      - acceptance_tests_public_ui:
           <<: *feature_branch
           requires:
             - request-acceptance-tests-public-approval
@@ -248,7 +248,7 @@ workflows:
           requires:
             - deploy_dev
 
-      - acceptance_tests_public_ui_main:
+      - acceptance_tests_public_ui:
           <<: *main_branch
           requires:
             - request-acceptance-tests-public-approval
