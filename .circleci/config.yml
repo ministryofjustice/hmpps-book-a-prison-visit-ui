@@ -296,7 +296,6 @@ workflows:
           requires:
             - request-prod-approval
 
-
   security:
     triggers:
       - schedule:
