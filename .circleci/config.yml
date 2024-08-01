@@ -211,7 +211,7 @@ workflows:
       - acceptance_tests_public_ui:
           <<: *feature_branch
           requires:
-            - request-acceptance-tests-public-approval
+            - request-acceptance-tests-staging-preview-public-approval
           context: visits-public-e2e-tests
 
       - request-acceptance-tests-staging-preview-public-approval:
