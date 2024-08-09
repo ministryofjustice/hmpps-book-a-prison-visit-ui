@@ -31,7 +31,7 @@ afterEach(() => {
 })
 
 describe('Home page', () => {
-  it('should render the visitors page with the visitors associated with the prisoner', () => {
+  it('should render the visitors page with the visitors associated with the booker', () => {
     bookerService.getVisitors.mockResolvedValue([visitor])
 
     return request(app)
