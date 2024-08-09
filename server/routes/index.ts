@@ -7,6 +7,7 @@ import bookingJourneyRoutes from './bookVisit'
 import paths from '../constants/paths'
 import bookingsRoutes from './bookings/index'
 import AccessDeniedController from './accessDeniedController'
+import VisitorsController from './visitorsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -14,12 +15,15 @@ export default function routes(services: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   const home = new HomeController(services.bookerService)
+  const visitors = new VisitorsController(services.bookerService)
 
   router.use(bookingsRoutes(services))
 
   const accessDenied = new AccessDeniedController()
 
   get(paths.HOME, home.view())
+
+  get(paths.VISITORS, visitors.view())
 
   router.use(bookingJourneyRoutes(services))
 

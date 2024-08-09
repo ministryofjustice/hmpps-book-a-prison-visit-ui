@@ -1,5 +1,6 @@
 const paths = {
   HOME: '/',
+  VISITORS: '/visitors',
 
   ACCESS_DENIED: '/access-denied',
   SIGN_IN: '/sign-in',
