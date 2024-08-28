@@ -9,7 +9,7 @@ export default function analyticsConsent(): RequestHandler {
         : undefined
 
       res.locals.analyticsEnabled = acceptAnalytics
-    } catch (error) {
+    } catch {
       res.locals.analyticsEnabled = undefined
     }
 
