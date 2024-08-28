@@ -27,7 +27,7 @@ export const initialiseName = (fullName?: string): string | null => {
 export const formatDate = (date: string, dateFormat = 'd MMMM yyyy'): string => {
   try {
     return format(parseISO(date), dateFormat)
-  } catch (error) {
+  } catch {
     return ''
   }
 }
@@ -37,7 +37,7 @@ export const formatTime = (time: string): string => {
     const referenceDate = new Date()
     const parsedTime = parse(time, 'HH:mm', referenceDate)
     return format(parsedTime, 'h:mmaaa').replace(':00', '')
-  } catch (error) {
+  } catch {
     return ''
   }
 }
@@ -45,7 +45,7 @@ export const formatTime = (time: string): string => {
 export const formatTimeFromDateTime = (dateTime: string): string => {
   try {
     return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : null
-  } catch (error) {
+  } catch {
     return ''
   }
 }
@@ -59,7 +59,7 @@ export const formatTimeDuration = (startTime: string, endTime: string): string =
     const duration = intervalToDuration({ start, end })
 
     return formatDuration(duration, { delimiter: ' and ' })
-  } catch (error) {
+  } catch {
     return ''
   }
 }
