@@ -277,7 +277,7 @@ describe('orchestrationApiClient', () => {
         visitorIds,
       })
 
-      expect(result).toStrictEqual(availableVisitSessionRestrictionDto.sessionRestriction)
+      expect(result).toBe(availableVisitSessionRestrictionDto.sessionRestriction)
     })
   })
 
