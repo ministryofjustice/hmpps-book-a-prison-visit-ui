@@ -1,16 +1,16 @@
 import nock from 'nock'
 import config from '../config'
-import OrchestrationApiClient from './orchestrationApiClient'
+import OrchestrationApiClient, { SessionRestriction } from './orchestrationApiClient'
 import TestData from '../routes/testutils/testData'
 import {
   ApplicationDto,
   AvailableVisitSessionDto,
+  AvailableVisitSessionRestrictionDto,
   BookingOrchestrationRequestDto,
   ChangeApplicationDto,
   CreateApplicationDto,
   VisitDto,
 } from './orchestrationApiTypes'
-import { SessionRestriction } from '../services/visitSessionsService'
 
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
@@ -253,6 +253,31 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toStrictEqual(visitSessions)
+    })
+  })
+
+  describe('getSessionRestriction', () => {
+    it('should get session restriction for prisoner and visitors', async () => {
+      const { prisoner } = TestData.bookerPrisonerInfoDto()
+      const visitorIds = [1, 2]
+
+      const availableVisitSessionRestrictionDto: AvailableVisitSessionRestrictionDto = { sessionRestriction: 'OPEN' }
+
+      fakeOrchestrationApi
+        .get('/visit-sessions/available/restriction')
+        .query({
+          prisonerId: prisoner.prisonerNumber,
+          visitors: visitorIds.join(','),
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, availableVisitSessionRestrictionDto)
+
+      const result = await orchestrationApiClient.getSessionRestriction({
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+      })
+
+      expect(result).toStrictEqual(availableVisitSessionRestrictionDto.sessionRestriction)
     })
   })
 

@@ -8,6 +8,8 @@ export type AuthDetailDto = components['schemas']['AuthDetailDto']
 
 export type AvailableVisitSessionDto = components['schemas']['AvailableVisitSessionDto']
 
+export type AvailableVisitSessionRestrictionDto = components['schemas']['AvailableVisitSessionRestrictionDto']
+
 export type BookingOrchestrationRequestDto = components['schemas']['BookingOrchestrationRequestDto']
 
 export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']

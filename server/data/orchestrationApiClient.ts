@@ -13,8 +13,10 @@ import {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
+  AvailableVisitSessionRestrictionDto,
 } from './orchestrationApiTypes'
-import { type SessionRestriction } from '../services/visitSessionsService'
+
+export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
 
 export default class OrchestrationApiClient {
   private restClient: RestClient
@@ -165,6 +167,23 @@ export default class OrchestrationApiClient {
         ...(excludedApplicationReference && { excludedApplicationReference }),
       }).toString(),
     })
+  }
+
+  async getSessionRestriction({
+    prisonerId,
+    visitorIds,
+  }: {
+    prisonerId: string
+    visitorIds: number[]
+  }): Promise<SessionRestriction> {
+    const { sessionRestriction } = await this.restClient.get<AvailableVisitSessionRestrictionDto>({
+      path: '/visit-sessions/available/restriction',
+      query: new URLSearchParams({
+        prisonerId,
+        visitors: visitorIds.join(','),
+      }).toString(),
+    })
+    return sessionRestriction
   }
 
   // orchestration-prisons-config-controller

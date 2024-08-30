@@ -3,8 +3,6 @@ import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../d
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
 
-export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
-
 type VisitSession = { reference: string; startTime: string; endTime: string }
 
 // Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
