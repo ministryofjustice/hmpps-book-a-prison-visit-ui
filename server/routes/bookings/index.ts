@@ -10,16 +10,15 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  // const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const getWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.get(path, ...validationChain, asyncMiddleware(handler))
 
-  const bookings = new BookingsController(services.visitService)
+  const bookingsController = new BookingsController(services.visitService)
   const bookingDetailsController = new BookingDetailsController(services.bookerService)
 
-  get(paths.BOOKINGS.PAST, bookings.viewPast())
-  get(paths.BOOKINGS.CANCELLED, bookings.viewCancelled())
-  get(paths.BOOKINGS.HOME, bookings.viewFuture())
+  get(paths.BOOKINGS.PAST, bookingsController.viewPast())
+  get(paths.BOOKINGS.CANCELLED, bookingsController.viewCancelled())
+  get(paths.BOOKINGS.HOME, bookingsController.viewFuture())
 
   getWithValidation(
     `${paths.BOOKINGS.VISIT}/:visitNumber`,

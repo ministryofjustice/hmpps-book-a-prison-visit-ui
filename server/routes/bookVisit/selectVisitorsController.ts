@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { differenceInYears } from 'date-fns'
-import { BookerService, PrisonService } from '../../services'
+import { BookerService, PrisonService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
 
@@ -9,6 +9,7 @@ export default class SelectVisitorsController {
   public constructor(
     private readonly bookerService: BookerService,
     private readonly prisonService: PrisonService,
+    private readonly visitSessionService: VisitSessionsService,
   ) {}
 
   public view(): RequestHandler {
@@ -58,7 +59,12 @@ export default class SelectVisitorsController {
 
       bookingJourney.selectedVisitors = selectedVisitors
 
-      return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
+      const sessionRestriction = await this.visitSessionService.getSessionRestriction({
+        prisonerId: bookingJourney.prisoner.prisonerNumber,
+        visitorIds: selectedVisitors.map(visitor => visitor.visitorId),
+      })
+
+      return res.redirect(sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.CHOOSE_TIME : paths.BOOK_VISIT.CLOSED_VISIT)
     }
   }
 

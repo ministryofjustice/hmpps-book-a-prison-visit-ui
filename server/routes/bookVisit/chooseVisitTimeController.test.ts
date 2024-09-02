@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { BadRequest, InternalServerError } from 'http-errors'
 import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockVisitService, createMockVisitSessionService } from '../../services/testutils/mocks'
+import { createMockVisitService, createMockVisitSessionsService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
@@ -16,7 +16,7 @@ jest.mock('../../../logger')
 let app: Express
 
 const visitService = createMockVisitService()
-const visitSessionsService = createMockVisitSessionService()
+const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
