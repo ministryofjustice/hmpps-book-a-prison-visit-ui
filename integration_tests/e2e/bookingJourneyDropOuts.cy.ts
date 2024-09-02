@@ -56,6 +56,10 @@ context('Booking journey - drop-out points', () => {
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
       selectVisitorsPage.selectVisitor(1)
+      cy.task('stubGetSessionRestriction', {
+        prisonerId: prisoner.prisoner.prisonerNumber,
+        visitorIds: [1000],
+      })
 
       // Choose visit time
       cy.task('stubGetVisitSessions', {
@@ -88,6 +92,10 @@ context('Booking journey - drop-out points', () => {
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
       selectVisitorsPage.selectVisitor(1)
+      cy.task('stubGetSessionRestriction', {
+        prisonerId: prisoner.prisoner.prisonerNumber,
+        visitorIds: [1000],
+      })
 
       // Choose visit time
       cy.task('stubGetVisitSessions', {

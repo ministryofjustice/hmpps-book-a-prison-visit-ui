@@ -111,6 +111,10 @@ context('Booking journey', () => {
     selectVisitorsPage.getVisitorLabel(3).contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitor(1)
     selectVisitorsPage.selectVisitor(3)
+    cy.task('stubGetSessionRestriction', {
+      prisonerId: prisoner.prisoner.prisonerNumber,
+      visitorIds: [1000, 3000],
+    })
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
