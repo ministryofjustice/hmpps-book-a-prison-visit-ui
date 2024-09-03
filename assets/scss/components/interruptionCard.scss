@@ -1,0 +1,8 @@
+.interruption-card {
+  background-color: govuk-colour('blue');
+  padding: govuk-spacing(8) govuk-spacing(5);
+}
+
+.interruption-card__heading, .interruption-card__text {
+  color: govuk-colour('white');
+}
