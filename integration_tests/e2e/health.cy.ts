@@ -16,6 +16,10 @@ context('Healthcheck', () => {
     it('Info is visible', () => {
       cy.request('/info').its('body').should('exist')
     })
+
+    it('Info contains activeAgencies array', () => {
+      cy.request('/info').its('body.activeAgencies').should('be.an', 'array')
+    })
   })
 
   context('Some unhealthy', () => {
