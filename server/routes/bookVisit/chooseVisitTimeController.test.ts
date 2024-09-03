@@ -86,7 +86,6 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
-          allVisitSessions,
         },
       } as SessionData
 
