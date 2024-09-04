@@ -17,6 +17,7 @@ export default function routes(services: Services): Router {
   const accessDeniedController = new AccessDeniedController()
 
   get(paths.HOME, homeController.view())
+  get(paths.RETURN_HOME, homeController.returnHome())
   get(paths.ACCESS_DENIED, accessDeniedController.view())
 
   router.use(bookingsRoutes(services))

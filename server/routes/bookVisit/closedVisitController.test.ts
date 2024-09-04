@@ -62,7 +62,7 @@ describe('Closed visit', () => {
           expect($('[data-test=closed-visit-continue]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
 
           expect($('[data-test=closed-visit-cancel]').text().trim()).toBe('Cancel and return to the homepage')
-          expect($('[data-test=closed-visit-cancel]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test=closed-visit-cancel]').attr('href')).toBe(paths.RETURN_HOME)
         })
     })
   })
