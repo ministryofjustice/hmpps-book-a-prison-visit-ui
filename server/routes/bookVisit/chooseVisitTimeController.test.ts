@@ -175,6 +175,21 @@ describe('Choose visit time', () => {
         })
     })
 
+    it('should have back link to closed visit page if sessionRestriction is CLOSED', () => {
+      sessionData.bookingJourney.sessionRestriction = 'CLOSED'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Choose the visit time -/)
+          expect($('#service-header__nav').length).toBe(0)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CLOSED_VISIT)
+          expect($('h1').text()).toBe('Choose the visit time')
+        })
+    })
+
     it('should render info message if set in flash', () => {
       const message = 'Your visit time is no longer available. Select a new time.'
       flashData = { message: [message] }
