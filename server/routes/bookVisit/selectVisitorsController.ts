@@ -63,6 +63,7 @@ export default class SelectVisitorsController {
         prisonerId: bookingJourney.prisoner.prisonerNumber,
         visitorIds: selectedVisitors.map(visitor => visitor.visitorId),
       })
+      bookingJourney.sessionRestriction = sessionRestriction
 
       return res.redirect(sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.CHOOSE_TIME : paths.BOOK_VISIT.CLOSED_VISIT)
     }

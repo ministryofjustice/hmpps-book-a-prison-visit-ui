@@ -299,6 +299,7 @@ describe('Select visitors', () => {
               prison,
               allVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
+              sessionRestriction: 'OPEN',
             },
           } as SessionData)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
@@ -328,6 +329,7 @@ describe('Select visitors', () => {
               prison,
               allVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
+              sessionRestriction: 'CLOSED',
             },
           } as SessionData)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
@@ -355,6 +357,7 @@ describe('Select visitors', () => {
               prison,
               allVisitors: visitors,
               selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
+              sessionRestriction: 'OPEN',
             },
           } as SessionData)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
