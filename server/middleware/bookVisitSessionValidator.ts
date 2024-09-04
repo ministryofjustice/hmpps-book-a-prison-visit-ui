@@ -56,7 +56,10 @@ export default function bookVisitSessionValidator(): RequestHandler {
     if (
       (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CLOSED_VISIT) ||
         journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME)) &&
-      (!bookingJourney.prison || !bookingJourney.allVisitors?.length || !bookingJourney.selectedVisitors?.length)
+      (!bookingJourney.prison ||
+        !bookingJourney.allVisitors?.length ||
+        !bookingJourney.selectedVisitors?.length ||
+        !bookingJourney.sessionRestriction)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }

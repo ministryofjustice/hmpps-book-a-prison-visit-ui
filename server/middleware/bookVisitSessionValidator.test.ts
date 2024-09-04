@@ -5,6 +5,7 @@ import bookVisitSessionValidator from './bookVisitSessionValidator'
 import paths from '../constants/paths'
 import { Booker, BookingConfirmed, BookingJourney } from '../@types/bapv'
 import logger from '../../logger'
+import { SessionRestriction } from '../data/orchestrationApiClient'
 
 jest.mock('../../logger')
 
@@ -18,6 +19,7 @@ describe('bookVisitSessionValidator', () => {
   const bookerReference = TestData.bookerReference().value
   const prisoner = TestData.prisoner()
   const visitor = TestData.visitor()
+  const sessionRestriction: SessionRestriction = 'OPEN'
   const visitSessionId = '2024-05-30_a'
   const visitSession = TestData.availableVisitSessionDto()
   const applicationReference = 'aaa-bbb-ccc'
@@ -128,7 +130,7 @@ describe('bookVisitSessionValidator', () => {
         })
       })
 
-      describe('...add selectedVisitors', () => {
+      describe('...add selectedVisitors and sessionRestriction', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'next' },
@@ -146,6 +148,7 @@ describe('bookVisitSessionValidator', () => {
               prison: TestData.prisonDto(),
               allVisitors: [visitor],
               selectedVisitors: [visitor],
+              sessionRestriction,
             },
           })
           bookVisitSessionValidator()(req, res, next)
@@ -172,6 +175,7 @@ describe('bookVisitSessionValidator', () => {
               prison: TestData.prisonDto(),
               allVisitors: [visitor],
               selectedVisitors: [visitor],
+              sessionRestriction,
               allVisitSessionIds: [visitSessionId],
               allVisitSessions: [visitSession],
             },
@@ -202,6 +206,7 @@ describe('bookVisitSessionValidator', () => {
               prison: TestData.prisonDto(),
               allVisitors: [visitor],
               selectedVisitors: [visitor],
+              sessionRestriction,
               allVisitSessionIds: [visitSessionId],
               allVisitSessions: [visitSession],
               selectedVisitSession: visitSession,
@@ -236,6 +241,7 @@ describe('bookVisitSessionValidator', () => {
               prison: TestData.prisonDto(),
               allVisitors: [visitor],
               selectedVisitors: [visitor],
+              sessionRestriction,
               allVisitSessionIds: [visitSessionId],
               allVisitSessions: [visitSession],
               selectedVisitSession: visitSession,
@@ -272,6 +278,7 @@ describe('bookVisitSessionValidator', () => {
               prison: TestData.prisonDto(),
               allVisitors: [visitor],
               selectedVisitors: [visitor],
+              sessionRestriction,
               allVisitSessionIds: [visitSessionId],
               allVisitSessions: [visitSession],
               selectedVisitSession: visitSession,
