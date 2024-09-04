@@ -11,7 +11,6 @@ import {
   isAdult,
   pluralise,
 } from './utils'
-import { Booker, BookingConfirmed, BookingJourney } from '../@types/bapv'
 
 describe('convert to title case', () => {
   it.each([
