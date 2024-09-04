@@ -10,6 +10,7 @@ import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
 
@@ -23,6 +24,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto({ policyNoticeDaysMax: 6 }) // small booking window for testing
 const visitor = TestData.visitorInfoDto()
+const sessionRestriction: SessionRestriction = 'OPEN'
 const firstSessionDate = '2024-05-30'
 const calendar: VisitSessionsCalendar = {
   '2024-05': {
@@ -86,6 +88,7 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
         },
       } as SessionData
 
@@ -271,6 +274,7 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
           allVisitSessionIds,
           allVisitSessions,
         },
