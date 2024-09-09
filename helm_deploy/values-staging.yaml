@@ -23,6 +23,7 @@ generic-service:
       APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
 
   allowlist:
+    user-vision: "5.181.59.114"
     groups:
       - digital_staff_and_mojo
       - moj_cloud_platform
