@@ -6,6 +6,7 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
 
@@ -17,6 +18,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
+const sessionRestriction: SessionRestriction = 'OPEN'
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -27,7 +29,7 @@ describe('Closed visit', () => {
     beforeEach(() => {
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { prisoner, prison, allVisitors: [visitor], selectedVisitors: [visitor] },
+        bookingJourney: { prisoner, prison, allVisitors: [visitor], selectedVisitors: [visitor], sessionRestriction },
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })
@@ -62,7 +64,7 @@ describe('Closed visit', () => {
           expect($('[data-test=closed-visit-continue]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
 
           expect($('[data-test=closed-visit-cancel]').text().trim()).toBe('Cancel and return to the homepage')
-          expect($('[data-test=closed-visit-cancel]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test=closed-visit-cancel]').attr('href')).toBe(paths.RETURN_HOME)
         })
     })
   })

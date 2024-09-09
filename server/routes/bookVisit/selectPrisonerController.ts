@@ -1,15 +1,14 @@
 import type { RequestHandler } from 'express'
 import { NotFound } from 'http-errors'
 import paths from '../../constants/paths'
+import { clearSession } from '../../utils/utils'
 
 export default class SelectPrisonerController {
   public constructor() {}
 
   public selectPrisoner(): RequestHandler {
     return async (req, res) => {
-      // clear booking journey in session
-      delete req.session.bookingJourney
-      delete req.session.bookingConfirmed
+      clearSession(req)
 
       const prisoner = req.session.booker.prisoners[0]
 

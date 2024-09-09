@@ -10,6 +10,7 @@ import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
 
@@ -23,6 +24,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto({ policyNoticeDaysMax: 6 }) // small booking window for testing
 const visitor = TestData.visitorInfoDto()
+const sessionRestriction: SessionRestriction = 'OPEN'
 const firstSessionDate = '2024-05-30'
 const calendar: VisitSessionsCalendar = {
   '2024-05': {
@@ -86,6 +88,7 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
         },
       } as SessionData
 
@@ -169,6 +172,21 @@ describe('Choose visit time', () => {
             bookerReference,
             daysAhead: prison.policyNoticeDaysMax,
           })
+        })
+    })
+
+    it('should have back link to closed visit page if sessionRestriction is CLOSED', () => {
+      sessionData.bookingJourney.sessionRestriction = 'CLOSED'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Choose the visit time -/)
+          expect($('#service-header__nav').length).toBe(0)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CLOSED_VISIT)
+          expect($('h1').text()).toBe('Choose the visit time')
         })
     })
 
@@ -271,6 +289,7 @@ describe('Choose visit time', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
           allVisitSessionIds,
           allVisitSessions,
         },
