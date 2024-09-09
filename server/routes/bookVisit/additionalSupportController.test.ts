@@ -8,6 +8,7 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import config from '../../config'
+import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
 
@@ -19,6 +20,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const visitor = TestData.visitor()
+const sessionRestriction: SessionRestriction = 'OPEN'
 const visitSession = TestData.availableVisitSessionDto()
 
 afterEach(() => {
@@ -40,6 +42,7 @@ describe('Additional support needs', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
           allVisitSessionIds: ['2024-05-30_a'],
           allVisitSessions: [visitSession],
           selectedVisitSession: visitSession,
@@ -189,6 +192,7 @@ describe('Additional support needs', () => {
           prison,
           allVisitors: [visitor],
           selectedVisitors: [visitor],
+          sessionRestriction,
           allVisitSessionIds: ['2024-05-30_a'],
           allVisitSessions: [visitSession],
           selectedVisitSession: visitSession,
