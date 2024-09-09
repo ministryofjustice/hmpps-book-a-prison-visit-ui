@@ -39,6 +39,9 @@ export default class ChooseVisitTimeController {
         ? { visitSession: `${selectedVisitSession.sessionDate}_${selectedVisitSession.sessionTemplateReference}` }
         : {}
 
+      const backLinkHref =
+        bookingJourney.sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.SELECT_VISITORS : paths.BOOK_VISIT.CLOSED_VISIT
+
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
@@ -46,6 +49,7 @@ export default class ChooseVisitTimeController {
         calendar,
         selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
         prisoner,
+        backLinkHref,
       })
     }
   }

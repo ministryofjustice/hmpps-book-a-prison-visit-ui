@@ -2,8 +2,7 @@ import { addDays, eachDayOfInterval, format } from 'date-fns'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
-
-export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
+import { SessionRestriction } from '../data/orchestrationApiClient'
 
 type VisitSession = { reference: string; startTime: string; endTime: string }
 
@@ -104,5 +103,18 @@ export default class VisitSessionsService {
       bookerReference,
       excludedApplicationReference,
     })
+  }
+
+  async getSessionRestriction({
+    prisonerId,
+    visitorIds,
+  }: {
+    prisonerId: string
+    visitorIds: number[]
+  }): Promise<SessionRestriction> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    return orchestrationApiClient.getSessionRestriction({ prisonerId, visitorIds })
   }
 }

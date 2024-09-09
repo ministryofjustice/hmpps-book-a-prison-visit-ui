@@ -2,6 +2,7 @@ import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsService'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
+import { SessionRestriction } from '../data/orchestrationApiClient'
 
 const token = 'some token'
 const bookerReference = TestData.bookerReference().value
@@ -162,6 +163,27 @@ describe('Visit sessions service', () => {
         bookerReference,
         excludedApplicationReference,
       })
+    })
+  })
+
+  describe('getSessionRestriction', () => {
+    it('should get session restriction for prisoner and visitors', async () => {
+      const sessionRestriction: SessionRestriction = 'OPEN'
+      orchestrationApiClient.getSessionRestriction.mockResolvedValue(sessionRestriction)
+
+      const { prisoner } = TestData.bookerPrisonerInfoDto()
+      const visitorIds = [1, 2]
+
+      const result = await visitSessionsService.getSessionRestriction({
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+      })
+
+      expect(orchestrationApiClient.getSessionRestriction).toHaveBeenCalledWith({
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+      })
+      expect(result).toBe(sessionRestriction)
     })
   })
 })

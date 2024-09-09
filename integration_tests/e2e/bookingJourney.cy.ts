@@ -10,6 +10,7 @@ import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
 import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 import VisitBookedPage from '../pages/bookVisit/visitBooked'
+import ClosedVisitPage from '../pages/bookVisit/closedVisit'
 
 context('Booking journey', () => {
   const today = new Date()
@@ -82,7 +83,7 @@ context('Booking journey', () => {
     cy.task('stubHmppsAuthToken')
   })
 
-  it('should complete the booking journey', () => {
+  it('should complete the booking journey (OPEN visit)', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
@@ -111,6 +112,10 @@ context('Booking journey', () => {
     selectVisitorsPage.getVisitorLabel(3).contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitor(1)
     selectVisitorsPage.selectVisitor(3)
+    cy.task('stubGetSessionRestriction', {
+      prisonerId: prisoner.prisoner.prisonerNumber,
+      visitorIds: [1000, 3000],
+    })
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
@@ -172,5 +177,46 @@ context('Booking journey', () => {
       .contains(
         'A text message confirming the visit will be sent to the main contact. This will include the booking reference.',
       )
+  })
+
+  it('should show closed visit interruption card (CLOSED visit)', () => {
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+    cy.signIn()
+
+    const bookerReference = TestData.bookerReference().value
+
+    // Home page - prisoner shown
+    const homePage = Page.verifyOnPage(HomePage)
+    homePage.prisonerName().contains('John Smith')
+
+    // Start booking journey
+    cy.task('stubGetPrison', prison)
+    cy.task('stubGetVisitors', { visitors })
+    homePage.startBooking()
+
+    // Select visitors page - choose visitors
+    const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
+    selectVisitorsPage.selectVisitor(1)
+    cy.task('stubGetSessionRestriction', {
+      prisonerId: prisoner.prisoner.prisonerNumber,
+      visitorIds: [1000],
+      sessionRestriction: 'CLOSED',
+    })
+    selectVisitorsPage.continue()
+
+    // Closed visit interruption card page
+    const closedVisitPage = Page.verifyOnPage(ClosedVisitPage)
+
+    // Choose visit time
+    cy.task('stubGetVisitSessions', {
+      prisonId: prisoner.prisoner.prisonId,
+      prisonerId: prisoner.prisoner.prisonerNumber,
+      visitorIds: [1000],
+      bookerReference,
+      visitSessions,
+    })
+    closedVisitPage.continue()
+    Page.verifyOnPage(ChooseVisitTimePage)
   })
 })

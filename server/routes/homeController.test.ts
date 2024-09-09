@@ -6,6 +6,7 @@ import { appWithAllRoutes } from './testutils/appSetup'
 import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from './testutils/testData'
 import paths from '../constants/paths'
+import * as utils from '../utils/utils'
 
 let app: Express
 
@@ -76,6 +77,20 @@ describe('Home page', () => {
             prisoners: [],
           },
         } as SessionData)
+      })
+  })
+})
+
+describe('Return to Home page redirect', () => {
+  it('should call clearSession() and redirect to home', () => {
+    const clearSession = jest.spyOn(utils, 'clearSession')
+
+    return request(app)
+      .get(paths.RETURN_HOME)
+      .expect(302)
+      .expect('Location', paths.HOME)
+      .expect(() => {
+        expect(clearSession).toHaveBeenCalled()
       })
   })
 })

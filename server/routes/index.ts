@@ -13,17 +13,15 @@ export default function routes(services: Services): Router {
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const home = new HomeController(services.bookerService)
+  const homeController = new HomeController(services.bookerService)
+  const accessDeniedController = new AccessDeniedController()
+
+  get(paths.HOME, homeController.view())
+  get(paths.RETURN_HOME, homeController.returnHome())
+  get(paths.ACCESS_DENIED, accessDeniedController.view())
 
   router.use(bookingsRoutes(services))
-
-  const accessDenied = new AccessDeniedController()
-
-  get(paths.HOME, home.view())
-
   router.use(bookingJourneyRoutes(services))
-
-  router.get(paths.ACCESS_DENIED, accessDenied.view())
 
   return router
 }

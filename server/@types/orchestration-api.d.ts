@@ -434,6 +434,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visit-sessions/available/restriction': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns the restriction type of available sessions
+     * @description Returns the restriction of available sessions given a prisoner and optionally a list of visitors [OPEN / CLOSED]
+     */
+    get: operations['getSessionRestrictionType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/get-dlq-messages/{dlqName}': {
     parameters: {
       query?: never
@@ -1061,9 +1081,13 @@ export interface components {
         | 'CANCELLED_VISIT'
         | 'NON_ASSOCIATION_EVENT'
         | 'PRISONER_RELEASED_EVENT'
+        | 'PRISONER_RECEIVED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
+        | 'PRISONER_ALERTS_UPDATED_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
         | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
+        | 'PERSON_RESTRICTION_UPSERTED_EVENT'
+        | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
       /**
        * @description What was the application method for this event
        * @enum {string}
@@ -1150,14 +1174,14 @@ export interface components {
       totalPages?: number
       /** Format: int64 */
       totalElements?: number
+      first?: boolean
+      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
@@ -1197,6 +1221,10 @@ export interface components {
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+        | 'PRISONER_RECEIVED_EVENT'
+        | 'PRISONER_ALERTS_UPDATED_EVENT'
+        | 'PERSON_RESTRICTION_UPSERTED_EVENT'
+        | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
       /** @description List of details of affected visits */
       affectedVisits: components['schemas']['OrchestrationPrisonerVisitsNotificationDto'][]
     }
@@ -1384,9 +1412,18 @@ export interface components {
        */
       sessionRestriction: 'OPEN' | 'CLOSED'
     }
+    /** @description Visit Session restriction type */
+    AvailableVisitSessionRestrictionDto: {
+      /**
+       * @description Session Restriction
+       * @example OPEN
+       * @enum {string}
+       */
+      sessionRestriction: 'OPEN' | 'CLOSED'
+    }
     DlqMessage: {
       body: {
-        [key: string]: Record<string, never> | undefined
+        [key: string]: Record<string, never>
       }
       messageId: string
     }
@@ -1588,7 +1625,7 @@ export interface components {
        */
       dateOfBirth?: string
     }
-    /** @description Alert */
+    /** @description AlertDto returned from orchestration, made of fields from AlertResponseDto from Alerts API call */
     AlertDto: {
       /**
        * @description Alert Type
@@ -1627,11 +1664,6 @@ export interface components {
        * @example 2020-08-20
        */
       dateExpires?: string
-      /**
-       * @description True / False based on presence of expiry date
-       * @example true
-       */
-      expired: boolean
       /**
        * @description True / False based on alert status
        * @example false
@@ -2796,6 +2828,10 @@ export interface operations {
             | 'PRISONER_RELEASED_EVENT'
             | 'PRISONER_RESTRICTION_CHANGE_EVENT'
             | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+            | 'PRISONER_RECEIVED_EVENT'
+            | 'PRISONER_ALERTS_UPDATED_EVENT'
+            | 'PERSON_RESTRICTION_UPSERTED_EVENT'
+            | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
           )[]
         }
       }
@@ -2880,6 +2916,11 @@ export interface operations {
          * @example 28
          */
         max?: number
+        /**
+         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
+         * @example user-1
+         */
+        username?: string
       }
       header?: never
       path?: never
@@ -3066,7 +3107,7 @@ export interface operations {
         /** @description Advances the available visits slots sought from date by n days. Defaults to 0 if not passed. */
         advanceFromDateByDays?: number
         /**
-         * @description Username for the user making the request. Optional, ignored if not passed in.
+         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
          * @example user-1
          */
         username?: string
@@ -3087,6 +3128,55 @@ export interface operations {
         }
       }
       /** @description Incorrect request to Get visit sessions  */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSessionRestrictionType: {
+    parameters: {
+      query: {
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
+        prisonerId: string
+        /**
+         * @description List of visitors who require visit sessions
+         * @example 4729510,4729220
+         */
+        visitors?: number[]
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Available visit session restriction returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AvailableVisitSessionRestrictionDto']
+        }
+      }
+      /** @description Incorrect request to Get available visit session restriction */
       400: {
         headers: {
           [name: string]: unknown

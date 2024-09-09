@@ -8,6 +8,7 @@ import TestData from '../testutils/testData'
 import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
 
@@ -19,6 +20,7 @@ let sessionData: SessionData
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
+const sessionRestriction: SessionRestriction = 'OPEN'
 const adultVisitor1 = TestData.visitor({ visitorDisplayId: 1, visitorId: 100 })
 const adultVisitor2 = TestData.visitor({ visitorDisplayId: 2, visitorId: 200 })
 const childVisitor = TestData.visitor({
@@ -37,6 +39,7 @@ beforeEach(() => {
       prison,
       allVisitors: [adultVisitor1, adultVisitor2, childVisitor],
       selectedVisitors: [adultVisitor1, childVisitor],
+      sessionRestriction,
       allVisitSessionIds: ['2024-05-30_a'],
       allVisitSessions: [visitSession],
       selectedVisitSession: visitSession,

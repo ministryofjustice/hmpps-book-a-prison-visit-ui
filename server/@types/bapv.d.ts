@@ -1,3 +1,4 @@
+import { SessionRestriction } from '../data/orchestrationApiClient'
 import { AvailableVisitSessionDto, PrisonDto } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 
@@ -19,6 +20,9 @@ export type BookingJourney = {
 
   // selected visitors for this visit
   selectedVisitors?: Visitor[]
+
+  // session restriction (OPEN/CLOSED) for this visit
+  sessionRestriction?: SessionRestriction
 
   // all available visit sessions
   allVisitSessionIds?: string[] // e.g. ['2024-05-28_session-ref']

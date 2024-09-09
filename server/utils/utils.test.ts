@@ -1,4 +1,7 @@
+import { Request } from 'express'
+import { SessionData } from 'express-session'
 import {
+  clearSession,
   convertToTitleCase,
   formatDate,
   formatTime,
@@ -113,6 +116,21 @@ describe('pluralise', () => {
     })
     it('Is a child - on given date', () => {
       expect(isAdult('2000-01-02', new Date('2018-01-01'))).toEqual(false)
+    })
+  })
+
+  describe('Clear session data', () => {
+    it('should clear booking journey from the session', () => {
+      const sessionData: Partial<Record<keyof SessionData, string>> = {
+        booker: 'BOOKER DATA',
+        bookingJourney: 'BOOKING JOURNEY DATA',
+        bookingConfirmed: 'BOOKING CONFIRMATION DATA',
+      }
+      const req = { session: sessionData } as unknown as Request
+
+      clearSession(req)
+
+      expect(sessionData).toStrictEqual({ booker: 'BOOKER DATA' })
     })
   })
 })

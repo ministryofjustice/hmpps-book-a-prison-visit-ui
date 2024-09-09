@@ -4,7 +4,11 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
+import {
+  createMockBookerService,
+  createMockPrisonService,
+  createMockVisitSessionsService,
+} from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -15,6 +19,7 @@ let app: Express
 
 const bookerService = createMockBookerService()
 const prisonService = createMockPrisonService()
+const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
@@ -266,15 +271,17 @@ describe('Select visitors', () => {
 
   describe(`POST ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
     beforeEach(() => {
+      visitSessionsService.getSessionRestriction.mockResolvedValue('OPEN')
+
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
         bookingJourney: { prisoner, prison, allVisitors: visitors },
       } as SessionData
 
-      app = appWithAllRoutes({ sessionData })
+      app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
     })
 
-    it('should should save selected visitors to session and redirect to select date and time page', () => {
+    it('should should save selected visitors to session and redirect to select date and time page (OPEN visit)', () => {
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
         .send({ visitorDisplayIds: [1, 3] })
@@ -292,8 +299,43 @@ describe('Select visitors', () => {
               prison,
               allVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
+              sessionRestriction: 'OPEN',
             },
           } as SessionData)
+          expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor1.visitorId, visitor3.visitorId],
+          })
+        })
+    })
+
+    it('should should save selected visitors to session and redirect to closed visit page (CLOSED visit)', () => {
+      visitSessionsService.getSessionRestriction.mockResolvedValue('CLOSED')
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
+        .send({ visitorDisplayIds: [1, 3] })
+        .expect(302)
+        .expect('Location', paths.BOOK_VISIT.CLOSED_VISIT)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+            bookingJourney: {
+              prisoner,
+              prison,
+              allVisitors: visitors,
+              selectedVisitors: [visitor1, visitor3],
+              sessionRestriction: 'CLOSED',
+            },
+          } as SessionData)
+          expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor1.visitorId, visitor3.visitorId],
+          })
         })
     })
 
@@ -315,8 +357,13 @@ describe('Select visitors', () => {
               prison,
               allVisitors: visitors,
               selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
+              sessionRestriction: 'OPEN',
             },
           } as SessionData)
+          expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor1.visitorId, visitor3.visitorId],
+          })
         })
     })
 

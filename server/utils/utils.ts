@@ -1,4 +1,6 @@
+import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
+import { SessionData } from 'express-session'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -71,4 +73,10 @@ export const pluralise = (word: string, count: string | number, plural = `${word
 export const isAdult = (dateOfBirth: string, referenceDate: Date = new Date()): boolean => {
   const dobDate = parseISO(dateOfBirth)
   return differenceInYears(referenceDate, dobDate) >= 18
+}
+
+export const clearSession = (req: Request): void => {
+  ;['bookingJourney', 'bookingConfirmed'].forEach((sessionItem: keyof SessionData) => {
+    delete req.session[sessionItem]
+  })
 }

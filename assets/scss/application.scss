@@ -10,5 +10,6 @@ $path: "/assets/images/";
 // GOV.UK One Login components
 @import './components/service-header-no-imports';
 
+@import './components/interruptionCard.scss';
 @import './components/visitsCalendar.scss';
 @import './local';

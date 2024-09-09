@@ -10,6 +10,7 @@ import {
   VisitDto,
   VisitorInfoDto,
 } from '../../server/data/orchestrationApiTypes'
+import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
 export default {
   // orchestration-visits-controller
@@ -245,7 +246,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPath: `/orchestration/visit-sessions/available`,
+        urlPath: '/orchestration/visit-sessions/available',
         queryParameters: {
           prisonId: { equalTo: prisonId },
           prisonerId: { equalTo: prisonerId },
@@ -267,6 +268,31 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: visitSessions,
+      },
+    }),
+
+  stubGetSessionRestriction: ({
+    prisonerId,
+    visitorIds,
+    sessionRestriction = 'OPEN',
+  }: {
+    prisonerId: string
+    visitorIds: number[]
+    sessionRestriction: SessionRestriction
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/orchestration/visit-sessions/available/restriction',
+        queryParameters: {
+          prisonerId: { equalTo: prisonerId },
+          visitors: { equalTo: visitorIds.join(',') },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { sessionRestriction },
       },
     }),
 

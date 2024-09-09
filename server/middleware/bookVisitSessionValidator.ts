@@ -7,6 +7,7 @@ const journeyOrder: string[] = [
   paths.BOOK_VISIT.SELECT_PRISONER,
   paths.BOOK_VISIT.CANNOT_BOOK,
   paths.BOOK_VISIT.SELECT_VISITORS,
+  paths.BOOK_VISIT.CLOSED_VISIT,
   paths.BOOK_VISIT.CHOOSE_TIME,
   paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
   paths.BOOK_VISIT.MAIN_CONTACT,
@@ -51,10 +52,14 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // Choose visit time page
+    // Closed visit & Choose visit time page
     if (
-      journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME) &&
-      (!bookingJourney.prison || !bookingJourney.allVisitors?.length || !bookingJourney.selectedVisitors?.length)
+      (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CLOSED_VISIT) ||
+        journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME)) &&
+      (!bookingJourney.prison ||
+        !bookingJourney.allVisitors?.length ||
+        !bookingJourney.selectedVisitors?.length ||
+        !bookingJourney.sessionRestriction)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
