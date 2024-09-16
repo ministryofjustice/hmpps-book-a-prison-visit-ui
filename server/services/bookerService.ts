@@ -60,4 +60,9 @@ export default class BookerService {
       return { ...visitor, visitorDisplayId: index + 1, adult: isAdult(visitor.dateOfBirth) }
     })
   }
+
+  async getEligibleVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
+    const allVisitors = await this.getVisitors(bookerReference, prisonerNumber)
+    return allVisitors.filter(visitor => visitor.visitorRestrictions.length === 0)
+  }
 }

@@ -1174,29 +1174,29 @@ export interface components {
       totalPages?: number
       /** Format: int64 */
       totalElements?: number
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject'][]
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject'][]
-      /** Format: int32 */
-      pageSize?: number
+      unpaged?: boolean
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      unpaged?: boolean
+      /** Format: int32 */
+      pageSize?: number
     }
     SortObject: {
       direction?: string
@@ -1624,6 +1624,23 @@ export interface components {
        * @example 2000-01-31
        */
       dateOfBirth?: string
+      /** @description Relevant visitor restrictions that impact visits or empty list if none */
+      visitorRestrictions: components['schemas']['VisitorRestrictionDto'][]
+    }
+    /** @description Visitor restriction */
+    VisitorRestrictionDto: {
+      /**
+       * @description Restriction Type
+       * @example BAN
+       * @enum {string}
+       */
+      restrictionType: 'BAN'
+      /**
+       * Format: date
+       * @description Restriction Expiry
+       * @example 2029-12-31
+       */
+      expiryDate?: string
     }
     /** @description AlertDto returned from orchestration, made of fields from AlertResponseDto from Alerts API call */
     AlertDto: {

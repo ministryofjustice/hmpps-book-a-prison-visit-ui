@@ -37,7 +37,7 @@ beforeEach(() => {
     bookingJourney: {
       prisoner,
       prison,
-      allVisitors: [adultVisitor1, adultVisitor2, childVisitor],
+      eligibleVisitors: [adultVisitor1, adultVisitor2, childVisitor],
       selectedVisitors: [adultVisitor1, childVisitor],
       sessionRestriction,
       allVisitSessionIds: ['2024-05-30_a'],

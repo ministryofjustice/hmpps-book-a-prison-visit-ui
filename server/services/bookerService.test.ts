@@ -82,7 +82,7 @@ describe('Booker service', () => {
         TestData.visitorInfoDto({ visitorId: 100, dateOfBirth: '2000-01-01' }), // an adult
         TestData.visitorInfoDto({ visitorId: 200, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
       ]
-      const visitors: Visitor[] = [
+      const expectedVisitors: Visitor[] = [
         { ...visitorInfoDtos[0], visitorDisplayId: 1, adult: true },
         { ...visitorInfoDtos[1], visitorDisplayId: 2, adult: false },
       ]
@@ -92,7 +92,26 @@ describe('Booker service', () => {
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
-      expect(results).toStrictEqual(visitors)
+      expect(results).toStrictEqual(expectedVisitors)
+    })
+  })
+
+  describe('getEligibleVisitors', () => {
+    it('should return eligible visitors (those having no restrictions) for the given booker reference and prisoner number', async () => {
+      const bookerReference = TestData.bookerReference()
+      const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+      const visitorInfoDtos = [
+        TestData.visitorInfoDto({ visitorId: 100 }),
+        TestData.visitorInfoDto({ visitorId: 200, visitorRestrictions: [{ restrictionType: 'BAN' }] }),
+      ]
+      const expectedVisitors: Visitor[] = [{ ...visitorInfoDtos[0], visitorDisplayId: 1, adult: true }]
+
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const results = await bookerService.getEligibleVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(results).toStrictEqual(expectedVisitors)
     })
   })
 })

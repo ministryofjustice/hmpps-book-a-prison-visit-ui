@@ -100,7 +100,7 @@ describe('Select visitors', () => {
     let flashData: FlashData
 
     beforeEach(() => {
-      bookerService.getVisitors.mockResolvedValue(visitors)
+      bookerService.getEligibleVisitors.mockResolvedValue(visitors)
       prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
@@ -158,7 +158,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+          expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
@@ -169,7 +169,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
             },
           } as SessionData)
         })
@@ -231,7 +231,7 @@ describe('Select visitors', () => {
     })
 
     it('should handle booker having no visitors for this prisoner', () => {
-      bookerService.getVisitors.mockResolvedValue([])
+      bookerService.getEligibleVisitors.mockResolvedValue([])
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -251,7 +251,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').length).toBe(0)
 
-          expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+          expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
@@ -262,7 +262,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: [],
+              eligibleVisitors: [],
             },
           } as SessionData)
         })
@@ -275,7 +275,7 @@ describe('Select visitors', () => {
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { prisoner, prison, allVisitors: visitors },
+        bookingJourney: { prisoner, prison, eligibleVisitors: visitors },
       } as SessionData
 
       app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
@@ -297,7 +297,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
               sessionRestriction: 'OPEN',
             },
@@ -327,7 +327,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
               sessionRestriction: 'CLOSED',
             },
@@ -355,7 +355,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
               sessionRestriction: 'OPEN',
             },
