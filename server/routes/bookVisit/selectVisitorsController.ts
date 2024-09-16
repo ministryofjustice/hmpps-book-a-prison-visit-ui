@@ -17,7 +17,7 @@ export default class SelectVisitorsController {
       const { booker, bookingJourney } = req.session
 
       if (!bookingJourney.prison) {
-        ;[bookingJourney.prison, bookingJourney.allVisitors] = await Promise.all([
+        ;[bookingJourney.prison, bookingJourney.eligibleVisitors] = await Promise.all([
           this.prisonService.getPrison(bookingJourney.prisoner.prisonId),
           this.bookerService.getEligibleVisitors(booker.reference, booker.prisoners[0].prisonerNumber),
         ])
@@ -35,7 +35,7 @@ export default class SelectVisitorsController {
         errors: req.flash('errors'),
         formValues,
         prison: bookingJourney.prison,
-        visitors: bookingJourney.allVisitors,
+        visitors: bookingJourney.eligibleVisitors,
       })
     }
   }
@@ -53,7 +53,7 @@ export default class SelectVisitorsController {
       const { bookingJourney } = req.session
       const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: number[] }>(req)
 
-      const selectedVisitors = bookingJourney.allVisitors.filter(visitor =>
+      const selectedVisitors = bookingJourney.eligibleVisitors.filter(visitor =>
         visitorDisplayIds.includes(visitor.visitorDisplayId),
       )
 
@@ -76,7 +76,9 @@ export default class SelectVisitorsController {
         .toInt()
         // filter out any invalid or duplicate visitorDisplayId values
         .customSanitizer((visitorDisplayIds: number[], { req }: Meta & { req: Express.Request }) => {
-          const allVisitorDisplaysIds = req.session.bookingJourney.allVisitors.map(visitor => visitor.visitorDisplayId)
+          const allVisitorDisplaysIds = req.session.bookingJourney.eligibleVisitors.map(
+            visitor => visitor.visitorDisplayId,
+          )
 
           const validVisitorDisplayIds = visitorDisplayIds.filter(visitorDisplayId =>
             allVisitorDisplaysIds.includes(visitorDisplayId),
@@ -99,10 +101,10 @@ export default class SelectVisitorsController {
           }
 
           // calculate selected visitor ages
-          const { allVisitors } = req.session.bookingJourney
+          const { eligibleVisitors } = req.session.bookingJourney
           const today = new Date()
           const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
-            const { dateOfBirth } = allVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
+            const { dateOfBirth } = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
             return differenceInYears(today, dateOfBirth)
           })
 

@@ -47,7 +47,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) &&
       method === 'POST' &&
-      (!bookingJourney.prison || !bookingJourney.allVisitors?.length)
+      (!bookingJourney.prison || !bookingJourney.eligibleVisitors?.length)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
@@ -57,7 +57,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
       (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CLOSED_VISIT) ||
         journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME)) &&
       (!bookingJourney.prison ||
-        !bookingJourney.allVisitors?.length ||
+        !bookingJourney.eligibleVisitors?.length ||
         !bookingJourney.selectedVisitors?.length ||
         !bookingJourney.sessionRestriction)
     ) {

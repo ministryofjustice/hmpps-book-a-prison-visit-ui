@@ -169,7 +169,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
             },
           } as SessionData)
         })
@@ -262,7 +262,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: [],
+              eligibleVisitors: [],
             },
           } as SessionData)
         })
@@ -275,7 +275,7 @@ describe('Select visitors', () => {
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { prisoner, prison, allVisitors: visitors },
+        bookingJourney: { prisoner, prison, eligibleVisitors: visitors },
       } as SessionData
 
       app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
@@ -297,7 +297,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
               sessionRestriction: 'OPEN',
             },
@@ -327,7 +327,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitor1, visitor3],
               sessionRestriction: 'CLOSED',
             },
@@ -355,7 +355,7 @@ describe('Select visitors', () => {
             bookingJourney: {
               prisoner,
               prison,
-              allVisitors: visitors,
+              eligibleVisitors: visitors,
               selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
               sessionRestriction: 'OPEN',
             },

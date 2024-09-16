@@ -40,7 +40,7 @@ describe('Additional support needs', () => {
         bookingJourney: {
           prisoner,
           prison,
-          allVisitors: [visitor],
+          eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
           allVisitSessionIds: ['2024-05-30_a'],
@@ -190,7 +190,7 @@ describe('Additional support needs', () => {
         bookingJourney: {
           prisoner,
           prison,
-          allVisitors: [visitor],
+          eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
           allVisitSessionIds: ['2024-05-30_a'],

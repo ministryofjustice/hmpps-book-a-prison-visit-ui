@@ -15,8 +15,8 @@ export type BookingJourney = {
   // prison for this visit
   prison?: PrisonDto
 
-  // all possible visitors for this visit
-  allVisitors?: Visitor[]
+  // all eligible visitors for this visit
+  eligibleVisitors?: Visitor[]
 
   // selected visitors for this visit
   selectedVisitors?: Visitor[]

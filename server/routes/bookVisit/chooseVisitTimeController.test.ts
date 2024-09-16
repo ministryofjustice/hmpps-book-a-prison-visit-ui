@@ -86,7 +86,7 @@ describe('Choose visit time', () => {
         bookingJourney: {
           prisoner,
           prison,
-          allVisitors: [visitor],
+          eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
         },
@@ -287,7 +287,7 @@ describe('Choose visit time', () => {
         bookingJourney: {
           prisoner,
           prison,
-          allVisitors: [visitor],
+          eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
           allVisitSessionIds,

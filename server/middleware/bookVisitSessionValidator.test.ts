@@ -111,7 +111,7 @@ describe('bookVisitSessionValidator', () => {
         })
       })
 
-      describe('...add prison and allVisitors', () => {
+      describe('...add prison and eligibleVisitors', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'next' },
@@ -123,7 +123,7 @@ describe('bookVisitSessionValidator', () => {
           req = createMockReq({
             method,
             path,
-            bookingJourney: { prisoner, prison: TestData.prisonDto(), allVisitors: [visitor] },
+            bookingJourney: { prisoner, prison: TestData.prisonDto(), eligibleVisitors: [visitor] },
           })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
@@ -146,7 +146,7 @@ describe('bookVisitSessionValidator', () => {
             bookingJourney: {
               prisoner,
               prison: TestData.prisonDto(),
-              allVisitors: [visitor],
+              eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
             },
@@ -173,7 +173,7 @@ describe('bookVisitSessionValidator', () => {
             bookingJourney: {
               prisoner,
               prison: TestData.prisonDto(),
-              allVisitors: [visitor],
+              eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
               allVisitSessionIds: [visitSessionId],
@@ -204,7 +204,7 @@ describe('bookVisitSessionValidator', () => {
             bookingJourney: {
               prisoner,
               prison: TestData.prisonDto(),
-              allVisitors: [visitor],
+              eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
               allVisitSessionIds: [visitSessionId],
@@ -239,7 +239,7 @@ describe('bookVisitSessionValidator', () => {
             bookingJourney: {
               prisoner,
               prison: TestData.prisonDto(),
-              allVisitors: [visitor],
+              eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
               allVisitSessionIds: [visitSessionId],
@@ -276,7 +276,7 @@ describe('bookVisitSessionValidator', () => {
             bookingJourney: {
               prisoner,
               prison: TestData.prisonDto(),
-              allVisitors: [visitor],
+              eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
               allVisitSessionIds: [visitSessionId],
