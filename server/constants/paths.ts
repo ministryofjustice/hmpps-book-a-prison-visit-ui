@@ -1,21 +1,11 @@
 const paths = {
   HOME: '/',
   RETURN_HOME: '/return-home', // used to clear session and redirect to HOME
-  VISITORS: '/visitors',
 
   ACCESS_DENIED: '/access-denied',
   SIGN_IN: '/sign-in',
   SIGN_OUT: '/sign-out',
   SIGNED_OUT: '/signed-out',
-
-  BOOKINGS: {
-    HOME: '/bookings',
-    PAST: '/bookings/past-visits',
-    CANCELLED: '/bookings/cancelled-visits',
-    VISIT: '/bookings/details',
-    VISIT_PAST: '/bookings/past/details',
-    VISIT_CANCELLED: '/bookings/cancelled/details',
-  },
 
   BOOK_VISIT: {
     ROOT: '/book-visit',
@@ -29,6 +19,17 @@ const paths = {
     CHECK_DETAILS: '/book-visit/check-visit-details',
     BOOKED: '/book-visit/visit-booked',
   },
+
+  BOOKINGS: {
+    HOME: '/bookings',
+    PAST: '/bookings/past-visits',
+    CANCELLED: '/bookings/cancelled-visits',
+    VISIT: '/bookings/details',
+    VISIT_PAST: '/bookings/past/details',
+    VISIT_CANCELLED: '/bookings/cancelled/details',
+  },
+
+  VISITORS: '/visitors',
 
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies',
