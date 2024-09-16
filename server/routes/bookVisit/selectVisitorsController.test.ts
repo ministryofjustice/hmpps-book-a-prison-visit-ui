@@ -100,7 +100,7 @@ describe('Select visitors', () => {
     let flashData: FlashData
 
     beforeEach(() => {
-      bookerService.getVisitors.mockResolvedValue(visitors)
+      bookerService.getEligibleVisitors.mockResolvedValue(visitors)
       prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
@@ -158,7 +158,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+          expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
@@ -231,7 +231,7 @@ describe('Select visitors', () => {
     })
 
     it('should handle booker having no visitors for this prisoner', () => {
-      bookerService.getVisitors.mockResolvedValue([])
+      bookerService.getEligibleVisitors.mockResolvedValue([])
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -251,7 +251,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').length).toBe(0)
 
-          expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+          expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData).toStrictEqual({
