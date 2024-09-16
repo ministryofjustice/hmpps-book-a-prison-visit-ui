@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { BookerService } from '../services'
+import { BookerService } from '../../services'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -12,7 +12,7 @@ export default class VisitorsController {
         ? await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
         : undefined
 
-      res.render('pages/visitors', { prisoner: booker.prisoners[0], visitors, showServiceNav: true })
+      res.render('pages/visitors/visitors', { prisoner: booker.prisoners[0], visitors, showServiceNav: true })
     }
   }
 }

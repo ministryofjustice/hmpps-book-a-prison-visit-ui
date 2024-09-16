@@ -2,10 +2,10 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from './testutils/appSetup'
-import { createMockBookerService } from '../services/testutils/mocks'
-import TestData from './testutils/testData'
-import paths from '../constants/paths'
+import { appWithAllRoutes } from '../testutils/appSetup'
+import { createMockBookerService } from '../../services/testutils/mocks'
+import TestData from '../testutils/testData'
+import paths from '../../constants/paths'
 
 let app: Express
 

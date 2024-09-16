@@ -2,7 +2,7 @@ import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
-import VisitorsPage from '../pages/visitors'
+import VisitorsPage from '../pages/visitors/visitors'
 
 context('Visitors page', () => {
   const visitors = [
