@@ -109,9 +109,10 @@ describe('Page header', () => {
         expect($('header .one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
         expect($('.service-header__heading').text()).toBe('Visit someone in prison')
-        expect($('.service-header__nav-list-item-link').length).toBe(2)
+        expect($('.service-header__nav-list-item-link').length).toBe(3)
         expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
         expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
+        expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
       })
   })
 

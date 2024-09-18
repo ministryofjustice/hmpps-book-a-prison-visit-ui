@@ -89,7 +89,7 @@ describe('Cancelled visits page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Cancelled visits -/)
-        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
         expect($('h1').text()).toBe('Cancelled visits')
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -115,7 +115,7 @@ describe('Cancelled visits page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Cancelled visits -/)
-        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
         expect($('h1').text()).toBe('Cancelled visits')
         expect($('[data-test="no-visits"]').text()).toBe('You do not have any cancelled bookings.')
       })
@@ -131,7 +131,7 @@ describe('Past visits page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Past visits -/)
-        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
         expect($('h1').text()).toBe('Past visits')
         expect($('[data-test="visit-date-1"]').text()).toBe('Tuesday 30 May 2023')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -157,7 +157,7 @@ describe('Past visits page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Past visits -/)
-        expect($('[data-test="back-link"]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
         expect($('h1').text()).toBe('Past visits')
         expect($('[data-test="no-visits"]').text()).toBe('You do not have any past bookings.')
       })
