@@ -13,7 +13,7 @@ export default class VisitorsController {
         return res.redirect(paths.HOME)
       }
 
-      const visitors = booker?.prisoners.length
+      const visitors = booker.prisoners.length
         ? await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
         : undefined
 
