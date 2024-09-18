@@ -9,14 +9,12 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-
-      {% include "partials/errorSummary.njk" %}
+    <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m">
-        <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span>'s visitors
+        <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span>’s visitors
       </h2>
 
       {% if visitors | length %}
@@ -26,10 +24,16 @@
         {% for visitor in visitors %}
           {% set displayRows = (displayRows.push([
             {
-              html: "<p data-test='visitor-name-" + loop.index + "'>" + visitor.firstName + " " + visitor.lastName + "</p>"
+              text: visitor.firstName + " " + visitor.lastName,
+              attributes: {
+                "data-test": "visitor-name-" + loop.index
+              }
             },
             { 
-              html: "<p data-test='visitor-date-of-birth-" + loop.index + "'>" + visitor.dateOfBirth | formatDate + "</p>"
+              text: visitor.dateOfBirth | formatDate,
+              attributes: {
+                "data-test": "visitor-dob-" + loop.index
+              }
             }
           ]), displayRows)%}
         {% endfor %}
@@ -50,11 +54,9 @@
       {% else %}
         <p data-test="no-visitors">No visitor details found.</p>
       {% endif %}
-    </div>
-    <div class="govuk-grid-column-two-thirds">
 
       <h2 class="govuk-heading-m">Add a new visitor</h2>
-      <p>The person you want to book for must be on the prisoner's visitor list.</p>
+      <p>The person you want to book for must be on the prisoner’s visitor list.</p>
       <p>
         To make a request,
         <a href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" target="_blank" rel="noopener noreferrer">complete the form (opens in a new tab)</a>.

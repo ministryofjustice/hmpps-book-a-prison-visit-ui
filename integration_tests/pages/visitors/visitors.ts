@@ -9,5 +9,5 @@ export default class VisitorsPage extends Page {
 
   visitorName = (index: number): PageElement => cy.get(`[data-test=visitor-name-${index}]`)
 
-  visitorDateOfBirth = (index: number): PageElement => cy.get(`[data-test=visitor-date-of-birth-${index}]`)
+  visitorDateOfBirth = (index: number): PageElement => cy.get(`[data-test=visitor-dob-${index}]`)
 }
