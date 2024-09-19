@@ -117,7 +117,7 @@ export default class TestData {
     }) as PrisonDto
 
   static prisoner = ({
-    prisonerDisplayId = 1,
+    prisonerDisplayId = 'uuidv4-1',
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',

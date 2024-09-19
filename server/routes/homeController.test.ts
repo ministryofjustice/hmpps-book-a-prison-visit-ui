@@ -39,7 +39,7 @@ describe('Home page', () => {
         expect($('h1').text()).toBe('Book a visit')
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
-        expect($('input[name=prisonerDisplayId]').val()).toBe('1')
+        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
         expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)

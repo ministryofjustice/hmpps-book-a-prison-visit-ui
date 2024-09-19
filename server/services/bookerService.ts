@@ -1,10 +1,11 @@
+import { v4 as uuidv4 } from 'uuid'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 
 export type Prisoner = {
-  prisonerDisplayId: number
+  prisonerDisplayId: string
   prisonerNumber: string
   firstName: string
   lastName: string
@@ -38,9 +39,9 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
-    return prisoners.map((prisoner, index) => {
+    return prisoners.map(prisoner => {
       return {
-        prisonerDisplayId: index + 1,
+        prisonerDisplayId: uuidv4(),
         prisonerNumber: prisoner.prisoner.prisonerNumber,
         firstName: prisoner.prisoner.firstName,
         lastName: prisoner.prisoner.lastName,
