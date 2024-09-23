@@ -139,7 +139,6 @@ export default class TestData {
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP)', // TODO does this come through (e.g. on /book)?
     sessionTemplateReference = 'v9d.7ed.7u',
     visitRoom = '',
     visitType = 'SOCIAL',
@@ -158,7 +157,6 @@ export default class TestData {
       reference,
       prisonerId,
       prisonId,
-      prisonName,
       sessionTemplateReference,
       visitRoom,
       visitType,
