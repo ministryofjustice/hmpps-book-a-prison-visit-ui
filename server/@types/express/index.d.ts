@@ -15,9 +15,10 @@ declare module 'express-session' {
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
 
-    bookingsFuture?: VisitDetails[]
-    bookingsPast?: VisitDetails[]
-    bookingsCancelled?: VisitDetails[]
+    bookings?: {
+      type: 'future' | 'past' | 'cancelled'
+      visits: VisitDetails[]
+    }
   }
 }
 

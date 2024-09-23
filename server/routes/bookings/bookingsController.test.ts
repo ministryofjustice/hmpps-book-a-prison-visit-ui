@@ -62,7 +62,10 @@ describe('Bookings homepage (future visits)', () => {
           booker: {
             reference: bookerReference,
           },
-          bookingsFuture: [futureVisitDetails],
+          bookings: {
+            type: 'future',
+            visits: [futureVisitDetails],
+          },
         } as SessionData)
       })
   })
@@ -74,6 +77,7 @@ describe('Bookings homepage (future visits)', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('h1').text()).toBe('Bookings')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('h2').text()).not.toContain('How to change your booking')
         expect($('[data-test="no-visits"]').length).toBeTruthy()
@@ -110,7 +114,10 @@ describe('Past visits page', () => {
           booker: {
             reference: bookerReference,
           },
-          bookingsPast: [pastVisitDetails],
+          bookings: {
+            type: 'past',
+            visits: [pastVisitDetails],
+          },
         } as SessionData)
       })
   })
@@ -122,6 +129,7 @@ describe('Past visits page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('h1').text()).toBe('Past visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
       })
@@ -157,7 +165,10 @@ describe('Cancelled visits page', () => {
           booker: {
             reference: bookerReference,
           },
-          bookingsCancelled: [cancelledVisitDetails],
+          bookings: {
+            type: 'cancelled',
+            visits: [cancelledVisitDetails],
+          },
         } as SessionData)
       })
   })
@@ -169,6 +180,7 @@ describe('Cancelled visits page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
+        expect($('h1').text()).toBe('Cancelled visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
       })
