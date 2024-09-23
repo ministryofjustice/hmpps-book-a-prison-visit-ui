@@ -1,10 +1,11 @@
+import { v4 as uuidv4 } from 'uuid'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 
 export type Prisoner = {
-  prisonerDisplayId: number
+  prisonerDisplayId: string
   prisonerNumber: string
   firstName: string
   lastName: string
@@ -13,7 +14,7 @@ export type Prisoner = {
   nextAvailableVoDate: string
 }
 export interface Visitor extends VisitorInfoDto {
-  visitorDisplayId: number
+  visitorDisplayId: string
   adult: boolean
 }
 
@@ -38,9 +39,9 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
-    return prisoners.map((prisoner, index) => {
+    return prisoners.map(prisoner => {
       return {
-        prisonerDisplayId: index + 1,
+        prisonerDisplayId: uuidv4(),
         prisonerNumber: prisoner.prisoner.prisonerNumber,
         firstName: prisoner.prisoner.firstName,
         lastName: prisoner.prisoner.lastName,
@@ -56,8 +57,8 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
     const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
-    return visitors.map((visitor, index) => {
-      return { ...visitor, visitorDisplayId: index + 1, adult: isAdult(visitor.dateOfBirth) }
+    return visitors.map(visitor => {
+      return { ...visitor, visitorDisplayId: uuidv4(), adult: isAdult(visitor.dateOfBirth) }
     })
   }
 

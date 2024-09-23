@@ -9,11 +9,8 @@ export default class MainContactPage extends Page {
     })
   }
 
-  getContactLabel = (contactDisplayId: number): PageElement =>
-    cy.get(`input[name=contact][value=${contactDisplayId}] + label`)
-
-  selectVisitor = (contactDisplayId: number): void => {
-    cy.get(`input[name=contact][value=${contactDisplayId}]`).check()
+  selectVisitorByName = (name: string): void => {
+    cy.get('label').contains(name).siblings('input[name=contact]').check()
   }
 
   checkHasPhoneNumber = (): void => {

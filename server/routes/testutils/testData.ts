@@ -117,7 +117,7 @@ export default class TestData {
     }) as PrisonDto
 
   static prisoner = ({
-    prisonerDisplayId = 1,
+    prisonerDisplayId = 'uuidv4-1',
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
@@ -139,7 +139,6 @@ export default class TestData {
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP)', // TODO does this come through (e.g. on /book)?
     sessionTemplateReference = 'v9d.7ed.7u',
     visitRoom = '',
     visitType = 'SOCIAL',
@@ -158,7 +157,6 @@ export default class TestData {
       reference,
       prisonerId,
       prisonId,
-      prisonName,
       sessionTemplateReference,
       visitRoom,
       visitType,
@@ -188,7 +186,7 @@ export default class TestData {
   })
 
   static visitor = ({
-    visitorDisplayId = 1,
+    visitorDisplayId = 'uuidv4-1',
     visitorId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',

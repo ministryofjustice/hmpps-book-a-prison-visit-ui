@@ -7,10 +7,9 @@ import VisitorsPage from '../pages/visitors/visitors'
 
 context('Visitors page', () => {
   const visitors = [
-    TestData.visitor(),
-    TestData.visitor({
-      visitorDisplayId: 9,
-      visitorId: 8005,
+    TestData.visitorInfoDto(),
+    TestData.visitorInfoDto({
+      visitorId: 2000,
       firstName: 'Keith',
       lastName: 'Richards',
       dateOfBirth: '1990-05-05',
@@ -51,7 +50,7 @@ context('Visitors page', () => {
     homePage.startBooking()
 
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-    selectVisitorsPage.getVisitorLabel(1).contains('Joan Phillips')
-    selectVisitorsPage.getVisitorLabel(2).should('not.exist')
+    selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')
+    selectVisitorsPage.getVisitorByNameLabel('Keith Richards').should('not.exist')
   })
 })

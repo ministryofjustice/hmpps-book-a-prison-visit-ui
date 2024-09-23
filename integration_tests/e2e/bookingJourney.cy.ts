@@ -107,11 +107,11 @@ context('Booking journey', () => {
     selectVisitorsPage.visitorsMaxChildren().contains(prison.maxChildVisitors)
     selectVisitorsPage.visitorsAdultAge().eq(0).contains(prison.adultAgeYears)
     selectVisitorsPage.visitorsAdultAge().eq(1).contains(prison.adultAgeYears)
-    selectVisitorsPage.getVisitorLabel(1).contains('Adult One (25 years old)')
-    selectVisitorsPage.getVisitorLabel(2).contains('Child One (12 years old)')
-    selectVisitorsPage.getVisitorLabel(3).contains('Child Two (5 years old)')
-    selectVisitorsPage.selectVisitor(1)
-    selectVisitorsPage.selectVisitor(3)
+    selectVisitorsPage.getVisitorByNameLabel('Adult One').contains('Adult One (25 years old)')
+    selectVisitorsPage.getVisitorByNameLabel('Child One').contains('Child One (12 years old)')
+    selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
+    selectVisitorsPage.selectVisitorByName('Adult One')
+    selectVisitorsPage.selectVisitorByName('Child Two')
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
@@ -141,8 +141,7 @@ context('Booking journey', () => {
 
     // Main contact
     const mainContactPage = Page.verifyOnPage(MainContactPage)
-    mainContactPage.getContactLabel(1).contains('Adult One')
-    mainContactPage.selectVisitor(1)
+    mainContactPage.selectVisitorByName('Adult One')
     mainContactPage.checkHasPhoneNumber()
     mainContactPage.enterPhoneNumber('01234 567 890')
     cy.task('stubChangeVisitApplication', {
@@ -197,7 +196,7 @@ context('Booking journey', () => {
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-    selectVisitorsPage.selectVisitor(1)
+    selectVisitorsPage.selectVisitorByName('Adult One')
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000],
