@@ -5,6 +5,12 @@ import { BookingJourney } from '../@types/bapv'
 
 const token = 'some token'
 
+jest.mock('uuid', () => {
+  return {
+    v4: () => 'uuidv4-1',
+  }
+})
+
 describe('Visit service', () => {
   const hmppsAuthClient = createMockHmppsAuthClient()
 
@@ -32,15 +38,6 @@ describe('Visit service', () => {
 
     const application = TestData.applicationDto()
     const visit = TestData.visitDto()
-    const orchestrationVisitDto = TestData.orchestrationVisitDto()
-    const cancelledVisit = TestData.orchestrationVisitDto({
-      outcomeStatus: 'ADMINISTRATIVE_CANCELLATION',
-      visitStatus: 'CANCELLED',
-    })
-    const pastVisit = TestData.orchestrationVisitDto({
-      startTimestamp: '2023-05-30T10:00:00',
-      endTimestamp: '2023-05-30T11:30:00',
-    })
     const visitSession = TestData.availableVisitSessionDto()
 
     let bookingJourney: BookingJourney
@@ -171,37 +168,53 @@ describe('Visit service', () => {
         expect(results).toStrictEqual(visit)
       })
     })
+  })
+
+  describe('Booking listings', () => {
+    const bookerReference = TestData.bookerReference().value
 
     describe('getFuturePublicVisits', () => {
       it('should retrieve all future visits for a booker', async () => {
+        const orchestrationVisitDto = TestData.orchestrationVisitDto()
+        const expectedVisitDetails = TestData.visitDetails({ ...orchestrationVisitDto })
         orchestrationApiClient.getFuturePublicVisits.mockResolvedValue([orchestrationVisitDto])
 
         const results = await visitService.getFuturePublicVisits(bookerReference)
 
         expect(orchestrationApiClient.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(results).toStrictEqual([orchestrationVisitDto])
-      })
-    })
-
-    describe('getCancelledPublicVisits', () => {
-      it('should retrieve all cancelled visits for a booker', async () => {
-        orchestrationApiClient.getCancelledPublicVisits.mockResolvedValue([cancelledVisit])
-
-        const results = await visitService.getCancelledPublicVisits(bookerReference)
-
-        expect(orchestrationApiClient.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(results).toStrictEqual([cancelledVisit])
+        expect(results).toStrictEqual([expectedVisitDetails])
       })
     })
 
     describe('getPastPublicVisits', () => {
       it('should retrieve all past visits for a booker', async () => {
+        const pastVisit = TestData.orchestrationVisitDto({
+          startTimestamp: '2023-05-30T10:00:00',
+          endTimestamp: '2023-05-30T11:30:00',
+        })
+        const expectedVisitDetails = TestData.visitDetails({ ...pastVisit })
         orchestrationApiClient.getPastPublicVisits.mockResolvedValue([pastVisit])
 
         const results = await visitService.getPastPublicVisits(bookerReference)
 
         expect(orchestrationApiClient.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(results).toStrictEqual([pastVisit])
+        expect(results).toStrictEqual([expectedVisitDetails])
+      })
+    })
+
+    describe('getCancelledPublicVisits', () => {
+      it('should retrieve all cancelled visits for a booker', async () => {
+        const cancelledVisit = TestData.orchestrationVisitDto({
+          outcomeStatus: 'ADMINISTRATIVE_CANCELLATION',
+          visitStatus: 'CANCELLED',
+        })
+        const expectedVisitDetails = TestData.visitDetails({ ...cancelledVisit })
+        orchestrationApiClient.getCancelledPublicVisits.mockResolvedValue([cancelledVisit])
+
+        const results = await visitService.getCancelledPublicVisits(bookerReference)
+
+        expect(orchestrationApiClient.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
+        expect(results).toStrictEqual([expectedVisitDetails])
       })
     })
   })
