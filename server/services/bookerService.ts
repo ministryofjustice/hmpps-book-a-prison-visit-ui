@@ -14,7 +14,7 @@ export type Prisoner = {
   nextAvailableVoDate: string
 }
 export interface Visitor extends VisitorInfoDto {
-  visitorDisplayId: number
+  visitorDisplayId: string
   adult: boolean
 }
 
@@ -57,8 +57,8 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
     const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
-    return visitors.map((visitor, index) => {
-      return { ...visitor, visitorDisplayId: index + 1, adult: isAdult(visitor.dateOfBirth) }
+    return visitors.map(visitor => {
+      return { ...visitor, visitorDisplayId: uuidv4(), adult: isAdult(visitor.dateOfBirth) }
     })
   }
 

@@ -51,7 +51,7 @@ export default class SelectVisitorsController {
       }
 
       const { bookingJourney } = req.session
-      const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: number[] }>(req)
+      const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: string[] }>(req)
 
       const selectedVisitors = bookingJourney.eligibleVisitors.filter(visitor =>
         visitorDisplayIds.includes(visitor.visitorDisplayId),
@@ -73,9 +73,8 @@ export default class SelectVisitorsController {
     return [
       body('visitorDisplayIds')
         .toArray()
-        .toInt()
         // filter out any invalid or duplicate visitorDisplayId values
-        .customSanitizer((visitorDisplayIds: number[], { req }: Meta & { req: Express.Request }) => {
+        .customSanitizer((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
           const allVisitorDisplaysIds = req.session.bookingJourney.eligibleVisitors.map(
             visitor => visitor.visitorDisplayId,
           )
@@ -91,7 +90,7 @@ export default class SelectVisitorsController {
         .withMessage('No visitors selected')
         .bail()
         // validate visitor totals
-        .custom((visitorDisplayIds: number[], { req }: Meta & { req: Express.Request }) => {
+        .custom((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
           const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
             req.session.bookingJourney.prison
 

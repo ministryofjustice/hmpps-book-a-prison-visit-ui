@@ -4,12 +4,12 @@ import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../
 
 const token = 'some token'
 
+let uuidCount: number
 jest.mock('uuid', () => {
-  let count = 0
   return {
     v4: () => {
-      count += 1
-      return `uuidv4-${count}`
+      uuidCount += 1
+      return `uuidv4-${uuidCount}`
     },
   }
 })
@@ -23,6 +23,7 @@ describe('Booker service', () => {
   let bookerService: BookerService
 
   beforeEach(() => {
+    uuidCount = 0
     hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
 
     orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
@@ -93,8 +94,8 @@ describe('Booker service', () => {
         TestData.visitorInfoDto({ visitorId: 200, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
       ]
       const expectedVisitors: Visitor[] = [
-        { ...visitorInfoDtos[0], visitorDisplayId: 1, adult: true },
-        { ...visitorInfoDtos[1], visitorDisplayId: 2, adult: false },
+        { ...visitorInfoDtos[0], visitorDisplayId: 'uuidv4-1', adult: true },
+        { ...visitorInfoDtos[1], visitorDisplayId: 'uuidv4-2', adult: false },
       ]
 
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
@@ -114,7 +115,7 @@ describe('Booker service', () => {
         TestData.visitorInfoDto({ visitorId: 100 }),
         TestData.visitorInfoDto({ visitorId: 200, visitorRestrictions: [{ restrictionType: 'BAN' }] }),
       ]
-      const expectedVisitors: Visitor[] = [{ ...visitorInfoDtos[0], visitorDisplayId: 1, adult: true }]
+      const expectedVisitors: Visitor[] = [{ ...visitorInfoDtos[0], visitorDisplayId: 'uuidv4-1', adult: true }]
 
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 

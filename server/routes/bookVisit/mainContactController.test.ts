@@ -21,10 +21,10 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const sessionRestriction: SessionRestriction = 'OPEN'
-const adultVisitor1 = TestData.visitor({ visitorDisplayId: 1, visitorId: 100 })
-const adultVisitor2 = TestData.visitor({ visitorDisplayId: 2, visitorId: 200 })
+const adultVisitor1 = TestData.visitor({ visitorDisplayId: 'uuidv4-1', visitorId: 100 })
+const adultVisitor2 = TestData.visitor({ visitorDisplayId: 'uuidv4-2', visitorId: 200 })
 const childVisitor = TestData.visitor({
-  visitorDisplayId: 3,
+  visitorDisplayId: 'uuidv4-3',
   visitorId: 300,
   dateOfBirth: `${new Date().getFullYear() - 2}-01-01`,
   adult: false,
@@ -91,7 +91,7 @@ describe('Main contact', () => {
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('input[name="contact"]').length).toBe(2) // Only adult visitor and 'Someone else'
           expect($('input[name="contact"]:checked').length).toBe(0)
-          expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
+          expect($('input[name="contact"][value=uuidv4-1] + label').text().trim()).toBe('Joan Phillips')
           expect($('input[name="contact"][value=someoneElse] + label').text().trim()).toBe('Someone else')
           expect($('#someoneElseName').prop('value')).toBeFalsy()
 
@@ -109,8 +109,8 @@ describe('Main contact', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('input[name="contact"][value=1]:checked').length).toBe(1)
-          expect($('input[name="contact"][value=1] + label').text().trim()).toBe('Joan Phillips')
+          expect($('input[name="contact"][value=uuidv4-1]:checked').length).toBe(1)
+          expect($('input[name="contact"][value=uuidv4-1] + label').text().trim()).toBe('Joan Phillips')
 
           expect($('input[name=hasPhoneNumber][value=yes]:checked').length).toBe(1)
           expect($('#phoneNumber').prop('value')).toBe('01234 567 890')
@@ -330,7 +330,7 @@ describe('Main contact', () => {
             msg: 'Enter a UK phone number, like 07700 900 982 or 01632 960 001',
           },
         ]
-        expectedFlashFormValues = { contact: '1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
+        expectedFlashFormValues = { contact: 'uuidv4-1', hasPhoneNumber: 'yes', phoneNumber: 'abcd1234' }
 
         return request(app)
           .post(paths.BOOK_VISIT.MAIN_CONTACT)

@@ -188,7 +188,7 @@ export default class TestData {
   })
 
   static visitor = ({
-    visitorDisplayId = 1,
+    visitorDisplayId = 'uuidv4-1',
     visitorId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',
