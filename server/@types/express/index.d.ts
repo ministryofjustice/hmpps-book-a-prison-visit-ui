@@ -1,6 +1,6 @@
 import { ValidationError } from 'express-validator'
 import { Booker, BookingConfirmed, BookingJourney } from '../bapv'
-import { OrchestrationVisitDto } from '../../data/orchestrationApiTypes'
+import { VisitDetails } from '../../services/visitService'
 
 export default {}
 
@@ -12,12 +12,12 @@ declare module 'express-session' {
 
     booker: Booker
 
-    bookingsFuture?: OrchestrationVisitDto[]
-    bookingsPast?: OrchestrationVisitDto[]
-    bookingsCancelled?: OrchestrationVisitDto[]
-
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
+
+    bookingsFuture?: VisitDetails[]
+    bookingsPast?: VisitDetails[]
+    bookingsCancelled?: VisitDetails[]
   }
 }
 

@@ -24,20 +24,20 @@
             </p>
             <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
             <p>
-              <a href="{{ paths.BOOKINGS.VISIT }}/{{ loop.index }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
+              <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
             </p>
           </div>
           
         {% endfor %}
 
-      <h2 class="govuk-heading-m">How to change your booking</h2>
-      <p>
-        To update or cancel your booking, call
-        <span data-test="prison-name">{{ prisonName }}</span>
-        on <span data-test="prison-phone-number">{{ prisonPhoneNumber }}</span>
-        between 9am and 5pm, Monday to Friday.
-      </p>
-      <p>You will need the booking reference to make changes.</p>
+        <h2 class="govuk-heading-m">How to change your booking</h2>
+        <p>
+          To update or cancel your booking, call
+          <span data-test="prison-name">{{ prisonName }}</span>
+          on <span data-test="prison-phone-number">{{ prisonPhoneNumber }}</span>
+          between 9am and 5pm, Monday to Friday.
+        </p>
+        <p>You will need the booking reference to make changes.</p>
 
       {% else %}
         <p data-test="no-visits">You do not have any future bookings.</p>

@@ -25,7 +25,7 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </p>
             <p>
-              <a href="{{ paths.BOOKINGS.VISIT_PAST }}/{{ loop.index }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
+              <a href="{{ paths.BOOKINGS.VISIT_PAST }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
             </p>
           </div>
           
