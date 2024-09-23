@@ -29,7 +29,13 @@ describe('Closed visit', () => {
     beforeEach(() => {
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: { prisoner, prison, allVisitors: [visitor], selectedVisitors: [visitor], sessionRestriction },
+        bookingJourney: {
+          prisoner,
+          prison,
+          eligibleVisitors: [visitor],
+          selectedVisitors: [visitor],
+          sessionRestriction,
+        },
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })

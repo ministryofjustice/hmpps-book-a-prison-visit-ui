@@ -49,7 +49,7 @@ describe('Visit service', () => {
       bookingJourney = {
         prisoner: TestData.prisoner(),
         prison: TestData.prisonDto(),
-        allVisitors: [visitorOne, visitorTwo, visitorThree],
+        eligibleVisitors: [visitorOne, visitorTwo, visitorThree],
         selectedVisitors: [visitorOne, visitorTwo],
         allVisitSessionIds: ['2024-05-30_a'],
         allVisitSessions: [visitSession],

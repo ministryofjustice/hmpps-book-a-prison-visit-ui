@@ -178,7 +178,14 @@ export default class TestData {
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({ visitorId, firstName, lastName, dateOfBirth })
+    visitorRestrictions = [],
+  }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({
+    visitorId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    visitorRestrictions,
+  })
 
   static visitor = ({
     visitorDisplayId = 1,
@@ -186,8 +193,17 @@ export default class TestData {
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
+    visitorRestrictions = [],
     adult = true,
-  }: Partial<Visitor> = {}): Visitor => ({ visitorDisplayId, visitorId, lastName, firstName, dateOfBirth, adult })
+  }: Partial<Visitor> = {}): Visitor => ({
+    visitorDisplayId,
+    visitorId,
+    lastName,
+    firstName,
+    dateOfBirth,
+    visitorRestrictions,
+    adult,
+  })
 
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
