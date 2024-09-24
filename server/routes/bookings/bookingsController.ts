@@ -1,46 +1,40 @@
 import type { RequestHandler } from 'express'
+import { SessionData } from 'express-session'
+import createError from 'http-errors'
 import { VisitService } from '../../services'
 import getPrisonInformation from '../../constants/prisonInformation'
+import { VisitDetails } from '../../services/visitService'
 
 export default class BookingsController {
   public constructor(private readonly visitService: VisitService) {}
 
-  public viewFuture(): RequestHandler {
-    return async (req, res) => {
+  public view(type: SessionData['bookings']['type']): RequestHandler {
+    return async (req, res, next) => {
       const { booker } = req.session
 
-      const visits = await this.visitService.getFuturePublicVisits(booker.reference)
-      req.session.bookingsFuture = visits
+      let visits: VisitDetails[]
+      switch (type) {
+        case 'future':
+          visits = await this.visitService.getFuturePublicVisits(booker.reference)
+          break
+
+        case 'past':
+          visits = await this.visitService.getPastPublicVisits(booker.reference)
+          break
+
+        case 'cancelled':
+          visits = await this.visitService.getCancelledPublicVisits(booker.reference)
+          break
+
+        default:
+          return next(createError(500, `Invalid bookings type: ${type}`))
+      }
+
+      req.session.bookings = { type, visits }
 
       const { prisonName, prisonPhoneNumber } = getPrisonInformation(visits[0]?.prisonId)
 
-      res.render('pages/bookings/future', { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
-    }
-  }
-
-  public viewPast(): RequestHandler {
-    return async (req, res) => {
-      const { booker } = req.session
-
-      const visits = await this.visitService.getPastPublicVisits(booker.reference)
-      req.session.bookingsPast = visits
-
-      const { prisonName, prisonPhoneNumber } = getPrisonInformation(visits[0]?.prisonId)
-
-      res.render('pages/bookings/past', { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
-    }
-  }
-
-  public viewCancelled(): RequestHandler {
-    return async (req, res) => {
-      const { booker } = req.session
-
-      const visits = await this.visitService.getCancelledPublicVisits(booker.reference)
-      req.session.bookingsCancelled = visits
-
-      const { prisonName, prisonPhoneNumber } = getPrisonInformation(visits[0]?.prisonId)
-
-      res.render('pages/bookings/cancelled', { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
+      return res.render(`pages/bookings/${type}`, { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
     }
   }
 }

@@ -1,8 +1,12 @@
+import { v4 as uuidv4 } from 'uuid'
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
 import { ApplicationDto, OrchestrationVisitDto, VisitDto } from '../data/orchestrationApiTypes'
 
+export interface VisitDetails extends OrchestrationVisitDto {
+  visitDisplayId: string
+}
 export default class VisitService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
@@ -86,33 +90,34 @@ export default class VisitService {
     return visit
   }
 
-  async getFuturePublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+  async getFuturePublicVisits(bookerReference: string): Promise<VisitDetails[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const visits = await orchestrationApiClient.getFuturePublicVisits(bookerReference)
 
-    logger.info(`Future visits for booker reference ${bookerReference} retrieved`)
-    return visits
+    return this.addVisitDisplayIds(visits)
   }
 
-  async getPastPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+  async getPastPublicVisits(bookerReference: string): Promise<VisitDetails[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const visits = await orchestrationApiClient.getPastPublicVisits(bookerReference)
 
-    logger.info(`Past visits for booker reference ${bookerReference} retrieved`)
-    return visits
+    return this.addVisitDisplayIds(visits)
   }
 
-  async getCancelledPublicVisits(bookerReference: string): Promise<OrchestrationVisitDto[]> {
+  async getCancelledPublicVisits(bookerReference: string): Promise<VisitDetails[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const visits = await orchestrationApiClient.getCancelledPublicVisits(bookerReference)
 
-    logger.info(`Cancelled visits for booker reference ${bookerReference} retrieved`)
-    return visits
+    return this.addVisitDisplayIds(visits)
+  }
+
+  private addVisitDisplayIds(visits: OrchestrationVisitDto[]): VisitDetails[] {
+    return visits.map(visit => ({ ...visit, visitDisplayId: uuidv4() }))
   }
 }

@@ -5,16 +5,7 @@
 
 {% set pageTitle = "Visit booking details" %}
 
-{%- set backLinkHref -%}
-  {%- if fromController === 'future' -%}
-    {{- paths.BOOKINGS.HOME -}}
-  {%- elif fromController === 'past' -%}
-    {{- paths.BOOKINGS.PAST -}}
-  {%- elif fromController === 'cancelled' -%}
-    {{- paths.BOOKINGS.CANCELLED -}}
-  {%- endif -%}
-{%- endset -%}
-
+{% set backLinkHref = paths.BOOKINGS.PAST if type === 'past' else (paths.BOOKINGS.CANCELLED if type === 'cancelled' else paths.BOOKINGS.HOME) %}
 
 {% block content %}
 
@@ -27,16 +18,16 @@
       {% if visit.visitStatus === "CANCELLED" %}
 
         {% set status = visit.outcomeStatus %}
-            
+
         {% set cancelledBy %}
-          {% if status === 'VISITOR_CANCELLED' %}
-            {{- 'This visit was cancelled by a visitor.' -}}
-          {% elif status === 'PRISONER_CANCELLED' %}
-            {{- 'This visit was cancelled by the prisoner.' -}}
-          {% else %}
-            {{- 'This visit was cancelled by the prison.' -}}
-          {% endif %}
-        {% endset %}
+          {%- if status === 'VISITOR_CANCELLED' %}
+            {{- 'This visit was cancelled by a visitor.' }}
+          {%- elif status === 'PRISONER_CANCELLED' %}
+            {{- 'This visit was cancelled by the prisoner.' }}
+          {%- else %}
+            {{- 'This visit was cancelled by the prison.' }}
+          {%- endif %}
+        {%- endset %}
 
         {% set cancelledVisitBannerHtml %}
           {{ govukWarningText({
@@ -72,7 +63,7 @@
 
       <div class="bookings-content-block">
         {% for visitor in visit.visitors %}
-          <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}
+          <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
         {% endfor %}
       </div>
 
@@ -86,7 +77,7 @@
         <p data-test="main-contact-number">{{ visit.visitContact.telephone | d("No phone number provided", true) }}</p>
       </div>
 
-      {% if fromController === 'future' %}
+      {% if type === 'future' %}
         <h2 class="govuk-heading-m">How to change your booking</h2>
         <p>
           To update or cancel your booking, call
