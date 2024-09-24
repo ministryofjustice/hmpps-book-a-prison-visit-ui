@@ -188,10 +188,7 @@ describe('Visit service', () => {
 
     describe('getPastPublicVisits', () => {
       it('should retrieve all past visits for a booker', async () => {
-        const pastVisit = TestData.orchestrationVisitDto({
-          startTimestamp: '2023-05-30T10:00:00',
-          endTimestamp: '2023-05-30T11:30:00',
-        })
+        const pastVisit = TestData.orchestrationVisitDto()
         const expectedVisitDetails = TestData.visitDetails({ ...pastVisit })
         orchestrationApiClient.getPastPublicVisits.mockResolvedValue([pastVisit])
 
