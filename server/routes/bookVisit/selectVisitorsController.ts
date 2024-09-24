@@ -73,6 +73,7 @@ export default class SelectVisitorsController {
     return [
       body('visitorDisplayIds')
         .toArray()
+        .isUUID()
         // filter out any invalid or duplicate visitorDisplayId values
         .customSanitizer((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
           const allVisitorDisplaysIds = req.session.bookingJourney.eligibleVisitors.map(
