@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
@@ -41,7 +41,7 @@ export default class BookerService {
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
     return prisoners.map(prisoner => {
       return {
-        prisonerDisplayId: uuidv4(),
+        prisonerDisplayId: randomUUID(),
         prisonerNumber: prisoner.prisoner.prisonerNumber,
         firstName: prisoner.prisoner.firstName,
         lastName: prisoner.prisoner.lastName,
@@ -58,7 +58,7 @@ export default class BookerService {
     const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map(visitor => {
-      return { ...visitor, visitorDisplayId: uuidv4(), adult: isAdult(visitor.dateOfBirth) }
+      return { ...visitor, visitorDisplayId: randomUUID(), adult: isAdult(visitor.dateOfBirth) }
     })
   }
 

@@ -5,9 +5,9 @@ import { BookingJourney } from '../@types/bapv'
 
 const token = 'some token'
 
-jest.mock('uuid', () => {
+jest.mock('crypto', () => {
   return {
-    v4: () => 'uuidv4-1',
+    randomUUID: () => 'uuidv4-1',
   }
 })
 
