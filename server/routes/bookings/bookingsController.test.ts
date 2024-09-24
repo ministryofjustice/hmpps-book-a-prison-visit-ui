@@ -51,7 +51,7 @@ describe('Bookings homepage (future visits)', () => {
           `${paths.BOOKINGS.VISIT}/${futureVisitDetails.visitDisplayId}`,
         )
 
-        expect($('h2').text()).toContain('How to change your booking')
+        expect($('[data-test=change-booking-heading]').length).toBeTruthy()
         expect($('[data-test="prison-name"]').text()).toBe(getPrisonInformation('DHI').prisonName)
         expect($('[data-test="prison-phone-number"]').text()).toBe(getPrisonInformation('DHI').prisonPhoneNumber)
         expect($('[data-test="no-visits"]').length).toBeFalsy()
@@ -79,7 +79,7 @@ describe('Bookings homepage (future visits)', () => {
         const $ = cheerio.load(res.text)
         expect($('h1').text()).toBe('Bookings')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
-        expect($('h2').text()).not.toContain('How to change your booking')
+        expect($('[data-test=change-booking-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
       })
   })

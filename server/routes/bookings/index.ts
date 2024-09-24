@@ -29,13 +29,13 @@ export default function routes(services: Services): Router {
   getWithValidation(
     `${paths.BOOKINGS.VISIT_PAST}/:visitDisplayId`,
     bookingDetailsController.validate(),
-    bookingDetailsController.viewPast(),
+    bookingDetailsController.view('past'),
   )
 
   getWithValidation(
     `${paths.BOOKINGS.VISIT_CANCELLED}/:visitDisplayId`,
     bookingDetailsController.validate(),
-    bookingDetailsController.viewCancelled(),
+    bookingDetailsController.view('cancelled'),
   )
 
   return router
