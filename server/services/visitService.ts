@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
@@ -118,6 +118,6 @@ export default class VisitService {
   }
 
   private addVisitDisplayIds(visits: OrchestrationVisitDto[]): VisitDetails[] {
-    return visits.map(visit => ({ ...visit, visitDisplayId: uuidv4() }))
+    return visits.map(visit => ({ ...visit, visitDisplayId: randomUUID() }))
   }
 }

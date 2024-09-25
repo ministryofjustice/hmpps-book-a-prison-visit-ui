@@ -5,9 +5,9 @@ import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../
 const token = 'some token'
 
 let uuidCount: number
-jest.mock('uuid', () => {
+jest.mock('crypto', () => {
   return {
-    v4: () => {
+    randomUUID: () => {
       uuidCount += 1
       return `uuidv4-${uuidCount}`
     },

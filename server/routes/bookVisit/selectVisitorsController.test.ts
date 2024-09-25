@@ -3,6 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
+import { randomUUID } from 'crypto'
 import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import {
   createMockBookerService,
@@ -29,56 +30,56 @@ const prison = TestData.prisonDto()
 const fakeDate = new Date('2024-05-02')
 
 const visitor1 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-1',
+  visitorDisplayId: randomUUID(),
   visitorId: 1000,
   firstName: 'Visitor',
   lastName: 'Age 20y',
   dateOfBirth: '2004-04-01',
 })
 const visitor2 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-2',
+  visitorDisplayId: randomUUID(),
   visitorId: 2000,
   firstName: 'Visitor',
   lastName: 'Age 18y',
   dateOfBirth: '2006-05-02', // 18 today
 })
 const visitor3 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-3',
+  visitorDisplayId: randomUUID(),
   visitorId: 3000,
   firstName: 'Visitor',
   lastName: 'Age 17y',
   dateOfBirth: '2006-05-03', // 18 tomorrow
 })
 const visitor4 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-4',
+  visitorDisplayId: randomUUID(),
   visitorId: 4000,
   firstName: 'Visitor',
   lastName: 'Age 16y',
   dateOfBirth: '2008-05-02', // 16 today
 })
 const visitor5 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-5',
+  visitorDisplayId: randomUUID(),
   visitorId: 5000,
   firstName: 'Visitor',
   lastName: 'Age 15y',
   dateOfBirth: '2008-05-03', // 16 tomorrow
 })
 const visitor6 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-6',
+  visitorDisplayId: randomUUID(),
   visitorId: 6000,
   firstName: 'Visitor',
   lastName: 'Age 10y',
   dateOfBirth: '2014-05-02',
 })
 const visitor7 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-7',
+  visitorDisplayId: randomUUID(),
   visitorId: 7000,
   firstName: 'Visitor',
   lastName: 'Age 1y',
   dateOfBirth: '2023-05-02',
 })
 const visitor8 = TestData.visitor({
-  visitorDisplayId: 'uuidv4-8',
+  visitorDisplayId: randomUUID(),
   visitorId: 8000,
   firstName: 'Visitor',
   lastName: 'Age 4m',
@@ -147,28 +148,28 @@ describe('Select visitors', () => {
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(0)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-1]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor1.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 20y (20 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-2]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor2.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 18y (18 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-3]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor3.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 17y (17 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-4]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor4.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 16y (16 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-5]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor5.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 15y (15 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-6]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor6.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 10y (10 years old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-7]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor7.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 1y (1 year old)',
           )
-          expect($('input[name=visitorDisplayIds][value=uuidv4-8]+label').text().trim()).toBe(
+          expect($(`input[name=visitorDisplayIds][value=${visitor8.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 4m (4 months old)',
           )
 
@@ -201,15 +202,15 @@ describe('Select visitors', () => {
           const $ = cheerio.load(res.text)
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(3)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-1]:checked + label').length).toBe(1)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-4]:checked + label').length).toBe(1)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-8]:checked + label').length).toBe(1)
+          expect($(`input[name=visitorDisplayIds][value=${visitor1.visitorDisplayId}]:checked + label`).length).toBe(1)
+          expect($(`input[name=visitorDisplayIds][value=${visitor4.visitorDisplayId}]:checked + label`).length).toBe(1)
+          expect($(`input[name=visitorDisplayIds][value=${visitor8.visitorDisplayId}]:checked + label`).length).toBe(1)
         })
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
       sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
-      const formValues = { visitorDisplayIds: ['uuidv4-2', 'uuidv4-7'] }
+      const formValues = { visitorDisplayIds: [visitor2.visitorDisplayId, visitor7.visitorDisplayId] }
       flashData = { formValues: [formValues] }
 
       return request(app)
@@ -219,8 +220,8 @@ describe('Select visitors', () => {
           const $ = cheerio.load(res.text)
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(2)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-7]:checked + label').length).toBe(1)
-          expect($('input[name=visitorDisplayIds][value=uuidv4-2]:checked + label').length).toBe(1)
+          expect($(`input[name=visitorDisplayIds][value=${visitor7.visitorDisplayId}]:checked + label`).length).toBe(1)
+          expect($(`input[name=visitorDisplayIds][value=${visitor2.visitorDisplayId}]:checked + label`).length).toBe(1)
         })
     })
 
@@ -300,7 +301,7 @@ describe('Select visitors', () => {
     it('should should save selected visitors to session and redirect to select date and time page (OPEN visit)', () => {
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
-        .send({ visitorDisplayIds: ['uuidv4-1', 'uuidv4-3'] })
+        .send({ visitorDisplayIds: [visitor1.visitorDisplayId, visitor3.visitorDisplayId] })
         .expect(302)
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
@@ -330,7 +331,7 @@ describe('Select visitors', () => {
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
-        .send({ visitorDisplayIds: ['uuidv4-1', 'uuidv4-3'] })
+        .send({ visitorDisplayIds: [visitor1.visitorDisplayId, visitor3.visitorDisplayId] })
         .expect(302)
         .expect('Location', paths.BOOK_VISIT.CLOSED_VISIT)
         .expect(() => {
@@ -355,10 +356,17 @@ describe('Select visitors', () => {
         })
     })
 
-    it('should filter out invalid or duplicate visitor IDs', () => {
+    it('should filter out unrecognised or duplicate visitor IDs', () => {
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_VISITORS)
-        .send({ visitorDisplayIds: ['uuidv4-1', 'uuidv4-1', 'uuidv4-999', 'uuidv4-3'] })
+        .send({
+          visitorDisplayIds: [
+            visitor1.visitorDisplayId,
+            visitor1.visitorDisplayId,
+            randomUUID(),
+            visitor3.visitorDisplayId,
+          ],
+        })
         .expect(302)
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
@@ -372,7 +380,7 @@ describe('Select visitors', () => {
               prisoner,
               prison,
               eligibleVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & invalid ID '999' filtered out
+              selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & unrecognised UUID filtered out
               sessionRestriction: 'OPEN',
             },
           } as SessionData)
@@ -425,7 +433,13 @@ describe('Select visitors', () => {
       })
 
       it('should set a validation error and redirect to original page when max total visitors exceeded', () => {
-        const visitorDisplayIds = ['uuidv4-1', 'uuidv4-2', 'uuidv4-5', 'uuidv4-6', 'uuidv4-7']
+        const visitorDisplayIds = [
+          visitor1.visitorDisplayId,
+          visitor2.visitorDisplayId,
+          visitor5.visitorDisplayId,
+          visitor6.visitorDisplayId,
+          visitor7.visitorDisplayId,
+        ]
         expectedFlashErrors[0].msg = 'Select no more than 4 visitors'
         expectedFlashErrors[0].value = visitorDisplayIds
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
@@ -443,7 +457,7 @@ describe('Select visitors', () => {
       })
 
       it('should set a validation error and redirect to original page when max total adult age visitors exceeded', () => {
-        const visitorDisplayIds = ['uuidv4-1', 'uuidv4-2', 'uuidv4-3']
+        const visitorDisplayIds = [visitor1.visitorDisplayId, visitor2.visitorDisplayId, visitor3.visitorDisplayId]
         expectedFlashErrors[0].msg = 'Select no more than 2 visitors 16 years old or older'
         expectedFlashErrors[0].value = visitorDisplayIds
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
@@ -461,7 +475,12 @@ describe('Select visitors', () => {
       })
 
       it('should set a validation error and redirect to original page when max total child age visitors exceeded', () => {
-        const visitorDisplayIds = ['uuidv4-5', 'uuidv4-6', 'uuidv4-7', 'uuidv4-8']
+        const visitorDisplayIds = [
+          visitor5.visitorDisplayId,
+          visitor6.visitorDisplayId,
+          visitor7.visitorDisplayId,
+          visitor8.visitorDisplayId,
+        ]
         expectedFlashErrors[0].msg = 'Select no more than 3 visitors under 16 years old'
         expectedFlashErrors[0].value = visitorDisplayIds
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
@@ -479,7 +498,7 @@ describe('Select visitors', () => {
       })
 
       it('should set a validation error and redirect to original page no visitor over 18 is selected', () => {
-        const visitorDisplayIds = ['uuidv4-3']
+        const visitorDisplayIds = [visitor3.visitorDisplayId]
         expectedFlashErrors[0].msg = 'Add a visitor who is 18 years old or older'
         expectedFlashErrors[0].value = visitorDisplayIds
         expectedFlashFormValues.visitorDisplayIds = visitorDisplayIds
