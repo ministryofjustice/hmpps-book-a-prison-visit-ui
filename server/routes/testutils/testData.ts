@@ -125,7 +125,6 @@ export default class TestData {
     maxAdultVisitors = 2,
     maxChildVisitors = 3,
     adultAgeYears = 16,
-    excludeDates = [],
     clients = [],
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
@@ -138,7 +137,6 @@ export default class TestData {
       maxAdultVisitors,
       maxChildVisitors,
       adultAgeYears,
-      excludeDates,
       clients,
     }) as PrisonDto
 
