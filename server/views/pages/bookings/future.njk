@@ -15,19 +15,18 @@
 
       {% if visits | length %}
         {% for visit in visits %}
-          <div class="bookings-content-block">
-            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
-            <p>
-              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-              to
-              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-            </p>
-            <p>Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span></p>  
-            <p>
-              <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
-            </p>
-          </div>
-          
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+          <p class="govuk-!-margin-bottom-1">
+            <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+            to
+            <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+          </p>
+          <p class="govuk-!-margin-bottom-1">
+            Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
+          </p>
+          <p>
+            <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
+          </p>
         {% endfor %}
 
         <h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your booking</h2>
