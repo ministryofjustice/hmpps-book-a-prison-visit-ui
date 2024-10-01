@@ -13,22 +13,17 @@
 
       <p>Only bookings made using GOV.UK One Login are shown.</p>
 
-      <h2 class="govuk-heading-m">{{ pageTitle }}</h2>
-
       {% if visits | length %}
         {% for visit in visits %}
-          <div class="bookings-content-block">
-            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
-            <p>
-              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-              to
-              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-            </p>
-            <p>
-              <a href="{{ paths.BOOKINGS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
-            </p>
-          </div>
-          
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h2>
+          <p class="govuk-!-margin-bottom-1">
+            <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+            to
+            <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+          </p>
+          <p>
+            <a href="{{ paths.BOOKINGS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
+          </p>
         {% endfor %}
 
       {% else %}
