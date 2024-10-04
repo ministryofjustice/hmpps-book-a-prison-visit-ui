@@ -72,9 +72,25 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should show alternative content if prison has no phone number', () => {
+      bookings.type = 'future'
+      prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=no-prison-phone-number]').text()).toContain(prison.prisonName)
+          expect($('[data-test=no-prison-phone-number] a').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
         })
     })
   })
