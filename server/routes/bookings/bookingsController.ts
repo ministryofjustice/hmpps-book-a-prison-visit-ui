@@ -1,21 +1,28 @@
 import type { RequestHandler } from 'express'
 import { SessionData } from 'express-session'
 import createError from 'http-errors'
-import { VisitService } from '../../services'
-import getPrisonInformation from '../../constants/prisonInformation'
+import { PrisonService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
+import { PrisonDto } from '../../data/orchestrationApiTypes'
 
 export default class BookingsController {
-  public constructor(private readonly visitService: VisitService) {}
+  public constructor(
+    private readonly prisonService: PrisonService,
+    private readonly visitService: VisitService,
+  ) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res, next) => {
       const { booker } = req.session
 
       let visits: VisitDetails[]
+      let prison: PrisonDto
       switch (type) {
         case 'future':
           visits = await this.visitService.getFuturePublicVisits(booker.reference)
+          // making assumption here that all visits[] will be for the same prison
+          prison = visits.length ? await this.prisonService.getPrison(visits[0].prisonId) : undefined
+
           break
 
         case 'past':
@@ -32,9 +39,7 @@ export default class BookingsController {
 
       req.session.bookings = { type, visits }
 
-      const { prisonName, prisonPhoneNumber } = getPrisonInformation(visits[0]?.prisonId)
-
-      return res.render(`pages/bookings/${type}`, { visits, prisonName, prisonPhoneNumber, showServiceNav: true })
+      return res.render(`pages/bookings/${type}`, { prison, visits, showServiceNav: true })
     }
   }
 }

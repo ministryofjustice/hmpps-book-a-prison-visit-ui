@@ -129,8 +129,7 @@ describe('Check visit details', () => {
 
     it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page', () => {
       const expectedBookingConfirmed: BookingConfirmed = {
-        prisonCode: sessionData.bookingJourney.prison.code,
-        prisonName: sessionData.bookingJourney.prison.prisonName,
+        prison,
         visitReference: visit.reference,
         hasPhoneNumber: true,
       }

@@ -39,8 +39,7 @@ export default class CheckVisitDetailsController {
         })
 
         const bookingConfirmed: BookingConfirmed = {
-          prisonCode: bookingJourney.prison.code,
-          prisonName: bookingJourney.prison.prisonName,
+          prison: bookingJourney.prison,
           visitReference: visit.reference,
           hasPhoneNumber: !!bookingJourney.mainContact.phoneNumber,
         }

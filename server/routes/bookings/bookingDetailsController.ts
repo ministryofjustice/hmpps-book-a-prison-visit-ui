@@ -1,12 +1,14 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, validationResult } from 'express-validator'
 import { SessionData } from 'express-session'
-import { BookerService } from '../../services'
-import getPrisonInformation from '../../constants/prisonInformation'
+import { BookerService, PrisonService } from '../../services'
 import paths from '../../constants/paths'
 
 export default class BookingDetailsController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res) => {
@@ -26,16 +28,14 @@ export default class BookingDetailsController {
 
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
-      const { prisonName, prisonPhoneNumber, prisonWebsite } = getPrisonInformation(prisoner.prisonId)
+      const prison = await this.prisonService.getPrison(visit.prisonId)
 
       return res.render('pages/bookings/visit', {
-        visit,
         booker,
+        prison,
         prisoner,
-        prisonName,
-        prisonPhoneNumber,
-        prisonWebsite,
         type,
+        visit,
         showServiceNav: true,
       })
     }

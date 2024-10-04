@@ -75,13 +75,13 @@
         <h2 class="govuk-heading-m">How to change your booking</h2>
         <p>
           To update or cancel your booking, call
-          <span data-test="prison-name">{{ prisonName }}</span>
-          on <span data-test="prison-phone-number">{{ prisonPhoneNumber }}</span>
+          <span data-test="prison-name">{{ prison.prisonName }}</span>
+          on <span data-test="prison-phone-number">{{ prison.phoneNumber }}</span>
           between 9am and 5pm, Monday to Friday.
         </p>
         <p>You will need the booking reference to make changes.</p>
 
-        <h2 class="govuk-heading-m">Prepare for visiting {{ prisonName }}</h2>
+        <h2 class="govuk-heading-m">Prepare for visiting {{ prison.prisonName }}</h2>
 
         <p>
           All visitors over 16 years old must show <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a" target="_blank">acceptable forms of ID to enter the prison</a>.
@@ -91,7 +91,7 @@
 
         <p>
           You can read more about
-          <a href="{{ prisonWebsite }}" data-test="prison-website" target="_blank">visits at {{ prisonName }}</a>.
+          <a href="{{ prison.webAddress }}" data-test="prison-website" target="_blank">visits at {{ prison.prisonName }}</a>.
           This includes information on getting to the prison and visiting facilities.
         </p>
 

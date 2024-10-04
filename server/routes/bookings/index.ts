@@ -13,8 +13,8 @@ export default function routes(services: Services): Router {
   const getWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.get(path, ...validationChain, asyncMiddleware(handler))
 
-  const bookingsController = new BookingsController(services.visitService)
-  const bookingDetailsController = new BookingDetailsController(services.bookerService)
+  const bookingsController = new BookingsController(services.prisonService, services.visitService)
+  const bookingDetailsController = new BookingDetailsController(services.bookerService, services.prisonService)
 
   get(paths.BOOKINGS.HOME, bookingsController.view('future'))
   get(paths.BOOKINGS.PAST, bookingsController.view('past'))

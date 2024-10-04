@@ -84,16 +84,15 @@ export default class TestData {
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static bookingConfirmed = ({
-    prisonCode = this.prisonDto().code,
-    prisonName = this.prisonDto().prisonName,
+    prison = this.prisonDto(),
     visitReference = 'ab-cd-ef-gh',
     hasPhoneNumber = true,
-  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prisonCode, prisonName, visitReference, hasPhoneNumber })
+  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prison, visitReference, hasPhoneNumber })
 
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
-    prisonId = 'DHI',
+    prisonId = 'HEI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
@@ -125,6 +124,9 @@ export default class TestData {
     maxAdultVisitors = 2,
     maxChildVisitors = 3,
     adultAgeYears = 16,
+    emailAddress = 'visits@example.com',
+    phoneNumber = '01234 567 890',
+    webAddress = 'https://www.example.com/',
     clients = [],
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
@@ -137,6 +139,9 @@ export default class TestData {
       maxAdultVisitors,
       maxChildVisitors,
       adultAgeYears,
+      emailAddress,
+      phoneNumber,
+      webAddress,
       clients,
     }) as PrisonDto
 
@@ -162,7 +167,7 @@ export default class TestData {
     visitDisplayId = 'uuidv4-1',
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
-    prisonId = 'DHI',
+    prisonId = 'HEI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',

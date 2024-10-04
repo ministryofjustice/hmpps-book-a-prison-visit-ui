@@ -11,22 +11,20 @@ context('Bookings home page', () => {
   const orchestrationVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',
-    prisonId: 'DHI',
   })
   const pastVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2023-05-30T10:00:00',
     endTimestamp: '2023-05-30T11:30:00',
-    prisonId: 'DHI',
   })
   const cancelledVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',
-    prisonId: 'DHI',
     outcomeStatus: 'ESTABLISHMENT_CANCELLED',
     visitStatus: 'CANCELLED',
   })
 
-  const prisoner = TestData.bookerPrisonerInfoDto({ prisonId: 'DHI' })
+  const prison = TestData.prisonDto()
+  const prisoner = TestData.bookerPrisonerInfoDto()
   const bookerReference = TestData.bookerReference()
 
   beforeEach(() => {
@@ -34,6 +32,7 @@ context('Bookings home page', () => {
     cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
+    cy.task('stubGetPrison')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
   })
@@ -63,8 +62,8 @@ context('Bookings home page', () => {
     visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
     visitDetailsPage.mainContactNumber().contains('01234 567890')
-    visitDetailsPage.prisonName().contains('Drake Hall (HMP & YOI)')
-    visitDetailsPage.prisonPhoneNumber().contains('0121 661 2101')
+    visitDetailsPage.prisonName().contains(prison.prisonName)
+    visitDetailsPage.prisonPhoneNumber().contains(prison.phoneNumber)
   })
 
   it('should show Past visits page with visits and navigate to view the visit details', () => {
