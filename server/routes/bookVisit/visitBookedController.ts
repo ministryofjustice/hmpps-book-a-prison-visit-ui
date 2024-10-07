@@ -6,7 +6,11 @@ export default class VisitBookedController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { bookingConfirmed } = req.session
-      res.render('pages/bookVisit/visitBooked', { bookingConfirmed, showServiceNav: true })
+      res.render('pages/bookVisit/visitBooked', {
+        bookingConfirmed,
+        prison: bookingConfirmed.prison,
+        showServiceNav: true,
+      })
     }
   }
 }
