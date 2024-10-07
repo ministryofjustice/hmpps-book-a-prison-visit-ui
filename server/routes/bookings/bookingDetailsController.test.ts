@@ -4,18 +4,19 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { randomUUID } from 'crypto'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockBookerService } from '../../services/testutils/mocks'
+import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import getPrisonInformation from '../../constants/prisonInformation'
 import { VisitDetails } from '../../services/visitService'
 
 let app: Express
 
 const bookerService = createMockBookerService()
+const prisonService = createMockPrisonService()
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner({ prisonId: 'DHI' })
+const prison = TestData.prisonDto()
+const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
@@ -34,7 +35,9 @@ beforeEach(() => {
     bookings,
   } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService }, sessionData })
+  prisonService.getPrison.mockResolvedValue(prison)
+
+  app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 })
 
 afterEach(() => {
@@ -65,10 +68,29 @@ describe('View a single booking', () => {
           expect($('[data-test="main-contact-name"]').text()).toBe('Joan Phillips')
           expect($('[data-test="main-contact-number"]').text()).toBe('01234 567890')
 
-          expect($('[data-test="prison-name"]').text()).toBe(getPrisonInformation('DHI').prisonName)
-          expect($('[data-test="prison-phone-number"]').text()).toBe(getPrisonInformation('DHI').prisonPhoneNumber)
+          expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
+          expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
-          expect($('[data-test="prison-website"]').attr('href')).toBe(getPrisonInformation('DHI').prisonWebsite)
+          expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
+
+          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should show alternative content if prison has no phone number', () => {
+      bookings.type = 'future'
+      prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=no-prison-phone-number]').text()).toContain(prison.prisonName)
+          expect($('[data-test=no-prison-phone-number] a').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
         })
     })
   })
@@ -92,6 +114,9 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+
+          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
   })
@@ -118,6 +143,9 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+
+          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
 
