@@ -1,0 +1,17 @@
+<h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your booking</h2>
+
+{% if prison.phoneNumber %}
+  <p>
+    To update or cancel your booking, call
+    <span data-test="prison-name">{{ prison.prisonName }}</span>
+    on <span data-test="prison-phone-number">{{ prison.phoneNumber }}</span>
+    between 9am and 5pm, Monday to Friday.
+  </p>
+{% else %}
+  <p data-test="no-prison-phone-number">
+    To update or cancel your booking,
+    <a href="{{ prison.webAddress }}" target="_blank">contact {{ prison.prisonName }} directly</a>.
+  </p>
+{% endif %}
+
+<p>You will need the booking reference to make changes.</p>

@@ -20,25 +20,9 @@
       <p>You can help us to improve this service by giving <a href="https://visit-someone-in-prison-test-feedback.form.service.justice.gov.uk/">feedback</a>.</p>
 
       <div data-test="prison-specific-content">
-        <h2 class="govuk-heading-m">How to change your booking</h2>
+        {% include "partials/howToChangeBooking.njk" %}
 
-        {% if bookingConfirmed.prison.phoneNumber %}
-          <p>
-            To update or cancel your booking, call
-            <span data-test="prison-name">{{ bookingConfirmed.prison.prisonName }}</span>
-            on <span data-test="prison-phone-number">{{ bookingConfirmed.prison.phoneNumber }}</span>
-            between 9am and 5pm, Monday to Friday.
-          </p>
-        {% else %}
-          <p data-test="no-prison-phone-number">
-            To update or cancel your booking,
-            <a href="{{ bookingConfirmed.prison.webAddress }}" target="_blank">contact {{ bookingConfirmed.prison.prisonName }} directly</a>.
-          </p>
-        {% endif %}
-
-        <p>You will need the booking reference to make changes.</p>
-
-        <h2 class="govuk-heading-m">Prepare for visiting {{ bookingConfirmed.prison.prisonName }}</h2>
+        <h2 class="govuk-heading-m">Prepare for visiting {{ prison.prisonName }}</h2>
 
         <p>All visitors over 16 years old must show
           <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a" target="_blank">
@@ -48,7 +32,7 @@
         <p>Visitors should arrive <span data-test="minutes-before-visit">45</span> minutes before the visit starts.</p>
 
         <p>You can read more about
-          <a href="{{ bookingConfirmed.prison.webAddress }}" data-test="prison-website" target="_blank">visits at {{ bookingConfirmed.prison.prisonName }}</a>.
+          <a href="{{ prison.webAddress }}" data-test="prison-website" target="_blank">visits at {{ prison.prisonName }}</a>.
           This includes information on getting to the prison and visiting facilities.
         </p>
 
