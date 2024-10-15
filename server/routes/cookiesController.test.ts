@@ -110,6 +110,9 @@ describe('Cookies page', () => {
     const fakeDate = new Date('2024-07-24T16:30:15.000Z')
     const expectedCookieExpiry = 'Thu, 24 Jul 2025 16:30:15 GMT' // expiry in 1 year
 
+    const analyticsYesValue = encodeURIComponent(JSON.stringify({ acceptAnalytics: 'yes' }))
+    const analyticsNoValue = encodeURIComponent(JSON.stringify({ acceptAnalytics: 'no' }))
+
     beforeEach(() => {
       jest.useFakeTimers({ now: new Date(fakeDate) })
       app = appWithAllRoutes({})
@@ -125,11 +128,11 @@ describe('Cookies page', () => {
         .send({ acceptAnalytics: 'yes' })
         .expect(302)
         .expect('Location', paths.COOKIES)
-        .expect('Set-Cookie', `cookie_policy={"acceptAnalytics":"yes"}; Path=/; Expires=${expectedCookieExpiry}`)
+        .expect('Set-Cookie', `cookie_policy=${analyticsYesValue}; Path=/; Expires=${expectedCookieExpiry}`)
     })
 
     it('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (localhost)', () => {
-      const acceptAnalyticsNoCookie = `cookie_policy={"acceptAnalytics":"no"}; Path=/; Expires=${expectedCookieExpiry}`
+      const acceptAnalyticsNoCookie = `cookie_policy=${analyticsNoValue}; Path=/; Expires=${expectedCookieExpiry}`
       const clearGACookie = '_ga=; Domain=localhost; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
       const clearGAIDCookie = '_ga_SSLMWLQYHQ=; Domain=localhost; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
 
@@ -144,7 +147,7 @@ describe('Cookies page', () => {
     it('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (justice domain)', () => {
       const replacedProp = jest.replaceProperty(config, 'domain', 'https://visit-dev.prison.service.justice.gov.uk')
 
-      const acceptAnalyticsNoCookie = `cookie_policy={"acceptAnalytics":"no"}; Path=/; Expires=${expectedCookieExpiry}`
+      const acceptAnalyticsNoCookie = `cookie_policy=${analyticsNoValue}; Path=/; Expires=${expectedCookieExpiry}`
       const clearGACookie = '_ga=; Domain=justice.gov.uk; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
       const clearGAIDCookie = '_ga_SSLMWLQYHQ=; Domain=justice.gov.uk; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
 

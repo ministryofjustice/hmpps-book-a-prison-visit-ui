@@ -42,7 +42,7 @@
   function setAnalyticsPreferenceCookie(acceptAnalytics) {
     const expires = new Date()
     expires.setFullYear(expires.getFullYear() + 1)
-    const cookieValue = JSON.stringify({ acceptAnalytics })
+    const cookieValue = encodeURIComponent(JSON.stringify({ acceptAnalytics }))
     const cookie = `cookie_policy=${cookieValue}; expires=${expires.toUTCString()}; path=/; Secure`
 
     document.cookie = cookie

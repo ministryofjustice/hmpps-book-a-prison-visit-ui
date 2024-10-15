@@ -29,7 +29,8 @@ export default class CookiesController {
       const expires = new Date()
       expires.setFullYear(expires.getFullYear() + 1)
 
-      res.cookie('cookie_policy', JSON.stringify({ acceptAnalytics }), {
+      const cookieValue = encodeURIComponent(JSON.stringify({ acceptAnalytics }))
+      res.cookie('cookie_policy', cookieValue, {
         expires,
         secure: config.https,
         httpOnly: false,
