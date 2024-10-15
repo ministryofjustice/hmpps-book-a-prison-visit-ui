@@ -120,7 +120,7 @@ context('Cookie consent and analytics', () => {
 function checkCookie({ acceptAnalytics }) {
   cy.getCookie('cookie_policy').then(cookie => {
     cy.wrap(cookie).should('have.a.property', 'path', '/')
-    cy.wrap(cookie).should('have.a.property', 'value', JSON.stringify({ acceptAnalytics }))
+    cy.wrap(cookie).should('have.a.property', 'value', encodeURIComponent(JSON.stringify({ acceptAnalytics })))
 
     const expectedExpiry = new Date()
     expectedExpiry.setFullYear(expectedExpiry.getFullYear() + 1)

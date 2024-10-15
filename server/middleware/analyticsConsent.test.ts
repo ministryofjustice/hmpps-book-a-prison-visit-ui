@@ -17,7 +17,7 @@ describe('analyticsConsent', () => {
   })
 
   it('should set res.locals.analyticsEnabled to true if consent cookie set to yes', async () => {
-    req.cookies = { cookie_policy: JSON.stringify({ acceptAnalytics: 'yes' }) }
+    req.cookies = { cookie_policy: encodeURIComponent(JSON.stringify({ acceptAnalytics: 'yes' })) }
 
     await analyticsConsent()(req, res, next)
 
@@ -26,7 +26,7 @@ describe('analyticsConsent', () => {
   })
 
   it('should set res.locals.analyticsEnabled to false if consent cookie set to no', async () => {
-    req.cookies = { cookie_policy: JSON.stringify({ acceptAnalytics: 'no' }) }
+    req.cookies = { cookie_policy: encodeURIComponent(JSON.stringify({ acceptAnalytics: 'no' })) }
 
     await analyticsConsent()(req, res, next)
 
