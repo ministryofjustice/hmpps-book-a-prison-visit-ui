@@ -28,8 +28,12 @@ generic-service:
       SecRuleUpdateTargetById 942100 "!REQUEST_COOKIES:/prison-visits.session/"
       SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/prison-visits.session/"
       SecRuleUpdateTargetById 942340 "!REQUEST_COOKIES:/cookie_policy/"
+      SecRuleUpdateTargetById 942100 "!ARGS:code"
+      SecRuleUpdateTargetById 942440 "!ARGS:code"
       SecRuleUpdateTargetById 942100 "!ARGS:_csrf"
       SecRuleUpdateTargetById 942440 "!ARGS:_csrf"
+      SecRuleUpdateTargetById 942100 "!ARGS:state"
+      SecRuleUpdateTargetById 942440 "!ARGS:state"
       SecAction \
         "id:900000,\
         phase:1,\
