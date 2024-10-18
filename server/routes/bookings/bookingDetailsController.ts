@@ -30,12 +30,17 @@ export default class BookingDetailsController {
 
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
+      const nowTimestamp = new Date()
+      const visitStartTimestamp = new Date(visit.startTimestamp)
+      const showCancel = nowTimestamp < visitStartTimestamp
+
       return res.render('pages/bookings/visit', {
         booker,
         prison,
         prisoner,
         type,
         visit,
+        showCancel,
         showServiceNav: true,
       })
     }

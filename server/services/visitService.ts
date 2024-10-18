@@ -90,6 +90,22 @@ export default class VisitService {
     return visit
   }
 
+  async cancelVisit({
+    applicationReference,
+    actionedBy,
+  }: {
+    applicationReference: string
+    actionedBy: string
+  }): Promise<VisitDto> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const visit = orchestrationApiClient.cancelVisit({ applicationReference, actionedBy })
+
+    logger.info(`Visit '${applicationReference}' has been cancelled by booker '${actionedBy}`)
+    return visit
+  }
+
   async getFuturePublicVisits(bookerReference: string): Promise<VisitDetails[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)

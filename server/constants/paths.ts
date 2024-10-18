@@ -27,6 +27,10 @@ const paths = {
     VISIT: '/bookings/details',
     VISIT_PAST: '/bookings/past/details',
     VISIT_CANCELLED: '/bookings/cancelled/details',
+    CANCEL: {
+      CANCEL_VISIT: '/bookings/cancel-booking',
+      CANCELLED_VISIT: '/bookings/booking-cancelled',
+    },
   },
 
   VISITORS: '/visitors',
