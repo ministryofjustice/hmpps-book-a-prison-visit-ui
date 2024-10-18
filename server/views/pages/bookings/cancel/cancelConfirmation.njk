@@ -1,0 +1,23 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set pageTitle = "Booking cancelled" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukPanel({
+        titleText: pageTitle,
+        text: pageTitle
+      }) }}
+
+      <h2 class="govuk-heading-m">What happens next</h1>
+
+      <p>The main contact for this booking will get a text message to confirm it has been cancelled</p>
+
+    </div>
+  </div>
+{% endblock %}
