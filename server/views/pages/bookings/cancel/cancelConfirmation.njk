@@ -1,7 +1,5 @@
-{% extends "../../partials/layout.njk" %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% extends "../../../partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
 
 {% set pageTitle = "Booking cancelled" %}
 
@@ -10,8 +8,7 @@
     <div class="govuk-grid-column-two-thirds">
 
       {{ govukPanel({
-        titleText: pageTitle,
-        text: pageTitle
+        titleText: pageTitle
       }) }}
 
       <h2 class="govuk-heading-m">What happens next</h1>

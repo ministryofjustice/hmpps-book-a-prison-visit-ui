@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, matchedData, param, body } from 'express-validator'
+import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
 import { BookerService, VisitService } from '../../services'
 import paths from '../../constants/paths'
 
@@ -27,10 +27,12 @@ export default class CancelVisitController {
       const showCancel = nowTimestamp < visitStartTimestamp
 
       return res.render('pages/bookings/cancel/cancel', {
+        errors: req.flash('errors'),
         booker,
         prisoner,
         visit,
         showCancel,
+        visitDisplayId,
         showServiceNav: true,
       })
     }
@@ -38,6 +40,7 @@ export default class CancelVisitController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
+      const errors = validationResult(req)
       const { booker, bookings } = req.session
       const { visits } = bookings
       const { cancelBooking } = req.body
@@ -45,6 +48,12 @@ export default class CancelVisitController {
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
+        return res.redirect(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
+      }
 
       if (cancelBooking === 'no') {
         return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)
@@ -55,7 +64,7 @@ export default class CancelVisitController {
         actionedBy: booker.reference,
       })
 
-      return res.redirect(paths.BOOKINGS.CANCEL.CANCELLED_VISIT)
+      return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
     }
   }
 
@@ -83,7 +92,7 @@ export default class CancelVisitController {
 
   public validateCancelChoice(): ValidationChain[] {
     return [
-      body('additionalSupportRequired').isIn(['yes', 'no']).withMessage('No answer selected'),
+      body('cancelBooking').isIn(['yes', 'no']).withMessage('No answer selected'),
       param('visitDisplayId')
         .isUUID()
         .bail()

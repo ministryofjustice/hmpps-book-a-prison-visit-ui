@@ -43,18 +43,18 @@ export default function routes(services: Services): Router {
   )
 
   getWithValidation(
-    `${paths.BOOKINGS.CANCEL.CANCEL_VISIT}/:visitDisplayId`,
+    `${paths.BOOKINGS.CANCEL_VISIT}/:visitDisplayId`,
     cancelVisitController.validateDisplayId(),
     cancelVisitController.confirmCancelView(),
   )
 
   postWithValidation(
-    `${paths.BOOKINGS.CANCEL.CANCEL_VISIT}/:visitDisplayId`,
+    `${paths.BOOKINGS.CANCEL_VISIT}/:visitDisplayId`,
     cancelVisitController.validateCancelChoice(),
     cancelVisitController.submit(),
   )
 
-  get(`${paths.BOOKINGS.CANCEL.CANCELLED_VISIT}`, cancelVisitController.visitCancelled())
+  get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`, cancelVisitController.visitCancelled())
 
   return router
 }

@@ -26,7 +26,7 @@
           </p>
           <p>
             <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">View booking details</a>
-            <a href="{{ paths.BOOKINGS.CANCEL.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-{{ loop.index }}">Cancel booking</a>
+            <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-{{ loop.index }}">Cancel booking</a>
           </p>
         {% endfor %}
 
