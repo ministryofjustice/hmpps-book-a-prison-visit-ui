@@ -14,6 +14,11 @@ export default class CancelVisitController {
       const { booker, bookings } = req.session
       const { visits } = bookings
 
+      const errors = validationResult(req)
+      if (!errors.isEmpty() || bookings.type !== 'future') {
+        return res.redirect(paths.BOOKINGS.HOME)
+      }
+
       const prisoner = booker.prisoners?.[0]
         ? booker.prisoners?.[0]
         : (await this.bookerService.getPrisoners(booker.reference))?.[0]
@@ -22,16 +27,11 @@ export default class CancelVisitController {
 
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
-      const nowTimestamp = new Date()
-      const visitStartTimestamp = new Date(visit.startTimestamp)
-      const showCancel = nowTimestamp < visitStartTimestamp
-
       return res.render('pages/bookings/cancel/cancel', {
         errors: req.flash('errors'),
         booker,
         prisoner,
         visit,
-        showCancel,
         visitDisplayId,
         showServiceNav: true,
       })
@@ -40,20 +40,25 @@ export default class CancelVisitController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const errors = validationResult(req)
       const { booker, bookings } = req.session
       const { visits } = bookings
       const { cancelBooking } = req.body
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
-      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
-
+      const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
+
+        if (!visitDisplayId) {
+          return res.redirect(paths.BOOKINGS.HOME)
+        }
+
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
         return res.redirect(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
       }
+
+      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       if (cancelBooking === 'no') {
         return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)

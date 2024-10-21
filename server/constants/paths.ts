@@ -27,6 +27,8 @@ const paths = {
     VISIT: '/bookings/details',
     VISIT_PAST: '/bookings/past/details',
     VISIT_CANCELLED: '/bookings/cancelled/details',
+
+    // Cancel journey
     CANCEL_VISIT: '/bookings/cancel-booking',
     CANCEL_CONFIRMATION: '/bookings/booking-cancelled',
   },

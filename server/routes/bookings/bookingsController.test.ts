@@ -51,7 +51,7 @@ describe('Bookings homepage (future visits)', () => {
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
-        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
           `${paths.BOOKINGS.VISIT}/${futureVisitDetails.visitDisplayId}`,
         )
 

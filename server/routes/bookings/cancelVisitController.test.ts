@@ -68,7 +68,7 @@ describe('Cancel a booking', () => {
     })
   })
 
-  describe('Post - cancel booking', () => {
+  describe('POST - cancel booking', () => {
     it('should have cancelled the visit and redirect to confirmation page', () => {
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
@@ -129,6 +129,17 @@ describe('Cancel a booking', () => {
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedValidationError])
+        })
+    })
+
+    it('should NOT cancel the visit if invalid visit ID is posted', () => {
+      return request(app)
+        .post(`${paths.BOOKINGS.CANCEL_VISIT}/test`)
+        .send('cancelBooking=yes')
+        .expect(302)
+        .expect('location', paths.BOOKINGS.HOME)
+        .expect(() => {
+          expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })
     })
   })
