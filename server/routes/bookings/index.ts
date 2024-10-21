@@ -5,6 +5,7 @@ import asyncMiddleware from '../../middleware/asyncMiddleware'
 import paths from '../../constants/paths'
 import BookingsController from './bookingsController'
 import BookingDetailsController from './bookingDetailsController'
+import CancelVisitController from './cancelVisitController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -12,9 +13,12 @@ export default function routes(services: Services): Router {
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const getWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.get(path, ...validationChain, asyncMiddleware(handler))
+  const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
+    router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const bookingsController = new BookingsController(services.prisonService, services.visitService)
   const bookingDetailsController = new BookingDetailsController(services.bookerService, services.prisonService)
+  const cancelVisitController = new CancelVisitController(services.bookerService, services.visitService)
 
   get(paths.BOOKINGS.HOME, bookingsController.view('future'))
   get(paths.BOOKINGS.PAST, bookingsController.view('past'))
@@ -37,6 +41,20 @@ export default function routes(services: Services): Router {
     bookingDetailsController.validate(),
     bookingDetailsController.view('cancelled'),
   )
+
+  getWithValidation(
+    `${paths.BOOKINGS.CANCEL_VISIT}/:visitDisplayId`,
+    cancelVisitController.validateDisplayId(),
+    cancelVisitController.confirmCancelView(),
+  )
+
+  postWithValidation(
+    `${paths.BOOKINGS.CANCEL_VISIT}/:visitDisplayId`,
+    cancelVisitController.validateCancelChoice(),
+    cancelVisitController.submit(),
+  )
+
+  get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`, cancelVisitController.visitCancelled())
 
   return router
 }
