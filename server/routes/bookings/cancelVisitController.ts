@@ -42,9 +42,7 @@ export default class CancelVisitController {
     return async (req, res, next) => {
       const { booker, bookings } = req.session
       const { visits } = bookings
-      const { cancelBooking } = req.body
-
-      const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
+      const { cancelBooking, visitDisplayId } = matchedData<{ cancelBooking: 'yes' | 'no', visitDisplayId: string }>(req)
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
