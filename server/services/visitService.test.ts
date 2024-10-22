@@ -171,9 +171,9 @@ describe('Visit service', () => {
 
     describe('cancelVisit', () => {
       it('should cancel a visit for the booker', async () => {
-        orchestrationApiClient.cancelVisit.mockResolvedValue(visit)
+        orchestrationApiClient.cancelVisit.mockResolvedValue()
 
-        const results = await visitService.cancelVisit({
+        await visitService.cancelVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
         })
@@ -182,7 +182,6 @@ describe('Visit service', () => {
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
         })
-        expect(results).toStrictEqual(visit)
       })
     })
   })

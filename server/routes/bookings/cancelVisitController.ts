@@ -54,15 +54,14 @@ export default class CancelVisitController {
           return res.redirect(paths.BOOKINGS.HOME)
         }
 
-        req.flash('formValues', matchedData(req, { onlyValidData: false }))
         return res.redirect(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
       }
-
-      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       if (cancelBooking === 'no') {
         return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)
       }
+
+      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       await this.visitService.cancelVisit({
         applicationReference: visit.reference,

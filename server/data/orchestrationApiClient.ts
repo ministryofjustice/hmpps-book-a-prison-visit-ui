@@ -51,8 +51,8 @@ export default class OrchestrationApiClient {
   }: {
     applicationReference: string
     actionedBy: string
-  }): Promise<VisitDto> {
-    return this.restClient.put({
+  }): Promise<void> {
+    await this.restClient.put({
       path: `/visits/${applicationReference}/cancel`,
       data: <CancelVisitOrchestrationDto>{
         cancelOutcome: {

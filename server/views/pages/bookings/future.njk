@@ -25,8 +25,16 @@
             Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
           </p>
           <p>
-            <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">View booking details</a>
-            <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">Cancel booking</a>
+            <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+              View details
+              <span class="govuk-visually-hidden">
+                of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+              </span>
+            </a>
+            <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
+              Cancel booking
+              <span class="govuk-visually-hidden"> of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}</span>
+            </a>
           </p>
         {% endfor %}
 

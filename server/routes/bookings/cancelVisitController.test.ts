@@ -44,7 +44,7 @@ afterEach(() => {
 
 describe('Cancel a booking', () => {
   describe('GET - Display visit information on cancellation page', () => {
-    it('should render the booking details page', () => {
+    it('should render the cancel confirmation page', () => {
       return request(app)
         .get(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
@@ -65,6 +65,24 @@ describe('Cancel a booking', () => {
             `${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`,
           )
         })
+    })
+
+    describe('GET - Display cancellation confirmed page', () => {
+      it('should render the page confirming the visit has been cancelled', () => {
+        return request(app)
+          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Booking cancelled -/)
+            expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
+            expect($('h1').text()).toContain('Booking cancelled')
+            expect($('h2').text()).toContain('What happens next')
+            expect($('p').text()).toContain(
+              'The main contact for this booking will get a text message to confirm it has been cancelled.',
+            )
+          })
+      })
     })
   })
 

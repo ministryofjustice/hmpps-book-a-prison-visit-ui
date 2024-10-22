@@ -58,8 +58,6 @@ describe('orchestrationApiClient', () => {
     it('should cancel a visit for the booker', async () => {
       const applicationReference = 'aaa-bbb-ccc'
 
-      const result = { reference: 'ab-cd-ef-gh' } as Partial<VisitDto>
-
       fakeOrchestrationApi
         .put(`/visits/${applicationReference}/cancel`, <CancelVisitOrchestrationDto>{
           cancelOutcome: {
@@ -69,14 +67,14 @@ describe('orchestrationApiClient', () => {
           actionedBy: bookerReference.value,
         })
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, result)
+        .reply(200)
 
-      const output = await orchestrationApiClient.cancelVisit({
+      await orchestrationApiClient.cancelVisit({
         applicationReference,
         actionedBy: bookerReference.value,
       })
 
-      expect(output).toStrictEqual(result)
+      expect(fakeOrchestrationApi.isDone()).toBe(true)
     })
   })
 

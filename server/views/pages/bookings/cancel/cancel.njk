@@ -30,7 +30,7 @@
       <h2 class="govuk-heading-m">Visitors</h2>
 
       {% for visitor in visit.visitors %}
-        <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}
+        <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
       {% endfor %}
 
       <form class="govuk-!-margin-top-5" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
@@ -60,7 +60,7 @@
         {{ govukButton({
           text: "Confirm",
           attributes: {
-            "data-test": "continue-button"
+            "data-test": "confirm-button"
           },
           preventDoubleClick: true
         }) }} 

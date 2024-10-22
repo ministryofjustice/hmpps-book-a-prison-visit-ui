@@ -54,6 +54,9 @@ describe('Bookings homepage (future visits)', () => {
         expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
           `${paths.BOOKINGS.VISIT}/${futureVisitDetails.visitDisplayId}`,
         )
+        expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
+          `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails.visitDisplayId}`,
+        )
 
         expect($('[data-test=change-booking-heading]').length).toBeTruthy()
         expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
@@ -122,9 +125,10 @@ describe('Past visits page', () => {
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
-        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
           `${paths.BOOKINGS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
         )
+        expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
@@ -189,9 +193,10 @@ describe('Cancelled visits page', () => {
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
-        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
           `${paths.BOOKINGS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,
         )
+        expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
