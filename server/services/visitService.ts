@@ -61,7 +61,7 @@ export default class VisitService {
 
     const visitorSupport = bookingJourney.visitorSupport ? { description: bookingJourney.visitorSupport } : undefined
 
-    const application = orchestrationApiClient.changeVisitApplication({
+    const application = await orchestrationApiClient.changeVisitApplication({
       applicationReference: bookingJourney.applicationReference,
       applicationRestriction: bookingJourney.selectedVisitSession.sessionRestriction,
       sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
@@ -84,7 +84,7 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visit = orchestrationApiClient.bookVisit({ applicationReference, actionedBy })
+    const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy })
 
     logger.info(`Visit application '${applicationReference}' booked as visit '${(await visit).reference}'`)
     return visit
