@@ -25,15 +25,17 @@
 
       <h2 class="govuk-heading-m">Prisoner</h2>
 
-      <p class="govuk-!-margin-bottom-1" data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</p>
+      <p data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</p>
 
       <h2 class="govuk-heading-m">Visitors</h2>
 
       {% for visitor in visit.visitors %}
-        <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
+        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
+          {{ visitor.firstName }} {{ visitor.lastName }}
+        </p>
       {% endfor %}
 
-      <form class="govuk-!-margin-top-5 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({

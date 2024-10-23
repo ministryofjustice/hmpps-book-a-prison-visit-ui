@@ -61,7 +61,9 @@
       <h2 class="govuk-heading-m">Visitors</h2>
 
       {% for visitor in visit.visitors %}
-        <p class="govuk-!-margin-bottom-1" data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
+        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
+          {{ visitor.firstName }} {{ visitor.lastName }}
+        </p>
       {% endfor %}
 
       <h2 class="govuk-heading-m">Additional support requests</h2>
@@ -75,7 +77,7 @@
       {% if showCancel %}
         {{ govukButton({
           text: "Cancel booking",
-          classes: "govuk-!-margin-top-2 govuk-button--secondary",
+          classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-7 govuk-button--secondary",
           href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },
           preventDoubleClick: true
