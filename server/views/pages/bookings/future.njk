@@ -32,8 +32,10 @@
               </span>
             </a>
             <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-              Cancel booking
-              <span class="govuk-visually-hidden"> of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}</span>
+              Cancel <span class="govuk-visually-hidden">your</span> booking
+              <span class="govuk-visually-hidden">
+                for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+              </span>
             </a>
           </p>
         {% endfor %}
