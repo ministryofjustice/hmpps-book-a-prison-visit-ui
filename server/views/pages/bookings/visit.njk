@@ -2,6 +2,7 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {%-from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = "Visit booking details" %}
 
@@ -70,6 +71,16 @@
       <h2 class="govuk-heading-m">Main contact</h2>
       <p class="govuk-!-margin-bottom-1" data-test="main-contact-name">{{ visit.visitContact.name }}</p>
       <p data-test="main-contact-number">{{ visit.visitContact.telephone | d("No phone number provided", true) }}</p>
+
+      {% if showCancel %}
+        {{ govukButton({
+          text: "Cancel booking",
+          classes: "govuk-!-margin-top-5 govuk-button--secondary",
+          href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
+          attributes: { "data-test": "cancel-visit" },
+          preventDoubleClick: true
+        }) }}
+      {% endif %}
 
       {% if type === 'future' %}
         {% include "partials/howToChangeBooking.njk" %}
