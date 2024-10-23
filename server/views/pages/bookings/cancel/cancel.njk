@@ -33,7 +33,7 @@
         <p data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
       {% endfor %}
 
-      <form class="govuk-!-margin-top-5" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
+      <form class="govuk-!-margin-top-5 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({
@@ -67,4 +67,8 @@
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/disableButtonOnSubmit.js"></script>
 {% endblock %}
