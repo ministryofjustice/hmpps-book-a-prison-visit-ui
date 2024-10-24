@@ -7,6 +7,7 @@ import {
   AvailableVisitSessionDto,
   AvailableVisitSessionRestrictionDto,
   BookingOrchestrationRequestDto,
+  CancelVisitOrchestrationDto,
   ChangeApplicationDto,
   CreateApplicationDto,
   VisitDto,
@@ -50,6 +51,30 @@ describe('orchestrationApiClient', () => {
       const output = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy: bookerReference.value })
 
       expect(output).toStrictEqual(result)
+    })
+  })
+
+  describe('cancelVisit', () => {
+    it('should cancel a visit for the booker', async () => {
+      const applicationReference = 'aaa-bbb-ccc'
+
+      fakeOrchestrationApi
+        .put(`/visits/${applicationReference}/cancel`, <CancelVisitOrchestrationDto>{
+          cancelOutcome: {
+            outcomeStatus: 'BOOKER_CANCELLED',
+          },
+          applicationMethodType: 'WEBSITE',
+          actionedBy: bookerReference.value,
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await orchestrationApiClient.cancelVisit({
+        applicationReference,
+        actionedBy: bookerReference.value,
+      })
+
+      expect(fakeOrchestrationApi.isDone()).toBe(true)
     })
   })
 

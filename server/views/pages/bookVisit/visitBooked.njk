@@ -8,7 +8,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        html: 'Your booking reference is<br><strong data-test="booking-reference">' + bookingConfirmed.visitReference + "</strong>"
+        html: 'Your booking reference is<br><strong data-test="booking-reference-title">' + bookingConfirmed.visitReference + "</strong>"
       }) }}
 
       {% if bookingConfirmed.hasPhoneNumber %}

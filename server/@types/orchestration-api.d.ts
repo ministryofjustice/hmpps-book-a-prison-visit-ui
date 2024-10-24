@@ -768,6 +768,8 @@ export interface components {
         | 'NOT_KNOWN'
         | 'NOT_APPLICABLE'
         | 'BY_PRISONER'
+      /** @description Username for user who actioned this request */
+      actionedBy: string
     }
     /**
      * @description Contact Phone Number
@@ -800,6 +802,7 @@ export interface components {
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
+        | 'BOOKER_CANCELLED'
       /**
        * @description Outcome text
        * @example Because he got covid
@@ -902,6 +905,7 @@ export interface components {
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
+        | 'BOOKER_CANCELLED'
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -1325,9 +1329,9 @@ export interface components {
       sort?: components['schemas']['SortObject'][]
       /** Format: int32 */
       pageSize?: number
-      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
+      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
@@ -1616,6 +1620,7 @@ export interface components {
         | 'VISIT_ORDER_CANCELLED'
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
+        | 'BOOKER_CANCELLED'
       /**
        * Format: date-time
        * @description The date and time of the visit

@@ -46,8 +46,15 @@ describe('Visit booked', () => {
           expect($('#service-header__nav').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visit booked')
+          expect($('[data-test="booking-reference-title"]').text()).toBe(visit.applicationReference)
 
           expect($('[data-test="phone-number-text"]').length).toBe(1)
+
+          expect($('[data-test="booking-reference-changes"]').text()).toBe(visit.applicationReference)
+          expect($('[data-test="cancel-visit-content"]').text()).toBe(
+            'Or you can cancel your booking from the bookings page.',
+          )
+          expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.BOOKINGS.HOME)
 
           expect($('[data-test="prison-specific-content"]').length).toBe(1)
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
