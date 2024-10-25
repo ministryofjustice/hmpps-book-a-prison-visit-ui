@@ -163,6 +163,20 @@ describe('View a single booking', () => {
         })
     })
 
+    it('should render the booking details page - cancelled by booker', () => {
+      bookings.type = 'cancelled'
+      visitDetails.visitStatus = 'CANCELLED'
+      visitDetails.outcomeStatus = 'BOOKER_CANCELLED'
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="visit-cancelled-type"]').text()).toBe('You cancelled this visit.')
+        })
+    })
+
     it('should render the booking details page - cancelled by visitor', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
