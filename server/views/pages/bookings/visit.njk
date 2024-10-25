@@ -25,6 +25,8 @@
             {{- 'This visit was cancelled by a visitor.' }}
           {%- elif status === 'PRISONER_CANCELLED' %}
             {{- 'This visit was cancelled by the prisoner.' }}
+          {%- elif status === 'BOOKER_CANCELLED' %}
+            {{- 'You cancelled this visit.' }}
           {%- else %}
             {{- 'This visit was cancelled by the prison.' }}
           {%- endif %}
