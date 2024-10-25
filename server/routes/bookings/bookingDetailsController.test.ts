@@ -163,7 +163,7 @@ describe('View a single booking', () => {
         })
     })
 
-    it('should render the booking details page - cancelled by prisoner', () => {
+    it('should render the booking details page - cancelled by booker', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'BOOKER_CANCELLED'
