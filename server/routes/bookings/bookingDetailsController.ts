@@ -32,7 +32,7 @@ export default class BookingDetailsController {
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
-      const showCancel = nowTimestamp < visitStartTimestamp
+      const showCancel = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       return res.render('pages/bookings/visit', {
         booker,

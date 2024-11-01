@@ -73,6 +73,7 @@ describe('View a single booking', () => {
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -114,6 +115,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -143,6 +145,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
