@@ -60,6 +60,7 @@ export default class OrchestrationApiClient {
         },
         applicationMethodType: 'WEBSITE',
         actionedBy,
+        userType: 'PUBLIC',
       },
     })
   }

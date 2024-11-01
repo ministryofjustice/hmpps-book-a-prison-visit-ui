@@ -770,6 +770,12 @@ export interface components {
         | 'BY_PRISONER'
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /**
+       * @description User type
+       * @example STAFF
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
     }
     /**
      * @description Contact Phone Number
@@ -1306,10 +1312,10 @@ export interface components {
       visitTimeSlot: components['schemas']['SessionTimeSlotDto']
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
       first?: boolean
       last?: boolean
       /** Format: int32 */
@@ -1583,6 +1589,16 @@ export interface components {
        * @example AF34567G
        */
       prisonerId: string
+      /**
+       * @description Prisoner first name
+       * @example James
+       */
+      prisonerFirstName?: string
+      /**
+       * @description Prisoner last name
+       * @example Smith
+       */
+      prisonerLastName?: string
       /**
        * @description Prison Id
        * @example MDI

@@ -65,6 +65,7 @@ describe('orchestrationApiClient', () => {
           },
           applicationMethodType: 'WEBSITE',
           actionedBy: bookerReference.value,
+          userType: 'PUBLIC',
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200)
