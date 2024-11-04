@@ -46,6 +46,16 @@ afterEach(() => {
 
 describe('View a single booking', () => {
   describe('Future booking', () => {
+    const fakeDate = new Date('2024-05-28')
+
+    beforeEach(() => {
+      jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
+    })
+
+    afterEach(() => {
+      jest.resetAllMocks()
+      jest.useRealTimers()
+    })
     it('should render the booking details page', () => {
       bookings.type = 'future'
 
@@ -74,6 +84,9 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
           expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
+
+          expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
+          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -117,6 +130,9 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-website"]').length).toBeFalsy()
           expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
 
+          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
+          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
+
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
@@ -146,6 +162,9 @@ describe('View a single booking', () => {
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
           expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+
+          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
+          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)

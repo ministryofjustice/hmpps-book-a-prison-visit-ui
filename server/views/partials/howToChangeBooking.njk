@@ -1,10 +1,5 @@
 <h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your booking</h2>
-{% set visitRef = '' %}
-{% if bookingConfirmed.visitReference %}
-  {% set visitRef = bookingConfirmed.visitReference %}
-{% elif visit.reference %}
-  {% set visitRef = visit.reference %}
-{% endif %}
+{% set visitRef = bookingConfirmed.visitReference if bookingConfirmed.visitReference else visit.reference %}
 
 {% if prison.phoneNumber %}
   <p>
@@ -20,6 +15,6 @@
   </p>
 {% endif %}
 
-<p>You will need the booking reference to make changes. {% if visitRef !== '' %}Your booking reference is <span data-test="booking-reference-changes">{{ visitRef }}</span>.{% endif %}</p>
+<p>You will need the booking reference to make changes. {% if visitRef %}Your booking reference is <span data-test="booking-reference-changes">{{ visitRef }}</span>.{% endif %}</p>
 
 <p data-test="cancel-visit-content">Or you can cancel your booking from <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">the bookings page</a>.</p>
