@@ -78,9 +78,7 @@ describe('Cancel a booking', () => {
             expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
             expect($('h1').text()).toContain('Booking cancelled')
             expect($('h2').text()).toContain('What happens next')
-            expect($('p').text()).toContain(
-              'The main contact for this booking will get a text message to confirm it has been cancelled.',
-            )
+            expect($('p').text()).toContain('A text message will be sent to the main contact')
           })
       })
     })
