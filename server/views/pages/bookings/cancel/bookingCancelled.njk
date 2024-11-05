@@ -13,9 +13,11 @@
 
       <h2 class="govuk-heading-m">What happens next</h1>
 
-      <p data-test="phone-number-text">
-        A text message will be sent to the main contact to confirm the booking has been cancelled.
-      </p>
+      {% if hasPhoneNumber %}
+        <p data-test="phone-number-text">
+          A text message will be sent to the main contact to confirm the booking has been cancelled.
+        </p>
+      {% endif %}
 
       <p>
         When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your bookings</a>.

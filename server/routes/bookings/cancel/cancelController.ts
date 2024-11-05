@@ -69,6 +69,8 @@ export default class CancelController {
         actionedBy: booker.reference,
       })
 
+      req.session.bookingCancelled = { hasPhoneNumber: !!visit.visitContact.telephone }
+
       return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
     }
   }

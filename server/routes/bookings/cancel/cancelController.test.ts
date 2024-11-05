@@ -9,6 +9,7 @@ import { createMockBookerService, createMockVisitService } from '../../../servic
 import TestData from '../../testutils/testData'
 import paths from '../../../constants/paths'
 import { VisitDetails } from '../../../services/visitService'
+import { BookingCancelled } from '../../../@types/bapv'
 
 let app: Express
 
@@ -69,7 +70,7 @@ describe('Cancel a booking - Are you sure page', () => {
   })
 
   describe('POST - cancel booking', () => {
-    it('should have cancelled the visit and redirect to confirmation page', () => {
+    it('should cancel the visit, set data in session and redirect to confirmation page - with phone number', () => {
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
@@ -81,6 +82,25 @@ describe('Cancel a booking - Are you sure page', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: true })
+        })
+    })
+
+    it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
+      sessionData.bookings.visits[0].visitContact.telephone = undefined
+
+      return request(app)
+        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .send('cancelBooking=yes')
+        .expect(302)
+        .expect('location', paths.BOOKINGS.CANCEL_CONFIRMATION)
+        .expect(() => {
+          expect(visitService.cancelVisit).toHaveBeenCalledTimes(1)
+          expect(visitService.cancelVisit).toHaveBeenCalledWith({
+            actionedBy: 'aaaa-bbbb-cccc',
+            applicationReference: 'ab-cd-ef-gh',
+          })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: false })
         })
     })
 
