@@ -12,7 +12,6 @@ export default class CancelController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookings } = req.session
-      const { visits } = bookings
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
@@ -25,6 +24,7 @@ export default class CancelController {
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
+      const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       return res.render('pages/bookings/cancel/cancel', {
@@ -40,8 +40,6 @@ export default class CancelController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { booker, bookings } = req.session
-      const { visits } = bookings
       const { cancelBooking, visitDisplayId } = matchedData<{
         cancelBooking: 'yes' | 'no'
         visitDisplayId: string
@@ -62,6 +60,8 @@ export default class CancelController {
         return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)
       }
 
+      const { booker, bookings } = req.session
+      const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       await this.visitService.cancelVisit({
