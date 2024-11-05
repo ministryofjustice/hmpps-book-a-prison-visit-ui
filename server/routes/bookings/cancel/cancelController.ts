@@ -1,15 +1,15 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
-import { BookerService, VisitService } from '../../services'
-import paths from '../../constants/paths'
+import { BookerService, VisitService } from '../../../services'
+import paths from '../../../constants/paths'
 
-export default class CancelVisitController {
+export default class CancelController {
   public constructor(
     private readonly bookerService: BookerService,
     private readonly visitService: VisitService,
   ) {}
 
-  public confirmCancelView(): RequestHandler {
+  public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookings } = req.session
       const { visits } = bookings
@@ -70,14 +70,6 @@ export default class CancelVisitController {
       })
 
       return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
-    }
-  }
-
-  public visitCancelled(): RequestHandler {
-    return async (req, res) => {
-      return res.render('pages/bookings/cancel/cancelConfirmation', {
-        showServiceNav: true,
-      })
     }
   }
 
