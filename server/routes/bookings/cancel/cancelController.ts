@@ -1,18 +1,17 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
-import { BookerService, VisitService } from '../../services'
-import paths from '../../constants/paths'
+import { BookerService, VisitService } from '../../../services'
+import paths from '../../../constants/paths'
 
-export default class CancelVisitController {
+export default class CancelController {
   public constructor(
     private readonly bookerService: BookerService,
     private readonly visitService: VisitService,
   ) {}
 
-  public confirmCancelView(): RequestHandler {
+  public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookings } = req.session
-      const { visits } = bookings
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
@@ -25,6 +24,7 @@ export default class CancelVisitController {
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
+      const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       return res.render('pages/bookings/cancel/cancel', {
@@ -40,8 +40,6 @@ export default class CancelVisitController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { booker, bookings } = req.session
-      const { visits } = bookings
       const { cancelBooking, visitDisplayId } = matchedData<{
         cancelBooking: 'yes' | 'no'
         visitDisplayId: string
@@ -62,6 +60,8 @@ export default class CancelVisitController {
         return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)
       }
 
+      const { booker, bookings } = req.session
+      const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       await this.visitService.cancelVisit({
@@ -69,15 +69,9 @@ export default class CancelVisitController {
         actionedBy: booker.reference,
       })
 
-      return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
-    }
-  }
+      req.session.bookingCancelled = { hasPhoneNumber: !!visit.visitContact.telephone }
 
-  public visitCancelled(): RequestHandler {
-    return async (req, res) => {
-      return res.render('pages/bookings/cancel/cancelConfirmation', {
-        showServiceNav: true,
-      })
+      return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
     }
   }
 

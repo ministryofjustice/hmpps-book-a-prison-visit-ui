@@ -5,7 +5,8 @@ import asyncMiddleware from '../../middleware/asyncMiddleware'
 import paths from '../../constants/paths'
 import BookingsController from './bookingsController'
 import BookingDetailsController from './bookingDetailsController'
-import CancelVisitController from './cancelVisitController'
+import CancelController from './cancel/cancelController'
+import CancelConfirmedController from './cancel/cancelConfirmedController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -18,7 +19,8 @@ export default function routes(services: Services): Router {
 
   const bookingsController = new BookingsController(services.prisonService, services.visitService)
   const bookingDetailsController = new BookingDetailsController(services.bookerService, services.prisonService)
-  const cancelVisitController = new CancelVisitController(services.bookerService, services.visitService)
+  const cancelVisitController = new CancelController(services.bookerService, services.visitService)
+  const cancelVisitConfirmationController = new CancelConfirmedController()
 
   get(paths.BOOKINGS.HOME, bookingsController.view('future'))
   get(paths.BOOKINGS.PAST, bookingsController.view('past'))
@@ -45,7 +47,7 @@ export default function routes(services: Services): Router {
   getWithValidation(
     `${paths.BOOKINGS.CANCEL_VISIT}/:visitDisplayId`,
     cancelVisitController.validateDisplayId(),
-    cancelVisitController.confirmCancelView(),
+    cancelVisitController.view(),
   )
 
   postWithValidation(
@@ -54,7 +56,7 @@ export default function routes(services: Services): Router {
     cancelVisitController.submit(),
   )
 
-  get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`, cancelVisitController.visitCancelled())
+  get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`, cancelVisitConfirmationController.view())
 
   return router
 }

@@ -4,11 +4,12 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { randomUUID } from 'crypto'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
-import TestData from '../testutils/testData'
-import paths from '../../constants/paths'
-import { VisitDetails } from '../../services/visitService'
+import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import { createMockBookerService, createMockVisitService } from '../../../services/testutils/mocks'
+import TestData from '../../testutils/testData'
+import paths from '../../../constants/paths'
+import { VisitDetails } from '../../../services/visitService'
+import { BookingCancelled } from '../../../@types/bapv'
 
 let app: Express
 
@@ -42,7 +43,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Cancel a booking', () => {
+describe('Cancel a booking - Are you sure page', () => {
   describe('GET - Display visit information on cancellation page', () => {
     it('should render the cancel confirmation page', () => {
       return request(app)
@@ -66,28 +67,10 @@ describe('Cancel a booking', () => {
           )
         })
     })
-
-    describe('GET - Display cancellation confirmed page', () => {
-      it('should render the page confirming the visit has been cancelled', () => {
-        return request(app)
-          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
-          .expect('Content-Type', /html/)
-          .expect(res => {
-            const $ = cheerio.load(res.text)
-            expect($('title').text()).toMatch(/^Booking cancelled -/)
-            expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
-            expect($('h1').text()).toContain('Booking cancelled')
-            expect($('h2').text()).toContain('What happens next')
-            expect($('p').text()).toContain(
-              'The main contact for this booking will get a text message to confirm it has been cancelled.',
-            )
-          })
-      })
-    })
   })
 
   describe('POST - cancel booking', () => {
-    it('should have cancelled the visit and redirect to confirmation page', () => {
+    it('should cancel the visit, set data in session and redirect to confirmation page - with phone number', () => {
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
@@ -99,6 +82,25 @@ describe('Cancel a booking', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: true })
+        })
+    })
+
+    it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
+      sessionData.bookings.visits[0].visitContact.telephone = undefined
+
+      return request(app)
+        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .send('cancelBooking=yes')
+        .expect(302)
+        .expect('location', paths.BOOKINGS.CANCEL_CONFIRMATION)
+        .expect(() => {
+          expect(visitService.cancelVisit).toHaveBeenCalledTimes(1)
+          expect(visitService.cancelVisit).toHaveBeenCalledWith({
+            actionedBy: 'aaaa-bbbb-cccc',
+            applicationReference: 'ab-cd-ef-gh',
+          })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: false })
         })
     })
 
