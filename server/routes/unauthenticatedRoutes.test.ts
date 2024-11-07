@@ -64,7 +64,7 @@ describe('Accessibility statement', () => {
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
       })
   })
 })
@@ -122,7 +122,7 @@ describe('Privacy notice', () => {
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
       })
   })
 })
@@ -143,7 +143,7 @@ describe('Signed out', () => {
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
       })
   })
 })
@@ -201,7 +201,7 @@ describe('Terms and conditions', () => {
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-header__content').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
       })
   })
 })
