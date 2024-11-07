@@ -14,6 +14,7 @@ import {
   VisitDto,
   VisitorInfoDto,
   AvailableVisitSessionRestrictionDto,
+  CancelVisitOrchestrationDto,
 } from './orchestrationApiTypes'
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
@@ -40,6 +41,26 @@ export default class OrchestrationApiClient {
         applicationMethodType: 'WEBSITE',
         allowOverBooking: false,
         actionedBy,
+      },
+    })
+  }
+
+  async cancelVisit({
+    applicationReference,
+    actionedBy,
+  }: {
+    applicationReference: string
+    actionedBy: string
+  }): Promise<void> {
+    await this.restClient.put({
+      path: `/visits/${applicationReference}/cancel`,
+      data: <CancelVisitOrchestrationDto>{
+        cancelOutcome: {
+          outcomeStatus: 'BOOKER_CANCELLED',
+        },
+        applicationMethodType: 'WEBSITE',
+        actionedBy,
+        userType: 'PUBLIC',
       },
     })
   }

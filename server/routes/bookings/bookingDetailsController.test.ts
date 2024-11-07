@@ -46,6 +46,16 @@ afterEach(() => {
 
 describe('View a single booking', () => {
   describe('Future booking', () => {
+    const fakeDate = new Date('2024-05-28')
+
+    beforeEach(() => {
+      jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
+    })
+
+    afterEach(() => {
+      jest.resetAllMocks()
+      jest.useRealTimers()
+    })
     it('should render the booking details page', () => {
       bookings.type = 'future'
 
@@ -63,7 +73,7 @@ describe('View a single booking', () => {
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
-          expect($('[data-test="visitor-name-1"]').text()).toBe('Keith Phillips')
+          expect($('[data-test="visitor-name-1"]').text().trim()).toBe('Keith Phillips')
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access requested')
           expect($('[data-test="main-contact-name"]').text()).toBe('Joan Phillips')
           expect($('[data-test="main-contact-number"]').text()).toBe('01234 567890')
@@ -73,6 +83,10 @@ describe('View a single booking', () => {
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
+
+          expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
+          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -114,6 +128,10 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+
+          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
+          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -143,6 +161,10 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
+          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+
+          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
+          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -160,6 +182,20 @@ describe('View a single booking', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by the prisoner.')
+        })
+    })
+
+    it('should render the booking details page - cancelled by booker', () => {
+      bookings.type = 'cancelled'
+      visitDetails.visitStatus = 'CANCELLED'
+      visitDetails.outcomeStatus = 'BOOKER_CANCELLED'
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="visit-cancelled-type"]').text()).toBe('You cancelled this visit.')
         })
     })
 

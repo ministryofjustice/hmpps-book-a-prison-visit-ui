@@ -1,0 +1,76 @@
+{% extends "../../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = "Cancel your booking" %}
+
+{% set backLinkHref = paths.BOOKINGS.VISIT + '/' + visit.visitDisplayId %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">Are you sure you want to cancel your booking?</h1>
+
+      <h2 class="govuk-heading-m">Date and time</h2>
+
+      <p class="govuk-!-margin-bottom-1" data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</p>
+      <p>
+        <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+        to
+        <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+      </p>
+
+      <h2 class="govuk-heading-m">Prisoner</h2>
+
+      <p data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</p>
+
+      <h2 class="govuk-heading-m">Visitors</h2>
+
+      {% for visitor in visit.visitors %}
+        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
+          {{ visitor.firstName }} {{ visitor.lastName }}
+        </p>
+      {% endfor %}
+
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukRadios({
+          name: "cancelBooking",
+          items: [
+            {
+              value: "yes",
+              text: "Yes, cancel this booking",
+              attributes: {
+                'data-test': 'cancel-booking-yes'
+              }
+            },
+            {
+              value: "no",
+              text: "No, keep this booking",
+              attributes: {
+                'data-test': 'cancel-booking-no'
+              }
+            }
+          ],
+          errorMessage: errors | findError('cancelBooking')
+        }) }}
+          
+        {{ govukButton({
+          text: "Confirm",
+          attributes: {
+            "data-test": "confirm-button"
+          },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/disableButtonOnSubmit.js"></script>
+{% endblock %}
