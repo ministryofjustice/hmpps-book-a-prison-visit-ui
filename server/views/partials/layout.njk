@@ -2,6 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% set navigationItems = [
@@ -70,7 +71,11 @@
   }) }}
 {% else %}
   {{ govukHeader({
-    homepageUrl: "/",
+    homepageUrl: "https://www.gov.uk",
+    containerClasses: "govuk-width-container",
+    classes: "govuk-header--full-width-border"
+  }) }}
+  {{ govukServiceNavigation({
     serviceName: applicationName,
     serviceUrl: "/"
   }) }}
