@@ -13,7 +13,7 @@ describe('Authorisation error page', () => {
 
       expect($('header.govuk-header').length).toBe(1)
       expect($('header .one-login-header').length).toBe(0)
-      expect($('.service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+      expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
       expect($('h1').text().trim()).toBe('Sorry, there is a problem with the service')
     })
   })
