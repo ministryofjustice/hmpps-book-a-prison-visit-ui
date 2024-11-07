@@ -13,7 +13,6 @@ export default class BookingDetailsController {
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res) => {
       const { booker, bookings } = req.session
-      const { visits } = bookings
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {
@@ -26,9 +25,14 @@ export default class BookingDetailsController {
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
+      const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       const prison = await this.prisonService.getPrison(visit.prisonId)
+
+      const nowTimestamp = new Date()
+      const visitStartTimestamp = new Date(visit.startTimestamp)
+      const showCancel = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       return res.render('pages/bookings/visit', {
         booker,
@@ -36,6 +40,7 @@ export default class BookingDetailsController {
         prisoner,
         type,
         visit,
+        showCancel,
         showServiceNav: true,
       })
     }

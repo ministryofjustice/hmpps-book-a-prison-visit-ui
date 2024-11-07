@@ -2,6 +2,7 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {%-from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = "Visit booking details" %}
 
@@ -24,6 +25,8 @@
             {{- 'This visit was cancelled by a visitor.' }}
           {%- elif status === 'PRISONER_CANCELLED' %}
             {{- 'This visit was cancelled by the prisoner.' }}
+          {%- elif status === 'BOOKER_CANCELLED' %}
+            {{- 'You cancelled this visit.' }}
           {%- else %}
             {{- 'This visit was cancelled by the prison.' }}
           {%- endif %}
@@ -60,7 +63,9 @@
       <h2 class="govuk-heading-m">Visitors</h2>
 
       {% for visitor in visit.visitors %}
-        <p class="govuk-!-margin-bottom-1" data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }}</p>
+        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
+          {{ visitor.firstName }} {{ visitor.lastName }}
+        </p>
       {% endfor %}
 
       <h2 class="govuk-heading-m">Additional support requests</h2>
@@ -70,6 +75,16 @@
       <h2 class="govuk-heading-m">Main contact</h2>
       <p class="govuk-!-margin-bottom-1" data-test="main-contact-name">{{ visit.visitContact.name }}</p>
       <p data-test="main-contact-number">{{ visit.visitContact.telephone | d("No phone number provided", true) }}</p>
+
+      {% if showCancel %}
+        {{ govukButton({
+          text: "Cancel booking",
+          classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-7 govuk-button--secondary",
+          href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
+          attributes: { "data-test": "cancel-visit" },
+          preventDoubleClick: true
+        }) }}
+      {% endif %}
 
       {% if type === 'future' %}
         {% include "partials/howToChangeBooking.njk" %}

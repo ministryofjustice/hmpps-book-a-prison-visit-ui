@@ -16,6 +16,8 @@ export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto
 
 export type BookerReference = components['schemas']['BookerReference']
 
+export type CancelVisitOrchestrationDto = components['schemas']['CancelVisitOrchestrationDto']
+
 export type ChangeApplicationDto = components['schemas']['ChangeApplicationDto']
 
 export type CreateApplicationDto = components['schemas']['CreateApplicationDto']

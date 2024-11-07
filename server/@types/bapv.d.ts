@@ -49,3 +49,7 @@ export type BookingConfirmed = {
   visitReference: string
   hasPhoneNumber: boolean
 }
+
+export type BookingCancelled = {
+  hasPhoneNumber: boolean
+}
