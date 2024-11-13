@@ -23,6 +23,13 @@ context('Bookings home page', () => {
     visitStatus: 'CANCELLED',
   })
 
+  const bookerCancelledVisitDto = TestData.orchestrationVisitDto({
+    startTimestamp: '2026-05-21T10:00:00',
+    endTimestamp: '2026-05-21T11:30:00',
+    outcomeStatus: 'BOOKER_CANCELLED',
+    visitStatus: 'CANCELLED',
+  })
+
   const prison = TestData.prisonDto()
   const prisoner = TestData.bookerPrisonerInfoDto()
   const bookerReference = TestData.bookerReference()
@@ -125,5 +132,31 @@ context('Bookings home page', () => {
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
+  })
+
+  it('should show booker cancelled visit information', () => {
+    cy.task('stubGetFuturePublicVisits', {
+      bookerReference: bookerReference.value,
+      visits: [orchestrationVisitDto],
+    })
+
+    const homePage = Page.verifyOnPage(HomePage)
+    homePage.goToServiceHeaderLinkByName('Bookings')
+    const bookingsPage = Page.verifyOnPage(BookingsPage)
+
+    cy.task('stubGetCancelledPublicVisits', {
+      bookerReference: bookerReference.value,
+      visits: [bookerCancelledVisitDto],
+    })
+
+    bookingsPage.cancelledVisitsLink().click()
+
+    const cancelledVisitsPage = Page.verifyOnPage(CancelledVisitsPage)
+    cancelledVisitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    cancelledVisitsPage.visitLink(1).click()
+
+    const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.CANCELLED)
+    visitDetailsPage.visitCancelledBanner().contains('You cancelled this visit.')
   })
 })

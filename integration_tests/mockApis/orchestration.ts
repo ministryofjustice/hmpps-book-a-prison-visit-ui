@@ -38,6 +38,37 @@ export default {
     })
   },
 
+  stubCancelVisit: ({
+    applicationReference,
+    bookerReference,
+  }: {
+    applicationReference: string
+    bookerReference: string
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/visits/${applicationReference}/cancel`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              cancelOutcome: {
+                outcomeStatus: 'BOOKER_CANCELLED',
+              },
+              applicationMethodType: 'WEBSITE',
+              actionedBy: bookerReference,
+              userType: 'PUBLIC',
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
+
   stubGetFuturePublicVisits: ({
     bookerReference = TestData.bookerReference(),
     visits = [],
