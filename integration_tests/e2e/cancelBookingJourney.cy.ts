@@ -1,7 +1,7 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import BookingsPage from '../pages/bookings'
-import CancelConfirmationPage from '../pages/bookings/cancelConfirmationPage'
+import CancelConfirmedPage from '../pages/bookings/cancelConfirmedPage'
 import CancelVisitPage from '../pages/bookings/cancelVisitPage'
 import VisitDetailsPage from '../pages/bookings/visit'
 import HomePage from '../pages/home'
@@ -69,8 +69,8 @@ context('Cancel booking journey', () => {
 
     cancelVisitPage.confirmButton()
 
-    const cancelConfirmationPage = Page.verifyOnPage(CancelConfirmationPage)
-    cancelConfirmationPage
+    const cancelConfirmedPage = Page.verifyOnPage(CancelConfirmedPage)
+    cancelConfirmedPage
       .phoneNumberText()
       .contains('A text message will be sent to the main contact to confirm the booking has been cancelled.')
   })

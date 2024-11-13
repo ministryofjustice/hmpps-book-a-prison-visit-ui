@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../page'
 
-export default class CancelConfirmationPage extends Page {
+export default class CancelConfirmedPage extends Page {
   constructor() {
     super('Booking cancelled')
   }
