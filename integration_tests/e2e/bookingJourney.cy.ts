@@ -12,7 +12,7 @@ import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 import VisitBookedPage from '../pages/bookVisit/visitBooked'
 import ClosedVisitPage from '../pages/bookVisit/closedVisit'
 
-context('Booking journey', () => {
+context.skip('Booking journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()

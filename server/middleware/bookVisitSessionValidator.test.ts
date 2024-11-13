@@ -24,7 +24,7 @@ describe('bookVisitSessionValidator', () => {
   const visitSession = TestData.availableVisitSessionDto()
   const applicationReference = 'aaa-bbb-ccc'
   const visitorSupport = ''
-  const mainContact = { contact: 'Some One' }
+  const mainContact = 'Some One'
 
   const createMockReq = ({
     method,

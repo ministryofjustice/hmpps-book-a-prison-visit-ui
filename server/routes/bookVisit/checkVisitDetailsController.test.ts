@@ -27,10 +27,6 @@ const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const application = TestData.applicationDto()
 const visitSession = TestData.availableVisitSessionDto()
-const mainContact = {
-  contact: 'Mary Magdeline',
-  phoneNumber: '01234 567890',
-}
 
 beforeEach(() => {
   sessionData = {
@@ -45,10 +41,9 @@ beforeEach(() => {
       allVisitSessions: [visitSession],
       selectedVisitSession: visitSession,
       applicationReference: application.reference,
-      mainContact: {
-        contact: mainContact.contact,
-        phoneNumber: mainContact.phoneNumber,
-      },
+      mainContact: 'User One',
+      mainContactPhone: '01234 567 890',
+      mainContactEmail: 'user@example.com',
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -93,15 +88,15 @@ describe('Check visit details', () => {
           expect($('[data-test="change-time"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access')
           expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
-          expect($('[data-test="main-contact-name"]').text()).toBe(mainContact.contact)
-          expect($('[data-test="main-contact-number"]').text()).toBe(mainContact.phoneNumber)
+          expect($('[data-test="main-contact-name"]').text()).toBe('User One')
+          expect($('[data-test="main-contact-number"]').text()).toBe('01234 567 890')
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })
 
     it('Should show alternative text when no additional support/phone number provided', () => {
       sessionData.bookingJourney.visitorSupport = ''
-      sessionData.bookingJourney.mainContact.phoneNumber = undefined
+      sessionData.bookingJourney.mainContactPhone = undefined
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)

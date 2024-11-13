@@ -1,10 +1,9 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
-import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 
 export default class MainContactController {
-  public constructor(private readonly visitService: VisitService) {}
+  public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -12,18 +11,16 @@ export default class MainContactController {
 
       const adultVisitors = selectedVisitors.filter(visitor => visitor.adult)
 
-      const selectedMainContact =
-        mainContact !== undefined
-          ? {
-              contact: typeof mainContact.contact === 'string' ? 'someoneElse' : mainContact.contact.visitorDisplayId,
-              someoneElseName: typeof mainContact.contact === 'string' ? mainContact.contact : '',
-              hasPhoneNumber: mainContact.phoneNumber ? 'yes' : 'no',
-              phoneNumber: mainContact.phoneNumber ?? '',
-            }
-          : {}
+      let contact
+      let someoneElseName
+      if (mainContact) {
+        contact = typeof mainContact === 'string' ? 'someoneElse' : mainContact.visitorDisplayId
+        someoneElseName = typeof mainContact === 'string' ? mainContact : ''
+      }
 
       const formValues = {
-        ...selectedMainContact,
+        contact,
+        someoneElseName,
         ...req.flash('formValues')?.[0],
       }
 
@@ -45,29 +42,21 @@ export default class MainContactController {
       }
 
       const { bookingJourney } = req.session
-      const { contact, someoneElseName, hasPhoneNumber, phoneNumber } = matchedData<{
+      const { contact, someoneElseName } = matchedData<{
         contact?: string
         someoneElseName?: string
-        hasPhoneNumber?: 'yes' | 'no'
-        phoneNumber?: string
       }>(req)
 
       if (contact === 'someoneElse') {
-        bookingJourney.mainContact = { contact: someoneElseName }
+        bookingJourney.mainContact = someoneElseName
       } else {
         const contactVisitor = bookingJourney.selectedVisitors.find(
           visitor => visitor.visitorDisplayId.toString() === contact,
         )
-        bookingJourney.mainContact = { contact: contactVisitor }
+        bookingJourney.mainContact = contactVisitor
       }
 
-      if (hasPhoneNumber === 'yes') {
-        bookingJourney.mainContact.phoneNumber = phoneNumber
-      }
-
-      await this.visitService.changeVisitApplication({ bookingJourney })
-
-      return res.redirect(paths.BOOK_VISIT.CHECK_DETAILS)
+      return res.redirect(paths.BOOK_VISIT.CONTACT_DETAILS)
     }
   }
 
@@ -91,14 +80,6 @@ export default class MainContactController {
         .if(body('contact').equals('someoneElse'))
         .trim()
         .notEmpty(),
-      body('hasPhoneNumber', 'No answer selected').isIn(['yes', 'no']),
-      body('phoneNumber', 'Enter a phone number')
-        .if(body('hasPhoneNumber').equals('yes'))
-        .trim()
-        .notEmpty()
-        .bail()
-        .matches(/^(?:0|\+?44)(?:\d\s?){9,10}$/)
-        .withMessage('Enter a UK phone number, like 07700 900 982 or 01632 960 001'),
     ]
   }
 }

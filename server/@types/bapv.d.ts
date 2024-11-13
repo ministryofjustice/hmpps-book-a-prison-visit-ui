@@ -38,10 +38,11 @@ export type BookingJourney = {
   visitorSupport?: string
 
   // main contact
-  mainContact?: {
-    contact: Visitor | string // either known Visitor or 'other' name
-    phoneNumber?: string
-  }
+  mainContact?: Visitor | string // either known Visitor or 'other' name
+
+  // contact details
+  mainContactEmail?: string
+  mainContactPhone?: string
 }
 
 export type BookingConfirmed = {
