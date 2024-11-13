@@ -4,6 +4,7 @@ import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
+import { getMainContactName } from '../../utils/utils'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -11,14 +12,10 @@ export default class CheckVisitDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { bookingJourney } = req.session
-      const mainContactName =
-        typeof bookingJourney.mainContact === 'string'
-          ? bookingJourney.mainContact
-          : `${bookingJourney.mainContact.firstName} ${bookingJourney.mainContact.lastName}`
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookingJourney.visitorSupport,
-        mainContactName,
+        mainContactName: getMainContactName(bookingJourney.mainContact),
         mainContactNumber: bookingJourney.mainContactPhone,
         sessionDate: bookingJourney.selectedVisitSession.sessionDate,
         sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
