@@ -59,7 +59,7 @@ export default class ContactDetailsController {
       body('mainContactEmail')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('email')))
         .trim()
-        .isEmail() // TODO check options
+        .isEmail()
         .withMessage('Enter a valid email address'),
       body('mainContactPhone')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('phone')))
