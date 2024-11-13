@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService } from '../../services'
 import paths from '../../constants/paths'
+import { getMainContactName } from '../../utils/utils'
 
 export default class ContactDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -9,9 +10,6 @@ export default class ContactDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookingJourney
-
-      const mainContactName =
-        typeof mainContact === 'string' ? mainContact : `${mainContact.firstName} ${mainContact.lastName}`
 
       const formValues = {
         mainContactEmail,
@@ -22,7 +20,7 @@ export default class ContactDetailsController {
 
       res.render('pages/bookVisit/contactDetails', {
         errors: req.flash('errors'),
-        mainContactName,
+        mainContactName: getMainContactName(mainContact),
         formValues,
       })
     }
