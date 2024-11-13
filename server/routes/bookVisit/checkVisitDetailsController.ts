@@ -12,14 +12,14 @@ export default class CheckVisitDetailsController {
     return async (req, res) => {
       const { bookingJourney } = req.session
       const mainContactName =
-        typeof bookingJourney.mainContact.contact === 'string'
-          ? bookingJourney.mainContact.contact
-          : `${bookingJourney.mainContact.contact.firstName} ${bookingJourney.mainContact.contact.lastName}`
+        typeof bookingJourney.mainContact === 'string'
+          ? bookingJourney.mainContact
+          : `${bookingJourney.mainContact.firstName} ${bookingJourney.mainContact.lastName}`
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookingJourney.visitorSupport,
         mainContactName,
-        mainContactNumber: bookingJourney.mainContact.phoneNumber,
+        mainContactNumber: bookingJourney.mainContactPhone,
         sessionDate: bookingJourney.selectedVisitSession.sessionDate,
         sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
         visitors: bookingJourney.selectedVisitors,
@@ -41,7 +41,7 @@ export default class CheckVisitDetailsController {
         const bookingConfirmed: BookingConfirmed = {
           prison: bookingJourney.prison,
           visitReference: visit.reference,
-          hasPhoneNumber: !!bookingJourney.mainContact.phoneNumber,
+          hasPhoneNumber: !!bookingJourney.mainContactPhone,
         }
         req.session.bookingConfirmed = bookingConfirmed
 

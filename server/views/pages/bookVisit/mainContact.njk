@@ -54,7 +54,6 @@
           }
         ), visitors) %}
 
-
         {{ govukRadios({
           idPrefix: "contact",
           name: "contact",
@@ -68,60 +67,7 @@
           items: visitors,
           errorMessage: errors | findError('contact')
         }) }}
-        
-        {% set inputPhoneNumberHtml %}
-          {{ govukInput({
-            classes: "govuk-!-width-one-half",
-            label: {
-              text: "Number"
-            },
-            id: "phoneNumber",
-            name: "phoneNumber",
-            value: formValues.phoneNumber if formValues.hasPhoneNumber == 'yes',
-            type: "tel",
-            autocomplete: "tel",
-            errorMessage: errors | findError('phoneNumber')
 
-          }) }}
-        {% endset %}
-
-        {{ govukRadios({
-          idPrefix: "hasPhoneNumber",
-          name: "hasPhoneNumber",
-          fieldset: {
-            legend: {
-              text: 'What is their phone number?',
-              isPageHeading: false,
-              classes: "govuk-fieldset__legend--m"
-            }
-          },
-          hint: {
-            text: "We will use this to update the main contact about the booking."
-          },
-          items: [
-          {
-            value: 'yes',
-            text: 'UK phone number',
-            hint: {
-              text: "If this is a UK mobile number, they will recieve a text message to confirm the booking"
-            },
-            conditional: {
-              html: inputPhoneNumberHtml
-            },
-            checked: formValues.hasPhoneNumber == 'yes'
-          },
-          {
-            value: 'no',
-            text: 'No phone number provided',
-            hint: {
-              text: "We will not be able to contact visitors if there is a problem with the booking"
-            },
-            checked: formValues.hasPhoneNumber == 'no'
-          }
-          ],
-          errorMessage: errors | findError('hasPhoneNumber')
-        }) }}
-          
         {{ govukButton({
           text: "Continue",
           attributes: { "data-test": "continue-button" },

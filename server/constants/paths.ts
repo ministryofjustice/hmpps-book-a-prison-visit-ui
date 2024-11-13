@@ -16,6 +16,7 @@ const paths = {
     CHOOSE_TIME: '/book-visit/choose-visit-time',
     ADDITIONAL_SUPPORT: '/book-visit/additional-support',
     MAIN_CONTACT: '/book-visit/main-contact',
+    CONTACT_DETAILS: '/book-visit/contact-details',
     CHECK_DETAILS: '/book-visit/check-visit-details',
     BOOKED: '/book-visit/visit-booked',
   },

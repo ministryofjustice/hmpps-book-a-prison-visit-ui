@@ -42,15 +42,18 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const contact = bookingJourney.mainContact?.contact
-    const phoneNumber = bookingJourney.mainContact?.phoneNumber
+    const contact = bookingJourney.mainContact
+    const { mainContactEmail, mainContactPhone } = bookingJourney
 
-    const visitContact = bookingJourney.mainContact
-      ? {
-          name: typeof contact === 'string' ? contact : `${contact.firstName} ${contact.lastName}`,
-          ...(phoneNumber && { telephone: phoneNumber }),
-        }
-      : undefined
+    let visitContact
+    if (contact) {
+      const name = typeof contact === 'string' ? contact : `${contact.firstName} ${contact.lastName}`
+      visitContact = {
+        name,
+        ...(mainContactPhone && { telephone: mainContactPhone }),
+        ...(mainContactEmail && { email: mainContactEmail }),
+      }
+    }
 
     const visitors = bookingJourney.selectedVisitors.map(visitor => {
       return {
