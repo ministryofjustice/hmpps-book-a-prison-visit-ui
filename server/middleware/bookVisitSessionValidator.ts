@@ -90,8 +90,10 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // TODO incorporate CONTACT_DETAILS page (and update tests)
-    // need contact name distinct from has email/phone
+    // Contact details page
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CONTACT_DETAILS) && !bookingJourney.mainContact) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
 
     // Check details page
     if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHECK_DETAILS) && !bookingJourney.mainContact) {

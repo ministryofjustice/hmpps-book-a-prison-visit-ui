@@ -229,8 +229,13 @@ describe('bookVisitSessionValidator', () => {
           { method: 'POST', path: paths.BOOK_VISIT.CHOOSE_TIME, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.ADDITIONAL_SUPPORT, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.ADDITIONAL_SUPPORT, expected: 'next' },
+
           { method: 'GET', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'next' },
+
+          { method: 'GET', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'redirect' },
+          { method: 'POST', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'redirect' },
+
           { method: 'GET', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'redirect' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
           req = createMockReq({
@@ -267,6 +272,8 @@ describe('bookVisitSessionValidator', () => {
           { method: 'POST', path: paths.BOOK_VISIT.ADDITIONAL_SUPPORT, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'next' },
+          { method: 'GET', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'next' },
+          { method: 'POST', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'next' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
@@ -309,6 +316,8 @@ describe('bookVisitSessionValidator', () => {
           { method: 'POST', path: paths.BOOK_VISIT.ADDITIONAL_SUPPORT, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'redirect' },
           { method: 'POST', path: paths.BOOK_VISIT.MAIN_CONTACT, expected: 'redirect' },
+          { method: 'GET', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'redirect' },
+          { method: 'POST', path: paths.BOOK_VISIT.CONTACT_DETAILS, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'redirect' },
           { method: 'POST', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.BOOKED, expected: 'next' },
