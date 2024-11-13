@@ -39,16 +39,16 @@ export default {
   },
 
   stubCancelVisit: ({
-    applicationReference,
+    reference,
     bookerReference,
   }: {
-    applicationReference: string
+    reference: string
     bookerReference: string
   }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
-        url: `/orchestration/visits/${applicationReference}/cancel`,
+        url: `/orchestration/visits/${reference}/cancel`,
         bodyPatterns: [
           {
             equalToJson: {

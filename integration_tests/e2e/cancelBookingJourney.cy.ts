@@ -26,7 +26,7 @@ context('Cancel booking journey', () => {
     cy.signIn()
   })
 
-  it('should navigate to Cancelled bookings page, then view visit, then cancel booking', () => {
+  it('should navigate to Future bookings page, then view visit details and cancel it', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -63,7 +63,7 @@ context('Cancel booking journey', () => {
     cancelVisitPage.cancelBookingYes().click()
 
     cy.task('stubCancelVisit', {
-      applicationReference: orchestrationVisitDto.reference,
+      reference: orchestrationVisitDto.reference,
       bookerReference: bookerReference.value,
     })
 
