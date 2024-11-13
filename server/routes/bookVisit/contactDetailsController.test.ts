@@ -57,7 +57,7 @@ afterEach(() => {
 })
 
 describe('Contact details', () => {
-  describe(`GET ${paths.BOOK_VISIT.MAIN_CONTACT}`, () => {
+  describe(`GET ${paths.BOOK_VISIT.CONTACT_DETAILS}`, () => {
     let flashData: FlashData
 
     beforeEach(() => {
@@ -153,7 +153,7 @@ describe('Contact details', () => {
     })
   })
 
-  describe(`POST ${paths.BOOK_VISIT.MAIN_CONTACT}`, () => {
+  describe(`POST ${paths.BOOK_VISIT.CONTACT_DETAILS}`, () => {
     const application = TestData.applicationDto()
 
     beforeEach(() => {
