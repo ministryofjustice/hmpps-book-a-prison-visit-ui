@@ -63,6 +63,9 @@ describe('Visit booked', () => {
           expect($('[data-test="prison-website"]').text()).toBe(`visits at ${prison.prisonName}`)
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
+
+          // display this line when on the visit booked page
+          expect($('[data-test=cancel-visit-content]').length).toBeTruthy()
         })
     })
 

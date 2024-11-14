@@ -17,4 +17,6 @@
 
 <p>You will need the booking reference to make changes. {% if visitRef %}Your booking reference is <span data-test="booking-reference-changes">{{ visitRef }}</span>.{% endif %}</p>
 
-<p data-test="cancel-visit-content">Or you can cancel your booking from <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">the bookings page</a>.</p>
+{% if bookingConfirmed %}
+  <p data-test="cancel-visit-content">Or you can cancel your booking from <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">the bookings page</a>.</p>
+{% endif %}

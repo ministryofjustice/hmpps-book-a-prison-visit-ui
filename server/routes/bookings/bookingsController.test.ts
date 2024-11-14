@@ -58,9 +58,8 @@ describe('Bookings homepage (future visits)', () => {
           `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails.visitDisplayId}`,
         )
 
-        expect($('[data-test=change-booking-heading]').length).toBeTruthy()
-        expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
-        expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
+        expect($('[data-test=change-booking-heading]').length).toBeFalsy()
+
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
