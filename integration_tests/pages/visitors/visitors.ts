@@ -2,7 +2,7 @@ import Page, { PageElement } from '../page'
 
 export default class VisitorsPage extends Page {
   constructor() {
-    super('Visitors you can book for')
+    super('Visitors')
   }
 
   prisonerName = (): PageElement => cy.get('[data-test=prisoner-name]')
