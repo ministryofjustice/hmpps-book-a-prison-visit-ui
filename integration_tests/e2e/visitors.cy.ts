@@ -1,4 +1,3 @@
-import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import HomePage from '../pages/home'
