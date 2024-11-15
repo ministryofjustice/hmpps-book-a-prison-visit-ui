@@ -89,14 +89,17 @@ describe('Check visit details', () => {
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access')
           expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('[data-test="main-contact-name"]').text()).toBe('User One')
-          expect($('[data-test="main-contact-number"]').text()).toBe('01234 567 890')
+          expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
+          expect($('[data-test="contact-details-phone"]').text()).toBe('01234 567 890')
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })
 
-    it('Should show alternative text when no additional support/phone number provided', () => {
+    it('should show alternative text when no additional support or contact details provided', () => {
       sessionData.bookingJourney.visitorSupport = ''
+      sessionData.bookingJourney.mainContactEmail = undefined
       sessionData.bookingJourney.mainContactPhone = undefined
+
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
@@ -108,7 +111,9 @@ describe('Check visit details', () => {
           expect($('h1').text()).toBe('Check the visit details before booking')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('[data-test="additional-support"]').text()).toBe('None')
-          expect($('[data-test="main-contact-number"]').text()).toBe('No phone number provided')
+          expect($('[data-test="contact-details-email"]').text()).toBeFalsy()
+          expect($('[data-test="contact-details-phone"]').text()).toBeFalsy()
+          expect($('[data-test="no-contact-details"]').text()).toBe('No contact details provided')
         })
     })
   })

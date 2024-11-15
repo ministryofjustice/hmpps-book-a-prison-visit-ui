@@ -28,6 +28,7 @@ export default class BookingDetailsController {
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
+      // FIXME prison details no longer used? May still be needed when VB-4718 implemented
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
       const nowTimestamp = new Date()

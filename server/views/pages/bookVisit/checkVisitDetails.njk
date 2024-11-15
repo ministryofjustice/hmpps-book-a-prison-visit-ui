@@ -5,120 +5,133 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-three-quarters">
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      {% include "partials/errorSummary.njk" %}
-
-      {% set displayRows = [
-        {
-          key: {
-            text: "Prisoner"
-          },
-          value: {
-            html: '<span data-test="prisoner-name">' +
-              prisoner.firstName | capitalize | escape + " " + prisoner.lastName | capitalize | escape + 
-              "</span>"
-          }
-        }
-      ] %}
-
-      {% set visitorsDisplay %}
+      {%- set visitorsHtml -%}
         {% for visitor in visitors %}
           <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
         {% endfor %}
-      {% endset %}
-
-      {% set displayRows = (displayRows.push(
-        {
-          key: {
-            text: 'Visitors'
-          },
-          value: {
-            html: visitorsDisplay
-          },
-          actions: {
-            items: [
-              {
-                href: paths.BOOK_VISIT.SELECT_VISITORS,
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "visitors",
-                attributes: { "data-test": "change-visitors" }
-              }
-            ]
-          }
-        }
-      ), displayRows) %}
-
-      {% set displayRows = (displayRows.push(
-        {
-          key: {
-            text: "Date and time"
-          },
-          value: {
-            html: "<p><span data-test='visit-date'>" + sessionDate | formatDate(dateFormats.PRETTY_DATE) + "</span></p>
-              <p><span data-test='visit-time'>" + sessionTimeSlot.startTime | formatTime + " to " + sessionTimeSlot.endTime | formatTime + "</span></p>"
-          },
-          actions: {
-            items: [
-              {
-                href: paths.BOOK_VISIT.CHOOSE_TIME,
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "time",
-                attributes: { "data-test": "change-time" }
-              }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Additional support requests"
-          },
-          value: {
-            html: '<p data-test="additional-support">' + additionalSupport | d("None", true) | escape + '</p>'
-          },
-          actions: {
-            items: [
-              {
-                href: paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "additional support requests",
-                attributes: { "data-test": "change-additional-support" }
-              }
-            ]
-          }
-        }
-      ), displayRows) %}
-
-      {% set displayRows = (displayRows.push(
-        {
-          key: {
-            text: "Main contact"
-          },
-          value: {
-            html: '<p><span data-test="main-contact-name">' + mainContactName | escape + '</span></p>
-              <p><span data-test="main-contact-number">' + mainContactNumber | d("No phone number provided") | escape + "</span></p>"
-          },
-          actions: {
-            items: [
-              {
-                href: paths.BOOK_VISIT.MAIN_CONTACT,
-                text: "Change",
-                classes: "govuk-link--no-visited-state",
-                visuallyHiddenText: "main contact",
-                attributes: { "data-test": "change-main-contact" }
-              }
-            ]
-          }
-        }
-      ), displayRows) %}
+      {%- endset -%}
 
       {{ govukSummaryList({
-          rows: displayRows
+        rows: [
+          {
+            key: {
+              text: "Prisoner"
+            },
+            value: {
+              html: '<span data-test="prisoner-name">' +
+                prisoner.firstName | capitalize | escape + " " + prisoner.lastName | capitalize | escape + 
+                "</span>"
+            }
+          },
+
+          {
+            key: {
+              text: 'Visitors'
+            },
+            value: {
+              html: visitorsHtml
+            },
+            actions: {
+              items: [
+                {
+                  href: paths.BOOK_VISIT.SELECT_VISITORS,
+                  text: "Change",
+                  classes: "govuk-link--no-visited-state",
+                  visuallyHiddenText: "visitors",
+                  attributes: { "data-test": "change-visitors" }
+                }
+              ]
+            }
+          },
+
+          {
+            key: {
+              text: "Date and time"
+            },
+            value: {
+              html: '<p><span data-test="visit-date">' + sessionDate | formatDate(dateFormats.PRETTY_DATE) + "</span></p>" +
+                '<p><span data-test="visit-time">' + sessionTimeSlot.startTime | formatTime + " to " + sessionTimeSlot.endTime | formatTime + "</span></p>"
+            },
+            actions: {
+              items: [
+                {
+                  href: paths.BOOK_VISIT.CHOOSE_TIME,
+                  text: "Change",
+                  classes: "govuk-link--no-visited-state",
+                  visuallyHiddenText: "date and time",
+                  attributes: { "data-test": "change-time" }
+                }
+              ]
+            }
+          },
+
+          {
+            key: {
+              text: "Additional support requests"
+            },
+            value: {
+              html: '<p data-test="additional-support">' + additionalSupport | d("None", true) | escape + "</p>"
+            },
+            actions: {
+              items: [
+                {
+                  href: paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
+                  text: "Change",
+                  classes: "govuk-link--no-visited-state",
+                  visuallyHiddenText: "additional support requests",
+                  attributes: { "data-test": "change-additional-support" }
+                }
+              ]
+            }
+          },
+
+          {
+            key: {
+              text: "Main contact"
+            },
+            value: {
+              html: '<p><span data-test="main-contact-name">' + mainContactName | escape + "</span></p>"
+            },
+            actions: {
+              items: [
+                {
+                  href: paths.BOOK_VISIT.MAIN_CONTACT,
+                  text: "Change",
+                  classes: "govuk-link--no-visited-state",
+                  visuallyHiddenText: "main contact",
+                  attributes: { "data-test": "change-main-contact" }
+                }
+              ]
+            }
+          },
+
+          {
+            key: {
+              text: "Contact details"
+            },
+            value: {
+              html: '<p><span data-test="contact-details-email">' + mainContactEmail | escape + "</span></p>" +
+                    '<p><span data-test="contact-details-phone">' + mainContactPhone | escape + "</span></p>"
+                      if mainContactEmail or mainContactPhone else
+                    '<p><span data-test="no-contact-details">No contact details provided</span>'
+            },
+            actions: {
+              items: [
+                {
+                  href: paths.BOOK_VISIT.CONTACT_DETAILS,
+                  text: "Change",
+                  classes: "govuk-link--no-visited-state",
+                  visuallyHiddenText: "contact details",
+                  attributes: { "data-test": "change-contact-details" }
+                }
+              ]
+            }
+          }
+        ]
       }) }}
 
       <form action="{{ paths.BOOK_VISIT.CHECK_DETAILS }}" method="POST" novalidate class="disable-button-on-submit">

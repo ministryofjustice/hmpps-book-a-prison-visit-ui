@@ -11,11 +11,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-<pre>
-  {{ errors | dump(2) }}
-  <hr>
-  {{ formValues | dump(2)}}
-</pre>
+
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }} for {{ mainContactName }}</h1>
