@@ -1,4 +1,3 @@
-import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import HomePage from '../pages/home'
@@ -37,7 +36,6 @@ context('Visitors page', () => {
     homePage.goToServiceHeaderLinkByName('Visitors')
 
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.backLink().should('have.attr', 'href', paths.HOME)
     visitorsPage.prisonerName().contains('John Smith')
     visitorsPage.visitorName(1).contains('Joan Phillips')
     visitorsPage.visitorDateOfBirth(1).contains('21 February 1980')

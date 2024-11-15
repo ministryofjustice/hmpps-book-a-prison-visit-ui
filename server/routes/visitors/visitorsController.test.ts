@@ -50,9 +50,8 @@ describe('Visitors page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Visitors you can book for -/)
-        expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
-        expect($('h1').text()).toBe('Visitors you can book for')
+        expect($('title').text()).toMatch(/^Visitors -/)
+        expect($('h1').text()).toBe('Visitors')
 
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('[data-test="visitor-name-1"]').text()).toBe('Joan Phillips')
@@ -71,9 +70,8 @@ describe('Visitors page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Visitors you can book for -/)
-        expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
-        expect($('h1').text()).toBe('Visitors you can book for')
+        expect($('title').text()).toMatch(/^Visitors -/)
+        expect($('h1').text()).toBe('Visitors')
 
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('[data-test="visitor-name-1"]').length).toBe(0)

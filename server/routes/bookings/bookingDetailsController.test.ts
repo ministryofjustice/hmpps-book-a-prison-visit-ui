@@ -85,6 +85,9 @@ describe('View a single booking', () => {
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
           expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
 
+          // don't display this line when on the visit details page
+          expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
+
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
