@@ -16,7 +16,8 @@ export default class CheckVisitDetailsController {
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookingJourney.visitorSupport,
         mainContactName: getMainContactName(bookingJourney.mainContact),
-        mainContactNumber: bookingJourney.mainContactPhone,
+        mainContactPhone: bookingJourney.mainContactPhone,
+        mainContactEmail: bookingJourney.mainContactEmail,
         sessionDate: bookingJourney.selectedVisitSession.sessionDate,
         sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
         visitors: bookingJourney.selectedVisitors,
