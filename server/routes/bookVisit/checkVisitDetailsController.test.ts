@@ -42,7 +42,7 @@ beforeEach(() => {
       selectedVisitSession: visitSession,
       applicationReference: application.reference,
       mainContact: 'User One',
-      mainContactPhone: '07700 900 000',
+      mainContactPhone: '07712 000 000',
       mainContactEmail: 'user@example.com',
       visitorSupport: 'Wheelchair access',
     },
@@ -90,7 +90,7 @@ describe('Check visit details', () => {
           expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('[data-test="main-contact-name"]').text()).toBe('User One')
           expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
-          expect($('[data-test="contact-details-phone"]').text()).toBe('07700 900 000')
+          expect($('[data-test="contact-details-phone"]').text()).toBe('07712 000 000')
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })

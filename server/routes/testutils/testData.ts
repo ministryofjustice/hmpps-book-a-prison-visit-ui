@@ -98,7 +98,7 @@ export default class TestData {
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
+    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
@@ -173,7 +173,7 @@ export default class TestData {
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
+    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<VisitDetails> = {}): VisitDetails => ({
@@ -204,7 +204,7 @@ export default class TestData {
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitNotes = [],
-    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
+    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000' },
     visitors = [{ nomisPersonId: 1234, visitContact: true }],
     visitorSupport = { description: 'wheelchair access' },
   }: Partial<VisitDto> = {}): VisitDto =>

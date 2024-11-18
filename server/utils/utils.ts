@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
 import { SessionData } from 'express-session'
+import parsePhoneNumber from 'libphonenumber-js/mobile'
 import type { Visitor } from '../services/bookerService'
 
 const properCase = (word: string): string =>
@@ -90,6 +91,5 @@ export const getMainContactName = (mainContact: Visitor | string): string => {
 }
 
 export const isMobilePhoneNumber = (phoneNumber: string): boolean => {
-  // TODO implement
-  return !!phoneNumber
+  return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
 }

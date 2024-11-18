@@ -76,7 +76,7 @@ describe('View a single booking', () => {
           expect($('[data-test="visitor-name-1"]').text().trim()).toBe('Keith Phillips')
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access requested')
           expect($('[data-test="main-contact-name"]').text()).toBe('Joan Phillips')
-          expect($('[data-test="main-contact-number"]').text()).toBe('07700 900 000')
+          expect($('[data-test="main-contact-number"]').text()).toBe('07712 000 000')
 
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
           expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)

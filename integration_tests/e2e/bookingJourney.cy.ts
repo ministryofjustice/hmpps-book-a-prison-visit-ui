@@ -150,10 +150,10 @@ context('Booking journey', () => {
     contactDetailsPage.checkGetUpdatesByEmail()
     contactDetailsPage.enterEmail('adult.one@example.com')
     contactDetailsPage.checkGetUpdatesByPhone()
-    contactDetailsPage.enterPhoneNumber('07700 900 000')
+    contactDetailsPage.enterPhoneNumber('07712 000 000')
     cy.task('stubChangeVisitApplication', {
       ...application,
-      visitContact: { name: 'Adult One', telephone: '07700 900 000', email: 'adult.one@example.com' },
+      visitContact: { name: 'Adult One', telephone: '07712 000 000', email: 'adult.one@example.com' },
       visitors: [
         { nomisPersonId: 1000, visitContact: true },
         { nomisPersonId: 3000, visitContact: false },
@@ -172,7 +172,7 @@ context('Booking journey', () => {
     checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
     checkVisitDetailsPage.contactDetailsEmail().contains('adult.one@example.com')
-    checkVisitDetailsPage.contactDetailsPhone().contains('07700 900 000')
+    checkVisitDetailsPage.contactDetailsPhone().contains('07712 000 000')
 
     cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
     checkVisitDetailsPage.continue()

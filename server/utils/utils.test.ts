@@ -10,6 +10,7 @@ import {
   getMainContactName,
   initialiseName,
   isAdult,
+  isMobilePhoneNumber,
   pluralise,
 } from './utils'
 import TestData from '../routes/testutils/testData'
@@ -147,6 +148,20 @@ describe('pluralise', () => {
       ['should handle mainContact being undefined', undefined, undefined],
     ])('%s', (_: string, visitor: Visitor | string, expectedName: string) => {
       expect(getMainContactName(visitor)).toBe(expectedName)
+    })
+  })
+
+  describe('isMobilePhoneNumber', () => {
+    it.each([
+      ['non-mobile number', '01234567890', false],
+      ['valid mobile number', '07712000000', true],
+      ['valid mobile number (with spaces)', '07712 000 000', true],
+      ['valid mobile number (with int. code)', '+447712 000000', true],
+      ['empty string', '', false],
+      ['invalid string', 'not a number', false],
+      ['undefined number', undefined, false],
+    ])('%s - %s - %s', (_: string, number: string, expected: boolean) => {
+      expect(isMobilePhoneNumber(number)).toBe(expected)
     })
   })
 })

@@ -55,7 +55,7 @@ describe('Visit service', () => {
         visitorSupport: 'wheelchair access',
         mainContact: visitorOne,
         mainContactEmail: 'user@example.com',
-        mainContactPhone: '07700 900 000',
+        mainContactPhone: '07712 000 000',
       }
     })
 
@@ -79,7 +79,7 @@ describe('Visit service', () => {
 
     describe('changeVisitApplication', () => {
       it('should change an existing visit application to update it with booking journey data', async () => {
-        const visitContact = { name: 'Joan Phillips', telephone: '07700 900 000', email: 'user@example.com' }
+        const visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'user@example.com' }
         const visitors = [
           { nomisPersonId: 100, visitContact: true },
           { nomisPersonId: 200, visitContact: false },
