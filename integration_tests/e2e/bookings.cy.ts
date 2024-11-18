@@ -68,6 +68,7 @@ context('Bookings home page', () => {
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
     visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
+    visitDetailsPage.mainContactEmail().contains('visitor@example.com')
     visitDetailsPage.mainContactNumber().contains('07712 000 000')
     visitDetailsPage.prisonName().contains(prison.prisonName)
     visitDetailsPage.prisonPhoneNumber().contains(prison.phoneNumber)

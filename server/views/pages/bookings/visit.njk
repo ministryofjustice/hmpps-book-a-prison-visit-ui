@@ -74,7 +74,15 @@
       
       <h2 class="govuk-heading-m">Main contact</h2>
       <p class="govuk-!-margin-bottom-1" data-test="main-contact-name">{{ visit.visitContact.name }}</p>
-      <p data-test="main-contact-number">{{ visit.visitContact.telephone | d("No phone number provided", true) }}</p>
+      {% if visit.visitContact.email %}
+        <p class="{%if visit.visitContact.telephone %}govuk-!-margin-bottom-1{% endif %}" data-test="main-contact-email">{{ visit.visitContact.email }}</p>
+      {% endif %}
+      {% if visit.visitContact.telephone %}
+        <p data-test="main-contact-number">{{ visit.visitContact.telephone }}</p>
+      {% endif %}
+      {% if not visit.visitContact.email and not visit.visitContact.telephone %}
+        <p data-test="main-contact-no-details">No contact details provided</p>
+      {% endif %}
 
       {% if showCancel %}
         {{ govukButton({

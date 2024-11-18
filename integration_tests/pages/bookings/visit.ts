@@ -23,6 +23,8 @@ export default class VisitDetailsPage extends Page {
 
   mainContactName = (): PageElement => cy.get('[data-test="main-contact-name"]')
 
+  mainContactEmail = (): PageElement => cy.get('[data-test="main-contact-email"]')
+
   mainContactNumber = (): PageElement => cy.get('[data-test="main-contact-number"]')
 
   prisonName = (): PageElement => cy.get('[data-test="prison-name"]')
