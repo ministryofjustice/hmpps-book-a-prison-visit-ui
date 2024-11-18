@@ -4,7 +4,7 @@ import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
-import { getMainContactName } from '../../utils/utils'
+import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -39,7 +39,8 @@ export default class CheckVisitDetailsController {
         const bookingConfirmed: BookingConfirmed = {
           prison: bookingJourney.prison,
           visitReference: visit.reference,
-          hasPhoneNumber: !!bookingJourney.mainContactPhone,
+          hasEmail: !!bookingJourney.mainContactEmail,
+          hasMobile: isMobilePhoneNumber(bookingJourney.mainContactPhone),
         }
         req.session.bookingConfirmed = bookingConfirmed
 

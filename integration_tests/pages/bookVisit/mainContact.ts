@@ -1,4 +1,4 @@
-import Page, { PageElement } from '../page'
+import Page from '../page'
 
 export default class MainContactPage extends Page {
   constructor() {
@@ -12,12 +12,6 @@ export default class MainContactPage extends Page {
   selectVisitorByName = (name: string): void => {
     cy.get('label').contains(name).siblings('input[name=contact]').check()
   }
-
-  checkHasPhoneNumber = (): void => {
-    cy.get('#hasPhoneNumber').check()
-  }
-
-  enterPhoneNumber = (number: string): PageElement => cy.get('#phoneNumber').type(number)
 
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()

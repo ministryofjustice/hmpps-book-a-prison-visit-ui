@@ -48,7 +48,8 @@ export type BookingJourney = {
 export type BookingConfirmed = {
   prison: PrisonDto
   visitReference: string
-  hasPhoneNumber: boolean
+  hasEmail: boolean
+  hasMobile: boolean
 }
 
 export type BookingCancelled = {

@@ -11,8 +11,9 @@ import MainContactPage from '../pages/bookVisit/mainContact'
 import CheckVisitDetailsPage from '../pages/bookVisit/checkVisitDetails'
 import VisitBookedPage from '../pages/bookVisit/visitBooked'
 import ClosedVisitPage from '../pages/bookVisit/closedVisit'
+import ContactDetailsPage from '../pages/bookVisit/contactDetails'
 
-context.skip('Booking journey', () => {
+context('Booking journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()
@@ -142,18 +143,24 @@ context.skip('Booking journey', () => {
     // Main contact
     const mainContactPage = Page.verifyOnPage(MainContactPage)
     mainContactPage.selectVisitorByName('Adult One')
-    mainContactPage.checkHasPhoneNumber()
-    mainContactPage.enterPhoneNumber('01234 567 890')
+    mainContactPage.continue()
+
+    // Contact details
+    const contactDetailsPage = Page.verifyOnPage(ContactDetailsPage, 'Adult One')
+    contactDetailsPage.checkGetUpdatesByEmail()
+    contactDetailsPage.enterEmail('adult.one@example.com')
+    contactDetailsPage.checkGetUpdatesByPhone()
+    contactDetailsPage.enterPhoneNumber('07712 000 000')
     cy.task('stubChangeVisitApplication', {
       ...application,
-      visitContact: { name: 'Adult One', telephone: '01234 567 890' },
+      visitContact: { name: 'Adult One', telephone: '07712 000 000', email: 'adult.one@example.com' },
       visitors: [
         { nomisPersonId: 1000, visitContact: true },
         { nomisPersonId: 3000, visitContact: false },
       ],
       visitorSupport: { description: 'Wheelchair access' },
     })
-    mainContactPage.continue()
+    contactDetailsPage.continue()
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
@@ -164,7 +171,8 @@ context.skip('Booking journey', () => {
     checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
     checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
-    checkVisitDetailsPage.mainContactNumber().contains('01234 567 890')
+    checkVisitDetailsPage.contactDetailsEmail().contains('adult.one@example.com')
+    checkVisitDetailsPage.contactDetailsPhone().contains('07712 000 000')
 
     cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
     checkVisitDetailsPage.continue()
@@ -172,10 +180,8 @@ context.skip('Booking journey', () => {
     const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
     visitBookedPage.bookingReference().contains('ab-cd-ef-gh')
     visitBookedPage
-      .phoneNumberText()
-      .contains(
-        'A text message confirming the visit will be sent to the main contact. This will include the booking reference.',
-      )
+      .confirmationNotificationMessage()
+      .contains('An email and a text message confirming the visit will be sent')
   })
 
   it('should show closed visit interruption card (CLOSED visit)', () => {
