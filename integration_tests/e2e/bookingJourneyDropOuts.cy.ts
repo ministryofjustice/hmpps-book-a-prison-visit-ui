@@ -76,7 +76,7 @@ context('Booking journey - drop-out points', () => {
       Page.verifyOnPage(HomePage)
     })
 
-    it.skip('should return to choose time page with message when selected session no longer available', () => {
+    it('should return to choose time page with message when selected session no longer available', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
       cy.signIn()

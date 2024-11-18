@@ -7,5 +7,5 @@ export default class VisitBookedPage extends Page {
 
   bookingReference = (): PageElement => cy.get('[data-test="booking-reference-title"]')
 
-  phoneNumberText = (): PageElement => cy.get('[data-test="phone-number-text"]')
+  confirmationNotificationMessage = (): PageElement => cy.get('[data-test="confirmation-notification-message"]')
 }
