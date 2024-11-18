@@ -86,8 +86,9 @@ export default class TestData {
   static bookingConfirmed = ({
     prison = this.prisonDto(),
     visitReference = 'ab-cd-ef-gh',
-    hasPhoneNumber = true,
-  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prison, visitReference, hasPhoneNumber })
+    hasEmail = true,
+    hasMobile = true,
+  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prison, visitReference, hasEmail, hasMobile })
 
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
@@ -97,7 +98,7 @@ export default class TestData {
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
+    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
@@ -172,7 +173,7 @@ export default class TestData {
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
+    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<VisitDetails> = {}): VisitDetails => ({
@@ -203,7 +204,7 @@ export default class TestData {
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitNotes = [],
-    visitContact = { name: 'Joan Phillips', telephone: '01234 567890' },
+    visitContact = { name: 'Joan Phillips', telephone: '07700 900 000' },
     visitors = [{ nomisPersonId: 1234, visitContact: true }],
     visitorSupport = { description: 'wheelchair access' },
   }: Partial<VisitDto> = {}): VisitDto =>

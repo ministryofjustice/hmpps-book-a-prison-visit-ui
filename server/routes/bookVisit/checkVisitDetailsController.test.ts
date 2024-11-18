@@ -42,7 +42,7 @@ beforeEach(() => {
       selectedVisitSession: visitSession,
       applicationReference: application.reference,
       mainContact: 'User One',
-      mainContactPhone: '01234 567 890',
+      mainContactPhone: '07700 900 000',
       mainContactEmail: 'user@example.com',
       visitorSupport: 'Wheelchair access',
     },
@@ -90,7 +90,7 @@ describe('Check visit details', () => {
           expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('[data-test="main-contact-name"]').text()).toBe('User One')
           expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
-          expect($('[data-test="contact-details-phone"]').text()).toBe('01234 567 890')
+          expect($('[data-test="contact-details-phone"]').text()).toBe('07700 900 000')
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })
@@ -127,11 +127,38 @@ describe('Check visit details', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page', () => {
+    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
       const expectedBookingConfirmed: BookingConfirmed = {
         prison,
         visitReference: visit.reference,
-        hasPhoneNumber: true,
+        hasEmail: true,
+        hasMobile: true,
+      }
+
+      return request(app)
+        .post(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.BOOKED)
+        .expect(() => {
+          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+          expect(visitService.bookVisit).toHaveBeenCalledWith({
+            applicationReference: application.reference,
+            actionedBy: bookerReference,
+          })
+        })
+    })
+
+    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
+      sessionData.bookingJourney.mainContactEmail = undefined
+      sessionData.bookingJourney.mainContactPhone = undefined
+
+      const expectedBookingConfirmed: BookingConfirmed = {
+        prison,
+        visitReference: visit.reference,
+        hasEmail: false,
+        hasMobile: false,
       }
 
       return request(app)

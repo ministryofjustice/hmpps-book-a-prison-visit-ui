@@ -99,7 +99,7 @@ describe('Contact details', () => {
 
     it('should pre-populate with data in session', () => {
       sessionData.bookingJourney.mainContactEmail = 'user@example.com'
-      sessionData.bookingJourney.mainContactPhone = '01234 567 890'
+      sessionData.bookingJourney.mainContactPhone = '07700 900 000'
 
       return request(app)
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -109,13 +109,13 @@ describe('Contact details', () => {
           const $ = cheerio.load(res.text)
           expect($('input[name=getUpdatesBy]:checked').length).toBe(2)
           expect($('input[name=mainContactEmail]').prop('value')).toBe('user@example.com')
-          expect($('input[name=mainContactPhone]').prop('value')).toBe('01234 567 890')
+          expect($('input[name=mainContactPhone]').prop('value')).toBe('07700 900 000')
         })
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
       sessionData.bookingJourney.mainContactEmail = 'user@example.com'
-      sessionData.bookingJourney.mainContactPhone = '01234 567 890'
+      sessionData.bookingJourney.mainContactPhone = '07700 900 000'
       const formValues = { getUpdatesBy: ['email'], mainContactEmail: 'new-email', mainContactPhone: '' }
       flashData = { formValues: [formValues] }
 
@@ -171,14 +171,14 @@ describe('Contact details', () => {
         .send({
           getUpdatesBy: ['email', 'phone'],
           mainContactEmail: 'user@example.com',
-          mainContactPhone: '01234 567 890',
+          mainContactPhone: '07700 900 000',
         })
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContactEmail).toBe('user@example.com')
-          expect(sessionData.bookingJourney.mainContactPhone).toBe('01234 567 890')
+          expect(sessionData.bookingJourney.mainContactPhone).toBe('07700 900 000')
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookingJourney: sessionData.bookingJourney,
@@ -193,9 +193,9 @@ describe('Contact details', () => {
       return request(app)
         .post(paths.BOOK_VISIT.CONTACT_DETAILS)
         .send({
-          getUpdatesBy: [], //
+          getUpdatesBy: [],
           mainContactEmail: 'user@example.com',
-          mainContactPhone: '01234 567 890',
+          mainContactPhone: '07700 900 000',
         })
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)

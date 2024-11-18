@@ -143,10 +143,10 @@ context.skip('Booking journey', () => {
     const mainContactPage = Page.verifyOnPage(MainContactPage)
     mainContactPage.selectVisitorByName('Adult One')
     mainContactPage.checkHasPhoneNumber()
-    mainContactPage.enterPhoneNumber('01234 567 890')
+    mainContactPage.enterPhoneNumber('07700 900 000')
     cy.task('stubChangeVisitApplication', {
       ...application,
-      visitContact: { name: 'Adult One', telephone: '01234 567 890' },
+      visitContact: { name: 'Adult One', telephone: '07700 900 000' },
       visitors: [
         { nomisPersonId: 1000, visitContact: true },
         { nomisPersonId: 3000, visitContact: false },
@@ -164,7 +164,7 @@ context.skip('Booking journey', () => {
     checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
     checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
-    checkVisitDetailsPage.mainContactNumber().contains('01234 567 890')
+    checkVisitDetailsPage.mainContactNumber().contains('07700 900 000')
 
     cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
     checkVisitDetailsPage.continue()

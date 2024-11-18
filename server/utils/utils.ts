@@ -88,3 +88,8 @@ export const getMainContactName = (mainContact: Visitor | string): string => {
   }
   return undefined
 }
+
+export const isMobilePhoneNumber = (phoneNumber: string): boolean => {
+  // TODO implement
+  return !!phoneNumber
+}
