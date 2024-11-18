@@ -11,7 +11,7 @@ context('Cookie consent and analytics', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
 
-    cy.signIn()
+    cy.signIn({ hideCookieBanner: false })
   })
 
   describe('Cookie banner', () => {
