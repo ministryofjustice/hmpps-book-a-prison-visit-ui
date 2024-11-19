@@ -21,8 +21,8 @@ afterEach(() => {
 
 describe('Cancel a booking - Booking cancelled', () => {
   describe('GET - Display Booking cancelled page', () => {
-    it('should render the page confirming the visit has been cancelled - with phone number', () => {
-      sessionData.bookingCancelled = { hasPhoneNumber: true }
+    it('should render the page confirming the visit has been cancelled (email and text message)', () => {
+      sessionData.bookingCancelled = { hasEmail: true, hasMobile: true }
 
       return request(app)
         .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
@@ -33,24 +33,48 @@ describe('Cancel a booking - Booking cancelled', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
           expect($('h1').text()).toContain('Booking cancelled')
           expect($('h2').text()).toContain('What happens next')
-          expect($('[data-test=phone-number-text]').length).toBe(1)
+          expect($('[data-test=confirmation-notification-message]').text()).toContain(
+            'An email and a text message will be sent',
+          )
         })
     })
 
-    it('should render the page confirming the visit has been cancelled - no phone number', () => {
-      sessionData.bookingCancelled = { hasPhoneNumber: false }
+    describe('Confirmation message variations', () => {
+      it('email only', () => {
+        sessionData.bookingCancelled = { hasEmail: true, hasMobile: false }
 
-      return request(app)
-        .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Booking cancelled -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
-          expect($('h1').text()).toContain('Booking cancelled')
-          expect($('h2').text()).toContain('What happens next')
-          expect($('[data-test=phone-number-text]').length).toBe(0)
-        })
+        return request(app)
+          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('[data-test=confirmation-notification-message]').text()).toContain('An email will be sent')
+          })
+      })
+
+      it('mobile phone only', () => {
+        sessionData.bookingCancelled = { hasEmail: false, hasMobile: true }
+
+        return request(app)
+          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('[data-test=confirmation-notification-message]').text()).toContain('A text message will be sent')
+          })
+      })
+
+      it('no email or mobile phone', () => {
+        sessionData.bookingCancelled = { hasEmail: false, hasMobile: false }
+
+        return request(app)
+          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('[data-test=confirmation-notification-message]').length).toBe(0)
+          })
+      })
     })
 
     it('should redirect to bookings page if bookingCancelled data not set', () => {
