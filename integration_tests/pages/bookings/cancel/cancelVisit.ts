@@ -1,4 +1,4 @@
-import Page, { PageElement } from '../page'
+import Page, { PageElement } from '../../page'
 
 export default class CancelVisitPage extends Page {
   constructor() {
