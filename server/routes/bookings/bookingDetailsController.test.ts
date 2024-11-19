@@ -56,6 +56,7 @@ describe('View a single booking', () => {
       jest.resetAllMocks()
       jest.useRealTimers()
     })
+
     it('should render the booking details page', () => {
       bookings.type = 'future'
 
@@ -76,7 +77,9 @@ describe('View a single booking', () => {
           expect($('[data-test="visitor-name-1"]').text().trim()).toBe('Keith Phillips')
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access requested')
           expect($('[data-test="main-contact-name"]').text()).toBe('Joan Phillips')
+          expect($('[data-test="main-contact-email"]').text()).toBe('visitor@example.com')
           expect($('[data-test="main-contact-number"]').text()).toBe('07712 000 000')
+          expect($('[data-test="main-contact-no-details"]').length).toBe(0)
 
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
           expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
@@ -93,6 +96,22 @@ describe('View a single booking', () => {
 
           expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should render the booking details page - no main contact details', () => {
+      bookings.type = 'future'
+      bookings.visits[0].visitContact.email = undefined
+      bookings.visits[0].visitContact.telephone = undefined
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="main-contact-email"]').length).toBe(0)
+          expect($('[data-test="main-contact-number"]').length).toBe(0)
+          expect($('[data-test="main-contact-no-details"]').text()).toBe('No contact details provided')
         })
     })
 
