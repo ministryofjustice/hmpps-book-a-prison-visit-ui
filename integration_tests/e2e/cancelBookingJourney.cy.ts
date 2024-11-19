@@ -70,8 +70,6 @@ context('Cancel booking journey', () => {
     cancelVisitPage.confirmButton()
 
     const cancelConfirmedPage = Page.verifyOnPage(CancelConfirmedPage)
-    cancelConfirmedPage
-      .phoneNumberText()
-      .contains('A text message will be sent to the main contact to confirm the booking has been cancelled.')
+    cancelConfirmedPage.confirmationNotificationMessage().contains('An email and a text message will be sent')
   })
 })

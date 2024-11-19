@@ -53,5 +53,6 @@ export type BookingConfirmed = {
 }
 
 export type BookingCancelled = {
-  hasPhoneNumber: boolean
+  hasEmail: boolean
+  hasMobile: boolean
 }

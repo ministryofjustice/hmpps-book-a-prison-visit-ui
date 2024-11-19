@@ -5,5 +5,5 @@ export default class CancelConfirmedPage extends Page {
     super('Booking cancelled')
   }
 
-  phoneNumberText = (): PageElement => cy.get(`[data-test=phone-number-text]`)
+  confirmationNotificationMessage = (): PageElement => cy.get('[data-test="confirmation-notification-message"]')
 }

@@ -70,7 +70,7 @@ describe('Cancel a booking - Are you sure page', () => {
   })
 
   describe('POST - cancel booking', () => {
-    it('should cancel the visit, set data in session and redirect to confirmation page - with phone number', () => {
+    it('should cancel the visit, set data in session and redirect to confirmation page - with email and phone number', () => {
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
@@ -82,12 +82,13 @@ describe('Cancel a booking - Are you sure page', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
-          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: true })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasEmail: true, hasMobile: true })
         })
     })
 
     it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
       sessionData.bookings.visits[0].visitContact.telephone = undefined
+      sessionData.bookings.visits[0].visitContact.email = undefined
 
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
@@ -100,7 +101,7 @@ describe('Cancel a booking - Are you sure page', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
-          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasPhoneNumber: false })
+          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasEmail: false, hasMobile: false })
         })
     })
 
