@@ -1,6 +1,8 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
 import { SessionData } from 'express-session'
+import parsePhoneNumber from 'libphonenumber-js/mobile'
+import type { Visitor } from '../services/bookerService'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -8,8 +10,8 @@ const properCase = (word: string): string =>
 const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
 
 /**
- * Converts a name (first name, last name, middle name, etc.) to proper case equivalent, handling double-barreled names
- * correctly (i.e. each part in a double-barreled is converted to proper case).
+ * Converts a name (first name, last name, middle name, etc.) to proper case equivalent, handling double-barrelled names
+ * correctly (i.e. each part in a double-barrelled is converted to proper case).
  * @param name name to be converted.
  * @returns name converted to proper case.
  */
@@ -79,4 +81,15 @@ export const clearSession = (req: Request): void => {
   ;['bookingJourney', 'bookingConfirmed'].forEach((sessionItem: keyof SessionData) => {
     delete req.session[sessionItem]
   })
+}
+
+export const getMainContactName = (mainContact: Visitor | string): string => {
+  if (mainContact) {
+    return typeof mainContact === 'string' ? mainContact : `${mainContact.firstName} ${mainContact.lastName}`
+  }
+  return undefined
+}
+
+export const isMobilePhoneNumber = (phoneNumber: string): boolean => {
+  return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
 }

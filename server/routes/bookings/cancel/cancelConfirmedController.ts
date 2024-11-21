@@ -13,7 +13,7 @@ export default class CancelConfirmedController {
       }
 
       return res.render('pages/bookings/cancel/cancelConfirmed', {
-        hasPhoneNumber: bookingCancelled.hasPhoneNumber,
+        bookingCancelled,
         showServiceNav: true,
       })
     }

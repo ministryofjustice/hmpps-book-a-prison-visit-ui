@@ -53,7 +53,9 @@ describe('Visit service', () => {
         selectedVisitSession: visitSession,
         applicationReference: application.reference,
         visitorSupport: 'wheelchair access',
-        mainContact: { contact: visitorOne, phoneNumber: '01234 567 890' },
+        mainContact: visitorOne,
+        mainContactEmail: 'user@example.com',
+        mainContactPhone: '07712 000 000',
       }
     })
 
@@ -77,7 +79,7 @@ describe('Visit service', () => {
 
     describe('changeVisitApplication', () => {
       it('should change an existing visit application to update it with booking journey data', async () => {
-        const visitContact = { name: 'Joan Phillips', telephone: '01234 567 890' }
+        const visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'user@example.com' }
         const visitors = [
           { nomisPersonId: 100, visitContact: true },
           { nomisPersonId: 200, visitContact: false },
@@ -100,8 +102,10 @@ describe('Visit service', () => {
         expect(results).toStrictEqual(application)
       })
 
-      it('should should handle a custom main contact and no phone number', async () => {
-        bookingJourney.mainContact = { contact: 'Someone Else' }
+      it('should should handle a custom main contact and no phone number or email', async () => {
+        bookingJourney.mainContact = 'Someone Else'
+        bookingJourney.mainContactEmail = undefined
+        bookingJourney.mainContactPhone = undefined
 
         const visitContact = { name: 'Someone Else' }
         const visitors = [
@@ -129,6 +133,8 @@ describe('Visit service', () => {
       it('should handle minimal available session data', async () => {
         bookingJourney.visitorSupport = undefined
         bookingJourney.mainContact = undefined
+        bookingJourney.mainContactEmail = undefined
+        bookingJourney.mainContactPhone = undefined
 
         const visitors = [
           { nomisPersonId: 100, visitContact: false },

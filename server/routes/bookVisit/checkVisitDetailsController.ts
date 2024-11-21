@@ -4,6 +4,7 @@ import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
+import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -11,15 +12,12 @@ export default class CheckVisitDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { bookingJourney } = req.session
-      const mainContactName =
-        typeof bookingJourney.mainContact.contact === 'string'
-          ? bookingJourney.mainContact.contact
-          : `${bookingJourney.mainContact.contact.firstName} ${bookingJourney.mainContact.contact.lastName}`
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookingJourney.visitorSupport,
-        mainContactName,
-        mainContactNumber: bookingJourney.mainContact.phoneNumber,
+        mainContactName: getMainContactName(bookingJourney.mainContact),
+        mainContactPhone: bookingJourney.mainContactPhone,
+        mainContactEmail: bookingJourney.mainContactEmail,
         sessionDate: bookingJourney.selectedVisitSession.sessionDate,
         sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
         visitors: bookingJourney.selectedVisitors,
@@ -41,7 +39,8 @@ export default class CheckVisitDetailsController {
         const bookingConfirmed: BookingConfirmed = {
           prison: bookingJourney.prison,
           visitReference: visit.reference,
-          hasPhoneNumber: !!bookingJourney.mainContact.phoneNumber,
+          hasEmail: !!bookingJourney.mainContactEmail,
+          hasMobile: isMobilePhoneNumber(bookingJourney.mainContactPhone),
         }
         req.session.bookingConfirmed = bookingConfirmed
 

@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
 import { BookerService, VisitService } from '../../../services'
 import paths from '../../../constants/paths'
+import { isMobilePhoneNumber } from '../../../utils/utils'
 
 export default class CancelController {
   public constructor(
@@ -69,7 +70,10 @@ export default class CancelController {
         actionedBy: booker.reference,
       })
 
-      req.session.bookingCancelled = { hasPhoneNumber: !!visit.visitContact.telephone }
+      req.session.bookingCancelled = {
+        hasEmail: !!visit.visitContact.email,
+        hasMobile: isMobilePhoneNumber(visit.visitContact.telephone),
+      }
 
       return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
     }

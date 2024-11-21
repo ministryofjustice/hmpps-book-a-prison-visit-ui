@@ -9,6 +9,8 @@ import TermsAndConditionsPage from '../pages/termsAndConditions'
 context('Static content pages', () => {
   describe('Unauthenticated user', () => {
     it('should be able to access static content pages', () => {
+      cy.hideCookieBanner()
+
       cy.visit(paths.ACCESSIBILITY)
       const accessibilityStatementPage = Page.verifyOnPage(AccessibilityStatementPage)
       accessibilityStatementPage.oneLoginHeader().should('not.exist')

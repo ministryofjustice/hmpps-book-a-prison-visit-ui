@@ -3,6 +3,7 @@ import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
 import { ApplicationDto, OrchestrationVisitDto, VisitDto } from '../data/orchestrationApiTypes'
+import { getMainContactName } from '../utils/utils'
 
 export interface VisitDetails extends OrchestrationVisitDto {
   visitDisplayId: string
@@ -42,20 +43,21 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const contact = bookingJourney.mainContact?.contact
-    const phoneNumber = bookingJourney.mainContact?.phoneNumber
+    const { mainContact } = bookingJourney
+    const { mainContactEmail, mainContactPhone } = bookingJourney
 
-    const visitContact = bookingJourney.mainContact
+    const visitContact = mainContact
       ? {
-          name: typeof contact === 'string' ? contact : `${contact.firstName} ${contact.lastName}`,
-          ...(phoneNumber && { telephone: phoneNumber }),
+          ...(mainContact && { name: getMainContactName(mainContact) }),
+          ...(mainContactPhone && { telephone: mainContactPhone }),
+          ...(mainContactEmail && { email: mainContactEmail }),
         }
       : undefined
 
     const visitors = bookingJourney.selectedVisitors.map(visitor => {
       return {
         nomisPersonId: visitor.visitorId,
-        visitContact: typeof contact === 'object' ? contact.visitorId === visitor.visitorId : false,
+        visitContact: typeof mainContact === 'object' ? mainContact.visitorId === visitor.visitorId : false,
       }
     })
 

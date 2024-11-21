@@ -1,8 +1,8 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
-import BookingsPage from '../pages/bookings'
-import CancelledVisitsPage from '../pages/bookings/cancelledVisitsPage'
-import PastVisitsPage from '../pages/bookings/pastVisitsPage'
+import BookingsPage from '../pages/bookings/bookings'
+import CancelledVisitsPage from '../pages/bookings/cancel/cancelledVisits'
+import PastVisitsPage from '../pages/bookings/pastVisits'
 import VisitDetailsPage from '../pages/bookings/visit'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
@@ -68,7 +68,8 @@ context('Bookings home page', () => {
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
     visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
-    visitDetailsPage.mainContactNumber().contains('01234 567890')
+    visitDetailsPage.mainContactEmail().contains('visitor@example.com')
+    visitDetailsPage.mainContactNumber().contains('07712 000 000')
     visitDetailsPage.prisonName().contains(prison.prisonName)
     visitDetailsPage.prisonPhoneNumber().contains(prison.phoneNumber)
   })

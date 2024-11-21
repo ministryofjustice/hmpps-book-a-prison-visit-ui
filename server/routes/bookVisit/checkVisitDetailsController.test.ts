@@ -27,10 +27,6 @@ const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const application = TestData.applicationDto()
 const visitSession = TestData.availableVisitSessionDto()
-const mainContact = {
-  contact: 'Mary Magdeline',
-  phoneNumber: '01234 567890',
-}
 
 beforeEach(() => {
   sessionData = {
@@ -45,10 +41,9 @@ beforeEach(() => {
       allVisitSessions: [visitSession],
       selectedVisitSession: visitSession,
       applicationReference: application.reference,
-      mainContact: {
-        contact: mainContact.contact,
-        phoneNumber: mainContact.phoneNumber,
-      },
+      mainContact: 'User One',
+      mainContactPhone: '07712 000 000',
+      mainContactEmail: 'user@example.com',
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -93,15 +88,18 @@ describe('Check visit details', () => {
           expect($('[data-test="change-time"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access')
           expect($('[data-test="change-additional-support"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
-          expect($('[data-test="main-contact-name"]').text()).toBe(mainContact.contact)
-          expect($('[data-test="main-contact-number"]').text()).toBe(mainContact.phoneNumber)
+          expect($('[data-test="main-contact-name"]').text()).toBe('User One')
+          expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
+          expect($('[data-test="contact-details-phone"]').text()).toBe('07712 000 000')
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
         })
     })
 
-    it('Should show alternative text when no additional support/phone number provided', () => {
+    it('should show alternative text when no additional support or contact details provided', () => {
       sessionData.bookingJourney.visitorSupport = ''
-      sessionData.bookingJourney.mainContact.phoneNumber = undefined
+      sessionData.bookingJourney.mainContactEmail = undefined
+      sessionData.bookingJourney.mainContactPhone = undefined
+
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
@@ -113,7 +111,9 @@ describe('Check visit details', () => {
           expect($('h1').text()).toBe('Check the visit details before booking')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('[data-test="additional-support"]').text()).toBe('None')
-          expect($('[data-test="main-contact-number"]').text()).toBe('No phone number provided')
+          expect($('[data-test="contact-details-email"]').text()).toBeFalsy()
+          expect($('[data-test="contact-details-phone"]').text()).toBeFalsy()
+          expect($('[data-test="no-contact-details"]').text()).toBe('No contact details provided')
         })
     })
   })
@@ -127,11 +127,38 @@ describe('Check visit details', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page', () => {
+    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
       const expectedBookingConfirmed: BookingConfirmed = {
         prison,
         visitReference: visit.reference,
-        hasPhoneNumber: true,
+        hasEmail: true,
+        hasMobile: true,
+      }
+
+      return request(app)
+        .post(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.BOOKED)
+        .expect(() => {
+          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+          expect(visitService.bookVisit).toHaveBeenCalledWith({
+            applicationReference: application.reference,
+            actionedBy: bookerReference,
+          })
+        })
+    })
+
+    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
+      sessionData.bookingJourney.mainContactEmail = undefined
+      sessionData.bookingJourney.mainContactPhone = undefined
+
+      const expectedBookingConfirmed: BookingConfirmed = {
+        prison,
+        visitReference: visit.reference,
+        hasEmail: false,
+        hasMobile: false,
       }
 
       return request(app)

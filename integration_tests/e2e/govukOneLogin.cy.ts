@@ -43,14 +43,14 @@ context('Sign in with GOV.UK One Login', () => {
     const page = '/deep-link' // will be a 404, but OK as testing original URL preserved
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
-    cy.signIn({ failOnStatusCode: false }, undefined, page)
+    cy.signIn({ options: { failOnStatusCode: false }, initialRequestUrl: page })
     cy.location('pathname').should('equal', page)
     cy.contains('404')
   })
 
   it('User sent to auth error page if sign in fails', () => {
     // setting an invalid nonce value should cause ID token validation to fail
-    cy.signIn({ failOnStatusCode: false }, 'INVALID_NONCE')
+    cy.signIn({ options: { failOnStatusCode: false }, nonce: 'INVALID_NONCE' })
     cy.get('h1').contains('Sorry, there is a problem with the service')
   })
 

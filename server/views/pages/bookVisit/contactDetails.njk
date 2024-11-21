@@ -1,0 +1,101 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Contact details" %}
+
+{% set backLinkHref = paths.BOOK_VISIT.MAIN_CONTACT %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ pageTitle }} for {{ mainContactName }}</h1>
+
+      <p>We use contact details to send updates about the booking.</p>
+      <p>The main contact can get both emails and text messages.</p>
+
+      {{ govukWarningText({
+        text: "If no contact details are provided, we cannot tell visitors if the visit is cancelled or changed.",
+        iconFallbackText: "Warning"
+      }) }}
+
+      <form action="{{ paths.BOOK_VISIT.CONTACT_DETAILS }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {% set emailHtml %}
+        {{ govukInput({
+          id: "mainContactEmail",
+          name: "mainContactEmail",
+          type: "email",
+          autocomplete: "email",
+          spellcheck: false,
+          label: {
+            text: "Email address"
+          },
+          value: formValues.mainContactEmail,
+          errorMessage: errors | findError('mainContactEmail')
+        }) }}
+        {% endset -%}
+  
+        {% set phoneHtml %}
+        <p class="govuk-hint">
+          If this is a UK mobile number, we will send a text message to confirm the booking and any updates
+        </p>
+        {# <p class="govuk-hint">For international numbers include the country code</p> #}
+
+        {{ govukInput({
+          id: "mainContactPhone",
+          name: "mainContactPhone",
+          type: "tel",
+          autocomplete: "tel",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Phone number"
+          },
+          value: formValues.mainContactPhone,
+          errorMessage: errors | findError('mainContactPhone')
+        }) }}
+        {% endset -%}
+
+        {{ govukCheckboxes({
+          name: "getUpdatesBy",
+          fieldset: {
+            legend: {
+              text: pageTitle,
+              classes: "govuk-visually-hidden"
+            }
+          },
+          items: [
+            {
+              value: "email",
+              text: "Get updates by email",
+              conditional: {
+                html: emailHtml
+              }
+            },
+            {
+              value: "phone",
+              text: "Get updates by phone",
+              classes: 'TEST',
+              conditional: {
+                html: phoneHtml
+              }
+            }
+          ],
+          values: formValues.getUpdatesBy
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -7,10 +7,14 @@ import {
   formatTime,
   formatTimeDuration,
   formatTimeFromDateTime,
+  getMainContactName,
   initialiseName,
   isAdult,
+  isMobilePhoneNumber,
   pluralise,
 } from './utils'
+import TestData from '../routes/testutils/testData'
+import { Visitor } from '../services/bookerService'
 
 describe('convert to title case', () => {
   it.each([
@@ -131,6 +135,33 @@ describe('pluralise', () => {
       clearSession(req)
 
       expect(sessionData).toStrictEqual({ booker: 'BOOKER DATA' })
+    })
+  })
+
+  describe('getMainContactName', () => {
+    const visitor1 = TestData.visitor({ firstName: 'User', lastName: 'One' })
+    const visitor2 = 'User Two'
+
+    it.each([
+      ['should concatenate names when mainContact is a Visitor', visitor1, 'User One'],
+      ['should use name when mainContact is a string', visitor2, 'User Two'],
+      ['should handle mainContact being undefined', undefined, undefined],
+    ])('%s', (_: string, visitor: Visitor | string, expectedName: string) => {
+      expect(getMainContactName(visitor)).toBe(expectedName)
+    })
+  })
+
+  describe('isMobilePhoneNumber', () => {
+    it.each([
+      ['non-mobile number', '01234567890', false],
+      ['valid mobile number', '07712000000', true],
+      ['valid mobile number (with spaces)', '07712 000 000', true],
+      ['valid mobile number (with int. code)', '+447712 000000', true],
+      ['empty string', '', false],
+      ['invalid string', 'not a number', false],
+      ['undefined number', undefined, false],
+    ])('%s - %s - %s', (_: string, number: string, expected: boolean) => {
+      expect(isMobilePhoneNumber(number)).toBe(expected)
     })
   })
 })

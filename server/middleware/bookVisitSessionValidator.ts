@@ -11,6 +11,7 @@ const journeyOrder: string[] = [
   paths.BOOK_VISIT.CHOOSE_TIME,
   paths.BOOK_VISIT.ADDITIONAL_SUPPORT,
   paths.BOOK_VISIT.MAIN_CONTACT,
+  paths.BOOK_VISIT.CONTACT_DETAILS,
   paths.BOOK_VISIT.CHECK_DETAILS,
   paths.BOOK_VISIT.BOOKED,
 ]
@@ -86,6 +87,11 @@ export default function bookVisitSessionValidator(): RequestHandler {
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.MAIN_CONTACT) &&
       typeof bookingJourney.visitorSupport !== 'string'
     ) {
+      return logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Contact details page
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CONTACT_DETAILS) && !bookingJourney.mainContact) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 

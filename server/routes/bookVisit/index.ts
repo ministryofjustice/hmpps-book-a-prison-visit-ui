@@ -14,6 +14,7 @@ import paths from '../../constants/paths'
 import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidator'
 import CannotBookController from './cannotBookController'
 import ClosedVisitController from './closedVisitController'
+import ContactDetailsController from './contactDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -33,7 +34,8 @@ export default function routes(services: Services): Router {
   const closedVisitController = new ClosedVisitController()
   const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
   const additionalSupportController = new AdditionalSupportController()
-  const mainContactController = new MainContactController(services.visitService)
+  const mainContactController = new MainContactController()
+  const contactDetailsController = new ContactDetailsController(services.visitService)
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
   const visitBookedController = new VisitBookedController()
 
@@ -68,6 +70,13 @@ export default function routes(services: Services): Router {
 
   get(paths.BOOK_VISIT.MAIN_CONTACT, mainContactController.view())
   postWithValidation(paths.BOOK_VISIT.MAIN_CONTACT, mainContactController.validate(), mainContactController.submit())
+
+  get(paths.BOOK_VISIT.CONTACT_DETAILS, contactDetailsController.view())
+  postWithValidation(
+    paths.BOOK_VISIT.CONTACT_DETAILS,
+    contactDetailsController.validate(),
+    contactDetailsController.submit(),
+  )
 
   get(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.view())
   post(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.submit())

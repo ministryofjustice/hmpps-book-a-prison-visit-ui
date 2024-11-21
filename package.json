@@ -109,6 +109,7 @@
     "govuk-frontend": "^5.7.1",
     "helmet": "^8.0.0",
     "http-errors": "^2.0.0",
+    "libphonenumber-js": "^1.11.14",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "openid-client": "^5.7.0",

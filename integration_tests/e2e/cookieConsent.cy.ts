@@ -1,5 +1,5 @@
 import TestData from '../../server/routes/testutils/testData'
-import CookiesPage from '../pages/cookiesPage'
+import CookiesPage from '../pages/cookies'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 
@@ -11,7 +11,7 @@ context('Cookie consent and analytics', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
 
-    cy.signIn()
+    cy.signIn({ hideCookieBanner: false })
   })
 
   describe('Cookie banner', () => {
