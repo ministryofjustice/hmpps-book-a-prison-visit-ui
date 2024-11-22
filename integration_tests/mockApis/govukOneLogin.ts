@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { Response } from 'superagent'
 import { createPublicKey } from 'crypto'
 import { getMatchingRequests, stubFor } from './wiremock'
+import paths from '../../server/constants/paths'
 
 let idToken: string
 
@@ -41,8 +42,7 @@ const redirect = () =>
         scope: { equalTo: 'openid email phone' },
         client_id: { equalTo: 'clientId' },
         state: { matches: '.*' },
-        redirect_uri: { equalTo: 'http://localhost:3007/auth/callback' },
-        nonce: { matches: '.*' },
+        redirect_uri: { equalTo: `http://localhost:3007${paths.AUTH_CALLBACK}` },
         vtr: { equalTo: '["Cl.Cm"]' },
         ui_locales: { equalTo: 'en' },
       },
@@ -65,7 +65,7 @@ const getSignInUrl = (nonce?: string): Promise<string> =>
     const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     const nonceForToken = nonce || requests[requests.length - 1].queryParams.nonce.values[0]
     // set up /token response while we have access to the nonce
-    return token(nonceForToken).then(() => `/auth/callback?code=AUTHORIZATION_CODE&state=${stateValue}`)
+    return token(nonceForToken).then(() => `${paths.AUTH_CALLBACK}?code=AUTHORIZATION_CODE&state=${stateValue}`)
   })
 
 const createIdToken = (nonce: string) => {
@@ -98,7 +98,7 @@ const token = (nonce: string) => {
       formParameters: {
         grant_type: { equalTo: 'authorization_code' },
         code: { equalTo: 'AUTHORIZATION_CODE' },
-        redirect_uri: { equalTo: 'http://localhost:3007/auth/callback' },
+        redirect_uri: { equalTo: `http://localhost:3007${paths.AUTH_CALLBACK}` },
         client_assertion_type: { equalTo: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer' },
         client_assertion: { matches: '.*' },
       },

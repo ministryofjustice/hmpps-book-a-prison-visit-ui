@@ -6,6 +6,7 @@ import { generators } from 'openid-client'
 import govukOneLogin from '../authentication/govukOneLogin'
 import config from '../config'
 import paths from '../constants/paths'
+import logger from '../../logger'
 
 // Add property used in 'passport.authenticate(strategy, options, callback)'
 // strategy options for 'oicd' that is missing from @types/passport
@@ -23,7 +24,7 @@ export default function setUpGovukOneLogin(): Router {
     router.use(passport.session())
     router.use(flash())
 
-    router.get('/auth-error', (req, res) => {
+    router.get(paths.AUTH_ERROR, (req, res) => {
       res.status(401)
       return res.render('authError')
     })
@@ -32,12 +33,35 @@ export default function setUpGovukOneLogin(): Router {
       passport.authenticate('oidc', { nonce: generators.nonce() })(req, res, next)
     })
 
-    router.get('/auth/callback', (req, res, next) => {
-      passport.authenticate('oidc', {
-        nonce: generators.nonce(),
-        successReturnToOrRedirect: req.session.returnTo || '/',
-        failureRedirect: '/auth-error',
-      })(req, res, next)
+    router.get(paths.AUTH_CALLBACK, (req, res, next) => {
+      const authCallback: passport.AuthenticateCallback = (err, user, info) => {
+        // Handle errors
+        if (err) {
+          logger.error('Authentication error:', err)
+          return res.redirect(paths.SIGN_IN)
+        }
+
+        // Handle authentication failure
+        if (!user) {
+          logger.error('Authentication failed:', info)
+          return res.redirect(paths.AUTH_ERROR)
+        }
+
+        // Successful authentication
+        const { returnTo } = req.session
+        return req.logIn(user, logInErr => {
+          if (logInErr) {
+            logger.error('Login error:', logInErr)
+            return next(logInErr)
+          }
+          if (typeof returnTo === 'string' && returnTo.startsWith('/')) {
+            return res.redirect(returnTo)
+          }
+          return res.redirect(paths.HOME)
+        })
+      }
+
+      passport.authenticate('oidc', authCallback)(req, res, next)
     })
 
     router.use(paths.SIGN_OUT, async (req, res, next) => {

@@ -3,6 +3,8 @@ const paths = {
   RETURN_HOME: '/return-home', // used to clear session and redirect to HOME
 
   ACCESS_DENIED: '/access-denied',
+  AUTH_CALLBACK: '/auth/callback',
+  AUTH_ERROR: '/auth-error',
   SIGN_IN: '/sign-in',
   SIGN_OUT: '/sign-out',
   SIGNED_OUT: '/signed-out',
