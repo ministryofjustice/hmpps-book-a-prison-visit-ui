@@ -21,7 +21,12 @@ context('Sign in with GOV.UK One Login', () => {
   })
 
   it('Unauthenticated user redirected to GOV.UK One Login - callback URL', () => {
-    cy.visit('/auth/callback')
+    cy.visit(paths.AUTH_CALLBACK)
+    Page.verifyOnPage(GovukOneLoginPage)
+  })
+
+  it('Unauthenticated user redirected to GOV.UK One Login - callback URL with unrecognised/expired parameters', () => {
+    cy.visit(`${paths.AUTH_CALLBACK}?code=INVALID_AUTHORIZATION_CODE&state=INVALID-STATE`)
     Page.verifyOnPage(GovukOneLoginPage)
   })
 

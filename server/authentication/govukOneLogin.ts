@@ -46,7 +46,7 @@ async function init(): Promise<{ client: Client; idTokenStore: TokenStore }> {
   const client = new issuer.Client(
     {
       client_id: config.apis.govukOneLogin.clientId,
-      redirect_uris: [`${config.domain}/auth/callback`],
+      redirect_uris: [`${config.domain}${paths.AUTH_CALLBACK}`],
       response_types: ['code'],
       token_endpoint_auth_method: 'private_key_jwt',
       token_endpoint_auth_signing_alg: 'RS256',
