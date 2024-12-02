@@ -650,6 +650,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/validate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Validates prisoner associated with a booker
+     * @description Validates prisoner associated with a booker
+     */
+    get: operations['validatePrisoner']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/permitted/visitors': {
     parameters: {
       query?: never
@@ -1431,8 +1451,6 @@ export interface components {
       totalElements?: number
       /** Format: int32 */
       totalPages?: number
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
@@ -1442,18 +1460,20 @@ export interface components {
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject'][]
-      /** Format: int32 */
-      pageSize?: number
+      unpaged?: boolean
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      unpaged?: boolean
+      /** Format: int32 */
+      pageSize?: number
     }
     SortObject: {
       direction?: string
@@ -1868,6 +1888,56 @@ export interface components {
        */
       cellLocation?: string
       currentIncentive?: components['schemas']['CurrentIncentive']
+    }
+    BookerPrisonerValidationException: {
+      errorCodes: (
+        | 'PRISONER_RELEASED'
+        | 'PRISONER_TRANSFERRED_SUPPORTED_PRISON'
+        | 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON'
+      )[]
+      cause?: {
+        stackTrace?: {
+          classLoaderName?: string
+          moduleName?: string
+          moduleVersion?: string
+          methodName?: string
+          fileName?: string
+          /** Format: int32 */
+          lineNumber?: number
+          className?: string
+          nativeMethod?: boolean
+        }[]
+        message?: string
+        localizedMessage?: string
+      }
+      stackTrace?: {
+        classLoaderName?: string
+        moduleName?: string
+        moduleVersion?: string
+        methodName?: string
+        fileName?: string
+        /** Format: int32 */
+        lineNumber?: number
+        className?: string
+        nativeMethod?: boolean
+      }[]
+      message?: string
+      suppressed?: {
+        stackTrace?: {
+          classLoaderName?: string
+          moduleName?: string
+          moduleVersion?: string
+          methodName?: string
+          fileName?: string
+          /** Format: int32 */
+          lineNumber?: number
+          className?: string
+          nativeMethod?: boolean
+        }[]
+        message?: string
+        localizedMessage?: string
+      }[]
+      localizedMessage?: string
     }
     /** @description A visitor for a prisoner */
     VisitorInfoDto: {
@@ -4335,6 +4405,58 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  validatePrisoner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        /**
+         * @description Prisoner Id for whom visitors need to be returned.
+         * @example A12345DC
+         */
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Validation passed */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Incorrect request to validate prisoner associated with a booker */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BookerPrisonerValidationException']
         }
       }
     }

@@ -222,6 +222,21 @@ describe('orchestrationApiClient', () => {
 
   describe('getPrisoners', () => {
     it('should retrieve prisoners associated with a booker', async () => {
+      const { prisoner } = TestData.bookerPrisonerInfoDto()
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisoner.prisonerNumber}/validate`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      const result = await orchestrationApiClient.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
+
+      expect(result).toBe(true)
+    })
+  })
+
+  describe('validatePrisoner', () => {
+    it('should call validate endpoint for given prisoner and booker reference', async () => {
       const prisoners = [TestData.bookerPrisonerInfoDto()]
 
       fakeOrchestrationApi
