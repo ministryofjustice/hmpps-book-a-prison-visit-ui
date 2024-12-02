@@ -52,6 +52,21 @@ export default class BookerService {
     })
   }
 
+  async validatePrisoner(bookerReference: string, prisonerNumber: string): Promise<boolean> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    try {
+      await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
+      return true
+    } catch (error) {
+      if (error.status === 422) {
+        return false
+      }
+      throw error
+    }
+  }
+
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
