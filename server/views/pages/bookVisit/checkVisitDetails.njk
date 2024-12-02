@@ -1,7 +1,10 @@
 {% extends "../../partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
 {% set pageTitle = "Check the visit details before booking" %}
+
+{% set backLinkHref = paths.BOOK_VISIT.CONTACT_DETAILS %}
 
 {% block content %}
   <div class="govuk-grid-row">
