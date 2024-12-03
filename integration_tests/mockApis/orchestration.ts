@@ -9,6 +9,7 @@ import {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
+  BookerPrisonerValidationException,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -233,6 +234,51 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: prisoners,
+      },
+    }),
+
+  stubValidatePrisonerPass: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+  }: {
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/validate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    }),
+
+  stubValidatePrisonerFail: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+    validationError = 'PRISONER_RELEASED',
+  }: {
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+    validationError?: BookerPrisonerValidationException['errorCodes'][number]
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/validate`,
+      },
+      response: {
+        status: 422,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          status: 422,
+          errorCode: null,
+          userMessage: 'Prisoner validation failed',
+          developerMessage: null,
+          validationErrors: [validationError],
+        },
       },
     }),
 

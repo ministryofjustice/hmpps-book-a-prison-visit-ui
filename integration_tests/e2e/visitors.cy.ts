@@ -29,6 +29,7 @@ context('Visitors page', () => {
 
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
+    cy.task('stubValidatePrisonerPass')
   })
 
   it('should show Visitors page with two visitors (one having a BAN restriction', () => {
