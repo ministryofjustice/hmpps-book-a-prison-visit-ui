@@ -66,6 +66,7 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
   }: Partial<{
@@ -73,10 +74,11 @@ export default class TestData {
     firstName: string
     lastName: string
     prisonId: string
+    prisonName: string
     availableVos: number
     nextAvailableVoDate: string
   }> = {}): BookerPrisonerInfoDto => ({
-    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId },
+    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName },
     availableVos,
     nextAvailableVoDate,
   })
@@ -152,6 +154,7 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
   }: Partial<Prisoner> = {}): Prisoner => ({
@@ -160,6 +163,7 @@ export default class TestData {
     firstName,
     lastName,
     prisonId,
+    prisonName,
     availableVos,
     nextAvailableVoDate,
   })

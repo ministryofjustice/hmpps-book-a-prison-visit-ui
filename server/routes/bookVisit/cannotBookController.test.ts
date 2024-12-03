@@ -30,7 +30,6 @@ describe('A visit cannot be booked', () => {
         },
         bookingJourney: {
           prisoner: prisonerWithoutVOs,
-          cannotBookReason: 'NO_VO_BALANCE',
         },
       } as SessionData
 
@@ -38,8 +37,6 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.cannotBookReason = undefined
-
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(302)
@@ -50,6 +47,8 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should render cannot book page and clear bookingJourney data - NO_VO_BALANCE', () => {
+      sessionData.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
+
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect('Content-Type', /html/)
@@ -62,6 +61,26 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
           expect($('main p').eq(0).text()).toContain('has used their allowance of visits')
           expect($('[data-test=book-from-date]').text().trim()).toBe('Monday 1 July 2024')
+
+          expect(sessionData.bookingJourney).toBe(undefined)
+        })
+    })
+
+    it('should render cannot book page and clear bookingJourney data - TRANSFER_OR_RELEASE', () => {
+      sessionData.bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('main p').eq(0).text()).toContain('moved to another prison or been released')
 
           expect(sessionData.bookingJourney).toBe(undefined)
         })

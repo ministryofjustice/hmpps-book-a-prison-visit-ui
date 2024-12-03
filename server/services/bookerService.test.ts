@@ -58,6 +58,7 @@ describe('Booker service', () => {
         firstName: 'F1',
         lastName: 'L1',
         prisonId: 'P1',
+        prisonName: 'P1 (HMP)',
         availableVos: 1,
         nextAvailableVoDate: '2024-06-01',
       }
@@ -66,6 +67,7 @@ describe('Booker service', () => {
         firstName: 'F2',
         lastName: 'L2',
         prisonId: 'P2',
+        prisonName: 'P2 (HMP)',
         availableVos: 2,
         nextAvailableVoDate: '2024-06-02',
       }

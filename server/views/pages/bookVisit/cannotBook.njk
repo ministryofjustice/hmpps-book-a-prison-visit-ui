@@ -4,6 +4,10 @@
 
 {% set backLinkHref = paths.HOME %}
 
+{% set prisonerName -%}
+  <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+{%- endset %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -12,8 +16,7 @@
 
       {% if cannotBookReason == 'NO_VO_BALANCE' %}
         <p>
-          <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
-          has used their allowance of visits for this month.
+          {{ prisonerName | safe }} has used their allowance of visits for this month.
         </p>
 
         <p>
@@ -22,6 +25,21 @@
         </p>
       {% endif %}
 
+      {% if cannotBookReason == 'TRANSFER_OR_RELEASE' %}
+        <p>
+          {{ prisonerName | safe }} is no longer at <span data-test="prison-name">{{ prisoner.prisonName }}</span>.
+          They may have moved to another prison or been released.
+        </p>
+
+        <p>
+          If they have moved to another prison,
+          <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales" target="_blank">find out how to book a visit at their new prison</a>.
+        </p>
+      
+        <p>
+          For help contacting them, you can use the <a href="https://www.gov.uk/find-prisoner" target="_blank">find a prisoner service</a>.
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
