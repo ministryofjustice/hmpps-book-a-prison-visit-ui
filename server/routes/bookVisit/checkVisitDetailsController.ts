@@ -51,11 +51,13 @@ export default class CheckVisitDetailsController {
           const validationErrors =
             (error as SanitisedError<ApplicationValidationErrorResponse>)?.data?.validationErrors ?? []
 
-          if (
-            validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND') ||
-            validationErrors.includes('APPLICATION_INVALID_PRISON_PRISONER_MISMATCH')
-          ) {
+          if (validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND')) {
             return next(error)
+          }
+
+          if (validationErrors.includes('APPLICATION_INVALID_PRISON_PRISONER_MISMATCH')) {
+            bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+            return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
           }
 
           if (validationErrors.includes('APPLICATION_INVALID_NO_VO_BALANCE')) {
