@@ -235,6 +235,7 @@ describe('Check visit details', () => {
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingJourney.cannotBookReason).toBe('NO_VO_BALANCE')
               expect(sessionData.bookingConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
