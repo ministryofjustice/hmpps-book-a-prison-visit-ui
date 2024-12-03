@@ -237,24 +237,6 @@ describe('View a single booking', () => {
   })
 
   describe('Validation', () => {
-    it('should look up prisoner details if not present in session', () => {
-      sessionData.booker.prisoners = []
-      bookings.type = 'future'
-
-      bookerService.getPrisoners.mockResolvedValue([prisoner])
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('h1').text()).toBe('Visit booking details')
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
-
-          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
-        })
-    })
-
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
       bookings.type = 'future'
       return request(app).get(`${paths.BOOKINGS.VISIT}/NOT-A-UUID`).expect(302).expect('location', paths.BOOKINGS.HOME)

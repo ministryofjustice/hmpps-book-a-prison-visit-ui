@@ -1379,6 +1379,16 @@ export interface components {
       eventsAudit: components['schemas']['EventAuditOrchestrationDto'][]
       visit: components['schemas']['VisitDto']
     }
+    /**
+     * @description To filter visits by status
+     * @example BOOKED
+     */
+    visitStatus: ('BOOKED' | 'CANCELLED')[]
+    /**
+     * @description Visit Restriction(s) - OPEN / CLOSED / UNKNOWN
+     * @example OPEN
+     */
+    visitRestrictions: ('OPEN' | 'CLOSED' | 'UNKNOWN')[]
     /** @description Timeslot for the visit */
     SessionTimeSlotDto: {
       /**
@@ -1438,7 +1448,7 @@ export interface components {
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
-      sort?: components['schemas']['SortObject'][]
+      sort?: components['schemas']['SortObject']
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
@@ -1447,7 +1457,7 @@ export interface components {
     PageableObject: {
       /** Format: int64 */
       offset?: number
-      sort?: components['schemas']['SortObject'][]
+      sort?: components['schemas']['SortObject']
       /** Format: int32 */
       pageSize?: number
       paged?: boolean
@@ -1456,11 +1466,9 @@ export interface components {
       unpaged?: boolean
     }
     SortObject: {
-      direction?: string
-      nullHandling?: string
-      ascending?: boolean
-      property?: string
-      ignoreCase?: boolean
+      empty?: boolean
+      sorted?: boolean
+      unsorted?: boolean
     }
     OrchestrationNotificationGroupDto: {
       /**
@@ -3365,12 +3373,12 @@ export interface operations {
          * @description To filter visits by status
          * @example BOOKED
          */
-        visitStatus: string
+        visitStatus: components['schemas']['visitStatus']
         /**
          * @description Visit Restriction(s) - OPEN / CLOSED / UNKNOWN
          * @example OPEN
          */
-        visitRestrictions?: string
+        visitRestrictions?: components['schemas']['visitRestrictions']
         /**
          * @description Filter results by prison id/code
          * @example MDI
@@ -4625,7 +4633,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: string
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
       }
       cookie?: never
     }

@@ -1,14 +1,11 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, validationResult } from 'express-validator'
 import { SessionData } from 'express-session'
-import { BookerService, PrisonService } from '../../services'
+import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 
 export default class BookingDetailsController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly prisonService: PrisonService,
-  ) {}
+  public constructor(private readonly prisonService: PrisonService) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res) => {
@@ -19,10 +16,6 @@ export default class BookingDetailsController {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
-      const prisoner = booker.prisoners?.[0]
-        ? booker.prisoners?.[0]
-        : (await this.bookerService.getPrisoners(booker.reference))?.[0]
-
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
       const { visits } = bookings
@@ -30,6 +23,11 @@ export default class BookingDetailsController {
 
       // FIXME prison details no longer used? May still be needed when VB-4718 implemented
       const prison = await this.prisonService.getPrison(visit.prisonId)
+
+      const prisoner = {
+        firstName: visit.prisonerFirstName,
+        lastName: visit.prisonerLastName,
+      }
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
