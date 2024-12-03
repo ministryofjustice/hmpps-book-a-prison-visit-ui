@@ -20,6 +20,7 @@ export default class SelectPrisonerController {
       req.session.bookingJourney = { prisoner }
 
       if (prisoner.availableVos <= 0) {
+        req.session.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
         return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
       }
 

@@ -59,6 +59,7 @@ export default class CheckVisitDetailsController {
           }
 
           if (validationErrors.includes('APPLICATION_INVALID_NO_VO_BALANCE')) {
+            bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
             return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
           }
 

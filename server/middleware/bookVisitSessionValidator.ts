@@ -39,8 +39,13 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return bookingConfirmed && !bookingJourney ? next() : logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // Select visitors / Cannot book page
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CANNOT_BOOK) && !bookingJourney?.prisoner) {
+    // Cannot book page - requires reason to be set
+    if (requestPath === paths.BOOK_VISIT.CANNOT_BOOK) {
+      return bookingJourney?.cannotBookReason ? next() : logAndRedirect(res, method, requestPath, booker.reference)
+    }
+
+    // Select visitors
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookingJourney?.prisoner) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 

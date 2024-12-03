@@ -20,7 +20,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('A visit cannot be booked (no VOs)', () => {
+describe('A visit cannot be booked', () => {
   describe(`GET ${paths.BOOK_VISIT.CANNOT_BOOK}`, () => {
     beforeEach(() => {
       sessionData = {
@@ -28,14 +28,17 @@ describe('A visit cannot be booked (no VOs)', () => {
           reference: bookerReference,
           prisoners: [prisonerWithoutVOs],
         },
-        bookingJourney: { prisoner: prisonerWithoutVOs },
+        bookingJourney: {
+          prisoner: prisonerWithoutVOs,
+          cannotBookReason: 'NO_VO_BALANCE',
+        },
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookingJourney.cannotBookReason = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -46,7 +49,7 @@ describe('A visit cannot be booked (no VOs)', () => {
         })
     })
 
-    it('should render drop-out page if the selected prisoner has no VOs and clear bookingJourney data', () => {
+    it('should render cannot book page and clear bookingJourney data - NO_VO_BALANCE', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect('Content-Type', /html/)

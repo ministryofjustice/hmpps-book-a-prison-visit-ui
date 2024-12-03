@@ -109,6 +109,7 @@ describe('Select prisoner', () => {
           },
           bookingJourney: {
             prisoner: prisonerWithNoVos,
+            cannotBookReason: 'NO_VO_BALANCE',
           },
         } as SessionData)
       })

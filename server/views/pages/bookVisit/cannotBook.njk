@@ -10,15 +10,17 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>
-        <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
-        has used their allowance of visits for this month.
-      </p>
+      {% if cannotBookReason == 'NO_VO_BALANCE' %}
+        <p>
+          <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+          has used their allowance of visits for this month.
+        </p>
 
-      <p>
-        You can book a visit from
-        <span data-test="book-from-date">{{ prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }}</span>.
-      </p>
+        <p>
+          You can book a visit from
+          <span data-test="book-from-date">{{ prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }}</span>.
+        </p>
+      {% endif %}
 
     </div>
   </div>
