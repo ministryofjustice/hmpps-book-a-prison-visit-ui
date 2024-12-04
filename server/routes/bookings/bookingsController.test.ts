@@ -3,16 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockPrisonService, createMockVisitService } from '../../services/testutils/mocks'
+import { createMockVisitService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 
 let app: Express
 
-const prisonService = createMockPrisonService()
 const visitService = createMockVisitService()
 const bookerReference = TestData.bookerReference().value
-const prison = TestData.prisonDto()
 
 let sessionData: SessionData
 
@@ -23,9 +21,7 @@ beforeEach(() => {
     },
   } as SessionData
 
-  prisonService.getPrison.mockResolvedValue(prison)
-
-  app = appWithAllRoutes({ services: { prisonService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {
@@ -63,7 +59,6 @@ describe('Bookings homepage (future visits)', () => {
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).toHaveBeenCalledWith(futureVisitDetails.prisonId)
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -91,7 +86,6 @@ describe('Bookings homepage (future visits)', () => {
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -132,7 +126,6 @@ describe('Past visits page', () => {
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -159,7 +152,6 @@ describe('Past visits page', () => {
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -200,7 +192,6 @@ describe('Cancelled visits page', () => {
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
 
         expect(sessionData).toStrictEqual({
           booker: {
@@ -227,7 +218,6 @@ describe('Cancelled visits page', () => {
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
 
         expect(sessionData).toStrictEqual({
           booker: {
