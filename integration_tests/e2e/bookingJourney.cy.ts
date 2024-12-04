@@ -98,6 +98,7 @@ context('Booking journey', () => {
     // Start booking journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
+    cy.task('stubValidatePrisonerPass')
     homePage.startBooking()
 
     // Select visitors page - choose visitors
@@ -198,6 +199,7 @@ context('Booking journey', () => {
     // Start booking journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
+    cy.task('stubValidatePrisonerPass')
     homePage.startBooking()
 
     // Select visitors page - choose visitors

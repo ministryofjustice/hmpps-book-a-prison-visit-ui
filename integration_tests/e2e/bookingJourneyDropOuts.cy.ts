@@ -51,6 +51,7 @@ context('Booking journey - drop-out points', () => {
       // Start booking journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors })
+      cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
       // Select visitors page - choose visitors
@@ -87,6 +88,7 @@ context('Booking journey - drop-out points', () => {
       // Start booking journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors })
+      cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
       // Select visitors page - choose visitors
@@ -137,12 +139,41 @@ context('Booking journey - drop-out points', () => {
       // Start booking journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors })
+      cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getPrisonerName().contains('John Smith')
+      cy.contains('has used their allowance of visits')
       cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
+
+      // Back link back to Home page
+      cannotBookPage.backLink().click()
+      Page.verifyOnPage(HomePage)
+    })
+
+    it('should show drop-out page when prisoner has been released', () => {
+      const prisonerWithoutVOs = TestData.bookerPrisonerInfoDto({ availableVos: 0, nextAvailableVoDate: in10Days })
+
+      cy.task('stubGetBookerReference')
+      cy.task('stubGetPrisoners', { prisoners: [prisonerWithoutVOs] })
+      cy.signIn()
+
+      // Home page - prisoner shown
+      const homePage = Page.verifyOnPage(HomePage)
+
+      // Start booking journey
+      cy.task('stubGetPrison', prison)
+      cy.task('stubGetVisitors', { visitors })
+      cy.task('stubValidatePrisonerFail')
+      homePage.startBooking()
+
+      // Visit cannot be booked page
+      const cannotBookPage = Page.verifyOnPage(CannotBookPage)
+      cannotBookPage.getPrisonerName().contains('John Smith')
+      cannotBookPage.getPrisonName().contains(prison.prisonName)
+      cy.contains('have moved to another prison or been released')
 
       // Back link back to Home page
       cannotBookPage.backLink().click()

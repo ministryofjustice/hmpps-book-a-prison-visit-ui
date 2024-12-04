@@ -10,6 +10,7 @@ export type Prisoner = {
   firstName: string
   lastName: string
   prisonId: string
+  prisonName: string
   availableVos: number
   nextAvailableVoDate: string
 }
@@ -39,15 +40,18 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
-    return prisoners.map(prisoner => {
+
+    return prisoners.map(bookerPrisonerInfo => {
+      const { prisoner, availableVos, nextAvailableVoDate } = bookerPrisonerInfo
       return {
         prisonerDisplayId: randomUUID(),
-        prisonerNumber: prisoner.prisoner.prisonerNumber,
-        firstName: prisoner.prisoner.firstName,
-        lastName: prisoner.prisoner.lastName,
-        prisonId: prisoner.prisoner.prisonId,
-        availableVos: prisoner.availableVos,
-        nextAvailableVoDate: prisoner.nextAvailableVoDate,
+        prisonerNumber: prisoner.prisonerNumber,
+        firstName: prisoner.firstName,
+        lastName: prisoner.lastName,
+        prisonId: prisoner.prisonId,
+        prisonName: prisoner.prisonName,
+        availableVos,
+        nextAvailableVoDate,
       }
     })
   }
