@@ -14,7 +14,11 @@ let app: Express
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisonerWithoutVOs = TestData.prisoner({ availableVos: -1 })
+const prisonerWithoutVOs = TestData.prisoner({
+  availableVos: -1,
+  registeredPrisonId: 'BLI',
+  registeredPrisonName: 'Bristol (HMP)',
+})
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -79,7 +83,7 @@ describe('A visit cannot be booked', () => {
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
           expect($('main p').eq(0).text()).toContain('moved to another prison or been released')
 
           expect(sessionData.bookingJourney).toBe(undefined)
@@ -99,7 +103,7 @@ describe('A visit cannot be booked', () => {
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
           expect($('main p').eq(0).text()).toContain('not currently supported')
 
           expect(sessionData.bookingJourney).toBe(undefined)

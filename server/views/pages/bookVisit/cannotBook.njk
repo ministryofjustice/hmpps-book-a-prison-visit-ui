@@ -27,7 +27,7 @@
 
       {% if cannotBookReason == 'TRANSFER_OR_RELEASE' %}
         <p>
-          {{ prisonerName | safe }} is no longer at <span data-test="prison-name">{{ prisoner.prisonName }}</span>.
+          {{ prisonerName | safe }} is no longer at <span data-test="registered-prison-name">{{ prisoner.registeredPrisonName }}</span>.
           They may have moved to another prison or been released.
         </p>
 
@@ -43,8 +43,13 @@
 
       {% if cannotBookReason == 'UNSUPPORTED_PRISON' %}
         <p>
-          {{ prisonerName | safe }} is at <span data-test="prison-name">{{ prisoner.prisonName }}</span>,
-          which is not currently supported by this service.
+          {{ prisonerName | safe }} is at <span data-test="registered-prison-name">{{ prisoner.registeredPrisonName }}</span>.
+          This prison is not currently supported by this service.
+        </p>
+
+        <p>
+          Find out
+          <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales" target="_blank">how to book a visit at this prison</a>.
         </p>
       {% endif %}
     </div>

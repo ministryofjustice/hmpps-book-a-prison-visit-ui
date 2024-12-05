@@ -10,6 +10,6 @@ export default class CannotBookPage extends Page {
   // NO_VO_BALANCE
   getBookFromDate = (): PageElement => cy.get('[data-test="book-from-date"]')
 
-  // TRANSFER_OR_RELEASE
-  getPrisonName = (): PageElement => cy.get('[data-test="prison-name"]')
+  // TRANSFER_OR_RELEASE / UNSUPPORTED PRISON
+  getRegisteredPrisonName = (): PageElement => cy.get('[data-test="registered-prison-name"]')
 }
