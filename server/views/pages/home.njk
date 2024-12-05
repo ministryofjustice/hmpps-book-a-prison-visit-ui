@@ -9,13 +9,13 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      {% if prisoners | length %}
-        <p>Prisoner: <span data-test="prisoner-name">{{ prisoners[0].firstName | capitalize }} {{prisoners[0].lastName | capitalize }}</span></p>
+      {% if prisoner %}
+        <p>Prisoner: <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span></p>
 
         <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-          <input type="hidden" name="prisonerDisplayId" value="{{ prisoners[0].prisonerDisplayId }}">
+          <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
 
           {{ govukButton({
             text: "Start",

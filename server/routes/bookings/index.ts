@@ -19,7 +19,7 @@ export default function routes(services: Services): Router {
 
   const bookingsController = new BookingsController(services.visitService)
   const bookingDetailsController = new BookingDetailsController(services.prisonService)
-  const cancelVisitController = new CancelController(services.bookerService, services.visitService)
+  const cancelVisitController = new CancelController(services.visitService)
   const cancelVisitConfirmationController = new CancelConfirmedController()
 
   get(paths.BOOKINGS.HOME, bookingsController.view('future'))
