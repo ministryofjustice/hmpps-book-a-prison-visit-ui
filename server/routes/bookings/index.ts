@@ -18,7 +18,7 @@ export default function routes(services: Services): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const bookingsController = new BookingsController(services.visitService)
-  const bookingDetailsController = new BookingDetailsController(services.bookerService, services.prisonService)
+  const bookingDetailsController = new BookingDetailsController(services.prisonService)
   const cancelVisitController = new CancelController(services.bookerService, services.visitService)
   const cancelVisitConfirmationController = new CancelConfirmedController()
 
