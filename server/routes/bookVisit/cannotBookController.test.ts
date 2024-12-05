@@ -85,5 +85,25 @@ describe('A visit cannot be booked', () => {
           expect(sessionData.bookingJourney).toBe(undefined)
         })
     })
+
+    it('should render cannot book page and clear bookingJourney data - UNSUPPORTED_PRISON', () => {
+      sessionData.bookingJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
+          expect($('main p').eq(0).text()).toContain('not currently supported')
+
+          expect(sessionData.bookingJourney).toBe(undefined)
+        })
+    })
   })
 })

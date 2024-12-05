@@ -2,7 +2,7 @@ import { BadRequest } from 'http-errors'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import { BookerPrisonerValidationException } from '../data/orchestrationApiTypes'
+import { PrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
 const token = 'some token'
@@ -106,19 +106,19 @@ describe('Booker service', () => {
       )
     })
 
-    it('should return false if API returns an HTTP 422 prisoner validation error', async () => {
-      const prisonerReleasedException: SanitisedError<BookerPrisonerValidationException> = {
+    it('should return validationError if API returns an HTTP 422 response', async () => {
+      const prisonerReleasedException: SanitisedError<PrisonerValidationErrorResponse> = {
         name: 'Error',
         status: 422,
         message: '',
         stack: '',
-        data: { errorCodes: ['PRISONER_RELEASED'] },
+        data: { status: 422, validationError: 'PRISONER_RELEASED' },
       }
       orchestrationApiClient.validatePrisoner.mockRejectedValue(prisonerReleasedException)
 
       const result = await bookerService.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
 
-      expect(result).toBe(false)
+      expect(result).toBe('PRISONER_RELEASED')
       expect(orchestrationApiClient.validatePrisoner).toHaveBeenCalledWith(
         bookerReference.value,
         prisoner.prisonerNumber,

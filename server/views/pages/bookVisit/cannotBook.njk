@@ -40,6 +40,13 @@
           For help contacting them, you can use the <a href="https://www.gov.uk/find-prisoner" target="_blank">find a prisoner service</a>.
         </p>
       {% endif %}
+
+      {% if cannotBookReason == 'UNSUPPORTED_PRISON' %}
+        <p>
+          {{ prisonerName | safe }} is at <span data-test="prison-name">{{ prisoner.prisonName }}</span>,
+          which is not currently supported by this service.
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

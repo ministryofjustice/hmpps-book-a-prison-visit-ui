@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
+import { AuthDetailDto, PrisonerValidationErrorResponse, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
+import { SanitisedError } from '../sanitisedError'
 
 export type Prisoner = {
   prisonerDisplayId: string
@@ -56,7 +57,10 @@ export default class BookerService {
     })
   }
 
-  async validatePrisoner(bookerReference: string, prisonerNumber: string): Promise<boolean> {
+  async validatePrisoner(
+    bookerReference: string,
+    prisonerNumber: string,
+  ): Promise<true | PrisonerValidationErrorResponse['validationError']> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
@@ -64,8 +68,11 @@ export default class BookerService {
       await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
       return true
     } catch (error) {
-      if (error.status === 422) {
-        return false
+      if (
+        error.status === 422 &&
+        typeof (error as SanitisedError<PrisonerValidationErrorResponse>)?.data?.validationError === 'string'
+      ) {
+        return error.data.validationError
       }
       throw error
     }
