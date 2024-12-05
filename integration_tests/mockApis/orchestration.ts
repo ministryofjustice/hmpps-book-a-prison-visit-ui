@@ -222,9 +222,9 @@ export default {
     bookerReference = TestData.bookerReference(),
     prisoners = [],
   }: {
-    bookerReference: BookerReference
-    prisoners: BookerPrisonerInfoDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: BookerReference
+    prisoners?: BookerPrisonerInfoDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
