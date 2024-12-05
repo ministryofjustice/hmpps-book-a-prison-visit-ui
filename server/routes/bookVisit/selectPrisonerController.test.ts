@@ -8,7 +8,7 @@ import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { Prisoner } from '../../services/bookerService'
 import { createMockBookerService } from '../../services/testutils/mocks'
-import { PrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
+import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { CannotBookReason } from '../../@types/bapv'
 
 jest.mock('../../../logger')
@@ -98,7 +98,9 @@ describe('Select prisoner', () => {
     // testing all these scenarios with no VO balance as validation failures should take precedence
     const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
 
-    it.each(<{ errorCode: PrisonerValidationErrorResponse['validationError']; cannotBookReason: CannotBookReason }[]>[
+    it.each(<
+      { errorCode: BookerPrisonerValidationErrorResponse['validationError']; cannotBookReason: CannotBookReason }[]
+    >[
       { errorCode: 'PRISONER_RELEASED', cannotBookReason: 'TRANSFER_OR_RELEASE' },
       { errorCode: 'PRISONER_TRANSFERRED_SUPPORTED_PRISON', cannotBookReason: 'TRANSFER_OR_RELEASE' },
       { errorCode: 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON', cannotBookReason: 'TRANSFER_OR_RELEASE' },

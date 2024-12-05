@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, PrisonerValidationErrorResponse, VisitorInfoDto } from '../data/orchestrationApiTypes'
+import { AuthDetailDto, BookerPrisonerValidationErrorResponse, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 import { SanitisedError } from '../sanitisedError'
 
@@ -64,7 +64,7 @@ export default class BookerService {
   async validatePrisoner(
     bookerReference: string,
     prisonerNumber: string,
-  ): Promise<true | PrisonerValidationErrorResponse['validationError']> {
+  ): Promise<true | BookerPrisonerValidationErrorResponse['validationError']> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
@@ -74,7 +74,7 @@ export default class BookerService {
     } catch (error) {
       if (
         error.status === 422 &&
-        typeof (error as SanitisedError<PrisonerValidationErrorResponse>)?.data?.validationError === 'string'
+        typeof (error as SanitisedError<BookerPrisonerValidationErrorResponse>)?.data?.validationError === 'string'
       ) {
         return error.data.validationError
       }

@@ -9,7 +9,7 @@ import {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
-  PrisonerValidationErrorResponse,
+  BookerPrisonerValidationErrorResponse,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -262,7 +262,7 @@ export default {
   }: {
     bookerReference?: BookerReference
     prisonerNumber?: string
-    validationError?: PrisonerValidationErrorResponse['validationError'][number]
+    validationError?: BookerPrisonerValidationErrorResponse['validationError'][number]
   } = {}): SuperAgentRequest =>
     stubFor({
       request: {

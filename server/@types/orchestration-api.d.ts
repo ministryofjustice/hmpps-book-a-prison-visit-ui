@@ -1457,19 +1457,19 @@ export interface components {
       firstBookedDateTime: string
     }
     PageVisitDto: {
-      /** Format: int32 */
-      totalPages?: number
       /** Format: int64 */
       totalElements?: number
+      /** Format: int32 */
+      totalPages?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
-      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
       first?: boolean
       last?: boolean
       empty?: boolean
@@ -1911,7 +1911,7 @@ export interface components {
        */
       prisonName: string
     }
-    PrisonerValidationErrorResponse: {
+    BookerPrisonerValidationErrorResponse: {
       /** Format: int32 */
       status: number
       /** Format: int32 */
@@ -4442,7 +4442,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': components['schemas']['PrisonerValidationErrorResponse']
+          'application/json': components['schemas']['BookerPrisonerValidationErrorResponse']
         }
       }
     }

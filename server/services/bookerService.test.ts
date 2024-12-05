@@ -2,7 +2,7 @@ import { BadRequest } from 'http-errors'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import { PrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
+import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
 const token = 'some token'
@@ -111,7 +111,7 @@ describe('Booker service', () => {
     })
 
     it('should return validationError if API returns an HTTP 422 response', async () => {
-      const prisonerReleasedException: SanitisedError<PrisonerValidationErrorResponse> = {
+      const prisonerReleasedException: SanitisedError<BookerPrisonerValidationErrorResponse> = {
         name: 'Error',
         status: 422,
         message: '',
