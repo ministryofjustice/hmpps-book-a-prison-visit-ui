@@ -36,6 +36,7 @@ export const user: Express.User = {
 }
 
 const bookerReference = TestData.bookerReference().value
+const prisoners = [TestData.prisoner()]
 
 export type FlashErrors = FieldValidationError[]
 export type FlashFormValues = Record<string, string | string[] | number[]>
@@ -62,7 +63,7 @@ function appSetup(
   app.use((req, res, next) => {
     if (!sessionData.booker && populateBooker) {
       // eslint-disable-next-line no-param-reassign
-      sessionData.booker = { reference: bookerReference } // emulate populateCurrentBooker()
+      sessionData.booker = { reference: bookerReference, prisoners } // emulate populateCurrentBooker()
     }
     req.session = sessionData as Session & Partial<SessionData>
     req.user = userSupplier()

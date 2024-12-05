@@ -4,7 +4,7 @@ import { Prisoner, Visitor } from '../services/bookerService'
 
 export type Booker = {
   reference: string
-  prisoners?: Prisoner[] // prisoners this booker can book for
+  prisoners: Prisoner[] // prisoners this booker can book for
 }
 
 // data that is built up during a booking journey
