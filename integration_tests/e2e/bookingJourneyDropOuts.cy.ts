@@ -172,7 +172,7 @@ context('Booking journey - drop-out points', () => {
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getPrisonerName().contains('John Smith')
-      cannotBookPage.getPrisonName().contains(prison.prisonName)
+      cannotBookPage.getRegisteredPrisonName().contains(prison.prisonName)
       cy.contains('have moved to another prison or been released')
 
       // Back link back to Home page

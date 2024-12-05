@@ -21,18 +21,29 @@ export default class SelectPrisonerController {
 
       req.session.bookingJourney = { prisoner }
 
-      const prisonerIsValid = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
-      if (!prisonerIsValid) {
+      const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
+
+      if (validationResult === true && prisoner.availableVos > 0) {
+        return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
+      }
+
+      if (
+        validationResult === 'PRISONER_RELEASED' ||
+        validationResult === 'PRISONER_TRANSFERRED_SUPPORTED_PRISON' ||
+        validationResult === 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON'
+      ) {
         req.session.bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
-        return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
       }
 
-      if (prisoner.availableVos <= 0) {
+      if (validationResult === 'REGISTERED_PRISON_NOT_SUPPORTED') {
+        req.session.bookingJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+      }
+
+      if (validationResult === true) {
         req.session.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
-        return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
       }
 
-      return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
+      return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
     }
   }
 }

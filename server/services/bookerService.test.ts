@@ -2,7 +2,7 @@ import { BadRequest } from 'http-errors'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import { BookerPrisonerValidationException } from '../data/orchestrationApiTypes'
+import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
 const token = 'some token'
@@ -59,6 +59,8 @@ describe('Booker service', () => {
         lastName: 'L1',
         prisonId: 'P1',
         prisonName: 'P1 (HMP)',
+        registeredPrisonId: 'RP1',
+        registeredPrisonName: 'RP1 (HMP)',
         availableVos: 1,
         nextAvailableVoDate: '2024-06-01',
       }
@@ -68,6 +70,8 @@ describe('Booker service', () => {
         lastName: 'L2',
         prisonId: 'P2',
         prisonName: 'P2 (HMP)',
+        registeredPrisonId: 'RP2',
+        registeredPrisonName: 'RP2 (HMP)',
         availableVos: 2,
         nextAvailableVoDate: '2024-06-02',
       }
@@ -106,19 +110,19 @@ describe('Booker service', () => {
       )
     })
 
-    it('should return false if API returns an HTTP 422 prisoner validation error', async () => {
-      const prisonerReleasedException: SanitisedError<BookerPrisonerValidationException> = {
+    it('should return validationError if API returns an HTTP 422 response', async () => {
+      const prisonerReleasedException: SanitisedError<BookerPrisonerValidationErrorResponse> = {
         name: 'Error',
         status: 422,
         message: '',
         stack: '',
-        data: { errorCodes: ['PRISONER_RELEASED'] },
+        data: { status: 422, validationError: 'PRISONER_RELEASED' },
       }
       orchestrationApiClient.validatePrisoner.mockRejectedValue(prisonerReleasedException)
 
       const result = await bookerService.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
 
-      expect(result).toBe(false)
+      expect(result).toBe('PRISONER_RELEASED')
       expect(orchestrationApiClient.validatePrisoner).toHaveBeenCalledWith(
         bookerReference.value,
         prisoner.prisonerNumber,

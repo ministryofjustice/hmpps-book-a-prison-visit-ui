@@ -14,7 +14,7 @@ export type BookingOrchestrationRequestDto = components['schemas']['BookingOrche
 
 export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
 
-export type BookerPrisonerValidationException = components['schemas']['BookerPrisonerValidationException']
+export type BookerPrisonerValidationErrorResponse = components['schemas']['BookerPrisonerValidationErrorResponse']
 
 export type BookerReference = components['schemas']['BookerReference']
 
