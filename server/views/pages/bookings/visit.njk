@@ -6,8 +6,6 @@
 
 {% set pageTitle = "Visit booking details" %}
 
-{% set backLinkHref = paths.BOOKINGS.PAST if type === 'past' else (paths.BOOKINGS.CANCELLED if type === 'cancelled' else paths.BOOKINGS.HOME) %}
-
 {% block content %}
 
   <div class="govuk-grid-row">
@@ -58,7 +56,7 @@
 
       <h2 class="govuk-heading-m">Prisoner</h2>
 
-      <p data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</p>
+      <p data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</p>
 
       <h2 class="govuk-heading-m">Visitors</h2>
 

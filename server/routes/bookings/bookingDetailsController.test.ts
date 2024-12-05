@@ -4,14 +4,13 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { randomUUID } from 'crypto'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
+import { createMockPrisonService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { VisitDetails } from '../../services/visitService'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const prisonService = createMockPrisonService()
 
 const bookerReference = TestData.bookerReference().value
@@ -37,7 +36,7 @@ beforeEach(() => {
 
   prisonService.getPrison.mockResolvedValue(prison)
 
-  app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+  app = appWithAllRoutes({ services: { prisonService }, sessionData })
 })
 
 afterEach(() => {
@@ -94,7 +93,6 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
@@ -155,7 +153,6 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
@@ -188,7 +185,6 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
@@ -237,24 +233,6 @@ describe('View a single booking', () => {
   })
 
   describe('Validation', () => {
-    it('should look up prisoner details if not present in session', () => {
-      sessionData.booker.prisoners = []
-      bookings.type = 'future'
-
-      bookerService.getPrisoners.mockResolvedValue([prisoner])
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('h1').text()).toBe('Visit booking details')
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
-
-          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
-        })
-    })
-
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
       bookings.type = 'future'
       return request(app).get(`${paths.BOOKINGS.VISIT}/NOT-A-UUID`).expect(302).expect('location', paths.BOOKINGS.HOME)
