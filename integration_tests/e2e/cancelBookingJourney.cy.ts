@@ -27,6 +27,7 @@ context('Cancel booking journey', () => {
   })
 
   it('should navigate to Future bookings page, then view visit details and cancel it', () => {
+    cy.task('stubValidatePrisonerPass')
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
