@@ -96,4 +96,16 @@ export default class BookerService {
     const allVisitors = await this.getVisitors(bookerReference, prisonerNumber)
     return allVisitors.filter(visitor => visitor.visitorRestrictions.length === 0)
   }
+
+  async isPrisonerTransferredOrReleased(bookerReference: string, prisonerNumber: string): Promise<boolean> {
+    const validationResult = await this.validatePrisoner(bookerReference, prisonerNumber)
+    if (
+      validationResult === 'PRISONER_RELEASED' ||
+      validationResult === 'PRISONER_TRANSFERRED_SUPPORTED_PRISON' ||
+      validationResult === 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON'
+    ) {
+      return true
+    }
+    return false
+  }
 }
