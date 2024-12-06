@@ -35,6 +35,7 @@ beforeEach(() => {
     bookings,
   } as SessionData
 
+  bookerService.isPrisonerTransferredOrReleased.mockResolvedValue(false)
   prisonService.getPrison.mockResolvedValue(prison)
 
   app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
@@ -70,6 +71,7 @@ describe('View a single booking', () => {
           expect($('h1').text()).toBe('Visit booking details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test=prisoner-transferred-or-released]').length).toBe(0)
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -94,8 +96,29 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(bookerService.isPrisonerTransferredOrReleased).toHaveBeenCalledWith(
+            bookerReference,
+            prisoner.prisonerNumber,
+          )
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should render the booking details page - with prisoner transfer or release banner', () => {
+      bookings.type = 'future'
+      sessionData.booker.prisoners[0].registeredPrisonId = 'BLI'
+      sessionData.booker.prisoners[0].registeredPrisonName = 'Bristol (HMP)'
+
+      bookerService.isPrisonerTransferredOrReleased.mockResolvedValue(true)
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=prisoner-transferred-or-released]').length).toBe(1)
+          expect($('[data-test=prisoner-transferred-or-released] [data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
         })
     })
 
@@ -145,6 +168,10 @@ describe('View a single booking', () => {
           expect($('h1').text()).toBe('Visit booking details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test=prisoner-transferred-or-released]').length).toBe(0)
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
+          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
 
           expect($('[data-test="prison-name"]').length).toBeFalsy()
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
@@ -155,7 +182,7 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(bookerService.isPrisonerTransferredOrReleased).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
@@ -177,6 +204,10 @@ describe('View a single booking', () => {
           expect($('h1').text()).toBe('Visit booking details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test=prisoner-transferred-or-released]').length).toBe(0)
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
+          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
           expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by the prison.')
 
           expect($('[data-test="prison-name"]').length).toBeFalsy()
@@ -188,7 +219,7 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
-          expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+          expect(bookerService.isPrisonerTransferredOrReleased).not.toHaveBeenCalled()
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
@@ -237,24 +268,6 @@ describe('View a single booking', () => {
   })
 
   describe('Validation', () => {
-    it('should look up prisoner details if not present in session', () => {
-      sessionData.booker.prisoners = []
-      bookings.type = 'future'
-
-      bookerService.getPrisoners.mockResolvedValue([prisoner])
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('h1').text()).toBe('Visit booking details')
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
-
-          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
-        })
-    })
-
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
       bookings.type = 'future'
       return request(app).get(`${paths.BOOKINGS.VISIT}/NOT-A-UUID`).expect(302).expect('location', paths.BOOKINGS.HOME)

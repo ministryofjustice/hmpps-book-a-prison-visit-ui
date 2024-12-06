@@ -24,7 +24,7 @@ export default function routes(services: Services): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
-  const selectPrisonerController = new SelectPrisonerController()
+  const selectPrisonerController = new SelectPrisonerController(services.bookerService)
   const cannotBookController = new CannotBookController()
   const selectVisitorsController = new SelectVisitorsController(
     services.bookerService,

@@ -157,6 +157,14 @@ export default class OrchestrationApiClient {
     return this.restClient.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` })
   }
 
+  async validatePrisoner(bookerReference: string, prisonerNumber: string): Promise<true> {
+    await this.restClient.get({
+      path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerNumber}/validate`,
+      raw: true, // needed because no JSON response body: an HTTP 200 is true
+    })
+    return true // API will return HTTP 422 for invalid prisoner, which will be caught in service layer
+  }
+
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
     return this.restClient.get({
       path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerNumber}/permitted/visitors`,

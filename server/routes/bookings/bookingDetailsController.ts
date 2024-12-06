@@ -13,35 +13,41 @@ export default class BookingDetailsController {
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res) => {
       const { booker, bookings } = req.session
+      const prisoner = booker.prisoners[0]
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
-      const prisoner = booker.prisoners?.[0]
-        ? booker.prisoners?.[0]
-        : (await this.bookerService.getPrisoners(booker.reference))?.[0]
+      const showTransferOrReleaseBanner =
+        type === 'future' &&
+        prisoner &&
+        (await this.bookerService.isPrisonerTransferredOrReleased(booker.reference, prisoner.prisonerNumber))
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
-
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
-      // FIXME prison details no longer used? May still be needed when VB-4718 implemented
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
-      const showCancel = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
+      const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
+
+      const backLinkHref =
+        (type === 'past' && paths.BOOKINGS.PAST) ||
+        (type === 'cancelled' && paths.BOOKINGS.CANCELLED) ||
+        paths.BOOKINGS.HOME
 
       return res.render('pages/bookings/visit', {
-        booker,
+        backLinkHref,
         prison,
         prisoner,
         type,
         visit,
-        showCancel,
+        showTransferOrReleaseBanner,
+        showCancelButton,
         showServiceNav: true,
       })
     }

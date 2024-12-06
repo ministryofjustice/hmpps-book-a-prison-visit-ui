@@ -1,27 +1,20 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
-import { BookerService, VisitService } from '../../../services'
+import { VisitService } from '../../../services'
 import paths from '../../../constants/paths'
 import { isMobilePhoneNumber } from '../../../utils/utils'
 
 export default class CancelController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly visitService: VisitService,
-  ) {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker, bookings } = req.session
+      const { bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
         return res.redirect(paths.BOOKINGS.HOME)
       }
-
-      const prisoner = booker.prisoners?.[0]
-        ? booker.prisoners?.[0]
-        : (await this.bookerService.getPrisoners(booker.reference))?.[0]
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
@@ -30,8 +23,6 @@ export default class CancelController {
 
       return res.render('pages/bookings/cancel/cancel', {
         errors: req.flash('errors'),
-        booker,
-        prisoner,
         visit,
         visitDisplayId,
         showServiceNav: true,

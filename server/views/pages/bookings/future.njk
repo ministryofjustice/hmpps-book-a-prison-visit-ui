@@ -1,6 +1,6 @@
-{% set activeLink = 'bookings-link' %}
 {% extends "../../partials/layout.njk" %}
 
+{% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Bookings" %}
 
 {% block content %}
@@ -12,6 +12,10 @@
       <p>Only bookings made using GOV.UK One Login are shown.</p>
 
       <h2 class="govuk-heading-m">Future visits</h2>
+
+      {% if showTransferOrReleaseBanner %}
+        {%- include "partials/prisonerTransferOrReleaseBanner.njk" -%}
+      {% endif %}
 
       {% if visits | length %}
         {% for visit in visits %}
