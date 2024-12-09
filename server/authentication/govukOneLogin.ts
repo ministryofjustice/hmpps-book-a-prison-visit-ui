@@ -71,6 +71,9 @@ async function init(): Promise<{ client: Client; idTokenStore: TokenStore }> {
         ui_locales: 'en',
       },
       usePKCE: false,
+      extras: {
+        clientAssertionPayload: { aud: issuer.metadata.token_endpoint },
+      },
     },
     verify,
   )
