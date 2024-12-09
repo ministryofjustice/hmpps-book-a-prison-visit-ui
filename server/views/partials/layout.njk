@@ -23,9 +23,7 @@
   }
   ] if showServiceNav
 %}
-{% set activeLinkId -%}
-  {{- activeLink if activeLink else 'home-link' -}}
-{%- endset %}
+{% set activeLinkId = activeLink if activeLink else "home-link" %}
 {% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 

@@ -7,10 +7,14 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { Prisoner } from '../../services/bookerService'
+import { createMockBookerService } from '../../services/testutils/mocks'
+import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
+import { CannotBookReason } from '../../@types/bapv'
 
 jest.mock('../../../logger')
 
 let app: Express
+const bookerService = createMockBookerService()
 let sessionData: SessionData
 
 afterEach(() => {
@@ -27,7 +31,7 @@ describe('Select prisoner', () => {
       booker: { reference: bookerReference },
     } as SessionData
 
-    app = appWithAllRoutes({ services: {}, sessionData })
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -39,13 +43,15 @@ describe('Select prisoner', () => {
   })
 
   it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
+    bookerService.validatePrisoner.mockResolvedValue(true)
+
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
       bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
       bookingConfirmed,
     } as SessionData
 
-    app = appWithAllRoutes({ services: {}, sessionData })
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -70,7 +76,7 @@ describe('Select prisoner', () => {
       booker: { reference: bookerReference, prisoners: [prisoner] },
     } as SessionData
 
-    app = appWithAllRoutes({ services: {}, sessionData })
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -88,29 +94,74 @@ describe('Select prisoner', () => {
       })
   })
 
-  it('should redirect to Visit cannot be booked page if selected prisoner has no VOs', () => {
+  describe('Prisoner validation', () => {
+    // testing all these scenarios with no VO balance as validation failures should take precedence
     const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
-    sessionData = {
-      booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
-    } as SessionData
 
-    app = appWithAllRoutes({ services: {}, sessionData })
+    it.each(<
+      { errorCode: BookerPrisonerValidationErrorResponse['validationError']; cannotBookReason: CannotBookReason }[]
+    >[
+      { errorCode: 'PRISONER_RELEASED', cannotBookReason: 'TRANSFER_OR_RELEASE' },
+      { errorCode: 'PRISONER_TRANSFERRED_SUPPORTED_PRISON', cannotBookReason: 'TRANSFER_OR_RELEASE' },
+      { errorCode: 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON', cannotBookReason: 'TRANSFER_OR_RELEASE' },
+      { errorCode: 'REGISTERED_PRISON_NOT_SUPPORTED', cannotBookReason: 'UNSUPPORTED_PRISON' },
+    ])(
+      'if prisoner validation fails with $errorCode, redirect to cannot book with code $cannotBookReason',
+      ({ errorCode, cannotBookReason }) => {
+        bookerService.validatePrisoner.mockResolvedValue(errorCode)
 
-    return request(app)
-      .post(paths.BOOK_VISIT.SELECT_PRISONER)
-      .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
-      .expect(302)
-      .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
-      .expect(() => {
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-            prisoners: [prisonerWithNoVos],
-          },
-          bookingJourney: {
-            prisoner: prisonerWithNoVos,
-          },
-        } as SessionData)
-      })
+        sessionData = {
+          booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
+        } as SessionData
+
+        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+        return request(app)
+          .post(paths.BOOK_VISIT.SELECT_PRISONER)
+          .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+          .expect(() => {
+            expect(sessionData).toStrictEqual({
+              booker: {
+                reference: bookerReference,
+                prisoners: [prisonerWithNoVos],
+              },
+              bookingJourney: {
+                prisoner: prisonerWithNoVos,
+                cannotBookReason,
+              },
+            } as SessionData)
+          })
+      },
+    )
+
+    it('should redirect to cannot book page with code NO_VO_BALANCE if prisoner has no VOs', () => {
+      bookerService.validatePrisoner.mockResolvedValue(true)
+
+      sessionData = {
+        booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
+      } as SessionData
+
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisonerWithNoVos],
+            },
+            bookingJourney: {
+              prisoner: prisonerWithNoVos,
+              cannotBookReason: 'NO_VO_BALANCE',
+            },
+          } as SessionData)
+        })
+    })
   })
 })

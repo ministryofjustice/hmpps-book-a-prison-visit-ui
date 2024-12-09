@@ -14,13 +14,17 @@ let app: Express
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisonerWithoutVOs = TestData.prisoner({ availableVos: -1 })
+const prisonerWithoutVOs = TestData.prisoner({
+  availableVos: -1,
+  registeredPrisonId: 'BLI',
+  registeredPrisonName: 'Bristol (HMP)',
+})
 
 afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('A visit cannot be booked (no VOs)', () => {
+describe('A visit cannot be booked', () => {
   describe(`GET ${paths.BOOK_VISIT.CANNOT_BOOK}`, () => {
     beforeEach(() => {
       sessionData = {
@@ -28,15 +32,15 @@ describe('A visit cannot be booked (no VOs)', () => {
           reference: bookerReference,
           prisoners: [prisonerWithoutVOs],
         },
-        bookingJourney: { prisoner: prisonerWithoutVOs },
+        bookingJourney: {
+          prisoner: prisonerWithoutVOs,
+        },
       } as SessionData
 
       app = appWithAllRoutes({ sessionData })
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
-
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(302)
@@ -46,7 +50,9 @@ describe('A visit cannot be booked (no VOs)', () => {
         })
     })
 
-    it('should render drop-out page if the selected prisoner has no VOs and clear bookingJourney data', () => {
+    it('should render cannot book page and clear bookingJourney data - NO_VO_BALANCE', () => {
+      sessionData.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
+
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect('Content-Type', /html/)
@@ -59,6 +65,46 @@ describe('A visit cannot be booked (no VOs)', () => {
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
           expect($('main p').eq(0).text()).toContain('has used their allowance of visits')
           expect($('[data-test=book-from-date]').text().trim()).toBe('Monday 1 July 2024')
+
+          expect(sessionData.bookingJourney).toBe(undefined)
+        })
+    })
+
+    it('should render cannot book page and clear bookingJourney data - TRANSFER_OR_RELEASE', () => {
+      sessionData.bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
+          expect($('main p').eq(0).text()).toContain('moved to another prison or been released')
+
+          expect(sessionData.bookingJourney).toBe(undefined)
+        })
+    })
+
+    it('should render cannot book page and clear bookingJourney data - UNSUPPORTED_PRISON', () => {
+      sessionData.bookingJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
+          expect($('main p').eq(0).text()).toContain('not currently supported')
 
           expect(sessionData.bookingJourney).toBe(undefined)
         })

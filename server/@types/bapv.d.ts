@@ -4,13 +4,16 @@ import { Prisoner, Visitor } from '../services/bookerService'
 
 export type Booker = {
   reference: string
-  prisoners?: Prisoner[] // prisoners this booker can book for
+  prisoners: Prisoner[] // prisoners this booker can book for
 }
 
 // data that is built up during a booking journey
 export type BookingJourney = {
   // selected prisoner for this visit
   prisoner: Prisoner
+
+  // may be set during journey to flag why a visit cannot be booked
+  cannotBookReason?: CannotBookReason
 
   // prison for this visit
   prison?: PrisonDto
@@ -56,3 +59,5 @@ export type BookingCancelled = {
   hasEmail: boolean
   hasMobile: boolean
 }
+
+export type CannotBookReason = 'NO_VO_BALANCE' | 'TRANSFER_OR_RELEASE' | 'UNSUPPORTED_PRISON'
