@@ -242,7 +242,7 @@ describe('Choose visit time', () => {
 
           expect($('main p').eq(0).text()).toContain('no available visit times')
           expect($('[data-test=return-to-home]').text()).toBe('return to the homepage')
-          expect($('[data-test=return-to-home]').attr('href')).toBe('/')
+          expect($('[data-test=return-to-home]').attr('href')).toBe(paths.HOME)
 
           expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
             prisonId: prison.code,

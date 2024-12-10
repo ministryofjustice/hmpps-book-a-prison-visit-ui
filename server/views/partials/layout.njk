@@ -7,19 +7,19 @@
 
 {% set navigationItems = [
   {
-    href: "/",
-    text: 'Home',
-    id: 'home-link'
+    href: paths.HOME,
+    text: "Home",
+    id: "home-link"
   },
   {
-    href: '/bookings',
-    text: 'Bookings',
-    id: 'bookings-link'
+    href: paths.BOOKINGS.HOME,
+    text: "Bookings",
+    id: "bookings-link"
   },
   {
-    href: '/visitors',
-    text: 'Visitors',
-    id: 'visitors-link'
+    href: paths.VISITORS,
+    text: "Visitors",
+    id: "visitors-link"
   }
   ] if showServiceNav
 %}
@@ -75,7 +75,7 @@
   }) }}
   {{ govukServiceNavigation({
     serviceName: applicationName,
-    serviceUrl: "/"
+    serviceUrl: paths.HOME
   }) }}
 {% endif %}
 {% endblock %}
