@@ -1,31 +1,23 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, matchedData, param, validationResult } from 'express-validator'
 import { SessionData } from 'express-session'
-import { BookerService, PrisonService } from '../../services'
+import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 
 export default class BookingDetailsController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly prisonService: PrisonService,
-  ) {}
+  public constructor(private readonly prisonService: PrisonService) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res) => {
-      const { booker, bookings } = req.session
-      const prisoner = booker.prisoners[0]
+      const { bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
-      const showTransferOrReleaseBanner =
-        type === 'future' &&
-        prisoner &&
-        (await this.bookerService.isPrisonerTransferredOrReleased(booker.reference, prisoner.prisonerNumber))
-
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
+
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
@@ -33,7 +25,7 @@ export default class BookingDetailsController {
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
-      const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
+      const showCancel = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       const backLinkHref =
         (type === 'past' && paths.BOOKINGS.PAST) ||
@@ -43,11 +35,9 @@ export default class BookingDetailsController {
       return res.render('pages/bookings/visit', {
         backLinkHref,
         prison,
-        prisoner,
         type,
         visit,
-        showTransferOrReleaseBanner,
-        showCancelButton,
+        showCancel,
         showServiceNav: true,
       })
     }

@@ -13,10 +13,6 @@
 
       <h2 class="govuk-heading-m">Future visits</h2>
 
-      {% if showTransferOrReleaseBanner %}
-        {%- include "partials/prisonerTransferOrReleaseBanner.njk" -%}
-      {% endif %}
-
       {% if visits | length %}
         {% for visit in visits %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>

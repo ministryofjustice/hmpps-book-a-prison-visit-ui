@@ -184,25 +184,4 @@ describe('Booker service', () => {
       expect(results).toStrictEqual(expectedVisitors)
     })
   })
-
-  describe('isPrisonerTransferredOrReleased', () => {
-    it.each(<
-      { validationResult: Awaited<ReturnType<typeof bookerService.validatePrisoner>>; expectedResponse: boolean }[]
-    >[
-      { validationResult: true, expectedResponse: false },
-      { validationResult: 'PRISONER_RELEASED', expectedResponse: true },
-      { validationResult: 'PRISONER_TRANSFERRED_SUPPORTED_PRISON', expectedResponse: true },
-      { validationResult: 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON', expectedResponse: true },
-      { validationResult: 'REGISTERED_PRISON_NOT_SUPPORTED', expectedResponse: false },
-    ])(
-      'should return $expectedResponse if prisoner validation returns $validationResult',
-      async ({ validationResult, expectedResponse: response }) => {
-        bookerService.validatePrisoner = async () => validationResult // i.e. mock validatePrisoner
-
-        const result = await bookerService.isPrisonerTransferredOrReleased('bookerReference', 'prisonerNumber')
-
-        expect(result).toBe(response)
-      },
-    )
-  })
 })

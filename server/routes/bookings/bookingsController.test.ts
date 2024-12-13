@@ -3,33 +3,35 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
+import { createMockVisitService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 const bookerReference = TestData.bookerReference().value
 
 let sessionData: SessionData
 
 beforeEach(() => {
-  sessionData = {} as SessionData
+  sessionData = {
+    booker: {
+      reference: bookerReference,
+    },
+  } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Bookings homepage (future visits list)', () => {
+describe('Bookings homepage (future visits)', () => {
   const futureVisitDetails = TestData.visitDetails()
 
   it('should render the bookings home page - with a future visit', () => {
-    bookerService.isPrisonerTransferredOrReleased.mockResolvedValue(false)
     visitService.getFuturePublicVisits.mockResolvedValue([futureVisitDetails])
 
     return request(app)
@@ -40,8 +42,6 @@ describe('Bookings homepage (future visits list)', () => {
         expect($('title').text()).toMatch(/^Bookings -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
-        expect($('h1').siblings('h2').first().text()).toBe('Future visits')
-        expect($('[data-test=prisoner-transferred-or-released]').length).toBe(0)
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -58,21 +58,21 @@ describe('Bookings homepage (future visits list)', () => {
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
-        expect(bookerService.isPrisonerTransferredOrReleased).toHaveBeenCalledWith(
-          bookerReference,
-          TestData.prisoner().prisonerNumber,
-        )
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'future',
-          visits: [futureVisitDetails],
-        } as SessionData['bookings'])
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'future',
+            visits: [futureVisitDetails],
+          },
+        } as SessionData)
       })
   })
 
   it('should render the bookings home page - with no future visits', () => {
-    bookerService.isPrisonerTransferredOrReleased.mockResolvedValue(false)
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
@@ -87,38 +87,20 @@ describe('Bookings homepage (future visits list)', () => {
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'future',
-          visits: [],
-        } as SessionData['bookings'])
-      })
-  })
-
-  it('should render the bookings home page - with prisoner transfer or release banner', () => {
-    sessionData.booker = {
-      reference: TestData.bookerReference().value,
-      prisoners: [TestData.prisoner({ registeredPrisonId: 'BLI', registeredPrisonName: 'Bristol (HMP)' })],
-    }
-    bookerService.isPrisonerTransferredOrReleased.mockResolvedValue(true)
-    visitService.getFuturePublicVisits.mockResolvedValue([futureVisitDetails])
-
-    return request(app)
-      .get(paths.BOOKINGS.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-
-        expect($('h1').text()).toBe('Bookings')
-        expect($('h1').siblings('h2').first().text()).toBe('Future visits')
-
-        expect($('[data-test=prisoner-transferred-or-released]').length).toBe(1)
-        expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-        expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'future',
+            visits: [],
+          },
+        } as SessionData)
       })
   })
 })
 
-describe('Past visits list page', () => {
+describe('Past visits page', () => {
   const pastVisitDetails = TestData.visitDetails()
 
   it('should render the past visits page', () => {
@@ -143,13 +125,17 @@ describe('Past visits list page', () => {
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
-        expect(bookerService.isPrisonerTransferredOrReleased).not.toHaveBeenCalled()
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'past',
-          visits: [pastVisitDetails],
-        } as SessionData['bookings'])
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'past',
+            visits: [pastVisitDetails],
+          },
+        } as SessionData)
       })
   })
 
@@ -167,15 +153,20 @@ describe('Past visits list page', () => {
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'past',
-          visits: [],
-        } as SessionData['bookings'])
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'past',
+            visits: [],
+          },
+        } as SessionData)
       })
   })
 })
 
-describe('Cancelled visits list page', () => {
+describe('Cancelled visits page', () => {
   const cancelledVisitDetails = TestData.visitDetails({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
 
   it('should render the cancelled visits page', () => {
@@ -200,13 +191,17 @@ describe('Cancelled visits list page', () => {
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
-        expect(bookerService.isPrisonerTransferredOrReleased).not.toHaveBeenCalled()
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'cancelled',
-          visits: [cancelledVisitDetails],
-        } as SessionData['bookings'])
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'cancelled',
+            visits: [cancelledVisitDetails],
+          },
+        } as SessionData)
       })
   })
 
@@ -224,10 +219,15 @@ describe('Cancelled visits list page', () => {
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
-          type: 'cancelled',
-          visits: [],
-        } as SessionData['bookings'])
+        expect(sessionData).toStrictEqual({
+          booker: {
+            reference: bookerReference,
+          },
+          bookings: {
+            type: 'cancelled',
+            visits: [],
+          },
+        } as SessionData)
       })
   })
 })

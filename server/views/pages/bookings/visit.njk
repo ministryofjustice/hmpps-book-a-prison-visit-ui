@@ -14,10 +14,6 @@
 
       <p>Booking reference: <span data-test="booking-reference">{{ visit.reference }}</span></p>
 
-      {% if showTransferOrReleaseBanner %}
-        {%- include "partials/prisonerTransferOrReleaseBanner.njk" -%}
-      {% endif %}
-
       {% if visit.visitStatus === "CANCELLED" %}
 
         {% set status = visit.outcomeStatus %}
@@ -36,7 +32,7 @@
 
         {% set cancelledVisitBannerHtml %}
           {{ govukWarningText({
-            classes: "govuk-!-margin-bottom-0 govuk-!-padding-left-1",
+            classes: "govuk-!-margin-bottom-0 govuk-!-padding-left-4",
             html: '<span data-test="visit-cancelled-type">' + cancelledBy + '</span>',
             iconFallbackText: "Warning"
           }) }}
@@ -86,7 +82,7 @@
         <p data-test="main-contact-no-details">No contact details provided</p>
       {% endif %}
 
-      {% if showCancelButton %}
+      {% if showCancel %}
         {{ govukButton({
           text: "Cancel booking",
           classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-7 govuk-button--secondary",
