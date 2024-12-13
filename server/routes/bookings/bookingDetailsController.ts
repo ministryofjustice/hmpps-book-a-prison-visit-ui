@@ -25,7 +25,7 @@ export default class BookingDetailsController {
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
-      const showCancel = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
+      const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       const backLinkHref =
         (type === 'past' && paths.BOOKINGS.PAST) ||
@@ -37,7 +37,7 @@ export default class BookingDetailsController {
         prison,
         type,
         visit,
-        showCancel,
+        showCancelButton,
         showServiceNav: true,
       })
     }

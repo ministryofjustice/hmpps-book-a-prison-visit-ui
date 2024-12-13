@@ -28,7 +28,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Bookings homepage (future visits)', () => {
+describe('Bookings homepage (future visits list)', () => {
   const futureVisitDetails = TestData.visitDetails()
 
   it('should render the bookings home page - with a future visit', () => {
@@ -100,7 +100,7 @@ describe('Bookings homepage (future visits)', () => {
   })
 })
 
-describe('Past visits page', () => {
+describe('Past visits list page', () => {
   const pastVisitDetails = TestData.visitDetails()
 
   it('should render the past visits page', () => {
@@ -166,7 +166,7 @@ describe('Past visits page', () => {
   })
 })
 
-describe('Cancelled visits page', () => {
+describe('Cancelled visits list page', () => {
   const cancelledVisitDetails = TestData.visitDetails({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
 
   it('should render the cancelled visits page', () => {
