@@ -42,6 +42,7 @@ describe('Bookings homepage (future visits list)', () => {
         expect($('title').text()).toMatch(/^Bookings -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Bookings')
+        expect($('h1').siblings('h2').first().text()).toBe('Future visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
