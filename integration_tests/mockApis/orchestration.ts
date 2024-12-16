@@ -9,6 +9,7 @@ import {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
+  BookerPrisonerValidationErrorResponse,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -221,9 +222,9 @@ export default {
     bookerReference = TestData.bookerReference(),
     prisoners = [],
   }: {
-    bookerReference: BookerReference
-    prisoners: BookerPrisonerInfoDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: BookerReference
+    prisoners?: BookerPrisonerInfoDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -233,6 +234,51 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: prisoners,
+      },
+    }),
+
+  stubValidatePrisonerPass: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+  }: {
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/validate`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    }),
+
+  stubValidatePrisonerFail: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+    validationError = 'PRISONER_RELEASED',
+  }: {
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+    validationError?: BookerPrisonerValidationErrorResponse['validationError'][number]
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerNumber}/validate`,
+      },
+      response: {
+        status: 422,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          status: 422,
+          errorCode: null,
+          userMessage: 'Prisoner validation failed',
+          developerMessage: null,
+          validationError,
+        },
       },
     }),
 

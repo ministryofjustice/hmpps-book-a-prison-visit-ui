@@ -1,8 +1,9 @@
 import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, VisitorInfoDto } from '../data/orchestrationApiTypes'
+import { AuthDetailDto, BookerPrisonerValidationErrorResponse, VisitorInfoDto } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
+import { SanitisedError } from '../sanitisedError'
 
 export type Prisoner = {
   prisonerDisplayId: string
@@ -10,6 +11,9 @@ export type Prisoner = {
   firstName: string
   lastName: string
   prisonId: string
+  prisonName: string
+  registeredPrisonId: string
+  registeredPrisonName: string
   availableVos: number
   nextAvailableVoDate: string
 }
@@ -39,17 +43,43 @@ export default class BookerService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
-    return prisoners.map(prisoner => {
+
+    return prisoners.map(bookerPrisonerInfo => {
+      const { prisoner, availableVos, nextAvailableVoDate, registeredPrison } = bookerPrisonerInfo
       return {
         prisonerDisplayId: randomUUID(),
-        prisonerNumber: prisoner.prisoner.prisonerNumber,
-        firstName: prisoner.prisoner.firstName,
-        lastName: prisoner.prisoner.lastName,
-        prisonId: prisoner.prisoner.prisonId,
-        availableVos: prisoner.availableVos,
-        nextAvailableVoDate: prisoner.nextAvailableVoDate,
+        prisonerNumber: prisoner.prisonerNumber,
+        firstName: prisoner.firstName,
+        lastName: prisoner.lastName,
+        prisonId: prisoner.prisonId,
+        prisonName: prisoner.prisonName,
+        registeredPrisonId: registeredPrison.prisonCode,
+        registeredPrisonName: registeredPrison.prisonName,
+        availableVos,
+        nextAvailableVoDate,
       }
     })
+  }
+
+  async validatePrisoner(
+    bookerReference: string,
+    prisonerNumber: string,
+  ): Promise<true | BookerPrisonerValidationErrorResponse['validationError']> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    try {
+      await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
+      return true
+    } catch (error) {
+      if (
+        error.status === 422 &&
+        typeof (error as SanitisedError<BookerPrisonerValidationErrorResponse>)?.data?.validationError === 'string'
+      ) {
+        return error.data.validationError
+      }
+      throw error
+    }
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {

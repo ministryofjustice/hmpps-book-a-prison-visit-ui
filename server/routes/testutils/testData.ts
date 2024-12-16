@@ -66,6 +66,9 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
+    registeredPrisonId = 'HEI',
+    registeredPrisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
   }: Partial<{
@@ -73,12 +76,16 @@ export default class TestData {
     firstName: string
     lastName: string
     prisonId: string
+    prisonName: string
+    registeredPrisonId: string
+    registeredPrisonName: string
     availableVos: number
     nextAvailableVoDate: string
   }> = {}): BookerPrisonerInfoDto => ({
-    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId },
+    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName },
     availableVos,
     nextAvailableVoDate,
+    registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
@@ -93,6 +100,8 @@ export default class TestData {
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
+    prisonerFirstName = 'JOHN',
+    prisonerLastName = 'SMITH',
     prisonId = 'HEI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
@@ -105,6 +114,8 @@ export default class TestData {
     ({
       reference,
       prisonerId,
+      prisonerFirstName,
+      prisonerLastName,
       prisonId,
       visitStatus,
       outcomeStatus,
@@ -152,6 +163,9 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
+    registeredPrisonId = 'HEI',
+    registeredPrisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
   }: Partial<Prisoner> = {}): Prisoner => ({
@@ -160,6 +174,9 @@ export default class TestData {
     firstName,
     lastName,
     prisonId,
+    prisonName,
+    registeredPrisonId,
+    registeredPrisonName,
     availableVos,
     nextAvailableVoDate,
   })
@@ -168,6 +185,8 @@ export default class TestData {
     visitDisplayId = 'uuidv4-1',
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
+    prisonerFirstName = 'JOHN',
+    prisonerLastName = 'SMITH',
     prisonId = 'HEI',
     visitStatus = 'BOOKED',
     outcomeStatus = undefined,
@@ -180,6 +199,8 @@ export default class TestData {
     visitDisplayId,
     reference,
     prisonerId,
+    prisonerFirstName,
+    prisonerLastName,
     prisonId,
     visitStatus,
     outcomeStatus,

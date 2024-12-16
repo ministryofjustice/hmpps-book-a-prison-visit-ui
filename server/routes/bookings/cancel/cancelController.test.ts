@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { randomUUID } from 'crypto'
 import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
-import { createMockBookerService, createMockVisitService } from '../../../services/testutils/mocks'
+import { createMockVisitService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import paths from '../../../constants/paths'
 import { VisitDetails } from '../../../services/visitService'
@@ -13,7 +13,6 @@ import { BookingCancelled } from '../../../@types/bapv'
 
 let app: Express
 
-const bookerService = createMockBookerService()
 const visitService = createMockVisitService()
 
 const bookerReference = TestData.bookerReference().value
@@ -36,7 +35,7 @@ beforeEach(() => {
     bookings,
   } as SessionData
 
-  app = appWithAllRoutes({ services: { bookerService, visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
 
 afterEach(() => {

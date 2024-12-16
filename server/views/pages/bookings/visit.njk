@@ -6,8 +6,6 @@
 
 {% set pageTitle = "Visit booking details" %}
 
-{% set backLinkHref = paths.BOOKINGS.PAST if type === 'past' else (paths.BOOKINGS.CANCELLED if type === 'cancelled' else paths.BOOKINGS.HOME) %}
-
 {% block content %}
 
   <div class="govuk-grid-row">
@@ -34,7 +32,7 @@
 
         {% set cancelledVisitBannerHtml %}
           {{ govukWarningText({
-            classes: "govuk-!-margin-bottom-0 govuk-!-padding-left-4",
+            classes: "govuk-!-margin-bottom-0 govuk-!-padding-left-1",
             html: '<span data-test="visit-cancelled-type">' + cancelledBy + '</span>',
             iconFallbackText: "Warning"
           }) }}
@@ -58,7 +56,7 @@
 
       <h2 class="govuk-heading-m">Prisoner</h2>
 
-      <p data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</p>
+      <p data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</p>
 
       <h2 class="govuk-heading-m">Visitors</h2>
 
@@ -84,7 +82,7 @@
         <p data-test="main-contact-no-details">No contact details provided</p>
       {% endif %}
 
-      {% if showCancel %}
+      {% if showCancelButton %}
         {{ govukButton({
           text: "Cancel booking",
           classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-7 govuk-button--secondary",

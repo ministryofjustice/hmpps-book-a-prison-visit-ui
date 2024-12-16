@@ -197,7 +197,8 @@ describe('Check visit details', () => {
               expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
             })
         })
-        it('should throw error APPLICATION_INVALID_PRISON_PRISONER_MISMATCH and not set flash message', () => {
+
+        it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_PRISON_PRISONER_MISMATCH', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
             status: 422,
@@ -209,12 +210,17 @@ describe('Check visit details', () => {
 
           return request(app)
             .post(paths.BOOK_VISIT.CHECK_DETAILS)
-            .expect(422)
+            .expect(302)
+            .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingJourney.cannotBookReason).toBe('TRANSFER_OR_RELEASE')
               expect(sessionData.bookingConfirmed).toBe(undefined)
-              expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+              expect(visitService.bookVisit).toHaveBeenCalledWith({
+                applicationReference: application.reference,
+                actionedBy: bookerReference,
+              })
             })
         })
 
@@ -235,6 +241,7 @@ describe('Check visit details', () => {
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookingJourney).not.toBe(undefined)
+              expect(sessionData.bookingJourney.cannotBookReason).toBe('NO_VO_BALANCE')
               expect(sessionData.bookingConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
