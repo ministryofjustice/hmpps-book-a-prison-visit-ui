@@ -13,9 +13,7 @@ let app: Express
 
 const prisonService = createMockPrisonService()
 
-const bookerReference = TestData.bookerReference().value
 const prison = TestData.prisonDto()
-const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
@@ -26,13 +24,7 @@ beforeEach(() => {
   visitDetails = TestData.visitDetails({ visitDisplayId })
   bookings = { type: undefined, visits: [visitDetails] }
 
-  sessionData = {
-    booker: {
-      reference: bookerReference,
-      prisoners: [prisoner],
-    },
-    bookings,
-  } as SessionData
+  sessionData = { bookings } as SessionData
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -143,6 +135,9 @@ describe('View a single booking', () => {
           expect($('h1').text()).toBe('Visit booking details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
+          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
 
           expect($('[data-test="prison-name"]').length).toBeFalsy()
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
@@ -174,6 +169,9 @@ describe('View a single booking', () => {
           expect($('h1').text()).toBe('Visit booking details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
+          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
+          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
           expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by the prison.')
 
           expect($('[data-test="prison-name"]').length).toBeFalsy()

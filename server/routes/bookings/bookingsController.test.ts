@@ -15,11 +15,7 @@ const bookerReference = TestData.bookerReference().value
 let sessionData: SessionData
 
 beforeEach(() => {
-  sessionData = {
-    booker: {
-      reference: bookerReference,
-    },
-  } as SessionData
+  sessionData = {} as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
 })
@@ -61,15 +57,10 @@ describe('Bookings homepage (future visits list)', () => {
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'future',
-            visits: [futureVisitDetails],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'future',
+          visits: [futureVisitDetails],
+        } as SessionData['bookings'])
       })
   })
 
@@ -88,15 +79,10 @@ describe('Bookings homepage (future visits list)', () => {
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'future',
-            visits: [],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'future',
+          visits: [],
+        } as SessionData['bookings'])
       })
   })
 })
@@ -128,15 +114,10 @@ describe('Past visits list page', () => {
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'past',
-            visits: [pastVisitDetails],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'past',
+          visits: [pastVisitDetails],
+        } as SessionData['bookings'])
       })
   })
 
@@ -154,15 +135,10 @@ describe('Past visits list page', () => {
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'past',
-            visits: [],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'past',
+          visits: [],
+        } as SessionData['bookings'])
       })
   })
 })
@@ -194,15 +170,10 @@ describe('Cancelled visits list page', () => {
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'cancelled',
-            visits: [cancelledVisitDetails],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'cancelled',
+          visits: [cancelledVisitDetails],
+        } as SessionData['bookings'])
       })
   })
 
@@ -220,15 +191,10 @@ describe('Cancelled visits list page', () => {
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-          },
-          bookings: {
-            type: 'cancelled',
-            visits: [],
-          },
-        } as SessionData)
+        expect(sessionData.bookings).toStrictEqual({
+          type: 'cancelled',
+          visits: [],
+        } as SessionData['bookings'])
       })
   })
 })
