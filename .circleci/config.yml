@@ -102,16 +102,16 @@ jobs:
           name: Run wiremock
           command: java -jar wiremock.jar --port 9091
           background: true
-      - run:
-          name: Wait for wiremock to start
-          command: sleep 5
+      - hmpps/wait_till_ready:
+          # Wait for wiremock to start
+          port: 9091
       - run:
           name: Run the node app.
           command: npm run start-feature
           background: true
-      - run:
-          name: Wait for node app to start
-          command: sleep 5
+      - hmpps/wait_till_ready:
+          # Wait for node app to start
+          port: 3007
       - run:
           name: integration tests
           command: npm run int-test
@@ -150,6 +150,12 @@ jobs:
           command: |
             cd hmpps-book-a-prison-visit-ui-tests
             npm run test:ci
+      - store_test_results:
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/results.xml
+      - store_artifacts:
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/playwright-report/index.html
+      - store_artifacts:
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/test-results
 
 workflows:
   version: 2
