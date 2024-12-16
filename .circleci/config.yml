@@ -111,7 +111,7 @@ jobs:
           background: true
       - hmpps/wait_till_ready:
           # Wait for node app to start
-          port: 3000
+          port: 3007
       - run:
           name: integration tests
           command: npm run int-test
