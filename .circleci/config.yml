@@ -151,11 +151,11 @@ jobs:
             cd hmpps-book-a-prison-visit-ui-tests
             npm run test:ci
       - store_test_results:
-          path: results.xml
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/results.xml
       - store_artifacts:
-          path: playwright-report/index.html
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/playwright-report/index.html
       - store_artifacts:
-          path: test-results
+          path: /root/project/hmpps-book-a-prison-visit-ui-tests/test-results
 
 workflows:
   version: 2
