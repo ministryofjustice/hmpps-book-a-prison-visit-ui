@@ -45,7 +45,6 @@ context('Bookings home page', () => {
   })
 
   it('should show Bookings home page with future visits and navigate to view the visit details', () => {
-    cy.task('stubValidatePrisonerPass')
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -76,7 +75,6 @@ context('Bookings home page', () => {
   })
 
   it('should show Past visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubValidatePrisonerPass')
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -107,7 +105,6 @@ context('Bookings home page', () => {
   })
 
   it('should show Cancelled visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubValidatePrisonerPass')
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -139,7 +136,6 @@ context('Bookings home page', () => {
   })
 
   it('should show booker cancelled visit information', () => {
-    cy.task('stubValidatePrisonerPass')
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],

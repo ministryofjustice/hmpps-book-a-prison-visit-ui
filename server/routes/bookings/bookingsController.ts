@@ -1,34 +1,20 @@
 import type { RequestHandler } from 'express'
 import { SessionData } from 'express-session'
 import createError from 'http-errors'
-import { BookerService, VisitService } from '../../services'
+import { VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 
 export default class BookingsController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly visitService: VisitService,
-  ) {}
+  public constructor(private readonly visitService: VisitService) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
     return async (req, res, next) => {
       const { booker } = req.session
-      const prisoner = booker.prisoners[0]
 
       let visits: VisitDetails[]
-      const viewContext: Record<string, unknown> = { showTransferOrReleaseBanner: false, showServiceNav: true }
-
       switch (type) {
         case 'future':
           visits = await this.visitService.getFuturePublicVisits(booker.reference)
-
-          if (
-            prisoner &&
-            (await this.bookerService.isPrisonerTransferredOrReleased(booker.reference, prisoner.prisonerNumber))
-          ) {
-            viewContext.prisoner = prisoner
-            viewContext.showTransferOrReleaseBanner = true
-          }
           break
 
         case 'past':
@@ -44,9 +30,8 @@ export default class BookingsController {
       }
 
       req.session.bookings = { type, visits }
-      viewContext.visits = visits
 
-      return res.render(`pages/bookings/${type}`, viewContext)
+      return res.render(`pages/bookings/${type}`, { visits, showServiceNav: true })
     }
   }
 }

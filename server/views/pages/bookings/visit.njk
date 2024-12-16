@@ -14,10 +14,6 @@
 
       <p>Booking reference: <span data-test="booking-reference">{{ visit.reference }}</span></p>
 
-      {% if showTransferOrReleaseBanner %}
-        {%- include "partials/prisonerTransferOrReleaseBanner.njk" -%}
-      {% endif %}
-
       {% if visit.visitStatus === "CANCELLED" %}
 
         {% set status = visit.outcomeStatus %}
