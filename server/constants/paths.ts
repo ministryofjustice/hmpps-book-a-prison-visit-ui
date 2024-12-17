@@ -1,4 +1,5 @@
 const paths = {
+  START: '/',
   HOME: '/home',
   RETURN_HOME: '/return-home', // used to clear session and redirect to HOME
 

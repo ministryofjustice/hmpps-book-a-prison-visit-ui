@@ -12,6 +12,11 @@ export default function routes(): Router {
   const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
+  // Service start page
+  router.get(paths.START, (req, res) => {
+    return req.user ? res.redirect(paths.HOME) : res.render('pages/serviceStart')
+  })
+
   // Accessibility statement
   router.get(paths.ACCESSIBILITY, (req, res) => {
     res.render('pages/accessibilityStatement', { showServiceNav: !!req.session.booker })

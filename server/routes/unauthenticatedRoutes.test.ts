@@ -11,6 +11,35 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
+describe('Service start page', () => {
+  it('should render service start page with fallback header for an unauthenticated user', () => {
+    userSupplier = () => undefined
+    app = appWithAllRoutes({ userSupplier })
+
+    return request(app)
+      .get(paths.START)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visit someone in prison -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Visit someone in prison')
+
+        expect($('header.govuk-header').length).toBe(1)
+        expect($('header .one-login-header').length).toBe(0)
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+
+        expect($('[data-test=start-now]').attr('href')).toBe(paths.SIGN_IN)
+      })
+  })
+
+  it('should redirect to the home page if an authenticated user visits the service start page', () => {
+    userSupplier = () => user
+    app = appWithAllRoutes({ userSupplier })
+    return request(app).get(paths.START).expect(302).expect('location', paths.HOME)
+  })
+})
+
 describe('Accessibility statement', () => {
   it('should render accessibility statement with GOVUK One Login Header for an authenticated user with booker record', () => {
     userSupplier = () => user
