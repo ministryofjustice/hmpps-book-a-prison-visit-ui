@@ -8,7 +8,7 @@ export default class HomeController {
   public view(): RequestHandler {
     return async (req, res) => {
       const prisoner = req.session.booker.prisoners[0]
-      res.render('pages/home', { prisoner, showServiceNav: true })
+      res.render('pages/home', { prisoner, showOLServiceNav: true })
     }
   }
 

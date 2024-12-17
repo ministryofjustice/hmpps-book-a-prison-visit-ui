@@ -12,7 +12,7 @@ afterEach(() => {
 })
 
 describe('Service start page', () => {
-  it('should render service start page with fallback header for an unauthenticated user', () => {
+  it('should render service start page with fallback header and no GOVUK service nav for an unauthenticated user', () => {
     userSupplier = () => undefined
     app = appWithAllRoutes({ userSupplier })
 
@@ -27,7 +27,7 @@ describe('Service start page', () => {
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation').length).toBe(0)
 
         expect($('[data-test=start-now]').attr('href')).toBe(paths.SIGN_IN)
       })

@@ -10,7 +10,7 @@ export default class CookiesController {
     return async (req, res) => {
       return res.render('pages/cookies', {
         errors: req.flash('errors'),
-        showServiceNav: !!req.session.booker,
+        showOLServiceNav: !!req.session.booker,
       })
     }
   }

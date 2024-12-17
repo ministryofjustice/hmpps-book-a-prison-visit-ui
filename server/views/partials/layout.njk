@@ -21,7 +21,7 @@
     text: "Visitors",
     id: "visitors-link"
   }
-  ] if showServiceNav
+  ] if showOLServiceNav
 %}
 {% set activeLinkId = activeLink if activeLink else "home-link" %}
 {% set serviceName = applicationName %}
@@ -71,12 +71,14 @@
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk",
     containerClasses: "govuk-width-container",
-    classes: "govuk-header--full-width-border"
+    classes: "govuk-header--full-width-border" if not hideGOVUKServiceNav
   }) }}
-  {{ govukServiceNavigation({
-    serviceName: applicationName,
-    serviceUrl: paths.HOME
-  }) }}
+  {% if not hideGOVUKServiceNav %}
+    {{ govukServiceNavigation({
+      serviceName: applicationName,
+      serviceUrl: paths.START
+    }) }}
+  {% endif %}
 {% endif %}
 {% endblock %}
 

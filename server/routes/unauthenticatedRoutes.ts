@@ -14,12 +14,12 @@ export default function routes(): Router {
 
   // Service start page
   router.get(paths.START, (req, res) => {
-    return req.user ? res.redirect(paths.HOME) : res.render('pages/serviceStart')
+    return req.user ? res.redirect(paths.HOME) : res.render('pages/serviceStart', { hideGOVUKServiceNav: true })
   })
 
   // Accessibility statement
   router.get(paths.ACCESSIBILITY, (req, res) => {
-    res.render('pages/accessibilityStatement', { showServiceNav: !!req.session.booker })
+    res.render('pages/accessibilityStatement', { showOLServiceNav: !!req.session.booker })
   })
 
   // Cookies
@@ -29,12 +29,12 @@ export default function routes(): Router {
 
   // Privacy notice
   router.get(paths.PRIVACY, (req, res) => {
-    res.render('pages/privacyNotice', { showServiceNav: !!req.session.booker })
+    res.render('pages/privacyNotice', { showOLServiceNav: !!req.session.booker })
   })
 
   // Terms and conditions
   router.get(paths.TERMS, (req, res) => {
-    res.render('pages/termsAndConditions', { showServiceNav: !!req.session.booker })
+    res.render('pages/termsAndConditions', { showOLServiceNav: !!req.session.booker })
   })
 
   // Signed out

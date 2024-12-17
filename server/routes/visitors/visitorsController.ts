@@ -17,7 +17,7 @@ export default class VisitorsController {
         ? await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
         : undefined
 
-      return res.render('pages/visitors/visitors', { prisoner: booker.prisoners[0], visitors, showServiceNav: true })
+      return res.render('pages/visitors/visitors', { prisoner: booker.prisoners[0], visitors, showOLServiceNav: true })
     }
   }
 }

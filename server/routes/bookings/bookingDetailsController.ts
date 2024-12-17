@@ -38,7 +38,7 @@ export default class BookingDetailsController {
         type,
         visit,
         showCancelButton,
-        showServiceNav: true,
+        showOLServiceNav: true,
       })
     }
   }
