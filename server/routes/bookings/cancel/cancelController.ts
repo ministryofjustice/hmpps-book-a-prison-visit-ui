@@ -25,7 +25,7 @@ export default class CancelController {
         errors: req.flash('errors'),
         visit,
         visitDisplayId,
-        showServiceNav: true,
+        showOLServiceNav: true,
       })
     }
   }

@@ -11,7 +11,7 @@ context('Sign in with GOV.UK One Login', () => {
   })
 
   it('Unauthenticated user redirected to GOV.UK One Login - home page', () => {
-    cy.visit('/')
+    cy.visit(paths.HOME)
     Page.verifyOnPage(GovukOneLoginPage)
   })
 

@@ -1,9 +1,11 @@
+import paths from '../../server/constants/paths'
+
 Cypress.Commands.add(
   'signIn',
   ({
     options = { failOnStatusCode: true },
     nonce = undefined,
-    initialRequestUrl = '/',
+    initialRequestUrl = paths.HOME,
     hideCookieBanner = true,
   } = {}) => {
     if (hideCookieBanner) {

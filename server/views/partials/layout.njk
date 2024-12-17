@@ -7,21 +7,21 @@
 
 {% set navigationItems = [
   {
-    href: "/",
-    text: 'Home',
-    id: 'home-link'
+    href: paths.HOME,
+    text: "Home",
+    id: "home-link"
   },
   {
-    href: '/bookings',
-    text: 'Bookings',
-    id: 'bookings-link'
+    href: paths.BOOKINGS.HOME,
+    text: "Bookings",
+    id: "bookings-link"
   },
   {
-    href: '/visitors',
-    text: 'Visitors',
-    id: 'visitors-link'
+    href: paths.VISITORS,
+    text: "Visitors",
+    id: "visitors-link"
   }
-  ] if showServiceNav
+  ] if showOLServiceNav
 %}
 {% set activeLinkId = activeLink if activeLink else "home-link" %}
 {% set serviceName = applicationName %}
@@ -71,12 +71,14 @@
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk",
     containerClasses: "govuk-width-container",
-    classes: "govuk-header--full-width-border"
+    classes: "govuk-header--full-width-border" if not hideGOVUKServiceNav
   }) }}
-  {{ govukServiceNavigation({
-    serviceName: applicationName,
-    serviceUrl: "/"
-  }) }}
+  {% if not hideGOVUKServiceNav %}
+    {{ govukServiceNavigation({
+      serviceName: applicationName,
+      serviceUrl: paths.START
+    }) }}
+  {% endif %}
 {% endif %}
 {% endblock %}
 

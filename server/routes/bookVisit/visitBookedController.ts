@@ -9,7 +9,7 @@ export default class VisitBookedController {
       res.render('pages/bookVisit/visitBooked', {
         bookingConfirmed,
         prison: bookingConfirmed.prison,
-        showServiceNav: true,
+        showOLServiceNav: true,
       })
     }
   }
