@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
 import { SessionData } from 'express-session'
+// eslint-disable-next-line import/no-named-as-default
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 import type { Visitor } from '../services/bookerService'
 
