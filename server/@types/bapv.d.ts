@@ -60,4 +60,8 @@ export type BookingCancelled = {
   hasMobile: boolean
 }
 
-export type CannotBookReason = 'NO_VO_BALANCE' | 'TRANSFER_OR_RELEASE' | 'UNSUPPORTED_PRISON'
+export type CannotBookReason =
+  | 'NO_VO_BALANCE'
+  | 'TRANSFER_OR_RELEASE'
+  | 'UNSUPPORTED_PRISON'
+  | 'NO_ELIGIBLE_ADULT_VISITOR'

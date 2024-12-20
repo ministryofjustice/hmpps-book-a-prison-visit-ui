@@ -13,14 +13,19 @@ context('Booking journey - drop-out points', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()
-  const visitors = [
-    TestData.visitorInfoDto({
-      visitorId: 1000,
-      firstName: 'Adult',
-      lastName: 'One',
-      dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
-    }),
-  ]
+
+  const adultVisitor = TestData.visitorInfoDto({
+    visitorId: 1000,
+    firstName: 'Adult',
+    lastName: 'One',
+    dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
+  })
+  const childVisitor = TestData.visitorInfoDto({
+    visitorId: 1000,
+    firstName: 'Child',
+    lastName: 'One',
+    dateOfBirth: format(subYears(today, 5), DateFormats.ISO_DATE), // 5-year-old
+  })
 
   const tomorrow = format(addDays(today, 1), DateFormats.ISO_DATE)
   const in10Days = format(addDays(today, 10), DateFormats.ISO_DATE)
@@ -50,7 +55,7 @@ context('Booking journey - drop-out points', () => {
 
       // Start booking journey
       cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
+      cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
@@ -87,7 +92,7 @@ context('Booking journey - drop-out points', () => {
 
       // Start booking journey
       cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
+      cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
@@ -138,7 +143,7 @@ context('Booking journey - drop-out points', () => {
 
       // Start booking journey
       cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
+      cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       homePage.startBooking()
 
@@ -165,7 +170,7 @@ context('Booking journey - drop-out points', () => {
 
       // Start booking journey
       cy.task('stubGetPrison', prison)
-      cy.task('stubGetVisitors', { visitors })
+      cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerFail')
       homePage.startBooking()
 
@@ -174,6 +179,29 @@ context('Booking journey - drop-out points', () => {
       cannotBookPage.getPrisonerName().contains('John Smith')
       cannotBookPage.getRegisteredPrisonName().contains(prison.prisonName)
       cy.contains('have moved to another prison or been released')
+
+      // Back link back to Home page
+      cannotBookPage.backLink().click()
+      Page.verifyOnPage(HomePage)
+    })
+
+    it('should show drop-out page when no eligible visitors over 18', () => {
+      cy.task('stubGetBookerReference')
+      cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.signIn()
+
+      // Home page - prisoner shown
+      const homePage = Page.verifyOnPage(HomePage)
+
+      // Start booking journey
+      cy.task('stubGetPrison', prison)
+      cy.task('stubGetVisitors', { visitors: [childVisitor] })
+      cy.task('stubValidatePrisonerPass')
+      homePage.startBooking()
+
+      // Visit cannot be booked page
+      const cannotBookPage = Page.verifyOnPage(CannotBookPage)
+      cy.contains('One person on a visit must be 18 years old or older')
 
       // Back link back to Home page
       cannotBookPage.backLink().click()

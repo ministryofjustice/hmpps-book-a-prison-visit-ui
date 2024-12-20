@@ -23,6 +23,12 @@ export default class SelectVisitorsController {
         ])
       }
 
+      const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)
+      if (bookingJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
+        req.session.bookingJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+        return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
+      }
+
       const selectedVisitorDisplayIds = {
         visitorDisplayIds: bookingJourney.selectedVisitors?.map(visitor => visitor.visitorDisplayId) ?? [],
       }
@@ -31,7 +37,7 @@ export default class SelectVisitorsController {
         ...req.flash('formValues')?.[0],
       }
 
-      res.render('pages/bookVisit/selectVisitors', {
+      return res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
         formValues,
         prison: bookingJourney.prison,
