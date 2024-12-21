@@ -92,7 +92,7 @@
     ]
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^3.2.1",
+    "@ministryofjustice/frontend": "^3.2.2",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.9.6",
     "bunyan": "^1.8.15",
@@ -109,7 +109,7 @@
     "govuk-frontend": "^5.7.1",
     "helmet": "^8.0.0",
     "http-errors": "^2.0.0",
-    "libphonenumber-js": "^1.11.16",
+    "libphonenumber-js": "^1.11.17",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "openid-client": "^5.7.1",
@@ -140,7 +140,7 @@
     "axe-core": "^4.10.2",
     "cheerio": "^1.0.0",
     "concurrently": "^9.1.0",
-    "cypress": "^13.16.1",
+    "cypress": "^13.17.0",
     "cypress-axe": "^1.5.0",
     "cypress-multi-reporters": "^2.0.4",
     "dotenv": "^16.4.7",
