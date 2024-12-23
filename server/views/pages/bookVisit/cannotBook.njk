@@ -52,6 +52,22 @@
           <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales" target="_blank">how to book a visit at this prison</a>.
         </p>
       {% endif %}
+
+      {% if cannotBookReason == 'NO_ELIGIBLE_ADULT_VISITOR' %}
+        <p>
+          One person on a visit must be 18 years old or older. None of your adult visitors can be selected.
+          This may be because of a new restriction or a ban.
+        </p>
+
+        <h2 class="govuk-heading-m">Add a new visitor</h2>
+        <p>The person you want to book for must be on the prisoner’s visitor list.</p>
+
+        <p>
+          To make a request to book for someone new,
+          <a href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" target="_blank">complete the form (opens in a new tab)</a>.
+          We will respond within 5 working days.
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

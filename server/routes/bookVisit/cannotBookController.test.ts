@@ -109,5 +109,23 @@ describe('A visit cannot be booked', () => {
           expect(sessionData.bookingJourney).toBe(undefined)
         })
     })
+
+    it('should render cannot book page and clear bookingJourney data - NO_ELIGIBLE_ADULT_VISITOR', () => {
+      sessionData.bookingJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^A visit cannot be booked -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('A visit cannot be booked')
+
+          expect($('main p').eq(0).text()).toContain('One person on a visit must be 18 years old or older')
+
+          expect(sessionData.bookingJourney).toBe(undefined)
+        })
+    })
   })
 })

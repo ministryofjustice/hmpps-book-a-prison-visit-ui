@@ -49,6 +49,7 @@ const visitor3 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 17y',
   dateOfBirth: '2006-05-03', // 18 tomorrow
+  adult: false,
 })
 const visitor4 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -56,6 +57,7 @@ const visitor4 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 16y',
   dateOfBirth: '2008-05-02', // 16 today
+  adult: false,
 })
 const visitor5 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -63,6 +65,7 @@ const visitor5 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 15y',
   dateOfBirth: '2008-05-03', // 16 tomorrow
+  adult: false,
 })
 const visitor6 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -70,6 +73,7 @@ const visitor6 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 10y',
   dateOfBirth: '2014-05-02',
+  adult: false,
 })
 const visitor7 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -77,6 +81,7 @@ const visitor7 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 1y',
   dateOfBirth: '2023-05-02',
+  adult: false,
 })
 const visitor8 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -84,6 +89,7 @@ const visitor8 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 4m',
   dateOfBirth: '2024-01-02',
+  adult: false,
 })
 const visitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8]
 
@@ -108,7 +114,6 @@ describe('Select visitors', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner] },
         bookingJourney: { prisoner },
       } as SessionData
 
@@ -178,17 +183,11 @@ describe('Select visitors', () => {
           expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              eligibleVisitors: visitors,
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: visitors,
+          } as SessionData['bookingJourney'])
         })
     })
 
@@ -271,17 +270,28 @@ describe('Select visitors', () => {
           expect(bookerService.getEligibleVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              eligibleVisitors: [],
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: [],
+          } as SessionData['bookingJourney'])
+        })
+    })
+
+    it('should handle booker having no eligible adult visitors for this prisoner and redirect to cannot book page with reason', () => {
+      bookerService.getEligibleVisitors.mockResolvedValue([visitor6]) // only a child visitor
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect(() => {
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: [visitor6],
+            cannotBookReason: 'NO_ELIGIBLE_ADULT_VISITOR',
+          } as SessionData['bookingJourney'])
         })
     })
   })
@@ -291,7 +301,6 @@ describe('Select visitors', () => {
       visitSessionsService.getSessionRestriction.mockResolvedValue('OPEN')
 
       sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner] },
         bookingJourney: { prisoner, prison, eligibleVisitors: visitors },
       } as SessionData
 
@@ -306,19 +315,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              eligibleVisitors: visitors,
-              selectedVisitors: [visitor1, visitor3],
-              sessionRestriction: 'OPEN',
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: visitors,
+            selectedVisitors: [visitor1, visitor3],
+            sessionRestriction: 'OPEN',
+          } as SessionData['bookingJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -336,19 +339,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CLOSED_VISIT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              eligibleVisitors: visitors,
-              selectedVisitors: [visitor1, visitor3],
-              sessionRestriction: 'CLOSED',
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: visitors,
+            selectedVisitors: [visitor1, visitor3],
+            sessionRestriction: 'CLOSED',
+          } as SessionData['bookingJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -371,19 +368,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner],
-            },
-            bookingJourney: {
-              prisoner,
-              prison,
-              eligibleVisitors: visitors,
-              selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & unrecognised UUID filtered out
-              sessionRestriction: 'OPEN',
-            },
-          } as SessionData)
+          expect(sessionData.bookingJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: visitors,
+            selectedVisitors: [visitors[0], visitors[2]], // duplicate '1' & unrecognised UUID filtered out
+            sessionRestriction: 'OPEN',
+          } as SessionData['bookingJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
