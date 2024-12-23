@@ -30,7 +30,7 @@
 
       <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your bookings</a>.</p>
 
-      <p>You can help us to improve this service by giving <a href="https://visit-someone-in-prison-test-feedback.form.service.justice.gov.uk/">feedback</a>.</p>
+      <p>You can help us to improve this service by giving <a href="https://visit-someone-in-prison-test-feedback.form.service.justice.gov.uk/" target="_blank" rel="noopener noreferrer">feedback</a>.</p>
 
       <div data-test="prison-specific-content">
         {% include "partials/howToChangeBooking.njk" %}
@@ -38,14 +38,14 @@
         <h2 class="govuk-heading-m">Prepare for visiting {{ prison.prisonName }}</h2>
 
         <p>All visitors over 16 years old must show
-          <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a" target="_blank">
+          <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a" target="_blank" rel="noopener noreferrer">
             acceptable forms of ID to enter the prison</a>.
         </p> 
 
         <p>Visitors should arrive <span data-test="minutes-before-visit">45</span> minutes before the visit starts.</p>
 
         <p>You can read more about
-          <a href="{{ prison.webAddress }}" data-test="prison-website" target="_blank">visits at {{ prison.prisonName }}</a>.
+          <a href="{{ prison.webAddress }}" data-test="prison-website" target="_blank" rel="noopener noreferrer">visits at {{ prison.prisonName }}</a>.
           This includes information on getting to the prison and visiting facilities.
         </p>
 
@@ -58,8 +58,10 @@
     
       <h2 class="govuk-heading-m">Help with the cost of prison visits</h2>
 
-      <p>You may be able to <a href="https://www.gov.uk/help-with-prison-visits" target="_blank">get help with the cost of prison visits</a> if you’re getting certain benefits or have a health certificate.</p>
-
+      <p>You may be able to
+        <a href="https://www.gov.uk/help-with-prison-visits" target="_blank" rel="noopener noreferrer">get help with the cost of prison visits</a>
+        if you’re getting certain benefits or have a health certificate.
+      </p>
     </div>
   </div>
 
