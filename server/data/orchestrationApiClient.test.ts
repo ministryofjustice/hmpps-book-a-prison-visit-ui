@@ -36,15 +36,17 @@ describe('orchestrationApiClient', () => {
   describe('bookVisit', () => {
     it('should book a visit from an application', async () => {
       const applicationReference = 'aaa-bbb-ccc'
+      const requestBody: BookingOrchestrationRequestDto = {
+        applicationMethodType: 'WEBSITE',
+        allowOverBooking: false,
+        actionedBy: bookerReference.value,
+        userType: 'PUBLIC',
+      }
 
       const result = { reference: 'ab-cd-ef-gh' } as Partial<VisitDto>
 
       fakeOrchestrationApi
-        .put(`/visits/${applicationReference}/book`, <BookingOrchestrationRequestDto>{
-          applicationMethodType: 'WEBSITE',
-          allowOverBooking: false,
-          actionedBy: bookerReference.value,
-        })
+        .put(`/visits/${applicationReference}/book`, requestBody)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, result)
 
@@ -57,16 +59,17 @@ describe('orchestrationApiClient', () => {
   describe('cancelVisit', () => {
     it('should cancel a visit for the booker', async () => {
       const applicationReference = 'aaa-bbb-ccc'
+      const requestBody: CancelVisitOrchestrationDto = {
+        cancelOutcome: {
+          outcomeStatus: 'BOOKER_CANCELLED',
+        },
+        applicationMethodType: 'WEBSITE',
+        actionedBy: bookerReference.value,
+        userType: 'PUBLIC',
+      }
 
       fakeOrchestrationApi
-        .put(`/visits/${applicationReference}/cancel`, <CancelVisitOrchestrationDto>{
-          cancelOutcome: {
-            outcomeStatus: 'BOOKER_CANCELLED',
-          },
-          applicationMethodType: 'WEBSITE',
-          actionedBy: bookerReference.value,
-          userType: 'PUBLIC',
-        })
+        .put(`/visits/${applicationReference}/cancel`, requestBody)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200)
 
@@ -137,18 +140,20 @@ describe('orchestrationApiClient', () => {
       ]
       const visitorSupport = { description: 'wheelchair' }
 
+      const requestBody: ChangeApplicationDto = {
+        applicationRestriction,
+        sessionTemplateReference,
+        sessionDate,
+        visitContact,
+        visitors,
+        visitorSupport,
+        allowOverBooking: false,
+      }
+
       const result = { reference: 'aaa-bbb-ccc' } as ApplicationDto
 
       fakeOrchestrationApi
-        .put(`/visits/application/${applicationReference}/slot/change`, <ChangeApplicationDto>{
-          applicationRestriction,
-          sessionTemplateReference,
-          sessionDate,
-          visitContact,
-          visitors,
-          visitorSupport,
-          allowOverBooking: false,
-        })
+        .put(`/visits/application/${applicationReference}/slot/change`, requestBody)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, result)
 
@@ -174,21 +179,23 @@ describe('orchestrationApiClient', () => {
       const applicationRestriction: SessionRestriction = 'OPEN'
       const visitorIds = [1234, 2345]
 
+      const requestBody: CreateApplicationDto = {
+        prisonerId,
+        sessionTemplateReference,
+        sessionDate,
+        applicationRestriction,
+        visitors: visitorIds.map(id => {
+          return { nomisPersonId: id }
+        }),
+        userType: 'PUBLIC',
+        actionedBy: bookerReference.value,
+        allowOverBooking: false,
+      }
+
       const result = { reference: 'aaa-bbb-ccc' } as ApplicationDto
 
       fakeOrchestrationApi
-        .post('/visits/application/slot/reserve', <CreateApplicationDto>{
-          prisonerId,
-          sessionTemplateReference,
-          sessionDate,
-          applicationRestriction,
-          visitors: visitorIds.map(id => {
-            return { nomisPersonId: id }
-          }),
-          userType: 'PUBLIC',
-          actionedBy: bookerReference.value,
-          allowOverBooking: false,
-        })
+        .post('/visits/application/slot/reserve', requestBody)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, result)
 

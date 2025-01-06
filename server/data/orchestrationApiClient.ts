@@ -41,6 +41,7 @@ export default class OrchestrationApiClient {
         applicationMethodType: 'WEBSITE',
         allowOverBooking: false,
         actionedBy,
+        userType: 'PUBLIC',
       },
     })
   }
