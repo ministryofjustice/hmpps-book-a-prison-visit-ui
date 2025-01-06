@@ -21,4 +21,4 @@ generic-service:
       - moj_cloud_platform
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: visits-alerts-nonprod
