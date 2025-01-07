@@ -60,7 +60,7 @@ export default class CancelController {
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
       if (nowTimestamp > visitStartTimestamp) {
-        return res.redirect(`${paths.BOOKINGS.PAST}`)
+        return res.redirect(paths.BOOKINGS.PAST)
       }
 
       await this.visitService.cancelVisit({
