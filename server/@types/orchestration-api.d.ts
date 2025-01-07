@@ -1146,6 +1146,11 @@ export interface components {
         | 'BY_PRISONER'
       /** @description allow over booking method */
       allowOverBooking: boolean
+      /**
+       * @description User type for user who actioned this request
+       * @enum {string}
+       */
+      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
     }
     IgnoreVisitNotificationsDto: {
       /** @description Reason why the visit's notifications can be ignored */
