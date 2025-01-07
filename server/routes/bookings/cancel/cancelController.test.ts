@@ -69,6 +69,17 @@ describe('Cancel a booking - Are you sure page', () => {
   })
 
   describe('POST - cancel booking', () => {
+    let fakeDate = new Date('2024-01-01')
+
+    beforeEach(() => {
+      jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
+    })
+
+    afterEach(() => {
+      jest.resetAllMocks()
+      jest.useRealTimers()
+    })
+
     it('should cancel the visit, set data in session and redirect to confirmation page - with email and phone number', () => {
       return request(app)
         .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
@@ -101,6 +112,19 @@ describe('Cancel a booking - Are you sure page', () => {
             applicationReference: 'ab-cd-ef-gh',
           })
           expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasEmail: false, hasMobile: false })
+        })
+    })
+
+    it('should redirect to past visits page if visit is in the past', () => {
+      fakeDate = new Date('2025-01-01')
+      jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
+      return request(app)
+        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .send('cancelBooking=yes')
+        .expect(302)
+        .expect('location', `${paths.BOOKINGS.PAST}`)
+        .expect(() => {
+          expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })
     })
 
