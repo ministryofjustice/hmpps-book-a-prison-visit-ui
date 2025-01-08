@@ -63,14 +63,13 @@ describe('Closed visit', () => {
           expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').length).toBe(0)
 
-          expect($('h1[data-test=closed-visit-heading]').text()).toBe('This will be a closed visit')
-          expect($('[data-test=closed-visit-text]').text()).toContain('On a closed visit, ')
+          expect($('h1').text()).toBe('This will be a closed visit')
+          expect($('p').text()).toContain('On a closed visit, ')
 
           expect($('[data-test=closed-visit-continue]').text().trim()).toBe('Continue to book')
           expect($('[data-test=closed-visit-continue]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
 
-          expect($('[data-test=closed-visit-cancel]').text().trim()).toBe('Cancel and return to the homepage')
-          expect($('[data-test=closed-visit-cancel]').attr('href')).toBe(paths.RETURN_HOME)
+          expect($(`a[href=${paths.RETURN_HOME}]`).text().trim()).toBe('Cancel and return to the homepage')
         })
     })
   })

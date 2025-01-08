@@ -27,6 +27,7 @@ export default {
               applicationMethodType: 'WEBSITE',
               allowOverBooking: false,
               actionedBy: bookerReference,
+              userType: 'PUBLIC',
             },
           },
         ],

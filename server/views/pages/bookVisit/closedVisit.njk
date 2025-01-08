@@ -1,26 +1,21 @@
 {% extends "../../partials/layout.njk" %}
-{% from "components/interruptionCard/interruptionCard.njk" import interruptionCard %}
+{%- from "moj/components/interruption-card/macro.njk" import interruptionCard -%}
 
 {% set pageTitle = "This will be a closed visit" %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-
-      {{ interruptionCard({
-        id: "closed-visit",
-        heading: pageTitle,
-        text: "On a closed visit, the prisoner and visitors cannot have physical contact or pass any items.",
-        continueButton: {
-          text: "Continue to book",
-          href: paths.BOOK_VISIT.CHOOSE_TIME
-        },
-        cancelLink: {
-          text: "Cancel and return to the homepage",
-          href: paths.RETURN_HOME
-        }
-      }) }}
-
-    </div>
-  </div>
+  {% call interruptionCard({
+    heading: pageTitle,
+    primaryAction: {
+        text: "Continue to book",
+        href: paths.BOOK_VISIT.CHOOSE_TIME,
+        attributes: { "data-test": "closed-visit-continue" }
+    },
+    secondaryAction: {
+        text: "Cancel and return to the homepage",
+        href: paths.RETURN_HOME
+    }
+    }) -%}
+    <p>On a closed visit, the prisoner and visitors cannot have physical contact or pass any items.</p>
+  {%- endcall %}
 {% endblock %}
