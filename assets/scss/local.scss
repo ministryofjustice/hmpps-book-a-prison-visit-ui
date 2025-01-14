@@ -1,10 +1,3 @@
 .govuk-main-wrapper {
   min-height: 300px;
 }
-
-// TODO workaround for MoJ component bug (https://github.com/ministryofjustice/moj-frontend/discussions/421#discussioncomment-11762159)
-// remove when fixed
-.moj-interruption-card__body > p {
-  @extend .govuk-body-l;
-  color: govuk-colour("white");
-}
