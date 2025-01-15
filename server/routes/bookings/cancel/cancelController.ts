@@ -56,6 +56,13 @@ export default class CancelController {
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
+      // Redirect to 'Past Visits' page, if visit start time has already passed
+      const nowTimestamp = new Date()
+      const visitStartTimestamp = new Date(visit.startTimestamp)
+      if (nowTimestamp > visitStartTimestamp) {
+        return res.redirect(paths.BOOKINGS.PAST)
+      }
+
       await this.visitService.cancelVisit({
         applicationReference: visit.reference,
         actionedBy: booker.reference,
