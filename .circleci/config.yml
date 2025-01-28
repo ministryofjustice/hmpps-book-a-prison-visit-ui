@@ -23,7 +23,7 @@ parameters:
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: visits-alerts
+    default: visits-releases
 
   node-version:
     type: string
