@@ -200,7 +200,10 @@ workflows:
           <<: *feature_branch
           type: approval
           requires:
-            - deploy_dev_preview
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
       - hmpps/deploy_env:
           name: deploy_staging_preview
           env: "staging"
@@ -214,17 +217,16 @@ workflows:
           requires:
             - request-staging-preview-approval
 
-      - acceptance_tests_public_ui:
-          <<: *feature_branch
-          requires:
-            - request-acceptance-tests-staging-preview-public-approval
-          context: visits-public-e2e-tests
-
       - request-acceptance-tests-staging-preview-public-approval:
           <<: *feature_branch
           type: approval
           requires:
             - deploy_staging_preview
+      - acceptance_tests_public_ui:
+          <<: *feature_branch
+          requires:
+            - request-acceptance-tests-staging-preview-public-approval
+          context: visits-public-e2e-tests
 
       - hmpps/deploy_env:
           <<: *main_branch
@@ -242,6 +244,7 @@ workflows:
             - build_docker
 
       - hmpps/deploy_env:
+          <<: *main_branch
           name: deploy_staging
           env: "staging"
           jira_update: true
@@ -252,23 +255,27 @@ workflows:
             - hmpps-common-vars
             - hmpps-book-a-prison-visit-ui-stage
           requires:
-            - deploy_dev
-
-      - acceptance_tests_public_ui:
-          <<: *main_branch
-          requires:
-            - request-acceptance-tests-public-approval
-          context: visits-public-e2e-tests
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
 
       - request-acceptance-tests-public-approval:
           <<: *main_branch
           type: approval
           requires:
             - deploy_staging
+      - acceptance_tests_public_ui:
+          <<: *main_branch
+          requires:
+            - request-acceptance-tests-public-approval
+          context: visits-public-e2e-tests
 
       - request-preprod-approval:
+          <<: *main_branch
           type: approval
           requires:
+            - deploy_dev
             - deploy_staging
       - hmpps/deploy_env:
           name: deploy_preprod
