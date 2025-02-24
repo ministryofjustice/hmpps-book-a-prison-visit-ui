@@ -57,6 +57,16 @@ afterEach(() => {
 
 describe('Check visit details', () => {
   describe(`GET ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
+    const fakeDate = new Date('2024-05-28')
+
+    beforeEach(() => {
+      jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
     it('should use the session validation middleware', () => {
       sessionData.bookingJourney.prisoner = undefined
 
