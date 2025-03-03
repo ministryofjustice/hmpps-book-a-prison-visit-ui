@@ -2003,8 +2003,6 @@ export interface components {
       totalElements?: number
       /** Format: int32 */
       totalPages?: number
-      first?: boolean
-      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
@@ -2014,17 +2012,19 @@ export interface components {
       /** Format: int32 */
       numberOfElements?: number
       pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject']
-      /** Format: int32 */
-      pageSize?: number
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
+      /** Format: int32 */
+      pageSize?: number
       unpaged?: boolean
     }
     SortObject: {
@@ -2420,8 +2420,11 @@ export interface components {
       nextAvailableVoDate: string
       /** @description Current prison code for the prison that the booker registered the prisoner with */
       registeredPrison: components['schemas']['RegisteredPrisonDto']
-      /** @description Convicted status of prisoner */
-      convictedStatus?: string
+      /**
+       * @description Convicted status of prisoner
+       * @enum {string}
+       */
+      convictedStatus?: 'Convicted' | 'Remand'
     }
     CurrentIncentive: {
       /** @description Incentive level */

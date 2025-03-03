@@ -53,7 +53,7 @@ describe('Booker service', () => {
   describe('getPrisoners', () => {
     it('should return prisoners for the given booker reference, with UUID display IDs added', async () => {
       const bookerReference = TestData.bookerReference()
-      const prisoner1 = {
+      const prisoner1: Omit<Prisoner, 'prisonerDisplayId'> = {
         prisonerNumber: 'A',
         firstName: 'F1',
         lastName: 'L1',
@@ -63,8 +63,9 @@ describe('Booker service', () => {
         registeredPrisonName: 'RP1 (HMP)',
         availableVos: 1,
         nextAvailableVoDate: '2024-06-01',
+        convictedStatus: 'Convicted',
       }
-      const prisoner2 = {
+      const prisoner2: Omit<Prisoner, 'prisonerDisplayId'> = {
         prisonerNumber: 'B',
         firstName: 'F2',
         lastName: 'L2',
@@ -74,6 +75,7 @@ describe('Booker service', () => {
         registeredPrisonName: 'RP2 (HMP)',
         availableVos: 2,
         nextAvailableVoDate: '2024-06-02',
+        convictedStatus: 'Convicted',
       }
       const bookerPrisonerInfoDtos = [
         TestData.bookerPrisonerInfoDto(prisoner1),
