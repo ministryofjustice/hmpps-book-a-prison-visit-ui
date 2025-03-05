@@ -97,6 +97,7 @@ describe('Select prisoner', () => {
   describe('Prisoner validation', () => {
     // testing all these scenarios with no VO balance as validation failures should take precedence
     const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
+    const remandPrisoner = TestData.prisoner({ availableVos: 0, convictedStatus: 'Remand' })
 
     it.each(<
       { errorCode: BookerPrisonerValidationErrorResponse['validationError']; cannotBookReason: CannotBookReason }[]
@@ -159,6 +160,33 @@ describe('Select prisoner', () => {
             bookingJourney: {
               prisoner: prisonerWithNoVos,
               cannotBookReason: 'NO_VO_BALANCE',
+            },
+          } as SessionData)
+        })
+    })
+
+    it('should allow prisoner on REMAND to book with no VO balance', () => {
+      bookerService.validatePrisoner.mockResolvedValue(true)
+
+      sessionData = {
+        booker: { reference: bookerReference, prisoners: [remandPrisoner] },
+      } as SessionData
+
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: remandPrisoner.prisonerDisplayId.toString() })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [remandPrisoner],
+            },
+            bookingJourney: {
+              prisoner: remandPrisoner,
             },
           } as SessionData)
         })

@@ -71,6 +71,7 @@ export default class TestData {
     registeredPrisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
+    convictedStatus = 'Convicted',
   }: Partial<{
     prisonerNumber: string
     firstName: string
@@ -81,11 +82,13 @@ export default class TestData {
     registeredPrisonName: string
     availableVos: number
     nextAvailableVoDate: string
+    convictedStatus: BookerPrisonerInfoDto['convictedStatus']
   }> = {}): BookerPrisonerInfoDto => ({
     prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName },
     availableVos,
     nextAvailableVoDate,
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
+    convictedStatus,
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
@@ -168,6 +171,7 @@ export default class TestData {
     registeredPrisonName = 'Hewell (HMP)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
+    convictedStatus = 'Convicted',
   }: Partial<Prisoner> = {}): Prisoner => ({
     prisonerDisplayId,
     prisonerNumber,
@@ -179,6 +183,7 @@ export default class TestData {
     registeredPrisonName,
     availableVos,
     nextAvailableVoDate,
+    convictedStatus,
   })
 
   static visitDetails = ({

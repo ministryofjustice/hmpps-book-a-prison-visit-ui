@@ -23,7 +23,8 @@ export default class SelectPrisonerController {
 
       const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
 
-      if (validationResult === true && prisoner.availableVos > 0) {
+      const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
+      if (validationResult === true && prisonerHasVOsOrRemand) {
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 

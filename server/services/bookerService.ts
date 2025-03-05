@@ -1,7 +1,12 @@
 import { randomUUID } from 'crypto'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
-import { AuthDetailDto, BookerPrisonerValidationErrorResponse, VisitorInfoDto } from '../data/orchestrationApiTypes'
+import {
+  AuthDetailDto,
+  BookerPrisonerInfoDto,
+  BookerPrisonerValidationErrorResponse,
+  VisitorInfoDto,
+} from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 import { SanitisedError } from '../sanitisedError'
 
@@ -16,6 +21,7 @@ export type Prisoner = {
   registeredPrisonName: string
   availableVos: number
   nextAvailableVoDate: string
+  convictedStatus?: BookerPrisonerInfoDto['convictedStatus']
 }
 export interface Visitor extends VisitorInfoDto {
   visitorDisplayId: string
@@ -45,7 +51,7 @@ export default class BookerService {
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
 
     return prisoners.map(bookerPrisonerInfo => {
-      const { prisoner, availableVos, nextAvailableVoDate, registeredPrison } = bookerPrisonerInfo
+      const { prisoner, availableVos, nextAvailableVoDate, registeredPrison, convictedStatus } = bookerPrisonerInfo
       return {
         prisonerDisplayId: randomUUID(),
         prisonerNumber: prisoner.prisonerNumber,
@@ -57,6 +63,7 @@ export default class BookerService {
         registeredPrisonName: registeredPrison.prisonName,
         availableVos,
         nextAvailableVoDate,
+        convictedStatus,
       }
     })
   }

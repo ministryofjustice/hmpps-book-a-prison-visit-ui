@@ -185,6 +185,26 @@ context('Booking journey', () => {
       .contains('An email and a text message confirming the visit will be sent')
   })
 
+  it('should be possible to start booking journey with no VOs if REMAND prisoner', () => {
+    const remandPrisoner = TestData.bookerPrisonerInfoDto({ availableVos: 0, convictedStatus: 'Remand' })
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners', { prisoners: [remandPrisoner] })
+    cy.signIn()
+
+    // Home page - prisoner shown
+    const homePage = Page.verifyOnPage(HomePage)
+    homePage.prisonerName().contains('John Smith')
+
+    // Start booking journey
+    cy.task('stubGetPrison', prison)
+    cy.task('stubGetVisitors', { visitors })
+    cy.task('stubValidatePrisonerPass')
+    homePage.startBooking()
+
+    // Select visitors page - choose visitors
+    Page.verifyOnPage(SelectVisitorsPage)
+  })
+
   it('should show closed visit interruption card (CLOSED visit)', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
