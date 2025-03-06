@@ -15,25 +15,29 @@
       <h1 class="govuk-heading-l">Are you sure you want to cancel your booking?</h1>
 
       <h2 class="govuk-heading-m">Date and time</h2>
-
-      <p class="govuk-!-margin-bottom-1" data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</p>
-      <p>
-        <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-        to
-        <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-      </p>
+      <ul class="govuk-list">
+        <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
+        <li>
+          <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+          to
+          <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+        </li>
+      </ul>
 
       <h2 class="govuk-heading-m">Prisoner</h2>
+      <ul class="govuk-list">
+        <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
+      </ul>
 
-      <p data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</p>
 
       <h2 class="govuk-heading-m">Visitors</h2>
-
-      {% for visitor in visit.visitors %}
-        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
-          {{ visitor.firstName }} {{ visitor.lastName }}
-        </p>
-      {% endfor %}
+      <ul class="govuk-list">
+        {% for visitor in visit.visitors %}
+          <li data-test="visitor-name-{{ loop.index }}">
+            {{ visitor.firstName }} {{ visitor.lastName }}
+          </li>
+        {% endfor %}
+      </ul>
 
       <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
