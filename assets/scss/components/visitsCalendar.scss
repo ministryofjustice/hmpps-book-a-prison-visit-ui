@@ -17,6 +17,8 @@
   }
 
   .visits-calendar__day-headings {
+    margin-top: govuk-spacing(3);
+
     li {
       min-width: 2.25rem;
       max-width: 3rem;

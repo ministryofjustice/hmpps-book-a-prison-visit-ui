@@ -15,29 +15,31 @@
 
       {% if visits | length %}
         {% for visit in visits %}
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
-          <p class="govuk-!-margin-bottom-1">
-            <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-            to
-            <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-          </p>
-          <p class="govuk-!-margin-bottom-1">
-            Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
-          </p>
-          <p>
-            <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
-              View details
-              <span class="govuk-visually-hidden">
-                of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
-              </span>
-            </a>
-            <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-              Cancel <span class="govuk-visually-hidden">your</span> booking
-              <span class="govuk-visually-hidden">
-                for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
-              </span>
-            </a>
-          </p>
+          <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+          <ul class="govuk-list">
+            <li>
+              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+              to
+              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+            </li>
+            <li>
+              Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
+            </li>
+            <li>
+              <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+                View details
+                <span class="govuk-visually-hidden">
+                  of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                </span>
+              </a>
+              <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
+                Cancel <span class="govuk-visually-hidden">your</span> booking
+                <span class="govuk-visually-hidden">
+                  for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                </span>
+              </a>
+            </li>
+          </ul>
         {% endfor %}
 
       {% else %}

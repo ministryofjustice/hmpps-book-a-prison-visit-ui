@@ -12,7 +12,9 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Booking reference: <span data-test="booking-reference">{{ visit.reference }}</span></p>
+      <h2 class="govuk-heading-m">Booking reference:
+        <span data-test="booking-reference">{{ visit.reference }}</span>
+      </h2>
 
       {% if visit.visitStatus === "CANCELLED" %}
 
@@ -45,47 +47,53 @@
 
       {% endif %}
 
-      <h2 class="govuk-heading-m">Date and time</h2>
+      <h3 class="govuk-heading-s">Date and time</h3>
+      <ul class="govuk-list">
+        <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
+        <li>
+          <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+          to
+          <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+        </li>
+      </ul>
 
-      <p class="govuk-!-margin-bottom-1" data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</p>
-      <p>
-        <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-        to
-        <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-      </p>
+      <h3 class="govuk-heading-s">Prisoner</h3>
+      <ul class="govuk-list">
+        <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
+      </ul>
 
-      <h2 class="govuk-heading-m">Prisoner</h2>
+      <h3 class="govuk-heading-s">Visitors</h3>
+      <ul class="govuk-list">
+        {% for visitor in visit.visitors %}
+          <li data-test="visitor-name-{{ loop.index }}">
+            {{ visitor.firstName }} {{ visitor.lastName }}
+          </li>
+        {% endfor %}
+      </ul>
 
-      <p data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</p>
+      <h3 class="govuk-heading-s">Additional support requests</h3>
+      <ul class="govuk-list">
+        <li data-test="additional-support">{{ visit.visitorSupport.description | d("None", true) }}</li>
+      </ul>
 
-      <h2 class="govuk-heading-m">Visitors</h2>
-
-      {% for visitor in visit.visitors %}
-        <p class="{{ "govuk-!-margin-bottom-1" if not loop.last }}" data-test="visitor-name-{{ loop.index }}">
-          {{ visitor.firstName }} {{ visitor.lastName }}
-        </p>
-      {% endfor %}
-
-      <h2 class="govuk-heading-m">Additional support requests</h2>
-
-      <p data-test="additional-support">{{ visit.visitorSupport.description | d("None", true) }}</p>
-      
-      <h2 class="govuk-heading-m">Main contact</h2>
-      <p class="govuk-!-margin-bottom-1" data-test="main-contact-name">{{ visit.visitContact.name }}</p>
-      {% if visit.visitContact.email %}
-        <p class="{%if visit.visitContact.telephone %}govuk-!-margin-bottom-1{% endif %}" data-test="main-contact-email">{{ visit.visitContact.email }}</p>
-      {% endif %}
-      {% if visit.visitContact.telephone %}
-        <p data-test="main-contact-number">{{ visit.visitContact.telephone }}</p>
-      {% endif %}
-      {% if not visit.visitContact.email and not visit.visitContact.telephone %}
-        <p data-test="main-contact-no-details">No contact details provided</p>
-      {% endif %}
+      <h3 class="govuk-heading-s">Main contact</h3>
+      <ul class="govuk-list">
+        <li data-test="main-contact-name">{{ visit.visitContact.name }}</li>
+        {% if visit.visitContact.email %}
+          <li data-test="main-contact-email">{{ visit.visitContact.email }}</li>
+        {% endif %}
+        {% if visit.visitContact.telephone %}
+          <li data-test="main-contact-number">{{ visit.visitContact.telephone }}</li>
+        {% endif %}
+        {% if not visit.visitContact.email and not visit.visitContact.telephone %}
+          <li data-test="main-contact-no-details">No contact details provided</li>
+        {% endif %}
+      </ul>
 
       {% if showCancelButton %}
         {{ govukButton({
           text: "Cancel booking",
-          classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-7 govuk-button--secondary",
+          classes: "govuk-button--secondary",
           href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },
           preventDoubleClick: true
