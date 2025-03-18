@@ -2,11 +2,12 @@ $govuk-global-styles: true;
 $govuk-new-typography-scale: true;
 $path: "/assets/images/";
 
-@import 'govuk/all';
+@import 'govuk';
 
 // MoJ components
-@import "moj/components/banner/banner";
-@import "moj/components/interruption-card/interruption-card";
+@import 'moj/all';
+// @import "moj/components/banner/banner";
+// @import "moj/components/interruption-card/interruption-card";
 
 // GOV.UK One Login components
 @import './components/service-header-no-imports';
