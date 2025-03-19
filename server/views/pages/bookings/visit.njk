@@ -12,7 +12,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m">Booking reference:
+      <h2 class="govuk-heading-m govuk-!-padding-top-5">Booking reference:
         <span data-test="booking-reference">{{ visit.reference }}</span>
       </h2>
 
@@ -47,7 +47,7 @@
 
       {% endif %}
 
-      <h3 class="govuk-heading-s">Date and time</h3>
+      <h3 class="govuk-heading-s govuk-!-padding-top-4">Date and time</h3>
       <ul class="govuk-list">
         <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
         <li>
