@@ -15,16 +15,16 @@
   @include govuk-responsive-margin(3, "bottom");
 }
 
-// Increase top padding if there is content above in container
-.govuk-heading-l:not(:first-child) {
+// Increase top padding if content above in container (unless immediate sibling heading)
+.govuk-heading-l:not(:first-child, .govuk-heading-xl + .govuk-heading-l) {
   @include govuk-responsive-padding(6, "top");
 }
 
-.govuk-heading-m:not(:first-child) {
+.govuk-heading-m:not(:first-child, .govuk-heading-l + .govuk-heading-m) {
   @include govuk-responsive-padding(5, "top");
 }
 
-.govuk-heading-s:not(:first-child) {
+.govuk-heading-s:not(:first-child, .govuk-heading-m + .govuk-heading-s) {
   @include govuk-responsive-padding(4, "top");
 }
 
