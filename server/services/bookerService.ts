@@ -3,8 +3,8 @@ import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import {
   AuthDetailDto,
-  BookerPrisonerInfoDto,
   BookerPrisonerValidationErrorResponse,
+  ConvictedStatus,
   VisitorInfoDto,
 } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
@@ -21,7 +21,7 @@ export type Prisoner = {
   registeredPrisonName: string
   availableVos: number
   nextAvailableVoDate: string
-  convictedStatus?: BookerPrisonerInfoDto['convictedStatus']
+  convictedStatus?: ConvictedStatus
 }
 export interface Visitor extends VisitorInfoDto {
   visitorDisplayId: string
@@ -51,7 +51,8 @@ export default class BookerService {
     const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
 
     return prisoners.map(bookerPrisonerInfo => {
-      const { prisoner, availableVos, nextAvailableVoDate, registeredPrison, convictedStatus } = bookerPrisonerInfo
+      const { prisoner, availableVos, nextAvailableVoDate, registeredPrison } = bookerPrisonerInfo
+
       return {
         prisonerDisplayId: randomUUID(),
         prisonerNumber: prisoner.prisonerNumber,
@@ -63,7 +64,7 @@ export default class BookerService {
         registeredPrisonName: registeredPrison.prisonName,
         availableVos,
         nextAvailableVoDate,
-        convictedStatus,
+        convictedStatus: prisoner.convictedStatus,
       }
     })
   }

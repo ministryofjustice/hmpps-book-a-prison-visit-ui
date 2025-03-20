@@ -1397,7 +1397,7 @@ export interface components {
       /** @description full name of user who added the exclude date or username if full name is not available. */
       actionedBy: string
     }
-    /** @description Event Audit */
+    /** @description Event Audit with actioned by user's full name populated */
     EventAuditOrchestrationDto: {
       /**
        * @description The type of event
@@ -1416,10 +1416,15 @@ export interface components {
         | 'PRISONER_RESTRICTION_CHANGE_EVENT'
         | 'PRISONER_ALERTS_UPDATED_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
+        | 'SESSION_VISITS_BLOCKED_FOR_DATE'
         | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
         | 'PERSON_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
         | 'VISITOR_UNAPPROVED_EVENT'
+        | 'UPDATED_NON_ASSOCIATION_VISIT_EVENT'
+        | 'CANCELLED_NON_ASSOCIATION_VISIT_EVENT'
+        | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
+        | 'PAIRED_VISIT_CANCELLED_IGNORED_OR_UPDATED_EVENT'
       /**
        * @description What was the application method for this event
        * @enum {string}
@@ -1443,8 +1448,6 @@ export interface components {
        * @enum {string}
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
-      /** @description Session template used for this event  */
-      sessionTemplateReference?: string
       /** @description Notes added against the event */
       text?: string
       /**
@@ -1460,25 +1463,6 @@ export interface components {
       eventsAudit: components['schemas']['EventAuditOrchestrationDto'][]
       /** @description The visit details */
       visit: components['schemas']['VisitDto']
-    }
-    /** @description Actioned By */
-    ActionedByDto: {
-      /**
-       * @description booker reference
-       * @example asd-aed-vhj
-       */
-      bookerReference?: string
-      /**
-       * @description User Name
-       * @example AS/ALED
-       */
-      userName?: string
-      /**
-       * @description User type
-       * @example STAFF
-       * @enum {string}
-       */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM'
     }
     /** @description An address */
     AddressDto: {
@@ -1622,54 +1606,6 @@ export interface components {
        */
       active: boolean
     }
-    /** @description Event Audit */
-    EventAuditDto: {
-      /**
-       * @description The type of event
-       * @enum {string}
-       */
-      type:
-        | 'RESERVED_VISIT'
-        | 'CHANGING_VISIT'
-        | 'MIGRATED_VISIT'
-        | 'BOOKED_VISIT'
-        | 'UPDATED_VISIT'
-        | 'CANCELLED_VISIT'
-        | 'NON_ASSOCIATION_EVENT'
-        | 'PRISONER_RELEASED_EVENT'
-        | 'PRISONER_RECEIVED_EVENT'
-        | 'PRISONER_RESTRICTION_CHANGE_EVENT'
-        | 'PRISONER_ALERTS_UPDATED_EVENT'
-        | 'PRISON_VISITS_BLOCKED_FOR_DATE'
-        | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
-        | 'PERSON_RESTRICTION_UPSERTED_EVENT'
-        | 'VISITOR_RESTRICTION_UPSERTED_EVENT'
-        | 'VISITOR_UNAPPROVED_EVENT'
-      /**
-       * @description What was the application method for this event
-       * @enum {string}
-       */
-      applicationMethodType:
-        | 'PHONE'
-        | 'WEBSITE'
-        | 'EMAIL'
-        | 'IN_PERSON'
-        | 'NOT_KNOWN'
-        | 'NOT_APPLICABLE'
-        | 'BY_PRISONER'
-      /** @description Event actioned by information */
-      actionedBy: components['schemas']['ActionedByDto']
-      /** @description Session template used for this event */
-      sessionTemplateReference?: string
-      /** @description Notes added against the event */
-      text?: string
-      /**
-       * Format: date-time
-       * @description event creat date and time
-       * @example 2018-12-01T13:45:00
-       */
-      createTimestamp: string
-    }
     /** @description Offender restriction */
     OffenderRestrictionDto: {
       /**
@@ -1740,6 +1676,11 @@ export interface components {
        * @example MDI
        */
       prisonId?: string
+      /**
+       * @description Prison Name
+       * @example HMP Leeds
+       */
+      prisonName?: string
       /**
        * @description In prison cell location
        * @example A-1-002
@@ -1817,17 +1758,38 @@ export interface components {
        */
       visitRoom: string
       /**
-       * @description Visit Type
-       * @example SOCIAL
-       * @enum {string}
-       */
-      visitType: 'SOCIAL'
-      /**
        * @description Visit Status
        * @example RESERVED
        * @enum {string}
        */
       visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Outcome Status
+       * @example VISITOR_CANCELLED
+       * @enum {string}
+       */
+      outcomeStatus?:
+        | 'ADMINISTRATIVE_CANCELLATION'
+        | 'ADMINISTRATIVE_ERROR'
+        | 'BATCH_CANCELLATION'
+        | 'CANCELLATION'
+        | 'COMPLETED_NORMALLY'
+        | 'ESTABLISHMENT_CANCELLED'
+        | 'NOT_RECORDED'
+        | 'NO_VISITING_ORDER'
+        | 'PRISONER_CANCELLED'
+        | 'PRISONER_COMPLETED_EARLY'
+        | 'PRISONER_REFUSED_TO_ATTEND'
+        | 'TERMINATED_BY_STAFF'
+        | 'VISITOR_CANCELLED'
+        | 'VISITOR_COMPLETED_EARLY'
+        | 'VISITOR_DECLINED_ENTRY'
+        | 'VISITOR_DID_NOT_ARRIVE'
+        | 'VISITOR_FAILED_SECURITY_CHECKS'
+        | 'VISIT_ORDER_CANCELLED'
+        | 'SUPERSEDED_CANCELLATION'
+        | 'DETAILS_CHANGED_AFTER_BOOKING'
+        | 'BOOKER_CANCELLED'
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -1846,8 +1808,10 @@ export interface components {
        * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
+      /** @description Visit Notes */
+      visitNotes?: components['schemas']['VisitNoteDto'][]
       /** @description Contact associated with the visit */
-      visitContact?: components['schemas']['ContactDto']
+      visitContact?: components['schemas']['VisitContactDto']
       /** @description Additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto']
       /** @description Prison code and name */
@@ -1856,8 +1820,32 @@ export interface components {
       prisoner: components['schemas']['PrisonerDetailsDto']
       /** @description Prisoner details */
       visitors: components['schemas']['VisitorDetailsDto'][]
-      events: components['schemas']['EventAuditDto'][]
+      events: components['schemas']['EventAuditOrchestrationDto'][]
       notifications: components['schemas']['VisitNotificationDto'][]
+    }
+    /** @description Visit notification details */
+    VisitContactDto: {
+      /**
+       * Format: int64
+       * @description Main contact ID associated with the visit
+       * @example 1234
+       */
+      visitContactId?: number
+      /**
+       * @description Contact Name
+       * @example John Smith
+       */
+      name: string
+      /**
+       * @description Contact Phone Number
+       * @example 01234 567890
+       */
+      telephone?: string
+      /**
+       * @description Contact Email Address
+       * @example email@example.com
+       */
+      email?: string
     }
     /** @description Visit notification details */
     VisitNotificationDto: {
@@ -1999,19 +1987,19 @@ export interface components {
       visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
       first?: boolean
       last?: boolean
       empty?: boolean
@@ -2029,8 +2017,8 @@ export interface components {
     }
     SortObject: {
       empty?: boolean
-      sorted?: boolean
       unsorted?: boolean
+      sorted?: boolean
     }
     OrchestrationNotificationGroupDto: {
       /**
@@ -2420,11 +2408,6 @@ export interface components {
       nextAvailableVoDate: string
       /** @description Current prison code for the prison that the booker registered the prisoner with */
       registeredPrison: components['schemas']['RegisteredPrisonDto']
-      /**
-       * @description Convicted status of prisoner
-       * @enum {string}
-       */
-      convictedStatus?: 'Convicted' | 'Remand'
     }
     CurrentIncentive: {
       /** @description Incentive level */
@@ -2498,6 +2481,12 @@ export interface components {
        * @example Outside - released from Leeds
        */
       locationDescription?: string
+      /**
+       * @description Convicted Status
+       * @example Convicted
+       * @enum {string}
+       */
+      convictedStatus?: 'Convicted' | 'Remand'
     }
     RegisteredPrisonDto: {
       /**
