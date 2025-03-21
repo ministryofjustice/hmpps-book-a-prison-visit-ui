@@ -9,6 +9,7 @@ import type {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
+  ConvictedStatus,
 } from '../../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
@@ -82,13 +83,12 @@ export default class TestData {
     registeredPrisonName: string
     availableVos: number
     nextAvailableVoDate: string
-    convictedStatus: BookerPrisonerInfoDto['convictedStatus']
+    convictedStatus: ConvictedStatus
   }> = {}): BookerPrisonerInfoDto => ({
-    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName },
+    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName, convictedStatus },
     availableVos,
     nextAvailableVoDate,
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
-    convictedStatus,
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })

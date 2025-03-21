@@ -22,6 +22,8 @@ export type CancelVisitOrchestrationDto = components['schemas']['CancelVisitOrch
 
 export type ChangeApplicationDto = components['schemas']['ChangeApplicationDto']
 
+export type ConvictedStatus = BookerPrisonerInfoDto['prisoner']['convictedStatus']
+
 export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
 export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
