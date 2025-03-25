@@ -37,7 +37,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setupGovukOneLogin())
   app.use(analyticsConsent())
   app.use(setUpCsrf())
-  app.use(unauthenticatedRoutes())
+  app.use(unauthenticatedRoutes(services))
   app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
 

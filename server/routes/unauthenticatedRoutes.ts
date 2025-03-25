@@ -4,8 +4,9 @@ import { ValidationChain } from 'express-validator'
 import paths from '../constants/paths'
 import CookiesController from './cookiesController'
 import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Services } from '../services'
 
-export default function routes(): Router {
+export default function routes({ prisonService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -13,12 +14,17 @@ export default function routes(): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   // Service start page
-  router.get(paths.START, (req, res) => {
-    return req.user ? res.redirect(paths.HOME) : res.render('pages/serviceStart', { hideGOVUKServiceNav: true })
+  get(paths.START, async (req, res) => {
+    if (req.user) {
+      return res.redirect(paths.HOME)
+    }
+
+    const supportedPrisons = await prisonService.getSupportedPrisons()
+    return res.render('pages/serviceStart', { supportedPrisons, hideGOVUKServiceNav: true })
   })
 
   // Accessibility statement
-  router.get(paths.ACCESSIBILITY, (req, res) => {
+  get(paths.ACCESSIBILITY, (req, res) => {
     res.render('pages/accessibilityStatement', { showOLServiceNav: !!req.session.booker })
   })
 
@@ -28,17 +34,17 @@ export default function routes(): Router {
   postWithValidation(paths.COOKIES, cookies.validate(), cookies.submit())
 
   // Privacy notice
-  router.get(paths.PRIVACY, (req, res) => {
+  get(paths.PRIVACY, (req, res) => {
     res.render('pages/privacyNotice', { showOLServiceNav: !!req.session.booker })
   })
 
   // Terms and conditions
-  router.get(paths.TERMS, (req, res) => {
+  get(paths.TERMS, (req, res) => {
     res.render('pages/termsAndConditions', { showOLServiceNav: !!req.session.booker })
   })
 
   // Signed out
-  router.get(paths.SIGNED_OUT, (req, res) => {
+  get(paths.SIGNED_OUT, (req, res) => {
     res.render('pages/signedOut')
   })
 
