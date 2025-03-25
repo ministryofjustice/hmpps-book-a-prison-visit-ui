@@ -3,6 +3,7 @@ import GovukOneLoginPage from '../pages/govukOneLogin'
 import Page from '../pages/page'
 import SignedOutPage from '../pages/signedOut'
 import paths from '../../server/constants/paths'
+import TestData from '../../server/routes/testutils/testData'
 
 context('Sign in with GOV.UK One Login', () => {
   beforeEach(() => {
@@ -38,7 +39,7 @@ context('Sign in with GOV.UK One Login', () => {
   it('User can sign in and view home page', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners')
+    cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.signIn()
 
     Page.verifyOnPage(HomePage)
@@ -48,7 +49,7 @@ context('Sign in with GOV.UK One Login', () => {
     const page = '/deep-link' // will be a 404, but OK as testing original URL preserved
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners')
+    cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.signIn({ options: { failOnStatusCode: false }, initialRequestUrl: page })
     cy.location('pathname').should('equal', page)
     cy.contains('404')
@@ -63,7 +64,7 @@ context('Sign in with GOV.UK One Login', () => {
   it('User can log out', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners')
+    cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.signIn()
     const homePage = Page.verifyOnPage(HomePage)
 
