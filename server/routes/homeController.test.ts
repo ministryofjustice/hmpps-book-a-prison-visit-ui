@@ -6,6 +6,7 @@ import { appWithAllRoutes } from './testutils/appSetup'
 import TestData from './testutils/testData'
 import paths from '../constants/paths'
 import * as utils from '../utils/utils'
+import config from '../config'
 
 let app: Express
 
@@ -22,55 +23,89 @@ afterEach(() => {
 
 describe('Home page', () => {
   const bookerReference = TestData.bookerReference().value
-  const prisoner = TestData.prisoner()
 
-  // For MVP only one prisoner per booker supported; so only first rendered
-  it('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
-    return request(app)
-      .get(paths.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Book a visit -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Book a visit')
-        expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
-        expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
-        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
-        expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
+  describe('Booker has a prisoner registered', () => {
+    const prisoner = TestData.prisoner()
 
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-            prisoners: [prisoner],
-          },
-        } as SessionData)
-      })
+    // For MVP only one prisoner per booker supported; so only first rendered
+    it('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
+      return request(app)
+        .get(paths.HOME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Book a visit -/)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text()).toBe('Book a visit')
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+          expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
+          expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner],
+            },
+          } as SessionData)
+        })
+    })
+
+    it('should render the home page with message when booker has no associated prisoners', () => {
+      sessionData.booker = { reference: bookerReference, prisoners: [] }
+      app = appWithAllRoutes({ populateBooker: false, sessionData })
+
+      return request(app)
+        .get(paths.HOME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Book a visit -/)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text()).toBe('Book a visit')
+          expect($('[data-test="prisoner-name"]').length).toBe(0)
+          expect($('[data-test="start-booking"]').length).toBe(0)
+          expect($('[data-test=no-prisoners]').text()).toBe('No prisoner details found.')
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [],
+            },
+          } as SessionData)
+        })
+    })
   })
 
-  it('should render the home page with message when booker has no associated prisoners', () => {
-    sessionData.booker = { reference: bookerReference, prisoners: [] }
-    app = appWithAllRoutes({ populateBooker: false, sessionData })
-
-    return request(app)
-      .get(paths.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Book a visit -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Book a visit')
-        expect($('[data-test="prisoner-name"]').length).toBe(0)
-        expect($('[data-test="start-booking"]').length).toBe(0)
-        expect($('[data-test=no-prisoners]').text()).toBe('No prisoner details found.')
-
-        expect(sessionData).toStrictEqual({
-          booker: {
-            reference: bookerReference,
-            prisoners: [],
-          },
-        } as SessionData)
+  describe('Booker has no prisoner registered (feature flagged with FEATURE_ADD_PRISONER_ENABLED)', () => {
+    beforeEach(() => {
+      jest.replaceProperty(config, 'features', {
+        ...config.features,
+        addPrisoner: true,
       })
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('should redirect add prisoner journey start if booker has no registered prisoner', () => {
+      sessionData.booker = { reference: bookerReference, prisoners: [] }
+      app = appWithAllRoutes({ populateBooker: false, sessionData })
+
+      return request(app)
+        .get(paths.HOME)
+        .expect(302)
+        .expect('Location', paths.ADD_PRISONER.LOCATION)
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [],
+            },
+          } as SessionData)
+        })
+    })
   })
 })
 
