@@ -10,6 +10,13 @@ const paths = {
   SIGN_OUT: '/sign-out',
   SIGNED_OUT: '/signed-out',
 
+  ADD_PRISONER: {
+    LOCATION: '/location',
+    DETAILS: '/prisoner',
+    SUCCESS: '/prisoner-added',
+    FAIL: '/prisoner-incorrect',
+  },
+
   BOOK_VISIT: {
     ROOT: '/book-visit',
     SELECT_PRISONER: '/book-visit/select-prisoner',
