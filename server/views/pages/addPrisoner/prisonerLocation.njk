@@ -1,0 +1,53 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = "Where is the prisoner you want to visit?" %}
+
+{% set backLinkHref = paths.HOME %}
+
+{% set prisonsRadios = [] %}
+{% for prison in prisons %}
+  {% set prisonsRadios = (prisonsRadios.push(
+    {
+      text: prison.prisonName,
+      value: prison.prisonId
+    }
+  ), prisonsRadios) %}
+{% endfor %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <form action="{{ paths.ADD_PRISONER.LOCATION }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukRadios({
+          name: "prisons",
+          fieldset: {
+            legend: {
+              text: pageTitle,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: prisonsRadios,
+          errorMessage: errors | findError('prisons')
+        }) }}
+
+        <p>
+          If you do not know, you can <a href="https://www.gov.uk/find-prisoner" target="_blank">apply to find the prisoner’s location</a>.
+        </p>
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}

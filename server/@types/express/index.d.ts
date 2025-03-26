@@ -1,5 +1,5 @@
 import { ValidationError } from 'express-validator'
-import { Booker, BookingCancelled, BookingConfirmed, BookingJourney } from '../bapv'
+import { AddPrisonerJourney, Booker, BookingCancelled, BookingConfirmed, BookingJourney } from '../bapv'
 import { VisitDetails } from '../../services/visitService'
 
 export default {}
@@ -11,6 +11,8 @@ declare module 'express-session' {
     nowInMinutes: number
 
     booker: Booker
+
+    addPrisonerJourney?: AddPrisonerJourney
 
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed
