@@ -1,5 +1,4 @@
 import paths from '../../server/constants/paths'
-import TestData from '../../server/routes/testutils/testData'
 import GovukOneLoginPage from '../pages/govukOneLogin'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
@@ -30,13 +29,13 @@ context('Service start page', () => {
     })
   })
 
-  describe('Authenticated user (with registered prisoner)', () => {
+  describe('Authenticated user', () => {
     it('should be redirected to home page if attempting to view the start page', () => {
       cy.task('stubSignIn')
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
+      cy.task('stubGetPrisoners')
       cy.signIn()
 
       // Logged in (on Home page)
