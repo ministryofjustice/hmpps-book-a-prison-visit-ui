@@ -23,6 +23,18 @@ describe('Prison service', () => {
     jest.resetAllMocks()
   })
 
+  describe('getSupportedPrisons', () => {
+    it('should return list of supported prisons', async () => {
+      const prisons = [TestData.prisonRegisterPrisonDto()]
+      orchestrationApiClient.getSupportedPrisons.mockResolvedValue(prisons)
+
+      const results = await prisonService.getSupportedPrisons()
+
+      expect(orchestrationApiClient.getSupportedPrisons).toHaveBeenCalled()
+      expect(results).toStrictEqual(prisons)
+    })
+  })
+
   describe('getPrison', () => {
     it('should return prison config for given prison code', async () => {
       const prison = TestData.prisonDto()

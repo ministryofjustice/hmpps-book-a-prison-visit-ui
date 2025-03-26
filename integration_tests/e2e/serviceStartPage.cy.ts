@@ -13,11 +13,15 @@ context('Service start page', () => {
   describe('Unauthenticated user', () => {
     it('should be able to visit start page and proceed to GOVUK One Login', () => {
       cy.hideCookieBanner()
+      cy.task('stubGetSupportedPrisons')
 
       // Go to service start page
       cy.visit(paths.START)
       const serviceStartPage = Page.verifyOnPage(ServiceStartPage)
       serviceStartPage.oneLoginHeader().should('not.exist')
+
+      // Check supported prisons
+      serviceStartPage.getSupportedPrison(1).contains('Hewell (HMP)')
 
       // Click Start now button and be redirected to GOVUK One Login
       cy.task('stubSignIn')

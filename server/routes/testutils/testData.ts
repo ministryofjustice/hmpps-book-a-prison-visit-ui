@@ -10,6 +10,7 @@ import type {
   VisitDto,
   VisitorInfoDto,
   ConvictedStatus,
+  PrisonRegisterPrisonDto,
 } from '../../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
@@ -159,6 +160,13 @@ export default class TestData {
       webAddress,
       clients,
     }) as PrisonDto
+
+  static prisonRegisterPrisonDto = ({
+    prisonId = 'HEI',
+    prisonName = 'Hewell (HMP)',
+    active = true,
+  }: Partial<PrisonRegisterPrisonDto> = {}): PrisonRegisterPrisonDto =>
+    ({ prisonId, prisonName, active }) as PrisonRegisterPrisonDto
 
   static prisoner = ({
     prisonerDisplayId = 'uuidv4-1',

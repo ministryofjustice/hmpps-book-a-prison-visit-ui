@@ -9,8 +9,9 @@
 
       <p>This new service can be used to visit one prisoner in:</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>Drake Hall (HMP & YOI)</li>
-        <li>Foston Hall (HMP & YOI)</li>
+        {% for prison in supportedPrisons %}
+          <li data-test="prison-{{ loop.index }}">{{ prison.prisonName }}</li>
+        {% endfor %}
       </ul>
 
       <p>

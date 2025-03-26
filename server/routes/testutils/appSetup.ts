@@ -77,7 +77,7 @@ function appSetup(
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(analyticsConsent())
-  app.use(unauthenticatedRoutes())
+  app.use(unauthenticatedRoutes(services))
   app.use(routes(services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))

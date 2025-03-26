@@ -271,6 +271,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/public/booker/{bookerReference}/permitted/prisoners/register': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Register prisoner to a booker
+     * @description Register prisoner to a booker
+     */
+    post: operations['registerPrisoner']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visits/{reference}': {
     parameters: {
       query?: never
@@ -819,6 +839,26 @@ export interface paths {
      * @description Get all supported prisons id's
      */
     get: operations['getSupportedPrisons']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/config/prisons/user-type/{type}/supported/detailed': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get supported prisons with detailed prison details by user type
+     * @description Get all supported prisons with detailed prison details by user type
+     */
+    get: operations['getSupportedPrisonDetails']
     put?: never
     post?: never
     delete?: never
@@ -1397,6 +1437,35 @@ export interface components {
       /** @description full name of user who added the exclude date or username if full name is not available. */
       actionedBy: string
     }
+    /** @description Details to register a prisoner to a booker. */
+    RegisterPrisonerForBookerDto: {
+      /**
+       * @description Prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Prisoner first name
+       * @example James
+       */
+      prisonerFirstName: string
+      /**
+       * @description Prisoner last name
+       * @example Smith
+       */
+      prisonerLastName: string
+      /**
+       * Format: date
+       * @description Prisoner date of birth
+       * @example 1960-01-30
+       */
+      prisonerDateOfBirth: string
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+    }
     /** @description Event Audit with actioned by user's full name populated */
     EventAuditOrchestrationDto: {
       /**
@@ -1808,6 +1877,11 @@ export interface components {
        * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
+      /**
+       * @description Session Template Reference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference?: string
       /** @description Visit Notes */
       visitNotes?: components['schemas']['VisitNoteDto'][]
       /** @description Contact associated with the visit */
@@ -1917,7 +1991,7 @@ export interface components {
       relationshipDescription?: string
       /** @description List of restrictions associated with the contact */
       restrictions: components['schemas']['RestrictionDto'][]
-      /** @description List of addresses associated with the contact */
+      /** @description Primary address for the contact or the first address if no primary address available, null if address list is empty */
       primaryAddress?: components['schemas']['AddressDto']
     }
     /**
@@ -1932,13 +2006,11 @@ export interface components {
     visitRestrictions: ('OPEN' | 'CLOSED' | 'UNKNOWN')[]
     SessionTimeSlotDto: {
       /**
-       * Format: HH:mm
        * @description The start time of the generated visit session(s)
        * @example 10:30
        */
       startTime: string
       /**
-       * Format: HH:mm
        * @description The end time of the generated visit session(s)
        * @example 11:30
        */
@@ -1987,19 +2059,19 @@ export interface components {
       visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
     }
     PageVisitDto: {
-      /** Format: int32 */
-      totalPages?: number
       /** Format: int64 */
       totalElements?: number
+      /** Format: int32 */
+      totalPages?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
-      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
+      pageable?: components['schemas']['PageableObject']
       first?: boolean
       last?: boolean
       empty?: boolean
@@ -2008,12 +2080,12 @@ export interface components {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject']
+      unpaged?: boolean
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
       /** Format: int32 */
       pageSize?: number
-      unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
@@ -3910,6 +3982,57 @@ export interface operations {
       }
     }
   }
+  registerPrisoner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegisterPrisonerForBookerDto']
+      }
+    }
+    responses: {
+      /** @description Registration successful */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Incorrect request to register a prisoner to a booker */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner registration failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': 'FAILED_REGISTRATION'
+        }
+      }
+    }
+  }
   getVisitsByReference: {
     parameters: {
       query?: never
@@ -5459,6 +5582,50 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to view session templates */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSupportedPrisonDetails: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description type
+         * @example STAFF
+         */
+        type: 'STAFF' | 'PUBLIC' | 'SYSTEM'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Supported prisons returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonRegisterPrisonDto'][]
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get supported prison details */
       403: {
         headers: {
           [name: string]: unknown
