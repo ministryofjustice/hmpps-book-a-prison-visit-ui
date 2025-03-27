@@ -25,9 +25,7 @@
               text: "Prisoner"
             },
             value: {
-              html: '<span data-test="prisoner-name">' +
-                prisoner.firstName | capitalize | escape + " " + prisoner.lastName | capitalize | escape + 
-                "</span>"
+              html: '<span data-test="prisoner-name">' + (prisoner | prisonerNameFirstLast | escape) + "</span>"
             }
           },
 

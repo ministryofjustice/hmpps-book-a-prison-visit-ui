@@ -11,7 +11,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m">
-        <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span>’s visitors
+        <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>’s visitors
       </h2>
 
       {% if visitors | length %}

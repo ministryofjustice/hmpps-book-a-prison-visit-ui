@@ -10,7 +10,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       {% if prisoner %}
-        <p>Prisoner: <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{prisoner.lastName | capitalize }}</span></p>
+        <p>Prisoner: <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span></p>
 
         <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">

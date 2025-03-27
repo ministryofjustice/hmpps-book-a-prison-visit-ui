@@ -4,7 +4,15 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { FieldValidationError } from 'express-validator'
-import { formatDate, formatTime, formatTimeDuration, formatTimeFromDateTime, initialiseName, pluralise } from './utils'
+import {
+  convertToTitleCase,
+  formatDate,
+  formatTime,
+  formatTimeDuration,
+  formatTimeFromDateTime,
+  initialiseName,
+  pluralise,
+} from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 import paths from '../constants/paths'
@@ -90,6 +98,10 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     return {
       text: errorForMessage?.msg,
     }
+  })
+
+  njkEnv.addFilter('prisonerNameFirstLast', prisoner => {
+    return convertToTitleCase(`${prisoner?.firstName} ${prisoner?.lastName}`)
   })
 
   njkEnv.addFilter('formatDate', formatDate)
