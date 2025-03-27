@@ -26,7 +26,7 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({
-          name: "prisons",
+          name: "prisonId",
           fieldset: {
             legend: {
               text: pageTitle,
@@ -35,7 +35,7 @@
             }
           },
           items: prisonsRadios,
-          errorMessage: errors | findError('prisons')
+          errorMessage: errors | findError('prisonId')
         }) }}
 
         <p>
