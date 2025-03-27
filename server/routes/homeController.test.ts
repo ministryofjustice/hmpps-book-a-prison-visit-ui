@@ -64,8 +64,9 @@ describe('Home page', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text()).toBe('Book a visit')
           expect($('[data-test="prisoner-name"]').length).toBe(0)
+          expect($('[data-test=no-prisoner]').text()).toBe('No prisoner details found.')
           expect($('[data-test="start-booking"]').length).toBe(0)
-          expect($('[data-test=no-prisoners]').text()).toBe('No prisoner details found.')
+          expect($('[data-test="add-prisoner"]').length).toBe(0)
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -89,15 +90,23 @@ describe('Home page', () => {
       jest.restoreAllMocks()
     })
 
-    it('should redirect add prisoner journey start if booker has no registered prisoner', () => {
+    it('should render the home page with add a prisoner message and button', () => {
       sessionData.booker = { reference: bookerReference, prisoners: [] }
       app = appWithAllRoutes({ populateBooker: false, sessionData })
 
       return request(app)
         .get(paths.HOME)
-        .expect(302)
-        .expect('Location', paths.ADD_PRISONER.LOCATION)
-        .expect(() => {
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Book a visit -/)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text()).toBe('Book a visit')
+          expect($('[data-test="prisoner-name"]').length).toBe(0)
+          expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
+          expect($('[data-test="start-booking"]').length).toBe(0)
+          expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
+
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
