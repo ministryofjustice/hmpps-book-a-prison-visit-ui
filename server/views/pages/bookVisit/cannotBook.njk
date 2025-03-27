@@ -5,7 +5,7 @@
 {% set backLinkHref = paths.HOME %}
 
 {% set prisonerName -%}
-  <span data-test="prisoner-name">{{ prisoner.firstName | capitalize }} {{ prisoner.lastName | capitalize }}</span>
+  <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>
 {%- endset %}
 
 {% block content %}
