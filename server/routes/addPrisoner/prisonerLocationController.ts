@@ -8,13 +8,19 @@ export default class PrisonerLocationController {
 
   public view(): RequestHandler {
     return async (req, res) => {
+      const selectedPrisonId = req.session.addPrisonerJourney?.selectedPrisonId
       const prisons = await this.prisonService.getSupportedPrisons()
 
       const supportedPrisonIds = prisons.map(prison => prison.prisonId)
-      req.session.addPrisonerJourney = { supportedPrisonIds }
+      req.session.addPrisonerJourney = { supportedPrisonIds, ...(selectedPrisonId && { selectedPrisonId }) }
+
+      const formValues = {
+        ...(selectedPrisonId && { prisonId: selectedPrisonId }),
+      }
 
       return res.render('pages/addPrisoner/prisonerLocation', {
         errors: req.flash('errors'),
+        formValues,
         prisons,
       })
     }
