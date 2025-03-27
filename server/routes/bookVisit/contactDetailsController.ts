@@ -51,7 +51,7 @@ export default class ContactDetailsController {
     }
   }
 
-  validate(): ValidationChain[] {
+  public validate(): ValidationChain[] {
     return [
       body('getUpdatesBy').toArray(),
       body('mainContactEmail')

@@ -60,7 +60,7 @@ export default class MainContactController {
     }
   }
 
-  validate(): ValidationChain[] {
+  public validate(): ValidationChain[] {
     return [
       body('contact', 'No main contact selected')
         // filter invalid values - it should be a selected adult visitor or 'someoneElse'

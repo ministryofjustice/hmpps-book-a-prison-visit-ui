@@ -52,7 +52,7 @@ export default class AdditionalSupportController {
     }
   }
 
-  validate(): ValidationChain[] {
+  public validate(): ValidationChain[] {
     return [
       body('additionalSupportRequired').isIn(['yes', 'no']).withMessage('No answer selected'),
       body('additionalSupport')
