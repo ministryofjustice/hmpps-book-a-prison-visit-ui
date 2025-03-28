@@ -1,4 +1,4 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
@@ -35,6 +35,7 @@
             }
           },
           items: prisonsRadios,
+          value: formValues.prisonId,
           errorMessage: errors | findError('prisonId')
         }) }}
 
