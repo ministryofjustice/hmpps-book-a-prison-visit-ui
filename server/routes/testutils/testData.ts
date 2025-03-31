@@ -11,6 +11,7 @@ import type {
   VisitorInfoDto,
   ConvictedStatus,
   PrisonRegisterPrisonDto,
+  RegisterPrisonerForBookerDto,
 } from '../../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
@@ -100,6 +101,20 @@ export default class TestData {
     hasEmail = true,
     hasMobile = true,
   }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prison, visitReference, hasEmail, hasMobile })
+
+  static registerPrisonerForBookerDto = ({
+    prisonerId = 'A1234BC',
+    prisonerFirstName = 'JOHN',
+    prisonerLastName = 'SMITH',
+    prisonerDateOfBirth = '1975-04-02',
+    prisonId = 'HEI',
+  }: Partial<RegisterPrisonerForBookerDto> = {}): RegisterPrisonerForBookerDto => ({
+    prisonId,
+    prisonerFirstName,
+    prisonerLastName,
+    prisonerDateOfBirth,
+    prisonerId,
+  })
 
   static orchestrationVisitDto = ({
     reference = 'ab-cd-ef-gh',

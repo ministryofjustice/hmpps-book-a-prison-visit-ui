@@ -2063,34 +2063,34 @@ export interface components {
       totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      first?: boolean
+      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
-      first?: boolean
-      last?: boolean
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject']
-      unpaged?: boolean
-      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
+      paged?: boolean
       /** Format: int32 */
       pageSize?: number
+      unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
-      unsorted?: boolean
       sorted?: boolean
+      unsorted?: boolean
     }
     OrchestrationNotificationGroupDto: {
       /**
@@ -2687,6 +2687,8 @@ export interface components {
       visitBalances?: components['schemas']['VisitBalancesDto']
       /** @description Past and future visits for the prisoner based on configured duration. */
       visits: components['schemas']['VisitSummaryDto'][]
+      /** @description Prisoner restrictions */
+      prisonerRestrictions: components['schemas']['OffenderRestrictionDto'][]
     }
     /** @description Balances of visit orders and privilege visit orders */
     VisitBalancesDto: {

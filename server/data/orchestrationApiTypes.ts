@@ -28,6 +28,8 @@ export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
 export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
 
+export type RegisterPrisonerForBookerDto = components['schemas']['RegisterPrisonerForBookerDto']
+
 export type PrisonDto = components['schemas']['PrisonDto']
 
 export type PrisonRegisterPrisonDto = components['schemas']['PrisonRegisterPrisonDto']

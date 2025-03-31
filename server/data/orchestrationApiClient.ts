@@ -16,7 +16,9 @@ import {
   AvailableVisitSessionRestrictionDto,
   CancelVisitOrchestrationDto,
   PrisonRegisterPrisonDto,
+  RegisterPrisonerForBookerDto,
 } from './orchestrationApiTypes'
+import { SanitisedError } from '../sanitisedError'
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
 
@@ -153,6 +155,22 @@ export default class OrchestrationApiClient {
       path: '/public/booker/register/auth',
       data: { ...authDetailDto },
     })
+  }
+
+  async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
+    try {
+      await this.restClient.post({
+        path: `/public/booker/${bookerReference}/permitted/prisoners/register`,
+        data: { ...prisoner },
+        raw: true, // needed because no JSON response body: an HTTP 200 is true
+      })
+      return true
+    } catch (error) {
+      if ((<SanitisedError>error)?.status === 422) {
+        return false
+      }
+      throw error
+    }
   }
 
   async getPrisoners(bookerReference: string): Promise<BookerPrisonerInfoDto[]> {
