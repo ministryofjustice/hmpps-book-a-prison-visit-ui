@@ -104,8 +104,8 @@ export default class TestData {
 
   static registerPrisonerForBookerDto = ({
     prisonerId = 'A1234BC',
-    prisonerFirstName = 'JOHN',
-    prisonerLastName = 'SMITH',
+    prisonerFirstName = 'John',
+    prisonerLastName = 'Smith',
     prisonerDateOfBirth = '1975-04-02',
     prisonId = 'HEI',
   }: Partial<RegisterPrisonerForBookerDto> = {}): RegisterPrisonerForBookerDto => ({

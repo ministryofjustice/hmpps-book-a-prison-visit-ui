@@ -1,0 +1,114 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Prisoner details" %}
+
+{% set backLinkHref = paths.ADD_PRISONER.LOCATION %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <form action="{{ paths.ADD_PRISONER.DETAILS }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          name: "firstName",
+          type: "text",
+          classes: "govuk-!-width-two-thirds",
+          label: {
+            text: "First name"
+          },
+          value: formValues.firstName,
+          autocomplete: "off",
+          spellcheck: "off",
+          errorMessage: errors | findError('firstName')
+        }) }}
+
+        {{ govukInput({
+          name: "lastName",
+          type: "text",
+          classes: "govuk-!-width-two-thirds",
+          label: {
+            text: "Last name"
+          },
+          value: formValues.lastName,
+          autocomplete: "off",
+          spellcheck: "off",
+          errorMessage: errors | findError('lastName')
+        }) }}
+
+        {% set prisonerDobError = errors | findError('prisonerDob') %}
+        {{ govukDateInput({
+          id: "prisonerDob",
+          fieldset: {
+            legend: {
+              text: "Date of birth"
+            }
+          },
+          hint: {
+            text: "For example, 27 3 1977"
+          },
+          items: [
+            {
+              name: "day",
+              classes: "govuk-input--width-2" + (" govuk-input--error" if prisonerDobError),
+              autocomplete: "off",
+              value: formValues.day
+            },
+            {
+              name: "month",
+              classes: "govuk-input--width-2" + (" govuk-input--error" if prisonerDobError),
+              autocomplete: "off",
+              value: formValues.month
+            },
+            {
+              name: "year",
+              classes: "govuk-input--width-4" + (" govuk-input--error" if prisonerDobError),
+              autocomplete: "off",
+              value: formValues.year
+            }
+          ],
+          errorMessage: prisonerDobError
+        }) }}
+
+        {{ govukInput({
+          name: "prisonNumber",
+          type: "text",
+          classes: "govuk-!-width-one-third",
+          label: {
+            text: "Prison number"
+          },
+          hint: {
+            text: "For example, A1234BC"
+          },
+          value: formValues.prisonNumber,
+          autocomplete: "off",
+          spellcheck: "off",
+          errorMessage: errors | findError('prisonNumber')
+        }) }}
+
+        {% call govukDetails({
+            summaryText: "Help with the prison number"
+          }) %}
+          <p>This is the number given to people when they enter prison.</p>
+          <p>Their prison number stays the same if they move to another prison. </p>
+          <p>You need to ask the prisoner for this information before you can book.</p>
+        {% endcall %}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}
