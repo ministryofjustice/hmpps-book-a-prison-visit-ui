@@ -227,6 +227,47 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('registerPrisoner', () => {
+    it('should try to register a prisoner and return true for a 200 API response', async () => {
+      const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
+
+      fakeOrchestrationApi
+        .post(`/public/booker/${bookerReference.value}/permitted/prisoners/register`, registerPrisonerForBookerDto)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, bookerReference)
+
+      const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
+
+      expect(result).toBe(true)
+    })
+
+    it('should try to register a prisoner and return false for a 422 API response', async () => {
+      const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
+
+      fakeOrchestrationApi
+        .post(`/public/booker/${bookerReference.value}/permitted/prisoners/register`, registerPrisonerForBookerDto)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(422)
+
+      const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
+
+      expect(result).toBe(false)
+    })
+
+    it('should try to register a prisoner and throw API errors', async () => {
+      const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
+
+      fakeOrchestrationApi
+        .post(`/public/booker/${bookerReference.value}/permitted/prisoners/register`, registerPrisonerForBookerDto)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(400)
+
+      await expect(
+        orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto),
+      ).rejects.toThrow('Bad Request')
+    })
+  })
+
   describe('getPrisoners', () => {
     it('should retrieve prisoners associated with a booker', async () => {
       const { prisoner } = TestData.bookerPrisonerInfoDto()

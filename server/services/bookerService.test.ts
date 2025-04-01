@@ -4,6 +4,9 @@ import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
+import logger from '../../logger'
+
+jest.mock('../../logger')
 
 const token = 'some token'
 
@@ -47,6 +50,41 @@ describe('Booker service', () => {
 
       expect(orchestrationApiClient.getBookerReference).toHaveBeenCalledWith(authDetailDto)
       expect(result).toBe(bookerReference.value)
+    })
+  })
+
+  describe('registerPrisoner', () => {
+    const bookerReference = TestData.bookerReference().value
+    const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
+
+    it('should attempt to register a prisoner and log success', async () => {
+      orchestrationApiClient.registerPrisoner.mockResolvedValue(true)
+
+      const result = await bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)
+
+      expect(result).toBe(true)
+      expect(orchestrationApiClient.registerPrisoner).toHaveBeenCalledWith(
+        bookerReference,
+        registerPrisonerForBookerDto,
+      )
+      expect(logger.info).toHaveBeenCalledWith(
+        `Registered prisoner ${registerPrisonerForBookerDto.prisonerId} for booker ${bookerReference}`,
+      )
+    })
+
+    it('should attempt to register a prisoner and log failure', async () => {
+      orchestrationApiClient.registerPrisoner.mockResolvedValue(false)
+
+      const result = await bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)
+
+      expect(result).toBe(false)
+      expect(orchestrationApiClient.registerPrisoner).toHaveBeenCalledWith(
+        bookerReference,
+        registerPrisonerForBookerDto,
+      )
+      expect(logger.info).toHaveBeenCalledWith(
+        `Failed to register prisoner ${registerPrisonerForBookerDto.prisonerId} for booker ${bookerReference}`,
+      )
     })
   })
 

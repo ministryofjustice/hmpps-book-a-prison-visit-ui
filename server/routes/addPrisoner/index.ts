@@ -4,6 +4,7 @@ import { Services } from '../../services'
 import asyncMiddleware from '../../middleware/asyncMiddleware'
 import paths from '../../constants/paths'
 import PrisonerLocationController from './prisonerLocationController'
+import PrisonerDetailsController from './prisonerDetailsController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -13,12 +14,20 @@ export default function routes(services: Services): Router {
     router.post(path, ...validationChain, asyncMiddleware(handler))
 
   const prisonerLocationController = new PrisonerLocationController(services.prisonService)
+  const prisonerDetailsController = new PrisonerDetailsController(services.bookerService)
 
   get(paths.ADD_PRISONER.LOCATION, prisonerLocationController.view())
   postWithValidation(
     paths.ADD_PRISONER.LOCATION,
     prisonerLocationController.validate(),
     prisonerLocationController.submit(),
+  )
+
+  get(paths.ADD_PRISONER.DETAILS, prisonerDetailsController.view())
+  postWithValidation(
+    paths.ADD_PRISONER.DETAILS,
+    prisonerDetailsController.validate(),
+    prisonerDetailsController.submit(),
   )
 
   return router

@@ -58,16 +58,16 @@ describe('Prisoner location', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Where is the prisoner you want to visit?\? -/)
+          expect($('title').text()).toMatch(/^Where is the prisoner you want to visit\? -/)
           expect($('#service-header__nav').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
           expect($('h1').text().trim()).toBe('Where is the prisoner you want to visit?')
 
+          expect($('form[method=POST]').attr('action')).toBe(paths.ADD_PRISONER.LOCATION)
           expect($('input[name=prisonId]').length).toBe(1)
           expect($('input[name=prisonId]:checked').length).toBe(0)
           expect($('label[for=prisonId]').eq(0).text().trim()).toBe('Hewell (HMP)')
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
-          expect($('form[method=POST]').attr('action')).toBe(paths.ADD_PRISONER.LOCATION)
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
           expect(sessionData.addPrisonerJourney.supportedPrisonIds).toStrictEqual(['HEI'])

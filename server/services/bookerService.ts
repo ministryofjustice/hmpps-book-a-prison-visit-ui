@@ -5,6 +5,7 @@ import {
   AuthDetailDto,
   BookerPrisonerValidationErrorResponse,
   ConvictedStatus,
+  RegisterPrisonerForBookerDto,
   VisitorInfoDto,
 } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
@@ -42,6 +43,17 @@ export default class BookerService {
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
+  }
+
+  async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const result = await orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
+
+    const logMessage = result ? 'Registered' : 'Failed to register'
+    logger.info(`${logMessage} prisoner ${prisoner.prisonerId} for booker ${bookerReference}`)
+    return result
   }
 
   async getPrisoners(bookerReference: string): Promise<Prisoner[]> {
