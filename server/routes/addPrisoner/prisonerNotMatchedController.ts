@@ -8,7 +8,7 @@ export default class PrisonerNotMatchedController {
     return async (req, res) => {
       const { addPrisonerJourney } = req.session
       if (addPrisonerJourney?.result !== false) {
-        return res.redirect(paths.HOME)
+        return res.redirect(paths.RETURN_HOME)
       }
       return res.render('pages/addPrisoner/prisonerNotMatched', {
         prisonName: addPrisonerJourney.selectedPrison.prisonName,

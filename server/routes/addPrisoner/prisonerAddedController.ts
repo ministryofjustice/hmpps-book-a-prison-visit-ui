@@ -7,7 +7,7 @@ export default class PrisonerAddedController {
   public view(): RequestHandler {
     return async (req, res) => {
       if (req.session.addPrisonerJourney?.result !== true) {
-        return res.redirect(paths.HOME)
+        return res.redirect(paths.RETURN_HOME)
       }
 
       delete req.session.addPrisonerJourney
