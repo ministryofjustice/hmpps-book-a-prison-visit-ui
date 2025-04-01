@@ -7,14 +7,16 @@ import TestData from './testutils/testData'
 import paths from '../constants/paths'
 import * as utils from '../utils/utils'
 import config from '../config'
+import { createMockBookerService } from '../services/testutils/mocks'
 
 let app: Express
-
 let sessionData: SessionData
+
+const bookerService = createMockBookerService()
 
 beforeEach(() => {
   sessionData = {} as SessionData
-  app = appWithAllRoutes({ sessionData })
+  app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })
 
 afterEach(() => {
@@ -26,6 +28,7 @@ describe('Home page', () => {
 
   describe('Booker has a prisoner registered', () => {
     const prisoner = TestData.prisoner()
+    bookerService.getPrisoners.mockResolvedValue([prisoner])
 
     // For MVP only one prisoner per booker supported; so only first rendered
     it('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
@@ -42,6 +45,7 @@ describe('Home page', () => {
           expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
           expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
 
+          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
@@ -52,8 +56,7 @@ describe('Home page', () => {
     })
 
     it('should render the home page with message when booker has no associated prisoners', () => {
-      sessionData.booker = { reference: bookerReference, prisoners: [] }
-      app = appWithAllRoutes({ populateBooker: false, sessionData })
+      bookerService.getPrisoners.mockResolvedValue([])
 
       return request(app)
         .get(paths.HOME)
@@ -68,6 +71,7 @@ describe('Home page', () => {
           expect($('[data-test="start-booking"]').length).toBe(0)
           expect($('[data-test="add-prisoner"]').length).toBe(0)
 
+          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
@@ -84,6 +88,8 @@ describe('Home page', () => {
         ...config.features,
         addPrisoner: true,
       })
+
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
     })
 
     afterEach(() => {
@@ -91,8 +97,7 @@ describe('Home page', () => {
     })
 
     it('should render the home page with add a prisoner message and button', () => {
-      sessionData.booker = { reference: bookerReference, prisoners: [] }
-      app = appWithAllRoutes({ populateBooker: false, sessionData })
+      bookerService.getPrisoners.mockResolvedValue([])
 
       return request(app)
         .get(paths.HOME)
@@ -133,6 +138,10 @@ describe('Return to Home page redirect', () => {
 })
 
 describe('Page header', () => {
+  beforeEach(() => {
+    bookerService.getPrisoners.mockResolvedValue([])
+  })
+
   it('should render the GOVUK One Login Header on pages where the user is logged in', () => {
     return request(app)
       .get(paths.HOME)
