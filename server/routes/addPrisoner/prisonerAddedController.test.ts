@@ -5,11 +5,13 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
 import config from '../../config'
+import TestData from '../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
 
-const prisonId = 'HEI'
+const selectedPrison = TestData.prisonRegisterPrisonDto()
+const supportedPrisons = [selectedPrison]
 
 beforeEach(() => {
   jest.replaceProperty(config, 'features', {
@@ -17,7 +19,7 @@ beforeEach(() => {
     addPrisoner: true,
   })
 
-  sessionData = { addPrisonerJourney: { supportedPrisonIds: [prisonId], selectedPrisonId: prisonId } } as SessionData
+  sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })
@@ -34,7 +36,7 @@ describe('Prisoner added', () => {
         addPrisoner: false,
       })
       app = appWithAllRoutes({})
-      return request(app).get(paths.ADD_PRISONER.LOCATION).expect(404)
+      return request(app).get(paths.ADD_PRISONER.SUCCESS).expect(404)
     })
   })
 
