@@ -162,7 +162,7 @@ describe('Prisoner details', () => {
       return request(app).post(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
-    it('should call service to register prisoner and redirect to success page - success', () => {
+    it('should call service to register prisoner, store result in session and redirect to success page - success', () => {
       bookerService.registerPrisoner.mockResolvedValue(true)
 
       return request(app)
@@ -173,6 +173,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney.result).toBe(true)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -188,6 +189,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toEqual(prisonerDetails)
+          expect(sessionData.addPrisonerJourney.result).toBe(false)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -202,6 +204,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney.result).toBeUndefined()
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })

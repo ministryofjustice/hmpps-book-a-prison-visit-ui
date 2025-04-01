@@ -51,6 +51,8 @@ export default class PrisonerDetailsController {
           prisonId: addPrisonerJourney.selectedPrisonId,
         })
 
+        addPrisonerJourney.result = result
+
         if (result) {
           return res.redirect(paths.ADD_PRISONER.SUCCESS)
         }
