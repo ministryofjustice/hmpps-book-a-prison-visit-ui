@@ -16,7 +16,8 @@ let app: Express
 const bookerService = createMockBookerService()
 let sessionData: SessionData
 
-const prisonId = 'HEI'
+const selectedPrison = TestData.prisonRegisterPrisonDto()
+const supportedPrisons = [selectedPrison]
 
 beforeEach(() => {
   jest.replaceProperty(config, 'features', {
@@ -24,7 +25,7 @@ beforeEach(() => {
     addPrisoner: true,
   })
 
-  sessionData = { addPrisonerJourney: { supportedPrisonIds: [prisonId], selectedPrisonId: prisonId } } as SessionData
+  sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })
@@ -53,8 +54,8 @@ describe('Prisoner details', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
-    it('should redirect to prisoner location page if selectedPrisonId not set in session', () => {
-      sessionData.addPrisonerJourney.selectedPrisonId = undefined
+    it('should redirect to prisoner location page if selectedPrison not set in session', () => {
+      sessionData.addPrisonerJourney.selectedPrison = undefined
       return request(app).get(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
@@ -157,12 +158,12 @@ describe('Prisoner details', () => {
     } as const
     const registerPrisonerDto = TestData.registerPrisonerForBookerDto()
 
-    it('should redirect to prisoner location page if selectedPrisonId not set in session', () => {
-      sessionData.addPrisonerJourney.selectedPrisonId = undefined
+    it('should redirect to prisoner location page if selectedPrison not set in session', () => {
+      sessionData.addPrisonerJourney.selectedPrison = undefined
       return request(app).post(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
-    it('should call service to register prisoner and redirect to success page - success', () => {
+    it('should call service to register prisoner, store result in session and redirect to success page - success', () => {
       bookerService.registerPrisoner.mockResolvedValue(true)
 
       return request(app)
@@ -173,6 +174,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney.result).toBe(true)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -188,6 +190,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toEqual(prisonerDetails)
+          expect(sessionData.addPrisonerJourney.result).toBe(false)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -202,6 +205,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney.result).toBeUndefined()
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })

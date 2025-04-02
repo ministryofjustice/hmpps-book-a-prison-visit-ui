@@ -1,0 +1,21 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = "Prisoner added" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: pageTitle
+      }) }}
+
+      <p>The prisoner details you submitted were successfully matched.</p>
+
+      <p>
+        To book a visit for this prisoner, you need to
+        <a href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" target="_blank">add visitors</a>.
+      </p>
+    </div>
+  </div>
+{% endblock %}

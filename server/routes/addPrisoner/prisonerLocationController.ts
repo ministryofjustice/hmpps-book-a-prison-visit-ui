@@ -8,14 +8,16 @@ export default class PrisonerLocationController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const selectedPrisonId = req.session.addPrisonerJourney?.selectedPrisonId
+      const selectedPrison = req.session.addPrisonerJourney?.selectedPrison
       const prisons = await this.prisonService.getSupportedPrisons()
 
-      const supportedPrisonIds = prisons.map(prison => prison.prisonId)
-      req.session.addPrisonerJourney = { supportedPrisonIds, ...(selectedPrisonId && { selectedPrisonId }) }
+      req.session.addPrisonerJourney = {
+        supportedPrisons: prisons,
+        ...(selectedPrison && { selectedPrison }),
+      }
 
       const formValues = {
-        ...(selectedPrisonId && { prisonId: selectedPrisonId }),
+        ...(selectedPrison && { prisonId: selectedPrison.prisonId }),
       }
 
       return res.render('pages/addPrisoner/prisonerLocation', {
@@ -34,8 +36,11 @@ export default class PrisonerLocationController {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
       }
 
+      const { addPrisonerJourney } = req.session
       const { prisonId } = matchedData<{ prisonId: string }>(req)
-      req.session.addPrisonerJourney.selectedPrisonId = prisonId
+      addPrisonerJourney.selectedPrison = addPrisonerJourney.supportedPrisons.find(
+        prison => prison.prisonId === prisonId,
+      )
 
       return res.redirect(paths.ADD_PRISONER.DETAILS)
     }
@@ -44,13 +49,8 @@ export default class PrisonerLocationController {
   public validate(): ValidationChain[] {
     return [
       body('prisonId', 'Select a prison').custom((prisonId: string, { req }: Meta & { req: Express.Request }) => {
-        const { addPrisonerJourney } = req.session
-        const supportedPrisonIds = addPrisonerJourney?.supportedPrisonIds ?? []
-
-        if (supportedPrisonIds.includes(prisonId)) {
-          return true
-        }
-        return false
+        const supportedPrisons = req.session.addPrisonerJourney?.supportedPrisons ?? []
+        return supportedPrisons.some(prison => prison.prisonId === prisonId)
       }),
     ]
   }

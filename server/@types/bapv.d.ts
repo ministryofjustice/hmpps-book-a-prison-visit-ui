@@ -1,5 +1,5 @@
 import { SessionRestriction } from '../data/orchestrationApiClient'
-import { AvailableVisitSessionDto, PrisonDto } from '../data/orchestrationApiTypes'
+import { AvailableVisitSessionDto, PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 
 export type Booker = {
@@ -9,9 +9,10 @@ export type Booker = {
 
 // data that is built up during an add prisoner journey
 export type AddPrisonerJourney = {
-  supportedPrisonIds: string[]
-  selectedPrisonId?: string
+  supportedPrisons: PrisonRegisterPrisonDto[]
+  selectedPrison?: PrisonRegisterPrisonDto
   prisonerDetails?: Record<string, string>
+  result?: boolean
 }
 
 // data that is built up during a booking journey
