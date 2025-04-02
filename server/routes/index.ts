@@ -16,7 +16,7 @@ export default function routes(services: Services): Router {
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  const homeController = new HomeController()
+  const homeController = new HomeController(services.bookerService)
   const accessDeniedController = new AccessDeniedController()
 
   get(paths.HOME, homeController.view())

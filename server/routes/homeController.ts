@@ -1,14 +1,16 @@
 import type { RequestHandler } from 'express'
 import paths from '../constants/paths'
 import { clearSession } from '../utils/utils'
+import { BookerService } from '../services'
 
 export default class HomeController {
-  public constructor() {}
+  public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const prisoner = req.session.booker.prisoners[0]
-      res.render('pages/home', { prisoner, showOLServiceNav: true })
+      const { booker } = req.session
+      booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
+      res.render('pages/home', { prisoner: booker.prisoners[0], showOLServiceNav: true })
     }
   }
 

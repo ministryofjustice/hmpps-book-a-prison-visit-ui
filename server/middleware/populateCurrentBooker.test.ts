@@ -22,7 +22,7 @@ describe('populateCurrentBooker', () => {
   beforeEach(() => {
     jest.resetAllMocks()
 
-    req = { session: {} } as unknown as Request
+    req = { path: '/test', session: {} } as unknown as Request
 
     res = {
       locals: {
@@ -49,6 +49,19 @@ describe('populateCurrentBooker', () => {
     })
     expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
     expect(req.session).toStrictEqual(<SessionData>{ booker: { reference: bookerReference, prisoners } })
+    expect(res.redirect).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('should get booker reference and NOT prisoners and add to session if it is not already set - HOME page only', async () => {
+    bookerService.getBookerReference.mockResolvedValue(bookerReference)
+    req = { path: paths.HOME, session: {} } as unknown as Request
+
+    await populateCurrentBooker(bookerService)(req, res, next)
+
+    expect(bookerService.getBookerReference).toHaveBeenCalled()
+    expect(bookerService.getPrisoners).not.toHaveBeenCalled()
+    expect(req.session).toStrictEqual(<SessionData>{ booker: { reference: bookerReference, prisoners: [] } })
     expect(res.redirect).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
   })
