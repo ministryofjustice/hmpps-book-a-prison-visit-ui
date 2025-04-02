@@ -9,11 +9,13 @@ export default class PrisonerLocationController {
   public view(): RequestHandler {
     return async (req, res) => {
       const selectedPrison = req.session.addPrisonerJourney?.selectedPrison
+      const prisonerDetails = req.session.addPrisonerJourney?.prisonerDetails
       const prisons = await this.prisonService.getSupportedPrisons()
 
       req.session.addPrisonerJourney = {
         supportedPrisons: prisons,
         ...(selectedPrison && { selectedPrison }),
+        ...(prisonerDetails && { prisonerDetails }),
       }
 
       const formValues = {

@@ -79,7 +79,12 @@ describe('Prisoner location', () => {
 
     it('should pre-populate prison choice if selected prison set in session', () => {
       const selectedPrison = TestData.prisonRegisterPrisonDto()
-      sessionData.addPrisonerJourney = { supportedPrisons: undefined, selectedPrison }
+      const prisonerDetails = { some: 'data' }
+      sessionData.addPrisonerJourney = {
+        supportedPrisons: undefined,
+        selectedPrison,
+        prisonerDetails,
+      }
 
       return request(app)
         .get(paths.ADD_PRISONER.LOCATION)
@@ -93,6 +98,7 @@ describe('Prisoner location', () => {
           expect(sessionData.addPrisonerJourney).toStrictEqual<AddPrisonerJourney>({
             supportedPrisons,
             selectedPrison,
+            prisonerDetails,
           })
         })
     })
