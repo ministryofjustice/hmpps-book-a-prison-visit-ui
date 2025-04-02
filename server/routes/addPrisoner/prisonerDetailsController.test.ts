@@ -151,8 +151,8 @@ describe('Prisoner details', () => {
     const prisonerDetails = {
       firstName: 'John',
       lastName: 'Smith',
-      day: '02',
-      month: '04',
+      day: '2',
+      month: '4',
       year: '1975',
       prisonNumber: 'A1234BC',
     } as const
@@ -189,7 +189,7 @@ describe('Prisoner details', () => {
         .expect('Location', paths.ADD_PRISONER.FAIL)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney.prisonerDetails).toEqual(prisonerDetails)
+          expect(sessionData.addPrisonerJourney.prisonerDetails).toStrictEqual(prisonerDetails)
           expect(sessionData.addPrisonerJourney.result).toBe(false)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
@@ -217,7 +217,7 @@ describe('Prisoner details', () => {
         expectedFlashErrors = [
           { type: 'field', location: 'body', path: 'firstName', value: '', msg: 'Enter a first name' },
           { type: 'field', location: 'body', path: 'lastName', value: '', msg: 'Enter a last name' },
-          { type: 'field', location: 'body', path: 'prisonerDob', value: undefined, msg: 'Enter a date of birth' },
+          { type: 'field', location: 'body', path: 'prisonerDob', value: 'NaN-NaN-NaN', msg: 'Enter a date of birth' },
           { type: 'field', location: 'body', path: 'prisonNumber', value: '', msg: 'Enter a prison number' },
         ]
 
@@ -236,7 +236,7 @@ describe('Prisoner details', () => {
             type: 'field',
             location: 'body',
             path: 'prisonerDob',
-            value: undefined,
+            value: '1975-04-NaN',
             msg: 'Enter a date of birth and include a day, month and year',
           },
         ]
@@ -257,7 +257,7 @@ describe('Prisoner details', () => {
             type: 'field',
             location: 'body',
             path: 'prisonerDob',
-            value: undefined,
+            value: '1975-13-02',
             msg: 'Date of birth must be a real date',
           },
         ]
@@ -278,7 +278,7 @@ describe('Prisoner details', () => {
             type: 'field',
             location: 'body',
             path: 'prisonerDob',
-            value: undefined,
+            value: '2025-04-03',
             msg: 'Date of birth must be in the past',
           },
         ]
