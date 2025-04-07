@@ -278,7 +278,7 @@ describe('Prisoner details', () => {
             type: 'field',
             location: 'body',
             path: 'prisonerDob',
-            value: '2025-04-03',
+            value: '2030-04-03',
             msg: 'Date of birth must be in the past',
           },
         ]
