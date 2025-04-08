@@ -272,21 +272,22 @@ describe('Prisoner details', () => {
           })
       })
 
+      const tomorrow = addDays(new Date(), 1)
+      const day = tomorrow.getDate()
+      const month = tomorrow.getMonth() + 1
+      const year = tomorrow.getFullYear()
+      const dobValue = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
       it('should set validation error for date of birth in the future', () => {
         expectedFlashErrors = [
           {
             type: 'field',
             location: 'body',
             path: 'prisonerDob',
-            value: '2025-04-03',
+            value: dobValue,
             msg: 'Date of birth must be in the past',
           },
         ]
-
-        const tomorrow = addDays(new Date(), 1)
-        const day = tomorrow.getDate()
-        const month = tomorrow.getMonth() + 1
-        const year = tomorrow.getFullYear()
 
         return request(app)
           .post(paths.ADD_PRISONER.DETAILS)
