@@ -5,7 +5,7 @@ import { createPrivateKey } from 'crypto'
 
 import config from '../config'
 import logger from '../../logger'
-import TokenStore from '../data/tokenStore/tokenStore'
+import { TokenStore } from '../data/tokenStore/tokenStore'
 import tokenStoreFactory from '../data/tokenStore/tokenStoreFactory'
 import paths from '../constants/paths'
 
@@ -36,7 +36,7 @@ async function init(): Promise<{ client: Client; idTokenStore: TokenStore }> {
   const issuer = await Issuer.discover(discoveryEndpoint)
   logger.info(`GOV.UK One Login issuer discovered: ${issuer.metadata.issuer}`)
 
-  const idTokenStore = tokenStoreFactory('idToken:')
+  const idTokenStore = tokenStoreFactory('idToken')
 
   // convert private key in PEM format to JWK
   const privateKeyJwk = createPrivateKey({

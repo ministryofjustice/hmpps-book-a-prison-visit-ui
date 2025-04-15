@@ -1,4 +1,4 @@
-import TokenStore from './tokenStore'
+import { TokenStore } from './tokenStore'
 
 export default class InMemoryTokenStore implements TokenStore {
   map = new Map<string, { token: string; expiry: Date }>()

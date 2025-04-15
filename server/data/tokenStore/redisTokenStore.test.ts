@@ -13,7 +13,7 @@ describe('tokenStore', () => {
   let tokenStore: TokenStore
 
   beforeEach(() => {
-    tokenStore = new TokenStore(redisClient as unknown as RedisClient, 'systemToken:')
+    tokenStore = new TokenStore(redisClient as unknown as RedisClient, 'systemToken')
   })
 
   afterEach(() => {
