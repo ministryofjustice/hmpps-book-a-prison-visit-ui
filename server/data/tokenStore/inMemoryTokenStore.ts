@@ -14,4 +14,15 @@ export default class InMemoryTokenStore implements TokenStore {
     }
     return Promise.resolve(this.map.get(key).token)
   }
+
+  public async incrementCount(key: string, windowSeconds: number): Promise<number> {
+    if (!this.map.has(key) || this.map.get(key).expiry.getTime() < Date.now()) {
+      await this.setToken(key, '1', windowSeconds)
+      return Promise.resolve(1)
+    }
+
+    const count = parseInt(await this.getToken(key), 10) + 1
+    await this.setToken(key, count.toString(), windowSeconds)
+    return count
+  }
 }

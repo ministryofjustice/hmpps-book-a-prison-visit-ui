@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto'
+import { TooManyRequests } from 'http-errors'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import {
@@ -10,6 +11,7 @@ import {
 } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 import { SanitisedError } from '../sanitisedError'
+import RateLimitService from './rateLimitService'
 
 export type Prisoner = {
   prisonerDisplayId: string
@@ -33,6 +35,8 @@ export default class BookerService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
     private readonly hmppsAuthClient: HmppsAuthClient,
+    private readonly bookerRateLimit: RateLimitService,
+    private readonly prisonerRateLimit: RateLimitService,
   ) {}
 
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
@@ -46,6 +50,17 @@ export default class BookerService {
   }
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
+    const [withinBookerLimit, withinPrisonerLimit] = await Promise.all([
+      this.bookerRateLimit.incrementAndCheckLimit(bookerReference),
+      this.prisonerRateLimit.incrementAndCheckLimit(prisoner.prisonerId),
+    ])
+
+    if (!withinBookerLimit || !withinPrisonerLimit) {
+      const message = withinBookerLimit ? `booker ${bookerReference}` : `prisoner ${prisoner.prisonerId}`
+      logger.info(`Rate limit exceeded for ${message}`)
+      throw new TooManyRequests()
+    }
+
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 

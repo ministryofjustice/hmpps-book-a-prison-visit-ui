@@ -28,4 +28,12 @@ export default class RedisTokenStore implements TokenStore {
     await this.ensureConnected()
     return this.client.get(`${this.prefix}:${key}`)
   }
+
+  public async incrementCount(key: string, windowSeconds: number): Promise<number> {
+    await this.ensureConnected()
+    const prefixedKey = `${this.prefix}:${key}`
+    const count = await this.client.incr(prefixedKey)
+    await this.client.expire(prefixedKey, windowSeconds)
+    return count
+  }
 }

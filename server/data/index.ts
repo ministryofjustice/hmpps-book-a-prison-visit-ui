@@ -21,6 +21,7 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(tokenStoreFactory('systemToken')),
   orchestrationApiClientBuilder: ((token: string) =>
     new OrchestrationApiClient(token)) as RestClientBuilder<OrchestrationApiClient>,
+  rateLimitStore: tokenStoreFactory('rateLimit'),
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
