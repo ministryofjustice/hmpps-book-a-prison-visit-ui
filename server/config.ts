@@ -34,6 +34,12 @@ export interface ApiConfig {
   agent: AgentConfig
 }
 
+export type RateLimitConfig = {
+  keyPrefix: string
+  maxRequests: number
+  windowSeconds: number
+}
+
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
@@ -78,6 +84,19 @@ export default {
         deadline: Number(get('ORCHESTRATION_API_TIMEOUT_DEADLINE', 10000)),
       },
       agent: new AgentConfig(Number(get('ORCHESTRATION_API_TIMEOUT_RESPONSE', 10000))),
+    },
+  },
+  rateLimit: <Record<string, RateLimitConfig>>{
+    // Rate limit config for Add a prisoner journey
+    booker: {
+      keyPrefix: 'booker',
+      maxRequests: Number(get('ADD_PRISONER_RATE_LIMIT_BOOKER_MAX_REQUESTS', 50)),
+      windowSeconds: Number(get('ADD_PRISONER_RATE_LIMIT_BOOKER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
+    },
+    prisoner: {
+      keyPrefix: 'prisoner',
+      maxRequests: Number(get('ADD_PRISONER_RATE_LIMIT_PRISONER_MAX_REQUESTS', 50)),
+      windowSeconds: Number(get('ADD_PRISONER_RATE_LIMIT_PRISONER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
     },
   },
   analytics: {

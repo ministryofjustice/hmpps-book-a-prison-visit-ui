@@ -1,10 +1,11 @@
-import { BadRequest } from 'http-errors'
+import { BadRequest, TooManyRequests } from 'http-errors'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 import logger from '../../logger'
+import { createMockRateLimitService } from './testutils/mocks'
 
 jest.mock('../../logger')
 
@@ -27,13 +28,20 @@ describe('Booker service', () => {
   const orchestrationApiClientFactory = jest.fn()
 
   let bookerService: BookerService
+  const bookerRateLimit = createMockRateLimitService()
+  const prisonerRateLimit = createMockRateLimitService()
 
   beforeEach(() => {
     uuidCount = 0
     hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
 
     orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    bookerService = new BookerService(orchestrationApiClientFactory, hmppsAuthClient)
+    bookerService = new BookerService(
+      orchestrationApiClientFactory,
+      hmppsAuthClient,
+      bookerRateLimit,
+      prisonerRateLimit,
+    )
   })
 
   afterEach(() => {
@@ -56,6 +64,11 @@ describe('Booker service', () => {
   describe('registerPrisoner', () => {
     const bookerReference = TestData.bookerReference().value
     const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
+
+    beforeEach(() => {
+      bookerRateLimit.incrementAndCheckLimit.mockResolvedValue(true)
+      prisonerRateLimit.incrementAndCheckLimit.mockResolvedValue(true)
+    })
 
     it('should attempt to register a prisoner and log success', async () => {
       orchestrationApiClient.registerPrisoner.mockResolvedValue(true)
@@ -85,6 +98,30 @@ describe('Booker service', () => {
       expect(logger.info).toHaveBeenCalledWith(
         `Failed to register prisoner ${registerPrisonerForBookerDto.prisonerId} for booker ${bookerReference}`,
       )
+    })
+
+    describe('Rate limiting', () => {
+      it('should throw a Too Many Requests error if booker rate limit exceeded', async () => {
+        bookerRateLimit.incrementAndCheckLimit.mockResolvedValue(false)
+
+        await expect(bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)).rejects.toThrow(
+          TooManyRequests,
+        )
+
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for prisoner A1234BC')
+        expect(orchestrationApiClient.registerPrisoner).not.toHaveBeenCalled()
+      })
+
+      it('should throw a Too Many Requests error if prisoner rate limit exceeded', async () => {
+        prisonerRateLimit.incrementAndCheckLimit.mockResolvedValue(false)
+
+        await expect(bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)).rejects.toThrow(
+          TooManyRequests,
+        )
+
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for booker aaaa-bbbb-cccc')
+        expect(orchestrationApiClient.registerPrisoner).not.toHaveBeenCalled()
+      })
     })
   })
 

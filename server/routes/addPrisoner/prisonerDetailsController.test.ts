@@ -272,13 +272,13 @@ describe('Prisoner details', () => {
           })
       })
 
-      const tomorrow = addDays(new Date(), 1)
-      const day = tomorrow.getDate()
-      const month = tomorrow.getMonth() + 1
-      const year = tomorrow.getFullYear()
-      const dobValue = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-
       it('should set validation error for date of birth in the future', () => {
+        const tomorrow = addDays(new Date(), 1)
+        const day = tomorrow.getDate()
+        const month = tomorrow.getMonth() + 1
+        const year = tomorrow.getFullYear()
+        const dobValue = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
         expectedFlashErrors = [
           {
             type: 'field',

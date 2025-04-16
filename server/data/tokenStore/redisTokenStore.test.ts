@@ -4,6 +4,8 @@ import TokenStore from './redisTokenStore'
 const redisClient = {
   get: jest.fn(),
   set: jest.fn(),
+  incr: jest.fn(),
+  expire: jest.fn(),
   on: jest.fn(),
   connect: jest.fn(),
   isOpen: true,
@@ -13,7 +15,7 @@ describe('tokenStore', () => {
   let tokenStore: TokenStore
 
   beforeEach(() => {
-    tokenStore = new TokenStore(redisClient as unknown as RedisClient, 'systemToken:')
+    tokenStore = new TokenStore(redisClient as unknown as RedisClient, 'systemToken')
   })
 
   afterEach(() => {
@@ -49,6 +51,27 @@ describe('tokenStore', () => {
       ;(redisClient as unknown as Record<string, boolean>).isOpen = false
 
       await tokenStore.setToken('user-1', 'token-1', 10)
+
+      expect(redisClient.connect).toHaveBeenCalledWith()
+    })
+  })
+
+  describe('increment count', () => {
+    beforeEach(() => {
+      tokenStore = new TokenStore(redisClient as unknown as RedisClient, 'rateLimit')
+    })
+
+    it('Can increment count', async () => {
+      await tokenStore.incrementCount('key-1', 60)
+
+      expect(redisClient.incr).toHaveBeenCalledWith('rateLimit:key-1')
+      expect(redisClient.expire).toHaveBeenCalledWith('rateLimit:key-1', 60)
+    })
+
+    it('Connects when no connection calling increment count', async () => {
+      ;(redisClient as unknown as Record<string, boolean>).isOpen = false
+
+      await tokenStore.incrementCount('key-1', 60)
 
       expect(redisClient.connect).toHaveBeenCalledWith()
     })
