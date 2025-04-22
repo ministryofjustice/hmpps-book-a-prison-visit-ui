@@ -10,6 +10,7 @@ import {
   VisitDto,
   VisitorInfoDto,
   BookerPrisonerValidationErrorResponse,
+  RegisterPrisonerForBookerDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -216,6 +217,31 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: bookerReference,
+      },
+    }),
+
+  stubRegisterPrisoner: ({
+    bookerReference = TestData.bookerReference(),
+    prisoner = TestData.registerPrisonerForBookerDto(),
+    fail = false,
+  }: {
+    bookerReference?: BookerReference
+    prisoner?: RegisterPrisonerForBookerDto
+    fail?: boolean
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/register`,
+        bodyPatterns: [
+          {
+            equalToJson: prisoner,
+          },
+        ],
+      },
+      response: {
+        status: fail ? 422 : 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       },
     }),
 
