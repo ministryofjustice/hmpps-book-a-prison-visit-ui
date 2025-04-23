@@ -82,7 +82,7 @@ jobs:
   integration_test:
     executor:
       name: hmpps/node_redis
-      tag: << pipeline.parameters.node-version >>
+      node_tag: << pipeline.parameters.node-version >>
       redis_tag: "7.4"
     steps:
       - checkout
