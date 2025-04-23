@@ -11,6 +11,8 @@ context('Add a prisoner', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
+
+    cy.task('clearRateLimits')
   })
 
   it('should complete the add prisoner journey, with failed and then successful attempt', () => {
