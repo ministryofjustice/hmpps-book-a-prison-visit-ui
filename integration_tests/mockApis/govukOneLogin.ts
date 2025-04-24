@@ -65,7 +65,9 @@ const getSignInUrl = (nonce?: string): Promise<string> =>
     const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     const nonceForToken = nonce || requests[requests.length - 1].queryParams.nonce.values[0]
     // set up /token response while we have access to the nonce
-    return token(nonceForToken).then(() => `${paths.AUTH_CALLBACK}?code=AUTHORIZATION_CODE&state=${stateValue}`)
+    return token(nonceForToken)
+      .then(() => signOut())
+      .then(() => `${paths.AUTH_CALLBACK}?code=AUTHORIZATION_CODE&state=${stateValue}`)
   })
 
 const createIdToken = (nonce: string) => {
@@ -181,5 +183,4 @@ export default {
   verifyJwtAssertionForToken,
   stubSignIn: (): Promise<[Response, Response, Response, Response]> =>
     Promise.all([stubOidcDiscovery(), stubJwks(), redirect(), stubUserInfo()]),
-  stubSignOut: (): Promise<Response> => signOut(),
 }
