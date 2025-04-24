@@ -108,7 +108,7 @@ describe('Booker service', () => {
           TooManyRequests,
         )
 
-        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for prisoner A1234BC')
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for booker aaaa-bbbb-cccc')
         expect(orchestrationApiClient.registerPrisoner).not.toHaveBeenCalled()
       })
 
@@ -119,7 +119,20 @@ describe('Booker service', () => {
           TooManyRequests,
         )
 
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for prisoner A1234BC')
+        expect(orchestrationApiClient.registerPrisoner).not.toHaveBeenCalled()
+      })
+
+      it('should throw a Too Many Requests error if both booker and prisoner rate limit exceeded', async () => {
+        bookerRateLimit.incrementAndCheckLimit.mockResolvedValue(false)
+        prisonerRateLimit.incrementAndCheckLimit.mockResolvedValue(false)
+
+        await expect(bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)).rejects.toThrow(
+          TooManyRequests,
+        )
+
         expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for booker aaaa-bbbb-cccc')
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for prisoner A1234BC')
         expect(orchestrationApiClient.registerPrisoner).not.toHaveBeenCalled()
       })
     })

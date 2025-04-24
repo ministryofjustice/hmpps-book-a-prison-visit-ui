@@ -56,8 +56,13 @@ export default class BookerService {
     ])
 
     if (!withinBookerLimit || !withinPrisonerLimit) {
-      const message = withinBookerLimit ? `booker ${bookerReference}` : `prisoner ${prisoner.prisonerId}`
-      logger.info(`Rate limit exceeded for ${message}`)
+      if (!withinBookerLimit) {
+        logger.info(`Rate limit exceeded for booker ${bookerReference}`)
+      }
+
+      if (!withinPrisonerLimit) {
+        logger.info(`Rate limit exceeded for prisoner ${prisoner.prisonerId}`)
+      }
       throw new TooManyRequests()
     }
 
