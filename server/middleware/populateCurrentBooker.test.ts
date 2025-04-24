@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { BadRequest, NotFound } from 'http-errors'
+import { BadRequest } from 'http-errors'
 import { SessionData } from 'express-session'
 import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from '../routes/testutils/testData'
