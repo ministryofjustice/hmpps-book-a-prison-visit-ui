@@ -8,6 +8,7 @@ Cypress.Commands.add(
     initialRequestUrl = paths.HOME,
     hideCookieBanner = true,
   } = {}) => {
+    cy.clearAllCookies()
     if (hideCookieBanner) {
       cy.hideCookieBanner()
     }

@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
 import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
 import govukOneLogin from './integration_tests/mockApis/govukOneLogin'
+import redisHelpers from './integration_tests/redis/redisHelpers'
 import orchestrationService from './integration_tests/mockApis/orchestration'
 
 export default defineConfig({
@@ -21,7 +22,7 @@ export default defineConfig({
         reset: resetStubs,
         ...hmppsAuth,
         ...govukOneLogin,
-
+        ...redisHelpers,
         ...orchestrationService,
 
         // Log message to console

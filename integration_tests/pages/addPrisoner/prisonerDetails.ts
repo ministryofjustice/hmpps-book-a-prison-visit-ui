@@ -21,6 +21,7 @@ export default class PrisonerDetailsPage extends Page {
   }
 
   enterPrisonNumber = (prisonNumber: string): void => {
+    cy.get('#prisonNumber').clear()
     cy.get('#prisonNumber').type(prisonNumber)
   }
 

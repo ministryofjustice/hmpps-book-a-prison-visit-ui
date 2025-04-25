@@ -64,11 +64,12 @@ context('Sign in with GOV.UK One Login', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners')
+
     cy.signIn()
     const homePage = Page.verifyOnPage(HomePage)
 
-    cy.task('stubSignOut')
     homePage.signOut()
+
     const signedOutPage = Page.verifyOnPage(SignedOutPage)
     signedOutPage.signInLink().should('have.attr', 'href', paths.SIGN_IN)
   })
