@@ -84,8 +84,8 @@ export default class PrisonerDetailsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('firstName', 'Enter a first name').trim().escape().isLength({ min: 1, max: 250 }),
-      body('lastName', 'Enter a last name').trim().escape().isLength({ min: 1, max: 250 }),
+      body('firstName', 'Enter a first name').trim().isLength({ min: 1, max: 250 }),
+      body('lastName', 'Enter a last name').trim().isLength({ min: 1, max: 250 }),
 
       body(['day', 'month', 'year']).trim(),
       // 'prisonerDob' not an actual form field but used to store combined result and any validation errors
