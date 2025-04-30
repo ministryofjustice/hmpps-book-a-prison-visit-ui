@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import { BadRequest, NotFound } from 'http-errors'
+import { BadRequest } from 'http-errors'
 import { SessionData } from 'express-session'
 import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from '../routes/testutils/testData'
@@ -85,56 +85,6 @@ describe('populateCurrentBooker', () => {
     expect(bookerService.getPrisoners).not.toHaveBeenCalled()
     expect(res.redirect).toHaveBeenCalledWith(paths.SIGN_OUT)
     expect(next).not.toHaveBeenCalled()
-  })
-
-  it('should handle the booker not being found (404 error) by logging and redirecting to /access-denied', async () => {
-    bookerService.getBookerReference.mockRejectedValue(new NotFound())
-
-    await populateCurrentBooker(bookerService)(req, res, next)
-
-    expect(bookerService.getBookerReference).toHaveBeenCalledWith({
-      oneLoginSub: res.locals.user.sub,
-      email: res.locals.user.email,
-      phoneNumber: res.locals.user.phone_number,
-    })
-    expect(bookerService.getPrisoners).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith(paths.ACCESS_DENIED)
-    expect(next).not.toHaveBeenCalled()
-    expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker details for: user1')
-  })
-
-  it('should handle the booker prisoners not being found (404 error) by logging and redirecting to /access-denied', async () => {
-    bookerService.getBookerReference.mockResolvedValue(bookerReference)
-    bookerService.getPrisoners.mockRejectedValue(new NotFound())
-
-    await populateCurrentBooker(bookerService)(req, res, next)
-
-    expect(bookerService.getBookerReference).toHaveBeenCalledWith({
-      oneLoginSub: res.locals.user.sub,
-      email: res.locals.user.email,
-      phoneNumber: res.locals.user.phone_number,
-    })
-    expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
-    expect(res.redirect).toHaveBeenCalledWith(paths.ACCESS_DENIED)
-    expect(next).not.toHaveBeenCalled()
-    expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker details for: user1')
-  })
-
-  it('should call next() if booker not found (404 error) and request path is already /access-denied', async () => {
-    bookerService.getBookerReference.mockRejectedValue(new NotFound())
-    req = { session: {}, path: paths.ACCESS_DENIED } as unknown as Request
-
-    await populateCurrentBooker(bookerService)(req, res, next)
-
-    expect(bookerService.getBookerReference).toHaveBeenCalledWith({
-      oneLoginSub: res.locals.user.sub,
-      email: res.locals.user.email,
-      phoneNumber: res.locals.user.phone_number,
-    })
-    expect(res.redirect).not.toHaveBeenCalled()
-    expect(bookerService.getPrisoners).not.toHaveBeenCalled()
-    expect(next).toHaveBeenCalled()
-    expect(logger.info).toHaveBeenCalledWith('Failed to retrieve booker details for: user1')
   })
 
   it('should propagate any other errors', async () => {
