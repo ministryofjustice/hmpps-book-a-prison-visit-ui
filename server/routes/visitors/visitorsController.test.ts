@@ -75,7 +75,7 @@ describe('Visitors page', () => {
 
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
-        expect($('[data-test=no-visitors]').text().trim()).toBe('Warning\nNo visitors are currently approved.');
+        expect($('[data-test=no-visitors]').text().trim()).toBe('Warning\nNo visitors are currently approved.')
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
       })
