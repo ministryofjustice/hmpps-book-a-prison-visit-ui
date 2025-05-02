@@ -72,12 +72,10 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
         expect($('h1').text()).toBe('Visitors')
-
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
         expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are currently approved')
-      
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
       })
   })
