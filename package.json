@@ -114,7 +114,7 @@
     "nunjucks": "^3.2.4",
     "openid-client": "^5.7.1",
     "passport": "^0.7.0",
-    "redis": "^4.7.0",
+    "redis": "^5.0.1",
     "superagent": "^10.2.0",
     "url-value-parser": "^2.2.0"
   },
