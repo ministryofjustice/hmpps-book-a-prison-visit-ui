@@ -26,7 +26,8 @@ export default class RedisTokenStore implements TokenStore {
 
   public async getToken(key: string): Promise<string> {
     await this.ensureConnected()
-    return this.client.get(`${this.prefix}:${key}`)
+    const result = await this.client.get(`${this.prefix}:${key}`)
+    return Buffer.isBuffer(result) ? result.toString() : result
   }
 
   public async incrementCount(key: string, windowSeconds: number): Promise<number> {
@@ -34,6 +35,6 @@ export default class RedisTokenStore implements TokenStore {
     const prefixedKey = `${this.prefix}:${key}`
     const count = await this.client.incr(prefixedKey)
     await this.client.expire(prefixedKey, windowSeconds)
-    return count
+    return typeof count === 'number' ? count : parseInt(count, 10)
   }
 }
