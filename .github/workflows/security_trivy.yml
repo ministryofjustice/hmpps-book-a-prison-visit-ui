@@ -3,6 +3,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "4 7 * * MON-FRI" # Every weekday at 07:04 UTC
+permissions:
+  contents: read
+  actions: read
+  security-events: write
 jobs:
   security-trivy-check:
     name: Project security trivy dependency check
