@@ -124,7 +124,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('input[name=additionalSupportRequired][value=no]').prop('checked')).toBe(true)
-          expect($('input[name=additionalSupport]').val()).toBe('')
+          expect($('#additionalSupport').val()).toBe('')
         })
     })
 
@@ -137,7 +137,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('input[name=additionalSupportRequired][value=yes]').prop('checked')).toBe(true)
-          expect($('input[name=additionalSupport]').val()).toBe('Wheelchair access')
+          expect($('#additionalSupport').val()).toBe('Wheelchair access')
         })
     })
 
@@ -152,7 +152,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('input[name=additionalSupportRequired][value=no]').prop('checked')).toBe(true)
-          expect($('input[name=additionalSupport]').val()).toBe('')
+          expect($('#additionalSupport').val()).toBe('')
         })
     })
 
@@ -285,7 +285,7 @@ describe('Additional support needs', () => {
             location: 'body',
             path: 'additionalSupport',
             value: 'ab',
-            msg: 'Please enter at least 3 and no more than 512 characters',
+            msg: 'Please enter at least 3 and no more than 200 characters',
           },
         ]
         expectedFlashFormValues = { additionalSupportRequired: 'yes', additionalSupport: 'ab' }
