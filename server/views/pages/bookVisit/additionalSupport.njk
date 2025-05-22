@@ -15,7 +15,7 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Tell us about any support that visitors will need because of a health condition of disability. For example, wheelchair access.</p>
+      <p>Tell us about any support that visitors will need because of a health condition or disability. For example, wheelchair access.</p>
 
       <p data-test="prison-name">{{ prisonName }} will make reasonable adjustments for the visit, but may not be able to fulfil your request.</p>
 
@@ -27,13 +27,12 @@
             name: "additionalSupport",
             maxlength: 200,
             type: "text",
-            classes: "govuk-!-width-two-thirds",
             label: {
-              text: "Provide details",
+              text: "Provide details of the request",
               classes: "govuk-visually-hidden"
             },
             hint: {
-              text: "Provide details"
+              text: "Provide details of the request"
             },
             value: formValues.additionalSupport,
             autocomplete: "off",
