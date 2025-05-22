@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 {% set pageTitle = "Is additional support needed for any of the visitors?" %}
 
@@ -22,12 +22,17 @@
       <form action="{{ paths.BOOK_VISIT.ADDITIONAL_SUPPORT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {% set supportDetailsHtml %}
-          {{ govukInput({
+          {{ govukCharacterCount({
             id: "additionalSupport",
             name: "additionalSupport",
+            maxlength: 200,
             type: "text",
-            classes: "govuk-!-width-one-half",
+            classes: "govuk-!-width-two-thirds",
             label: {
+              text: "Provide details",
+              classes: "govuk-visually-hidden"
+            },
+            hint: {
               text: "Provide details"
             },
             value: formValues.additionalSupport,
