@@ -29,10 +29,6 @@ generic-service:
 
     FEATURE_ADD_PRISONER_ENABLED: "true"
 
-  namespace_secrets:
-    hmpps-book-a-prison-visit-ui:
-      APPINSIGHTS_INSTRUMENTATIONKEY: null # disable App Insights for staging
-
   allowlist:
     groups:
       - digital_staff_and_mojo
