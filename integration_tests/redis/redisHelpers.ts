@@ -1,4 +1,5 @@
 /* eslint-disable no-await-in-loop */
+import logger from '../../logger'
 import { createRedisClient } from '../../server/data/redisClient'
 
 const rateLimitKeyPattern = 'rateLimit:*'
@@ -11,6 +12,7 @@ const clearRateLimits = async () => {
 
   if (keys.length > 0) {
     await client.del(keys)
+    logger.info('Rate limits cleared')
   }
 
   await client.quit()
@@ -29,6 +31,7 @@ const waitUntilRateLimitsExpire = async () => {
     const keys = await client.keys(rateLimitKeyPattern)
 
     if (keys.length === 0) {
+      logger.info('Rate limits expired')
       break
     }
 
@@ -37,6 +40,7 @@ const waitUntilRateLimitsExpire = async () => {
     })
 
     retries += 1
+    logger.info(`Waiting for rate limits to expire: retry ${retries}`)
   }
 
   await client.quit()
