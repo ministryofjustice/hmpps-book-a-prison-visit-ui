@@ -8,7 +8,6 @@ import { addDays } from 'date-fns'
 import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import config from '../../config'
 import { createMockBookerService } from '../../services/testutils/mocks'
 
 let app: Express

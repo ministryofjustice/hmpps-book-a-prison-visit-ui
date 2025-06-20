@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import config from '../../config'
 import TestData from '../testutils/testData'
 
 let app: Express
