@@ -8,7 +8,6 @@ import addPrisonerRoutes from './addPrisoner'
 import bookVisitRoutes from './bookVisit'
 import bookingsRoutes from './bookings'
 import visitorsRoutes from './visitors'
-import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -20,9 +19,7 @@ export default function routes(services: Services): Router {
   get(paths.HOME, homeController.view())
   get(paths.RETURN_HOME, homeController.returnHome())
 
-  if (config.features.addPrisoner) {
-    router.use(addPrisonerRoutes(services))
-  }
+  router.use(addPrisonerRoutes(services))
 
   router.use(bookVisitRoutes(services))
   router.use(bookingsRoutes(services))

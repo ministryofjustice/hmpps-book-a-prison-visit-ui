@@ -14,11 +14,6 @@ const selectedPrison = TestData.prisonRegisterPrisonDto()
 const supportedPrisons = [selectedPrison]
 
 beforeEach(() => {
-  jest.replaceProperty(config, 'features', {
-    ...config.features,
-    addPrisoner: true,
-  })
-
   sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
@@ -29,17 +24,6 @@ afterEach(() => {
 })
 
 describe('Prisoner not matched', () => {
-  describe('Feature flag', () => {
-    it('should not be available if feature flag disabled', () => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        addPrisoner: false,
-      })
-      app = appWithAllRoutes({})
-      return request(app).get(paths.ADD_PRISONER.FAIL).expect(404)
-    })
-  })
-
   describe(`GET ${paths.ADD_PRISONER.FAIL}`, () => {
     it('should redirect to home page if add prisoner failure not set in session', () => {
       return request(app).get(paths.ADD_PRISONER.FAIL).expect(302).expect('Location', paths.RETURN_HOME)

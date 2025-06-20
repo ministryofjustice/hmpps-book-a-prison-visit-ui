@@ -15,7 +15,5 @@ generic-service:
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration.prison.service.justice.gov.uk"
     GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
 
-    FEATURE_ADD_PRISONER_ENABLED: "true"
-
 generic-prometheus-alerts:
   alertSeverity: visits-alerts
