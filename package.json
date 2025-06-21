@@ -138,7 +138,7 @@
     "axe-core": "^4.10.3",
     "cheerio": "^1.1.0",
     "concurrently": "^9.1.2",
-    "cypress": "^14.4.1",
+    "cypress": "^14.5.0",
     "cypress-axe": "^1.6.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^16.5.0",
