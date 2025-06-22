@@ -73,3 +73,14 @@ export type CannotBookReason =
   | 'TRANSFER_OR_RELEASE'
   | 'UNSUPPORTED_PRISON'
   | 'NO_ELIGIBLE_ADULT_VISITOR'
+
+export type FlashFormValues = Record<string, unknown>
+
+export type MoJAlert = {
+  variant: 'information' | 'success' | 'warning' | 'error'
+  title: string
+  showTitleAsHeading?: boolean
+  classes?: string
+} & TextOrHtml
+
+type TextOrHtml = { text: string; html?: never } | { text?: never; html: string }

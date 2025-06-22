@@ -128,7 +128,7 @@ context('Booking journey - drop-out points', () => {
       // Choose time - should be redirected back with info message shown
       chooseVisitTimePage.continue()
       chooseVisitTimePage.checkOnPage()
-      chooseVisitTimePage.getMessage().contains('Your visit time is no longer available. Select a new time.')
+      chooseVisitTimePage.getMessages(0).contains(/Your visit time is no longer available(.*)Select a new time\./)
     })
 
     it('should show drop-out page when prisoner has no VOs', () => {

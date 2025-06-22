@@ -4,13 +4,14 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { BadRequest, InternalServerError } from 'http-errors'
-import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionsService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
+import { MoJAlert } from '../../@types/bapv'
 
 jest.mock('../../../logger')
 
@@ -190,16 +191,17 @@ describe('Choose visit time', () => {
         })
     })
 
-    it('should render info message if set in flash', () => {
-      const message = 'Your visit time is no longer available. Select a new time.'
-      flashData = { message: [message] }
+    it('should render alert message if set in flash', () => {
+      const alert: MoJAlert = { variant: 'error', title: 'Alert title', showTitleAsHeading: true, text: 'Alert text' }
+      flashData = { messages: [alert] }
 
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="message"]').text().trim()).toBe(message)
+          expect($('.moj-alert').eq(0).text().trim()).toContain(alert.title)
+          expect($('.moj-alert').eq(0).text().trim()).toContain(alert.text)
         })
     })
 
@@ -344,7 +346,12 @@ describe('Choose visit time', () => {
     })
 
     describe('Handle API errors', () => {
-      const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
+      const expectedFlashMessage: MoJAlert = {
+        variant: 'error',
+        title: 'Your visit time is no longer available',
+        showTitleAsHeading: true,
+        text: 'Select a new time.',
+      }
 
       it('should set message in flash and redirect to current page when create application returns 400 Bad Request', () => {
         visitService.createVisitApplication.mockRejectedValue(new BadRequest())
@@ -355,7 +362,7 @@ describe('Choose visit time', () => {
           .expect(302)
           .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+            expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
             expect(visitService.createVisitApplication).toHaveBeenCalledWith({
               bookingJourney: sessionData.bookingJourney,
               bookerReference,
@@ -379,7 +386,7 @@ describe('Choose visit time', () => {
           .expect(302)
           .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
           .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+            expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
             expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
               bookingJourney: sessionData.bookingJourney,
@@ -404,7 +411,7 @@ describe('Choose visit time', () => {
     })
 
     describe('Validation errors', () => {
-      const expectedFlashErrors: FlashErrors = [
+      const expectedFlashErrors: FieldValidationError[] = [
         { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
       ]
 

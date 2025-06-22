@@ -65,7 +65,12 @@ export default class CheckVisitDetailsController {
             return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
           }
 
-          req.flash('message', 'Your visit time is no longer available. Select a new time.')
+          req.flash('messages', {
+            variant: 'error',
+            title: 'Your visit time is no longer available.',
+            showTitleAsHeading: true,
+            text: 'Select a new time',
+          })
           delete bookingJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
