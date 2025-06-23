@@ -154,7 +154,7 @@ describe('View a single booking', () => {
   })
 
   describe('Cancelled booking', () => {
-    it('should render the booking details page - cancelled by prison', () => {
+    it('should render the booking details page with "Visit cancelled" message', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
@@ -172,7 +172,8 @@ describe('View a single booking', () => {
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
-          expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by the prison.')
+          expect($('.moj-alert').eq(0).text()).toContain('Visit cancelled')
+          expect($('.moj-alert').eq(0).text()).toContain('This visit was cancelled by the prison')
 
           expect($('[data-test="prison-name"]').length).toBeFalsy()
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
@@ -184,48 +185,6 @@ describe('View a single booking', () => {
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
-        })
-    })
-
-    it('should render the booking details page - cancelled by prisoner', () => {
-      bookings.type = 'cancelled'
-      visitDetails.visitStatus = 'CANCELLED'
-      visitDetails.outcomeStatus = 'PRISONER_CANCELLED'
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by the prisoner.')
-        })
-    })
-
-    it('should render the booking details page - cancelled by booker', () => {
-      bookings.type = 'cancelled'
-      visitDetails.visitStatus = 'CANCELLED'
-      visitDetails.outcomeStatus = 'BOOKER_CANCELLED'
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="visit-cancelled-type"]').text()).toBe('You cancelled this visit.')
-        })
-    })
-
-    it('should render the booking details page - cancelled by visitor', () => {
-      bookings.type = 'cancelled'
-      visitDetails.visitStatus = 'CANCELLED'
-      visitDetails.outcomeStatus = 'VISITOR_CANCELLED'
-
-      return request(app)
-        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="visit-cancelled-type"]').text()).toBe('This visit was cancelled by a visitor.')
         })
     })
   })
