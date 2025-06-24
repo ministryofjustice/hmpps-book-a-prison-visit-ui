@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockPrisonService } from '../../services/testutils/mocks'
@@ -125,7 +125,7 @@ describe('Prisoner location', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
 
       beforeEach(() => {
         expectedFlashErrors = [

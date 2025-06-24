@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { InternalServerError } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { BookingConfirmed } from '../../@types/bapv'
+import { BookingConfirmed, MoJAlert } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -187,6 +187,13 @@ describe('Check visit details', () => {
 
     describe('Handle API errors', () => {
       describe('HTTP 422 Response', () => {
+        const expectedFlashMessage: MoJAlert = {
+          variant: 'error',
+          title: 'Your visit time is no longer available.',
+          showTitleAsHeading: true,
+          text: 'Select a new time',
+        }
+
         it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
@@ -261,8 +268,6 @@ describe('Check visit details', () => {
         })
 
         it('should set flash message and redirect to choose visit time page for error APPLICATION_INVALID_NO_SLOT_CAPACITY', () => {
-          const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
-
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
             status: 422,
@@ -277,7 +282,7 @@ describe('Check visit details', () => {
             .expect(302)
             .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
             .expect(() => {
-              expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+              expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
               expect(sessionData.bookingJourney).not.toBe(undefined)
               expect(sessionData.bookingConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
@@ -289,8 +294,6 @@ describe('Check visit details', () => {
         })
 
         it('should set flash message and redirect to choose visit time page for any other error set', () => {
-          const expectedFlashMessage = 'Your visit time is no longer available. Select a new time.'
-
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
             status: 422,
@@ -311,7 +314,7 @@ describe('Check visit details', () => {
             .expect(302)
             .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
             .expect(() => {
-              expect(flashProvider).toHaveBeenCalledWith('message', expectedFlashMessage)
+              expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
               expect(sessionData.bookingJourney).not.toBe(undefined)
               expect(sessionData.bookingConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({

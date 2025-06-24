@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { BadRequest } from 'http-errors'
 import { addDays } from 'date-fns'
-import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockBookerService } from '../../services/testutils/mocks'
@@ -194,7 +194,7 @@ describe('Prisoner details', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
 
       it('should set validation errors and redirect to original page when no data entered', () => {
         expectedFlashErrors = [

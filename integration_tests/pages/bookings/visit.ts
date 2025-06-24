@@ -5,8 +5,6 @@ export default class VisitDetailsPage extends Page {
     super('Visit booking details')
   }
 
-  visitCancelledBanner = (): PageElement => cy.get('[data-test="visit-cancelled-type"]')
-
   bookingReference = (): PageElement => cy.get('[data-test="booking-reference"]')
 
   visitDate = (): PageElement => cy.get('[data-test="visit-date"]')
