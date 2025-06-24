@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { randomUUID } from 'crypto'
-import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import {
   createMockBookerService,
   createMockPrisonService,
@@ -13,6 +13,7 @@ import {
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
+import { FlashFormValues } from '../../@types/bapv'
 
 jest.mock('../../../logger')
 
@@ -384,7 +385,7 @@ describe('Select visitors', () => {
 
     describe('Validation errors', () => {
       // Uses visitor age config in TestData.prisonDto()
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
       let expectedFlashFormValues: FlashFormValues
 
       beforeEach(() => {

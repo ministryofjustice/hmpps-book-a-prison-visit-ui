@@ -71,6 +71,8 @@ export default abstract class Page {
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 
+  getMessages = (index: number): PageElement => cy.get('.moj-alert').eq(index)
+
   goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains('a', name).click()
 
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {

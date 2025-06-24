@@ -2,7 +2,7 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { FieldValidationError } from 'express-validator'
-import { appWithAllRoutes, FlashData, FlashErrors, flashProvider } from './testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from './testutils/appSetup'
 import paths from '../constants/paths'
 import config from '../config'
 
@@ -164,7 +164,7 @@ describe('Cookies page', () => {
 
     describe('Validation errors', () => {
       it('should set validation error and not set cookie when no choice made', () => {
-        const expectedFlashErrors: FlashErrors = [
+        const expectedFlashErrors: FieldValidationError[] = [
           { type: 'field', location: 'body', path: 'acceptAnalytics', value: undefined, msg: 'No answer selected' },
         ]
 
@@ -179,7 +179,7 @@ describe('Cookies page', () => {
       })
 
       it('should set validation error and not set cookie when invalid choice made', () => {
-        const expectedFlashErrors: FlashErrors = [
+        const expectedFlashErrors: FieldValidationError[] = [
           { type: 'field', location: 'body', path: 'acceptAnalytics', value: 'INVALID', msg: 'No answer selected' },
         ]
 

@@ -6,7 +6,6 @@ import { appWithAllRoutes } from './testutils/appSetup'
 import TestData from './testutils/testData'
 import paths from '../constants/paths'
 import * as utils from '../utils/utils'
-import config from '../config'
 import { createMockBookerService } from '../services/testutils/mocks'
 
 let app: Express
@@ -54,46 +53,15 @@ describe('Home page', () => {
           } as SessionData)
         })
     })
-
-    it('should render the home page with message when booker has no associated prisoners', () => {
-      bookerService.getPrisoners.mockResolvedValue([])
-
-      return request(app)
-        .get(paths.HOME)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Book a visit -/)
-          expect($('[data-test="back-link"]').length).toBe(0)
-          expect($('h1').text()).toBe('Book a visit')
-          expect($('[data-test="prisoner-name"]').length).toBe(0)
-          expect($('[data-test=no-prisoner]').text()).toBe('No prisoner details found.')
-          expect($('[data-test="start-booking"]').length).toBe(0)
-          expect($('[data-test="add-prisoner"]').length).toBe(0)
-
-          expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [],
-            },
-          } as SessionData)
-        })
-    })
   })
 
-  describe('Booker has no prisoner registered (feature flagged with FEATURE_ADD_PRISONER_ENABLED)', () => {
+  describe('Booker has no prisoner registered', () => {
     beforeEach(() => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        addPrisoner: true,
-      })
-
       app = appWithAllRoutes({ services: { bookerService }, sessionData })
     })
 
     afterEach(() => {
-      jest.restoreAllMocks()
+      jest.resetAllMocks()
     })
 
     it('should render the home page with add a prisoner message and button', () => {

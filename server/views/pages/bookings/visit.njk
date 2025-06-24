@@ -1,51 +1,24 @@
 {% set activeLink = 'bookings-link' %}
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{%-from "moj/components/banner/macro.njk" import mojBanner %}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = "Visit booking details" %}
 
 {% block content %}
-
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
+
+      {# Messages #}
+      {% for message in messages %}
+        {{ mojAlert(message) }}
+      {% endfor %}
+
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m govuk-!-padding-top-5">Booking reference:
         <span data-test="booking-reference">{{ visit.reference }}</span>
       </h2>
-
-      {% if visit.visitStatus === "CANCELLED" %}
-
-        {% set status = visit.outcomeStatus %}
-
-        {% set cancelledBy %}
-          {%- if status === 'VISITOR_CANCELLED' %}
-            {{- 'This visit was cancelled by a visitor.' }}
-          {%- elif status === 'PRISONER_CANCELLED' %}
-            {{- 'This visit was cancelled by the prisoner.' }}
-          {%- elif status === 'BOOKER_CANCELLED' %}
-            {{- 'You cancelled this visit.' }}
-          {%- else %}
-            {{- 'This visit was cancelled by the prison.' }}
-          {%- endif %}
-        {%- endset %}
-
-        {% set cancelledVisitBannerHtml %}
-          {{ govukWarningText({
-            classes: "govuk-!-margin-bottom-0 govuk-!-padding-left-1",
-            html: '<span data-test="visit-cancelled-type">' + cancelledBy + '</span>',
-            iconFallbackText: "Warning"
-          }) }}
-        {% endset %}
-
-        {{ mojBanner({
-          classes: "govuk-!-padding-left-4",
-          html: cancelledVisitBannerHtml
-        }) }}
-
-      {% endif %}
 
       <h3 class="govuk-heading-s govuk-!-padding-top-4">Date and time</h3>
       <ul class="govuk-list">

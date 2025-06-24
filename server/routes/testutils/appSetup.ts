@@ -17,7 +17,7 @@ jest.mock('../../applicationInfo', () => {
 import express, { Express, Request } from 'express'
 import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
-import { FieldValidationError } from 'express-validator'
+import { ValidationError } from 'express-validator'
 
 import unauthenticatedRoutes from '../unauthenticatedRoutes'
 import routes from '../index'
@@ -26,6 +26,7 @@ import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
 import TestData from './testData'
 import analyticsConsent from '../../middleware/analyticsConsent'
+import { FlashFormValues, MoJAlert } from '../../@types/bapv'
 
 export const user: Express.User = {
   sub: 'user1',
@@ -38,12 +39,10 @@ export const user: Express.User = {
 const bookerReference = TestData.bookerReference().value
 const prisoners = [TestData.prisoner()]
 
-export type FlashErrors = FieldValidationError[]
-export type FlashFormValues = Record<string, string | string[] | number[]>
 export type FlashData = {
-  errors?: FlashErrors
+  errors?: ValidationError[]
   formValues?: FlashFormValues[]
-  message?: [string]
+  messages?: [MoJAlert]
 }
 export const flashProvider = jest.fn()
 

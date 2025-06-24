@@ -27,20 +27,17 @@
         </form>
 
       {% else %}
-        {# TODO remove when VB-4547 complete #}
-        {%if features.addPrisoner %}
-          <p data-test="no-prisoner">You need to add a prisoner to book a visit.</p>
 
-          {{ govukButton({
-            text: "Add a prisoner",
-            href: paths.ADD_PRISONER.LOCATION,
-            classes: "govuk-!-margin-top-3",
-            preventDoubleClick: true,
-            attributes: { "data-test": "add-prisoner" }
-          }) }}
-        {% else %}
-          <p data-test="no-prisoner">No prisoner details found.</p>
-        {% endif %}
+        <p data-test="no-prisoner">You need to add a prisoner to book a visit.</p>
+
+        {{ govukButton({
+          text: "Add a prisoner",
+          href: paths.ADD_PRISONER.LOCATION,
+          classes: "govuk-!-margin-top-3",
+          preventDoubleClick: true,
+          attributes: { "data-test": "add-prisoner" }
+        }) }}
+
       {% endif %}
     </div>
   </div>

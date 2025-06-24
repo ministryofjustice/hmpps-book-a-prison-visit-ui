@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import config from '../../config'
 import TestData from '../testutils/testData'
 
 let app: Express
@@ -14,11 +13,6 @@ const selectedPrison = TestData.prisonRegisterPrisonDto()
 const supportedPrisons = [selectedPrison]
 
 beforeEach(() => {
-  jest.replaceProperty(config, 'features', {
-    ...config.features,
-    addPrisoner: true,
-  })
-
   sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
@@ -29,17 +23,6 @@ afterEach(() => {
 })
 
 describe('Prisoner added', () => {
-  describe('Feature flag', () => {
-    it('should not be available if feature flag disabled', () => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        addPrisoner: false,
-      })
-      app = appWithAllRoutes({})
-      return request(app).get(paths.ADD_PRISONER.SUCCESS).expect(404)
-    })
-  })
-
   describe(`GET ${paths.ADD_PRISONER.SUCCESS}`, () => {
     it('should redirect to home page if add prisoner success not set in session', () => {
       return request(app).get(paths.ADD_PRISONER.SUCCESS).expect(302).expect('Location', paths.RETURN_HOME)

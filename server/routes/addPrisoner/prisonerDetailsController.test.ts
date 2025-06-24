@@ -5,10 +5,9 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { BadRequest } from 'http-errors'
 import { addDays } from 'date-fns'
-import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import config from '../../config'
 import { createMockBookerService } from '../../services/testutils/mocks'
 
 let app: Express
@@ -20,11 +19,6 @@ const selectedPrison = TestData.prisonRegisterPrisonDto()
 const supportedPrisons = [selectedPrison]
 
 beforeEach(() => {
-  jest.replaceProperty(config, 'features', {
-    ...config.features,
-    addPrisoner: true,
-  })
-
   sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService }, sessionData })
@@ -35,17 +29,6 @@ afterEach(() => {
 })
 
 describe('Prisoner details', () => {
-  describe('Feature flag', () => {
-    it('should not be available if feature flag disabled', () => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        addPrisoner: false,
-      })
-      app = appWithAllRoutes({})
-      return request(app).get(paths.ADD_PRISONER.DETAILS).expect(404)
-    })
-  })
-
   describe(`GET ${paths.ADD_PRISONER.DETAILS}`, () => {
     let flashData: FlashData
 
@@ -211,7 +194,7 @@ describe('Prisoner details', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
 
       it('should set validation errors and redirect to original page when no data entered', () => {
         expectedFlashErrors = [

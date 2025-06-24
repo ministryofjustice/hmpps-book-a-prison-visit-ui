@@ -27,8 +27,6 @@ generic-service:
     ADD_PRISONER_RATE_LIMIT_PRISONER_MAX_REQUESTS: "500"
     ADD_PRISONER_RATE_LIMIT_PRISONER_WINDOW_SECS: "60"
 
-    FEATURE_ADD_PRISONER_ENABLED: "true"
-
   allowlist:
     groups:
       - digital_staff_and_mojo

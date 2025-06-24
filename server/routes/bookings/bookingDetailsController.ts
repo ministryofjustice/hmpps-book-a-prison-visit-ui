@@ -3,6 +3,7 @@ import { Meta, ValidationChain, matchedData, param, validationResult } from 'exp
 import { SessionData } from 'express-session'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
+import { getVisitMessages } from './bookingsUtils'
 
 export default class BookingDetailsController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -23,6 +24,8 @@ export default class BookingDetailsController {
 
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
+      const messages = getVisitMessages(visit)
+
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
       const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
@@ -36,6 +39,7 @@ export default class BookingDetailsController {
         backLinkHref,
         prison,
         type,
+        messages,
         visit,
         showCancelButton,
         showOLServiceNav: true,

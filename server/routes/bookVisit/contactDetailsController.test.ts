@@ -3,12 +3,13 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, FlashErrors, FlashFormValues, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
+import { FlashFormValues } from '../../@types/bapv'
 
 jest.mock('../../../logger')
 
@@ -211,7 +212,7 @@ describe('Contact details', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
       let expectedFlashFormValues: FlashFormValues
 
       it('should set validation errors when email and phone checked but no data entered', () => {

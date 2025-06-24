@@ -102,9 +102,7 @@ export default {
   analytics: {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },
-  features: {
-    addPrisoner: get('FEATURE_ADD_PRISONER_ENABLED', 'false') === 'true',
-  },
+  features: {},
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
 }

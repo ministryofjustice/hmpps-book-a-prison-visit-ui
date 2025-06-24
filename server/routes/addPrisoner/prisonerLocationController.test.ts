@@ -3,10 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, FlashErrors, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
+import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import config from '../../config'
 import { createMockPrisonService } from '../../services/testutils/mocks'
 import { AddPrisonerJourney } from '../../@types/bapv'
 import { PrisonRegisterPrisonDto } from '../../data/orchestrationApiTypes'
@@ -18,11 +17,6 @@ const supportedPrisons = [TestData.prisonRegisterPrisonDto()]
 const prisonService = createMockPrisonService()
 
 beforeEach(() => {
-  jest.replaceProperty(config, 'features', {
-    ...config.features,
-    addPrisoner: true,
-  })
-
   sessionData = {} as SessionData
   prisonService.getSupportedPrisons.mockResolvedValue(supportedPrisons)
 
@@ -34,17 +28,6 @@ afterEach(() => {
 })
 
 describe('Prisoner location', () => {
-  describe('Feature flag', () => {
-    it('should not be available if feature flag disabled', () => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        addPrisoner: false,
-      })
-      app = appWithAllRoutes({})
-      return request(app).get(paths.ADD_PRISONER.LOCATION).expect(404)
-    })
-  })
-
   describe(`GET ${paths.ADD_PRISONER.LOCATION}`, () => {
     let flashData: FlashData
 
@@ -142,7 +125,7 @@ describe('Prisoner location', () => {
     })
 
     describe('Validation errors', () => {
-      let expectedFlashErrors: FlashErrors
+      let expectedFlashErrors: FieldValidationError[]
 
       beforeEach(() => {
         expectedFlashErrors = [

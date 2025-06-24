@@ -45,7 +45,7 @@ export default class ChooseVisitTimeController {
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
-        message: req.flash('message')?.[0],
+        messages: req.flash('messages'),
         calendar,
         selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
         prisoner,
@@ -92,7 +92,13 @@ export default class ChooseVisitTimeController {
       } catch (error) {
         // HTTP 400 Bad Request is the response when a session is no longer available
         if (error.status === 400) {
-          req.flash('message', 'Your visit time is no longer available. Select a new time.')
+          req.flash('messages', {
+            variant: 'error',
+            title: 'Your visit time is no longer available',
+            showTitleAsHeading: true,
+            text: 'Select a new time.',
+          })
+
           delete bookingJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
