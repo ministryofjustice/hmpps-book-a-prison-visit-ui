@@ -62,7 +62,7 @@ describe('Visit booked', () => {
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
           expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
-          expect($('[data-test="prison-website"]').text()).toBe(`visits at ${prison.prisonName} (opens in a new tab)`)
+          expect($('[data-test="prison-website"]').text()).toBe(`visits at ${prison.prisonName}`)
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
 

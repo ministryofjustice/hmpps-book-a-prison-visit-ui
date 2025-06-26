@@ -58,9 +58,9 @@ describe('Accessibility statement', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement -/)
+        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Accessibility statement')
+        expect($('h1').text()).toBe('Accessibility statement for Visit someone in prison')
 
         expect($('header .one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
@@ -81,7 +81,7 @@ describe('Accessibility statement', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement -/)
+        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
         expect($('.service-header__nav-list-item-link').length).toBe(0)
       })
   })
@@ -95,9 +95,9 @@ describe('Accessibility statement', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement -/)
+        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Accessibility statement')
+        expect($('h1').text()).toBe('Accessibility statement for Visit someone in prison')
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
