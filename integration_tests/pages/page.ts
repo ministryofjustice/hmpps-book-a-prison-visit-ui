@@ -1,4 +1,3 @@
-import axe from 'axe-core'
 import logAccessibilityViolations from '../support/logAccessibilityViolations'
 
 export type PageElement = Cypress.Chainable<JQuery>
@@ -10,14 +9,14 @@ export default abstract class Page {
 
   constructor(
     private readonly title: string,
-    private readonly options: { axeTest?: boolean; axeRulesToIgnore?: string[] } = {
+    private readonly options: { axeTest?: boolean } = {
       axeTest: true,
     },
   ) {
     this.checkOnPage()
 
-    if (options.axeTest || options.axeRulesToIgnore?.length) {
-      this.runAxe(options.axeRulesToIgnore)
+    if (options.axeTest) {
+      this.runAxe()
     }
   }
 
@@ -25,19 +24,22 @@ export default abstract class Page {
     cy.get('h1').contains(this.title)
   }
 
-  runAxe = (axeRulesToIgnore: string[] = []): void => {
-    axeRulesToIgnore.push('region') // FIXME ignoring this rule as suspected false positives since adding cookie banner
-
-    // If passed, build set of axe rules to ignore for a particular page class
-    const rules: axe.RuleObject = axeRulesToIgnore.reduce((acc, cur) => {
-      acc[cur] = { enabled: false }
-      return acc
-    }, {})
-
+  runAxe = (): void => {
     cy.injectAxe()
+
+    cy.configureAxe({
+      rules: [
+        // Known issue with skip link not in a landmark: https://design-system.service.gov.uk/components/skip-link/
+        { id: 'region', selector: '*:not(.govuk-skip-link)' },
+
+        // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
+        { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
+      ],
+    })
+
     cy.checkA11y(
-      null,
-      { rules },
+      undefined,
+      undefined,
       logAccessibilityViolations,
       false, // skipFailures
     )

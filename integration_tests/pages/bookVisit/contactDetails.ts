@@ -2,11 +2,7 @@ import Page, { PageElement } from '../page'
 
 export default class ContactDetailsPage extends Page {
   constructor(contactName: string) {
-    super(`Contact details for ${contactName}`, {
-      // Known issue with radio conditional reveal. See:
-      // https://github.com/alphagov/govuk-frontend/issues/979
-      axeRulesToIgnore: ['aria-allowed-attr'],
-    })
+    super(`Contact details for ${contactName}`)
   }
 
   checkGetUpdatesByEmail = (): void => {

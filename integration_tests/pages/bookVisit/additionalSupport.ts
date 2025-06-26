@@ -2,11 +2,7 @@ import Page, { PageElement } from '../page'
 
 export default class AdditionalSupportPage extends Page {
   constructor() {
-    super('Is additional support needed for any of the visitors?', {
-      // Known issue with radio conditional reveal. See:
-      // https://github.com/alphagov/govuk-frontend/issues/979
-      axeRulesToIgnore: ['aria-allowed-attr'],
-    })
+    super('Is additional support needed for any of the visitors?')
   }
 
   selectYes = (): void => {
