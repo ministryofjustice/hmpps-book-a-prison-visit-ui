@@ -91,9 +91,9 @@ export default class PrisonerDetailsController {
       // 'prisonerDob' not an actual form field but used to store combined result and any validation errors
       body('prisonerDob')
         .customSanitizer((_value, { req }) => {
-          const day = Number.parseInt(req.body.day, 10).toString().padStart(2, '0')
-          const month = Number.parseInt(req.body.month, 10).toString().padStart(2, '0')
-          const year = Number.parseInt(req.body.year, 10).toString()
+          const day = Number.parseInt(req.body?.day, 10).toString().padStart(2, '0')
+          const month = Number.parseInt(req.body?.month, 10).toString().padStart(2, '0')
+          const year = Number.parseInt(req.body?.year, 10).toString()
           return `${year}-${month}-${day}`
         })
         .custom((date: string) => {

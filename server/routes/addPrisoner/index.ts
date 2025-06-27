@@ -1,7 +1,5 @@
-import { RequestHandler, Router } from 'express'
-import { ValidationChain } from 'express-validator'
+import { Router } from 'express'
 import { Services } from '../../services'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
 import paths from '../../constants/paths'
 import PrisonerLocationController from './prisonerLocationController'
 import PrisonerDetailsController from './prisonerDetailsController'
@@ -11,31 +9,19 @@ import PrisonerNotMatchedController from './prisonerNotMatchedController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const postWithValidation = (path: string | string[], validationChain: ValidationChain[], handler: RequestHandler) =>
-    router.post(path, ...validationChain, asyncMiddleware(handler))
-
   const prisonerLocationController = new PrisonerLocationController(services.prisonService)
   const prisonerDetailsController = new PrisonerDetailsController(services.bookerService)
   const prisonerAddedController = new PrisonerAddedController()
   const prisonerNotAddedController = new PrisonerNotMatchedController()
 
-  get(paths.ADD_PRISONER.LOCATION, prisonerLocationController.view())
-  postWithValidation(
-    paths.ADD_PRISONER.LOCATION,
-    prisonerLocationController.validate(),
-    prisonerLocationController.submit(),
-  )
+  router.get(paths.ADD_PRISONER.LOCATION, prisonerLocationController.view())
+  router.post(paths.ADD_PRISONER.LOCATION, prisonerLocationController.validate(), prisonerLocationController.submit())
 
-  get(paths.ADD_PRISONER.DETAILS, prisonerDetailsController.view())
-  postWithValidation(
-    paths.ADD_PRISONER.DETAILS,
-    prisonerDetailsController.validate(),
-    prisonerDetailsController.submit(),
-  )
+  router.get(paths.ADD_PRISONER.DETAILS, prisonerDetailsController.view())
+  router.post(paths.ADD_PRISONER.DETAILS, prisonerDetailsController.validate(), prisonerDetailsController.submit())
 
-  get(paths.ADD_PRISONER.SUCCESS, prisonerAddedController.view())
-  get(paths.ADD_PRISONER.FAIL, prisonerNotAddedController.view())
+  router.get(paths.ADD_PRISONER.SUCCESS, prisonerAddedController.view())
+  router.get(paths.ADD_PRISONER.FAIL, prisonerNotAddedController.view())
 
   return router
 }
