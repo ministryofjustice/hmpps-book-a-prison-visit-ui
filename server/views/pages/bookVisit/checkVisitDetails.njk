@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% set pageTitle = "Check the visit details before booking" %}
+{% set pageTitle = "Check the visit details" %}
 
 {% set backLinkHref = paths.BOOK_VISIT.CONTACT_DETAILS %}
 
@@ -25,7 +25,9 @@
               text: "Prisoner"
             },
             value: {
-              html: '<span data-test="prisoner-name">' + (prisoner | prisonerNameFirstLast | escape) + "</span>"
+              html:
+                '<span data-test="prisoner-name">' + (prisoner | prisonerNameFirstLast | escape) + "</span> at " +
+                '<span data-test="prison-name">' + (prisoner.prisonName | escape) + "</span>"
             }
           },
 
@@ -139,9 +141,9 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
-          text: "Submit booking",
+          text: "Submit",
           preventDoubleClick: true,
-          attributes: { "data-test": "submit-booking" }
+          attributes: { "data-test": "submit" }
         }) }}
       </form>
     </div>
