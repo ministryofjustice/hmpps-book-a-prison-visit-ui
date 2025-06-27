@@ -12,6 +12,7 @@ import logger from '../../../logger'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
+import config from '../../config'
 
 jest.mock('../../../logger')
 
@@ -129,61 +130,137 @@ describe('Check visit details', () => {
   })
 
   describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
-    const visit = TestData.visitDto()
-
     beforeEach(() => {
-      visitService.bookVisit.mockResolvedValue(visit)
+      jest.replaceProperty(config, 'features', {
+        ...config.features,
+        visitRequest: true,
+      })
 
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
-      const expectedBookingConfirmed: BookingConfirmed = {
-        prison,
-        visitReference: visit.reference,
-        hasEmail: true,
-        hasMobile: true,
-      }
+    describe('Visit BOOKED', () => {
+      const visitBooked = TestData.visitDto({ visitSubStatus: 'BOOKED' })
 
-      return request(app)
-        .post(paths.BOOK_VISIT.CHECK_DETAILS)
-        .expect(302)
-        .expect('location', paths.BOOK_VISIT.BOOKED)
-        .expect(() => {
-          expect(sessionData.bookingJourney).toBe(undefined)
-          expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+      beforeEach(() => {
+        visitService.bookVisit.mockResolvedValue(visitBooked)
+      })
 
-          expect(visitService.bookVisit).toHaveBeenCalledWith({
-            applicationReference: application.reference,
-            actionedBy: bookerReference,
+      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
+        const expectedBookingConfirmed: BookingConfirmed = {
+          isARequest: false,
+          prison,
+          visitReference: visitBooked.reference,
+          hasEmail: true,
+          hasMobile: true,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.BOOKED)
+          .expect(() => {
+            expect(sessionData.bookingJourney).toBe(undefined)
+            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+            expect(visitService.bookVisit).toHaveBeenCalledWith({
+              applicationReference: application.reference,
+              actionedBy: bookerReference,
+            })
           })
-        })
+      })
+
+      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
+        sessionData.bookingJourney.mainContactEmail = undefined
+        sessionData.bookingJourney.mainContactPhone = undefined
+
+        const expectedBookingConfirmed: BookingConfirmed = {
+          isARequest: false,
+          prison,
+          visitReference: visitBooked.reference,
+          hasEmail: false,
+          hasMobile: false,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.BOOKED)
+          .expect(() => {
+            expect(sessionData.bookingJourney).toBe(undefined)
+            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+            expect(visitService.bookVisit).toHaveBeenCalledWith({
+              applicationReference: application.reference,
+              actionedBy: bookerReference,
+            })
+          })
+      })
     })
 
-    it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
-      sessionData.bookingJourney.mainContactEmail = undefined
-      sessionData.bookingJourney.mainContactPhone = undefined
+    describe('Visit REQUESTED', () => {
+      const visitRequested = TestData.visitDto({ visitSubStatus: 'REQUESTED' })
 
-      const expectedBookingConfirmed: BookingConfirmed = {
-        prison,
-        visitReference: visit.reference,
-        hasEmail: false,
-        hasMobile: false,
-      }
+      beforeEach(() => {
+        visitService.bookVisit.mockResolvedValue(visitRequested)
+      })
 
-      return request(app)
-        .post(paths.BOOK_VISIT.CHECK_DETAILS)
-        .expect(302)
-        .expect('location', paths.BOOK_VISIT.BOOKED)
-        .expect(() => {
-          expect(sessionData.bookingJourney).toBe(undefined)
-          expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
-
-          expect(visitService.bookVisit).toHaveBeenCalledWith({
-            applicationReference: application.reference,
-            actionedBy: bookerReference,
+      describe('Feature flag', () => {
+        it('should ignore visitSubStatus and handle as a BOOKED visit when FEATURE_VISIT_REQUEST disabled', () => {
+          jest.replaceProperty(config, 'features', {
+            ...config.features,
+            visitRequest: false,
           })
+
+          app = appWithAllRoutes({ services: { visitService }, sessionData })
+
+          const expectedBookingConfirmed: BookingConfirmed = {
+            isARequest: false,
+            prison,
+            visitReference: visitRequested.reference,
+            hasEmail: true,
+            hasMobile: true,
+          }
+
+          return request(app)
+            .post(paths.BOOK_VISIT.CHECK_DETAILS)
+            .expect(302)
+            .expect('location', paths.BOOK_VISIT.BOOKED)
+            .expect(() => {
+              expect(sessionData.bookingJourney).toBe(undefined)
+              expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+              expect(visitService.bookVisit).toHaveBeenCalledWith({
+                applicationReference: application.reference,
+                actionedBy: bookerReference,
+              })
+            })
         })
+      })
+
+      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit requested page', () => {
+        const expectedBookingConfirmed: BookingConfirmed = {
+          isARequest: true,
+          prison,
+          visitReference: visitRequested.reference,
+          hasEmail: true,
+          hasMobile: true,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CHECK_DETAILS)
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.REQUESTED)
+          .expect(() => {
+            expect(sessionData.bookingJourney).toBe(undefined)
+            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+
+            expect(visitService.bookVisit).toHaveBeenCalledWith({
+              applicationReference: application.reference,
+              actionedBy: bookerReference,
+            })
+          })
+      })
     })
 
     describe('Handle API errors', () => {

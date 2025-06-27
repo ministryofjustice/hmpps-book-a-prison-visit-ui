@@ -28,6 +28,7 @@ const paths = {
     CONTACT_DETAILS: '/book-visit/contact-details',
     CHECK_DETAILS: '/book-visit/check-visit-details',
     BOOKED: '/book-visit/visit-booked',
+    REQUESTED: '/book-visit/visit-requested',
   },
 
   BOOKINGS: {
