@@ -1,6 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import HomeController from './homeController'
 import paths from '../constants/paths'
@@ -12,12 +10,10 @@ import visitorsRoutes from './visitors'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
   const homeController = new HomeController(services.bookerService)
 
-  get(paths.HOME, homeController.view())
-  get(paths.RETURN_HOME, homeController.returnHome())
+  router.get(paths.HOME, homeController.view())
+  router.get(paths.RETURN_HOME, homeController.returnHome())
 
   router.use(addPrisonerRoutes(services))
 
