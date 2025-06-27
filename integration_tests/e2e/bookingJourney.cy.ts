@@ -166,6 +166,7 @@ context('Booking journey', () => {
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
     checkVisitDetailsPage.prisonerName().contains('John Smith')
+    checkVisitDetailsPage.prisonName().contains('Hewell (HMP)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
@@ -176,7 +177,7 @@ context('Booking journey', () => {
     checkVisitDetailsPage.contactDetailsPhone().contains('07712 000 000')
 
     cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
-    checkVisitDetailsPage.continue()
+    checkVisitDetailsPage.submit()
 
     const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
     visitBookedPage.bookingReference().contains('ab-cd-ef-gh')
