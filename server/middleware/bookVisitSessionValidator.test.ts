@@ -323,7 +323,7 @@ describe('bookVisitSessionValidator', () => {
     })
 
     describe('bookingConfirmed', () => {
-      describe('should only allow visit booked path and POST select visitors', () => {
+      describe('should only allow visit booked/requested paths and POST select prisoner', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           // this allowed because bookingConfirmed gets cleared in this route
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
@@ -343,6 +343,7 @@ describe('bookVisitSessionValidator', () => {
           { method: 'GET', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'redirect' },
           { method: 'POST', path: paths.BOOK_VISIT.CHECK_DETAILS, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.BOOKED, expected: 'next' },
+          { method: 'GET', path: paths.BOOK_VISIT.REQUESTED, expected: 'next' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
           req = createMockReq({
             method,

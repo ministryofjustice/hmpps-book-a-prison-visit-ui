@@ -1,0 +1,63 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = "Visit requested" %}
+
+{# Build messages for email and/or mobile notifications #}
+{% if bookingConfirmed.hasEmail or bookingConfirmed.hasMobile %}
+
+  {% if bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
+    {% set notificationMethods = "An email and a text message" %}
+  {% elseif bookingConfirmed.hasEmail %}
+    {% set notificationMethods = "An email" %}
+  {% else %}
+    {% set notificationMethods = "A text message" %}
+  {% endif %}
+
+  {% set requestConfirmationMessage = "We have sent " + (notificationMethods | lower)+ " with the details of your request to the main contact." %}
+
+  {% set responseMessage = notificationMethods + " with the prison’s decision will be sent to the main contact." %}
+
+{% endif %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: pageTitle,
+        classes: "visits-request-confirmation",
+        html:
+          'It will now be reviewed by <span data-test="prison-name-panel">' +
+            (bookingConfirmed.prison.prisonName | escape) +
+          "</span>"
+      }) }}
+
+      {% if requestConfirmationMessage %}
+        <p data-test="request-confirmation-message">{{ requestConfirmationMessage }}</p>
+      {% endif %}
+
+      <p>Request reference: <span data-test="request-reference">{{ bookingConfirmed.visitReference }}</span></p>
+
+
+      <h2 class="govuk-heading-m">What happens next</h2>
+
+      <p>Your visit is not booked yet. It needs to be checked.</p>
+
+      <p>
+        <span data-test="prison-name">{{ bookingConfirmed.prison.prisonName }}</span>
+        will confirm or reject your request.
+      </p>
+
+      {% if responseMessage %}
+        <p data-test="response-message">{{ responseMessage }}</p>
+      {% endif %}
+      
+      <p>
+        <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">Your bookings page</a>
+        also shows the status of upcoming visits.
+      </p>
+
+    </div>
+  </div>
+
+{% endblock %}

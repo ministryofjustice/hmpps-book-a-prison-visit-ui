@@ -249,7 +249,7 @@ export default class TestData {
     visitRoom = '',
     visitType = 'SOCIAL',
     visitStatus = 'BOOKED',
-    visitSubStatus = 'BOOKED',
+    visitSubStatus = 'AUTO-APPROVED',
     outcomeStatus = undefined,
     visitRestriction = 'OPEN',
     startTimestamp = '2024-05-30T10:00:00',
