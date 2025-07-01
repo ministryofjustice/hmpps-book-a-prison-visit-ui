@@ -34,9 +34,11 @@ export default class OrchestrationApiClient {
   async bookVisit({
     applicationReference,
     actionedBy,
+    isRequestBooking,
   }: {
     applicationReference: string
     actionedBy: string
+    isRequestBooking: boolean
   }): Promise<VisitDto> {
     return this.restClient.put({
       path: `/visits/${applicationReference}/book`,
@@ -45,6 +47,7 @@ export default class OrchestrationApiClient {
         allowOverBooking: false,
         actionedBy,
         userType: 'PUBLIC',
+        isRequestBooking,
       },
     })
   }

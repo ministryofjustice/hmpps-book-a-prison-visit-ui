@@ -139,8 +139,8 @@ describe('Check visit details', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    describe('Visit BOOKED (AUTO-APPROVED)', () => {
-      const visitBooked = TestData.visitDto({ visitSubStatus: 'AUTO-APPROVED' })
+    describe('Visit BOOKED (AUTO_APPROVED)', () => {
+      const visitBooked = TestData.visitDto({ visitSubStatus: 'AUTO_APPROVED' })
 
       beforeEach(() => {
         visitService.bookVisit.mockResolvedValue(visitBooked)
@@ -166,6 +166,7 @@ describe('Check visit details', () => {
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
               actionedBy: bookerReference,
+              isRequestBooking: false,
             })
           })
       })
@@ -193,6 +194,7 @@ describe('Check visit details', () => {
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
               actionedBy: bookerReference,
+              isRequestBooking: false,
             })
           })
       })
@@ -233,6 +235,7 @@ describe('Check visit details', () => {
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
+                isRequestBooking: false,
               })
             })
         })
@@ -258,6 +261,7 @@ describe('Check visit details', () => {
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
               actionedBy: bookerReference,
+              isRequestBooking: false, // TODO will be true when VB-5699 implemented
             })
           })
       })
@@ -315,6 +319,7 @@ describe('Check visit details', () => {
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
+                isRequestBooking: false,
               })
             })
         })
@@ -341,6 +346,7 @@ describe('Check visit details', () => {
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
+                isRequestBooking: false,
               })
             })
         })
@@ -366,6 +372,7 @@ describe('Check visit details', () => {
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
+                isRequestBooking: false,
               })
               expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
             })
@@ -398,6 +405,7 @@ describe('Check visit details', () => {
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
+                isRequestBooking: false,
               })
               expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
             })

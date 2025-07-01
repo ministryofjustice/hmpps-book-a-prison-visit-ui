@@ -85,7 +85,7 @@ context('Booking journey', () => {
     cy.task('stubHmppsAuthToken')
   })
 
-  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO-APPROVED)', () => {
+  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
@@ -177,7 +177,11 @@ context('Booking journey', () => {
     checkVisitDetailsPage.contactDetailsEmail().contains('adult.one@example.com')
     checkVisitDetailsPage.contactDetailsPhone().contains('07712 000 000')
 
-    cy.task('stubBookVisit', { visit: TestData.visitDto(), bookerReference: TestData.bookerReference().value })
+    cy.task('stubBookVisit', {
+      visit: TestData.visitDto(),
+      bookerReference: TestData.bookerReference().value,
+      isRequestBooking: false,
+    })
     checkVisitDetailsPage.submit()
 
     // Visit booked
@@ -269,6 +273,7 @@ context('Booking journey', () => {
     cy.task('stubBookVisit', {
       visit: TestData.visitDto({ visitSubStatus: 'REQUESTED' }),
       bookerReference: TestData.bookerReference().value,
+      isRequestBooking: false, // TODO will be true when VB-5699 implemented
     })
     checkVisitDetailsPage.submit()
 
