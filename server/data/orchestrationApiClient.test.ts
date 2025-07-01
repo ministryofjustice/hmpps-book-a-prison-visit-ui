@@ -41,6 +41,7 @@ describe('orchestrationApiClient', () => {
         allowOverBooking: false,
         actionedBy: bookerReference.value,
         userType: 'PUBLIC',
+        isRequestBooking: false,
       }
 
       const result = { reference: 'ab-cd-ef-gh' } as Partial<VisitDto>
@@ -50,7 +51,11 @@ describe('orchestrationApiClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, result)
 
-      const output = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy: bookerReference.value })
+      const output = await orchestrationApiClient.bookVisit({
+        applicationReference,
+        actionedBy: bookerReference.value,
+        isRequestBooking: false,
+      })
 
       expect(output).toStrictEqual(result)
     })

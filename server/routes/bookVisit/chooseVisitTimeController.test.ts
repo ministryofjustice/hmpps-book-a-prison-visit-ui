@@ -176,6 +176,16 @@ describe('Choose visit time', () => {
         })
     })
 
+    it('should save visit session data to booking journey session', () => {
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(() => {
+          expect(sessionData.bookingJourney.allVisitSessionIds).toStrictEqual(allVisitSessionIds)
+          expect(sessionData.bookingJourney.allVisitSessions).toStrictEqual(allVisitSessions)
+        })
+    })
+
     it('should have back link to closed visit page if sessionRestriction is CLOSED', () => {
       sessionData.bookingJourney.sessionRestriction = 'CLOSED'
 

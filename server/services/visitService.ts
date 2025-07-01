@@ -79,14 +79,16 @@ export default class VisitService {
   async bookVisit({
     applicationReference,
     actionedBy,
+    isRequestBooking,
   }: {
     applicationReference: string
     actionedBy: string
+    isRequestBooking: boolean
   }): Promise<VisitDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy })
+    const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy, isRequestBooking })
 
     logger.info(
       `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus})`,

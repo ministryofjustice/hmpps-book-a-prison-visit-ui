@@ -165,11 +165,13 @@ describe('Visit service', () => {
         const results = await visitService.bookVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
+          isRequestBooking: false,
         })
 
         expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
+          isRequestBooking: false,
         })
         expect(results).toStrictEqual(visit)
       })

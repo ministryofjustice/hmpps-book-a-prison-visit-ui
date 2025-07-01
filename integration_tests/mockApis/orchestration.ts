@@ -17,7 +17,15 @@ import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 export default {
   // orchestration-visits-controller
 
-  stubBookVisit: ({ visit, bookerReference }: { visit: VisitDto; bookerReference: string }): SuperAgentRequest => {
+  stubBookVisit: ({
+    visit,
+    bookerReference,
+    isRequestBooking,
+  }: {
+    visit: VisitDto
+    bookerReference: string
+    isRequestBooking: boolean
+  }): SuperAgentRequest => {
     return stubFor({
       request: {
         method: 'PUT',
@@ -29,6 +37,7 @@ export default {
               allowOverBooking: false,
               actionedBy: bookerReference,
               userType: 'PUBLIC',
+              isRequestBooking,
             },
           },
         ],
