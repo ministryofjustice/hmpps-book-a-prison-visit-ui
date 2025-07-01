@@ -14,6 +14,7 @@ const journeyOrder: string[] = [
   paths.BOOK_VISIT.CONTACT_DETAILS,
   paths.BOOK_VISIT.CHECK_DETAILS,
   paths.BOOK_VISIT.BOOKED,
+  paths.BOOK_VISIT.REQUESTED,
 ]
 
 export default function bookVisitSessionValidator(): RequestHandler {
@@ -35,7 +36,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
     }
 
     // Booking confirmed (check first because bookingJourney cleared just before this stage)
-    if (requestPath === paths.BOOK_VISIT.BOOKED) {
+    if (requestPath === paths.BOOK_VISIT.BOOKED || requestPath === paths.BOOK_VISIT.REQUESTED) {
       return bookingConfirmed && !bookingJourney ? next() : logAndRedirect(res, method, requestPath, booker.reference)
     }
 

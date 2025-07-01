@@ -1,3 +1,7 @@
 .govuk-main-wrapper {
   min-height: 300px;
 }
+
+.govuk-panel.visits-request-confirmation {
+  background-color: govuk-colour("blue");
+}

@@ -34,6 +34,7 @@ export type PrisonDto = components['schemas']['PrisonDto']
 
 export type PrisonRegisterPrisonDto = components['schemas']['PrisonRegisterPrisonDto']
 
-export type VisitDto = components['schemas']['VisitDto']
+// FIXME remove visitSubStatus from here when it is added to the API
+export type VisitDto = components['schemas']['VisitDto'] & { visitSubStatus: 'AUTO-APPROVED' | 'REQUESTED' }
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']

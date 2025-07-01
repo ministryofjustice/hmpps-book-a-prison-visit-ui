@@ -96,11 +96,12 @@ export default class TestData {
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static bookingConfirmed = ({
+    isARequest = false,
     prison = this.prisonDto(),
     visitReference = 'ab-cd-ef-gh',
     hasEmail = true,
     hasMobile = true,
-  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ prison, visitReference, hasEmail, hasMobile })
+  }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ isARequest, prison, visitReference, hasEmail, hasMobile })
 
   static registerPrisonerForBookerDto = ({
     prisonerId = 'A1234BC',
@@ -248,6 +249,7 @@ export default class TestData {
     visitRoom = '',
     visitType = 'SOCIAL',
     visitStatus = 'BOOKED',
+    visitSubStatus = 'AUTO-APPROVED',
     outcomeStatus = undefined,
     visitRestriction = 'OPEN',
     startTimestamp = '2024-05-30T10:00:00',
@@ -266,6 +268,7 @@ export default class TestData {
       visitRoom,
       visitType,
       visitStatus,
+      visitSubStatus,
       outcomeStatus,
       visitRestriction,
       startTimestamp,

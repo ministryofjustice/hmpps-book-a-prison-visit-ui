@@ -88,7 +88,9 @@ export default class VisitService {
 
     const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy })
 
-    logger.info(`Visit application '${applicationReference}' booked as visit '${(await visit).reference}'`)
+    logger.info(
+      `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus})`,
+    )
     return visit
   }
 

@@ -5,6 +5,7 @@ import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
+import config from '../../config'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -37,6 +38,7 @@ export default class CheckVisitDetailsController {
         })
 
         const bookingConfirmed: BookingConfirmed = {
+          isARequest: config.features.visitRequest && visit.visitSubStatus === 'REQUESTED',
           prison: bookingJourney.prison,
           visitReference: visit.reference,
           hasEmail: !!bookingJourney.mainContactEmail,
@@ -45,7 +47,8 @@ export default class CheckVisitDetailsController {
         req.session.bookingConfirmed = bookingConfirmed
 
         delete req.session.bookingJourney
-        return res.redirect(paths.BOOK_VISIT.BOOKED)
+
+        return res.redirect(bookingConfirmed.isARequest ? paths.BOOK_VISIT.REQUESTED : paths.BOOK_VISIT.BOOKED)
       } catch (error) {
         if (error.status === 422) {
           const validationErrors =

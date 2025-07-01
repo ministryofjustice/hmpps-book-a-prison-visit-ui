@@ -57,6 +57,7 @@ export type BookingJourney = {
 }
 
 export type BookingConfirmed = {
+  isARequest: boolean
   prison: PrisonDto
   visitReference: string
   hasEmail: boolean
