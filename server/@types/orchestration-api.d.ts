@@ -1046,6 +1046,19 @@ export interface components {
        */
       visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
       /**
+       * @description Visit Sub Status
+       * @example AUTO_APPROVED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
+      /**
        * @description Outcome Status
        * @example VISITOR_CANCELLED
        * @enum {string}
@@ -1812,6 +1825,19 @@ export interface components {
        */
       visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
       /**
+       * @description Visit Sub Status
+       * @example AUTO_APPROVED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
+      /**
        * @description Outcome Status
        * @example VISITOR_CANCELLED
        * @enum {string}
@@ -2040,19 +2066,19 @@ export interface components {
       visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
       first?: boolean
       last?: boolean
       empty?: boolean
@@ -2358,6 +2384,19 @@ export interface components {
        * @enum {string}
        */
       visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      /**
+       * @description Visit Sub Status
+       * @example AUTO_APPROVED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
       /**
        * @description Outcome Status
        * @example VISITOR_CANCELLED

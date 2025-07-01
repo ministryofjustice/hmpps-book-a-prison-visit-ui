@@ -139,8 +139,8 @@ describe('Check visit details', () => {
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
-    describe('Visit BOOKED (AUTO-APPROVED)', () => {
-      const visitBooked = TestData.visitDto({ visitSubStatus: 'AUTO-APPROVED' })
+    describe('Visit BOOKED (AUTO_APPROVED)', () => {
+      const visitBooked = TestData.visitDto({ visitSubStatus: 'AUTO_APPROVED' })
 
       beforeEach(() => {
         visitService.bookVisit.mockResolvedValue(visitBooked)

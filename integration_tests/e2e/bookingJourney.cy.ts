@@ -85,7 +85,7 @@ context('Booking journey', () => {
     cy.task('stubHmppsAuthToken')
   })
 
-  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO-APPROVED)', () => {
+  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
