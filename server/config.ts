@@ -85,6 +85,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('ORCHESTRATION_API_TIMEOUT_RESPONSE', 10000))),
     },
+    prisonRegister: {
+      url: get('PRISON_REGISTER_API_URL', 'http://localhost:8080', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
+    },
   },
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey

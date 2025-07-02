@@ -4,6 +4,7 @@ import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
 import govukOneLogin from './integration_tests/mockApis/govukOneLogin'
 import redisHelpers from './integration_tests/redis/redisHelpers'
 import orchestrationService from './integration_tests/mockApis/orchestration'
+import prisonRegister from './integration_tests/mockApis/prisonRegister'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -24,6 +25,7 @@ export default defineConfig({
         ...govukOneLogin,
         ...redisHelpers,
         ...orchestrationService,
+        ...prisonRegister,
 
         // Log message to console
         log: (message: string) => {

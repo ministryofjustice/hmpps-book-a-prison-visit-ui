@@ -13,6 +13,7 @@ import type {
   PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
 } from '../../data/orchestrationApiTypes'
+import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
 
@@ -211,6 +212,14 @@ export default class TestData {
     nextAvailableVoDate,
     convictedStatus,
   })
+
+  static prisonNameDtos = ({
+    prisons = [
+      { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
+      { prisonId: 'FHI', prisonName: 'Foston Hall (HMP & YOI)' },
+      { prisonId: 'HEI', prisonName: 'Hewell (HMP)' },
+    ] as PrisonNameDto[],
+  } = {}): PrisonNameDto[] => prisons
 
   static visitDetails = ({
     visitDisplayId = 'uuidv4-1',
