@@ -19,6 +19,8 @@ SYSTEM_CLIENT_SECRET="<system_client_secret>"
 
 ORCHESTRATION_API_URL="https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
 
+PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
+
 GOVUK_ONE_LOGIN_URL=https://oidc.integration.account.gov.uk
 GOVUK_ONE_LOGIN_HOME_URL=https://home.integration.account.gov.uk
 GOVUK_ONE_LOGIN_VTR=LOW # LOW will skip the OTP verification during sign-in

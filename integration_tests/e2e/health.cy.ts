@@ -3,6 +3,7 @@ context('Healthcheck', () => {
     beforeEach(() => {
       cy.task('reset')
       cy.task('stubOrchestrationPing')
+      cy.task('stubPrisonRegisterPing')
     })
 
     it('Health check page is visible and UP', () => {
@@ -22,6 +23,7 @@ context('Healthcheck', () => {
     beforeEach(() => {
       cy.task('reset')
       cy.task('stubOrchestrationPing', 500)
+      cy.task('stubPrisonRegisterPing')
     })
 
     it('Reports correctly when token orchestration down', () => {

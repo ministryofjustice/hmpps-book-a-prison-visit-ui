@@ -44,6 +44,7 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
 
 const apiChecks = [
   service('orchestration', `${config.apis.orchestration.url}/health/ping`, config.apis.orchestration.agent),
+  service('prisonRegister', `${config.apis.prisonRegister.url}/health/ping`, config.apis.prisonRegister.agent),
 ]
 
 export default function healthCheck(
