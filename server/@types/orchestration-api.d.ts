@@ -548,6 +548,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visit-sessions/available/v2': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns available visit sessions for a specified prisoner and visitors combination for the date range passed in
+     * @description Returns available visit sessions for a specified prisoner and visitors combination for the date range passed in. Used by Visits Public only, not PVB
+     */
+    get: operations['getAvailableVisitSessions_1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visit-sessions/available/restriction': {
     parameters: {
       query?: never
@@ -2066,33 +2086,33 @@ export interface components {
       visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
     }
     PageVisitDto: {
-      /** Format: int32 */
-      totalPages?: number
       /** Format: int64 */
       totalElements?: number
+      /** Format: int32 */
+      totalPages?: number
+      first?: boolean
+      last?: boolean
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
       sort?: components['schemas']['SortObject']
-      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      first?: boolean
-      last?: boolean
+      pageable?: components['schemas']['PageableObject']
       empty?: boolean
     }
     PageableObject: {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject']
+      unpaged?: boolean
+      /** Format: int32 */
+      pageSize?: number
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      /** Format: int32 */
-      pageSize?: number
-      unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
@@ -2328,6 +2348,12 @@ export interface components {
        * @enum {string}
        */
       sessionRestriction: 'OPEN' | 'CLOSED'
+      /**
+       * @description Does session need review, defaults to false
+       * @example true
+       */
+      isSessionForReview: boolean
+      sessionForReview?: boolean
     }
     /** @description Visit Session restriction type */
     AvailableVisitSessionRestrictionDto: {
@@ -4818,6 +4844,80 @@ export interface operations {
         fromDateOverride?: number
         /** @description maximum override in days for closing session slot booking window, E.g. 28 will set max booking window to today + 28 days */
         toDateOverride?: number
+        /**
+         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
+         * @example user-1
+         */
+        username?: string
+        /**
+         * @description user type for the session
+         * @example PUBLIC
+         */
+        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Visit session information returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AvailableVisitSessionDto'][]
+        }
+      }
+      /** @description Incorrect request to Get visit sessions  */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getAvailableVisitSessions_1: {
+    parameters: {
+      query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example MDI
+         */
+        prisonId: string
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
+        prisonerId: string
+        /**
+         * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
+         * @example CLOSED
+         */
+        sessionRestriction?: 'OPEN' | 'CLOSED'
+        /**
+         * @description List of visitors who require visit sessions
+         * @example 4729510,4729220
+         */
+        visitors?: number[]
+        /**
+         * @description The current application reference to be excluded from capacity count and double booking
+         * @example dfs-wjs-eqr
+         */
+        excludedApplicationReference?: string
         /**
          * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
          * @example user-1
