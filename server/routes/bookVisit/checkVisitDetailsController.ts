@@ -35,7 +35,7 @@ export default class CheckVisitDetailsController {
         const visit = await this.visitService.bookVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: booker.reference,
-          isRequestBooking: false, // TODO to be implemented in VB-5699, where it will come from the selected session
+          isRequestBooking: config.features.visitRequest && bookingJourney.selectedVisitSession.isSessionForReview,
         })
 
         const bookingConfirmed: BookingConfirmed = {
