@@ -14,6 +14,7 @@ generic-service:
     GOVUK_ONE_LOGIN_HOME_URL: "https://home.account.gov.uk"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration.prison.service.justice.gov.uk"
     PRISON_REGISTER_API_URL: "https://prison-register.hmpps.service.justice.gov.uk"
+    PVB_URL: "https://www.prisonvisits.service.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
 
 generic-prometheus-alerts:
