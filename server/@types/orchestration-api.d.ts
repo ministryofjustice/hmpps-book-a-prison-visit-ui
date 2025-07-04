@@ -2107,12 +2107,12 @@ export interface components {
       /** Format: int64 */
       offset?: number
       sort?: components['schemas']['SortObject']
-      unpaged?: boolean
       /** Format: int32 */
       pageSize?: number
-      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
+      paged?: boolean
+      unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
@@ -2352,8 +2352,7 @@ export interface components {
        * @description Does session need review, defaults to false
        * @example true
        */
-      isSessionForReview: boolean
-      sessionForReview?: boolean
+      sessionForReview: boolean
     }
     /** @description Visit Session restriction type */
     AvailableVisitSessionRestrictionDto: {
@@ -4903,11 +4902,6 @@ export interface operations {
          * @example A12345DC
          */
         prisonerId: string
-        /**
-         * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
-         * @example CLOSED
-         */
-        sessionRestriction?: 'OPEN' | 'CLOSED'
         /**
          * @description List of visitors who require visit sessions
          * @example 4729510,4729220

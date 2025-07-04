@@ -205,7 +205,7 @@ describe('Check visit details', () => {
 
       beforeEach(() => {
         sessionData.bookingJourney.selectedVisitSession = TestData.availableVisitSessionDto({
-          isSessionForReview: true,
+          sessionForReview: true,
         })
         visitService.bookVisit.mockResolvedValue(visitRequested)
       })

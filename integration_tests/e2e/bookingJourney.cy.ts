@@ -219,7 +219,7 @@ context('Booking journey', () => {
       visitorIds: [1000, 3000],
       bookerReference,
       // set needs review flag for returned sessions
-      visitSessions: visitSessions.map(visitSession => ({ ...visitSession, isSessionForReview: true })),
+      visitSessions: visitSessions.map(visitSession => ({ ...visitSession, sessionForReview: true })),
     })
     selectVisitorsPage.continue()
     const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
