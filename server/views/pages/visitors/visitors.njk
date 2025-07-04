@@ -32,6 +32,13 @@
               attributes: {
                 "data-test": "visitor-dob-" + loop.index
               }
+            },
+            {
+              text: visitor.canVisitorBook.text,
+              classes: visitor.canVisitorBook.class,
+              attributes: {
+                "data-test": "visitor-availability-" + loop.index
+              }
             }
           ]), displayRows)%}
         {% endfor %}
@@ -44,6 +51,9 @@
             },
             {
               text: "Date of birth"
+            },
+            {
+              text: "Can you book a visit for them?"
             }
           ],
           rows: displayRows
