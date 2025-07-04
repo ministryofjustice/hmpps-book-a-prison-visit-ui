@@ -58,13 +58,13 @@ export default class TestData {
     sessionTemplateReference = 'a',
     sessionTimeSlot = { startTime: '10:00', endTime: '11:30' },
     sessionRestriction = 'OPEN',
-    isSessionForReview = false,
+    sessionForReview = false,
   }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({
     sessionDate,
     sessionTemplateReference,
     sessionTimeSlot,
     sessionRestriction,
-    isSessionForReview,
+    sessionForReview,
   })
 
   static bookerPrisonerInfoDto = ({

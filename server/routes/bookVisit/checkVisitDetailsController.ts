@@ -35,7 +35,7 @@ export default class CheckVisitDetailsController {
         const visit = await this.visitService.bookVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: booker.reference,
-          isRequestBooking: config.features.visitRequest && bookingJourney.selectedVisitSession.isSessionForReview,
+          isRequestBooking: config.features.visitRequest && bookingJourney.selectedVisitSession.sessionForReview,
         })
 
         const bookingConfirmed: BookingConfirmed = {
