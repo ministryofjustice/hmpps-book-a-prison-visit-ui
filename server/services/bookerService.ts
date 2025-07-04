@@ -128,7 +128,11 @@ export default class BookerService {
     const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map(visitor => {
-      return { ...visitor, visitorDisplayId: randomUUID(), adult: isAdult(visitor.dateOfBirth) }
+      return {
+        ...visitor,
+        visitorDisplayId: randomUUID(),
+        adult: isAdult(visitor.dateOfBirth),
+      }
     })
   }
 
