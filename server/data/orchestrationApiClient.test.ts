@@ -327,7 +327,7 @@ describe('orchestrationApiClient', () => {
       const excludedApplicationReference = 'aaa-bbb-ccc'
 
       fakeOrchestrationApi
-        .get('/visit-sessions/available')
+        .get('/visit-sessions/available/v2')
         .query({
           prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
