@@ -18,6 +18,7 @@ generic-service:
     GOVUK_ONE_LOGIN_VTR: "LOW"
     ORCHESTRATION_API_URL: "https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
     PRISON_REGISTER_API_URL: "https://prison-register-dev.hmpps.service.justice.gov.uk"
+    PVB_URL: "https://dev.prisonvisits.prison.service.justice.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: DEV
 
