@@ -421,6 +421,21 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('getSupportedPrisonIds', () => {
+    it('should get list of supported prison IDs', async () => {
+      const prisonIds = ['HEI']
+
+      fakeOrchestrationApi
+        .get('/config/prisons/user-type/PUBLIC/supported')
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, prisonIds)
+
+      const result = await orchestrationApiClient.getSupportedPrisonIds()
+
+      expect(result).toStrictEqual(prisonIds)
+    })
+  })
+
   describe('getSupportedPrisons', () => {
     it('should get list of supported prisons', async () => {
       const prisons = [TestData.prisonRegisterPrisonDto()]

@@ -214,6 +214,8 @@ export default class TestData {
     convictedStatus,
   })
 
+  static prisonIds = (prisonIds = ['DHI', 'FHI', 'HEI']): string[] => prisonIds
+
   static prisonNameDtos = ({
     prisons = [
       { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
