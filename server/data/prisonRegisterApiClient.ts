@@ -10,6 +10,6 @@ export default class PrisonRegisterApiClient {
   }
 
   async getPrisonNames(): Promise<PrisonNameDto[]> {
-    return this.restClient.get({ path: '/prisons/names' })
+    return this.restClient.get({ path: '/prisons/names', query: new URLSearchParams({ active: 'true' }).toString() })
   }
 }
