@@ -5,6 +5,7 @@ import { appWithAllRoutes, user } from './testutils/appSetup'
 import paths from '../constants/paths'
 import { createMockPrisonService } from '../services/testutils/mocks'
 import TestData from './testutils/testData'
+import config from '../config'
 
 let app: Express
 let userSupplier: () => Express.User
@@ -12,6 +13,13 @@ const prisonService = createMockPrisonService()
 
 afterEach(() => {
   jest.resetAllMocks()
+})
+
+describe('Legacy service (PVB) redirect', () => {
+  it('should redirect requests to /select-prison to PVB URL', () => {
+    app = appWithAllRoutes({})
+    return request(app).get(paths.SELECT_PRISON).expect(302).expect('location', config.pvbUrl)
+  })
 })
 
 describe('Service start page', () => {

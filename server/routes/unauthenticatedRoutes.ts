@@ -2,9 +2,15 @@ import { Router } from 'express'
 import paths from '../constants/paths'
 import CookiesController from './cookiesController'
 import { Services } from '../services'
+import config from '../config'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
+
+  // Legacy service (PVB) redirect
+  router.get(paths.SELECT_PRISON, (req, res) => {
+    return res.redirect(config.pvbUrl)
+  })
 
   // Service start page
   router.get(paths.START, async (req, res) => {
