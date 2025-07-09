@@ -185,9 +185,8 @@ export default class TestData {
   static prisonRegisterPrisonDto = ({
     prisonId = 'HEI',
     prisonName = 'Hewell (HMP)',
-    active = true,
   }: Partial<PrisonRegisterPrisonDto> = {}): PrisonRegisterPrisonDto =>
-    ({ prisonId, prisonName, active }) as PrisonRegisterPrisonDto
+    ({ prisonId, prisonName }) as PrisonRegisterPrisonDto
 
   static prisoner = ({
     prisonerDisplayId = 'uuidv4-1',
