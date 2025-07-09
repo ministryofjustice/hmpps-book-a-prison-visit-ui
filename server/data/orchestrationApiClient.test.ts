@@ -320,34 +320,79 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getVisitSessions', () => {
-    it('should get available visit sessions for prison / prisoner / visitors', async () => {
-      const { prisoner } = TestData.bookerPrisonerInfoDto()
-      const visitorIds = [1, 2]
-      const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
-      const excludedApplicationReference = 'aaa-bbb-ccc'
+    const { prisoner } = TestData.bookerPrisonerInfoDto()
+    const visitorIds = [1, 2]
+    const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
+    const excludedApplicationReference = 'aaa-bbb-ccc'
 
-      fakeOrchestrationApi
-        .get('/visit-sessions/available/v2')
-        .query({
+    afterEach(() => {
+      jest.resetAllMocks()
+    })
+
+    describe('Feature flag FEATURE_VISIT_REQUEST enabled - use v2 API', () => {
+      it('should get available visit sessions for prison / prisoner / visitors', async () => {
+        jest.replaceProperty(config, 'features', {
+          ...config.features,
+          visitRequest: true,
+        })
+
+        orchestrationApiClient = new OrchestrationApiClient(token)
+        fakeOrchestrationApi
+          .get('/visit-sessions/available/v2')
+          .query({
+            prisonId: prisoner.prisonId,
+            prisonerId: prisoner.prisonerNumber,
+            visitors: visitorIds.join(','),
+            username: bookerReference.value,
+            excludedApplicationReference,
+            userType: 'PUBLIC',
+          })
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, visitSessions)
+
+        const result = await orchestrationApiClient.getVisitSessions({
           prisonId: prisoner.prisonId,
           prisonerId: prisoner.prisonerNumber,
-          visitors: visitorIds.join(','),
-          username: bookerReference.value,
+          visitorIds,
+          bookerReference: bookerReference.value,
           excludedApplicationReference,
-          userType: 'PUBLIC',
         })
-        .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, visitSessions)
 
-      const result = await orchestrationApiClient.getVisitSessions({
-        prisonId: prisoner.prisonId,
-        prisonerId: prisoner.prisonerNumber,
-        visitorIds,
-        bookerReference: bookerReference.value,
-        excludedApplicationReference,
+        expect(result).toStrictEqual(visitSessions)
       })
+    })
 
-      expect(result).toStrictEqual(visitSessions)
+    describe('Feature flag FEATURE_VISIT_REQUEST disabled - use original API', () => {
+      it('should get available visit sessions for prison / prisoner / visitors', async () => {
+        jest.replaceProperty(config, 'features', {
+          ...config.features,
+          visitRequest: false,
+        })
+
+        orchestrationApiClient = new OrchestrationApiClient(token)
+        fakeOrchestrationApi
+          .get('/visit-sessions/available')
+          .query({
+            prisonId: prisoner.prisonId,
+            prisonerId: prisoner.prisonerNumber,
+            visitors: visitorIds.join(','),
+            username: bookerReference.value,
+            excludedApplicationReference,
+            userType: 'PUBLIC',
+          })
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, visitSessions)
+
+        const result = await orchestrationApiClient.getVisitSessions({
+          prisonId: prisoner.prisonId,
+          prisonerId: prisoner.prisonerNumber,
+          visitorIds,
+          bookerReference: bookerReference.value,
+          excludedApplicationReference,
+        })
+
+        expect(result).toStrictEqual(visitSessions)
+      })
     })
   })
 
