@@ -412,6 +412,19 @@ export default {
 
   // orchestration-prisons-config-controller
 
+  stubGetSupportedPrisonIds: (prisonIds = TestData.prisonIds()): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: '/orchestration/config/prisons/user-type/PUBLIC/supported',
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: prisonIds,
+      },
+    }),
+
   stubGetSupportedPrisons: (prisons = [TestData.prisonRegisterPrisonDto()]): SuperAgentRequest =>
     stubFor({
       request: {

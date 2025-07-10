@@ -8,7 +8,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        url: '/prisonRegister/prisons/names',
+        url: '/prisonRegister/prisons/names?active=true',
       },
       response: {
         status: 200,

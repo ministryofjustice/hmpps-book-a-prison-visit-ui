@@ -28,6 +28,7 @@ describe('prisonRegisterApiClient', () => {
 
       fakePrisonRegisterApi
         .get('/prisons/names')
+        .query({ active: true })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, prisonNames)
 
