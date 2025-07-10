@@ -18,7 +18,6 @@ export default function routes({ prisonService }: Services): Router {
       return res.redirect(paths.HOME)
     }
 
-    // TODO does this call need caching?
     const supportedPrisons = await prisonService.getSupportedPrisons()
     return res.render('pages/serviceStart', { supportedPrisons, hideGOVUKServiceNav: true })
   })
