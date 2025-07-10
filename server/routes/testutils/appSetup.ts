@@ -19,8 +19,8 @@ import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
 import { ValidationError } from 'express-validator'
 
+import authenticatedRoutes from '../authenticatedRoutes'
 import unauthenticatedRoutes from '../unauthenticatedRoutes'
-import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
@@ -77,7 +77,7 @@ function appSetup(
   app.use(express.urlencoded({ extended: true }))
   app.use(analyticsConsent())
   app.use(unauthenticatedRoutes(services))
-  app.use(routes(services))
+  app.use(authenticatedRoutes(services))
   app.use((req, res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 

@@ -1,5 +1,5 @@
 import TestData from '../../server/routes/testutils/testData'
-import CookiesPage from '../pages/cookies'
+import CookiesPage from '../pages/cookies/cookies'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 

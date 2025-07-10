@@ -5,7 +5,7 @@ import PrisonerLocationPage from '../pages/addPrisoner/prisonerLocation'
 import PrisonerNotMatchedPage from '../pages/addPrisoner/prisonerNotMatched'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
-import SignedOutPage from '../pages/signedOut'
+import SignedOutPage from '../pages/staticPages/signedOut'
 
 context('Add a prisoner', () => {
   beforeEach(() => {
