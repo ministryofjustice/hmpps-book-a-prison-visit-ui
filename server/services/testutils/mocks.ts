@@ -23,7 +23,7 @@ jest.mock('..')
 
 export const createMockBookerService = () => new BookerService(null, null, null, null) as jest.Mocked<BookerService>
 
-export const createMockPrisonService = () => new PrisonService(null, null) as jest.Mocked<PrisonService>
+export const createMockPrisonService = () => new PrisonService(null, null, null, null) as jest.Mocked<PrisonService>
 
 export const createMockRateLimitService = () => new RateLimitService(null, null) as jest.Mocked<RateLimitService>
 
