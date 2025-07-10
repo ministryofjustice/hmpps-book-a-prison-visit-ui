@@ -79,19 +79,19 @@ context('Booking journey', () => {
     visitors: [{ nomisPersonId: 1000 }, { nomisPersonId: 3000 }],
   })
 
+  const bookerReference = TestData.bookerReference().value
+
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
-  })
 
-  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.signIn()
+  })
 
-    const bookerReference = TestData.bookerReference().value
-
+  it('should complete the booking journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     // Home page - prisoner shown
     const homePage = Page.verifyOnPage(HomePage)
     homePage.prisonerName().contains('John Smith')
@@ -193,12 +193,6 @@ context('Booking journey', () => {
   })
 
   it('should complete the booking journey (OPEN visit) - visit BOOKED (REQUESTED)', () => {
-    cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-
-    const bookerReference = TestData.bookerReference().value
-
     // Home page - prisoner shown
     const homePage = Page.verifyOnPage(HomePage)
     homePage.prisonerName().contains('John Smith')
@@ -224,7 +218,8 @@ context('Booking journey', () => {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
-      visitSessions,
+      // set needs review flag for returned sessions
+      visitSessions: visitSessions.map(visitSession => ({ ...visitSession, sessionForReview: true })),
     })
     selectVisitorsPage.continue()
     const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
@@ -273,7 +268,7 @@ context('Booking journey', () => {
     cy.task('stubBookVisit', {
       visit: TestData.visitDto({ visitSubStatus: 'REQUESTED' }),
       bookerReference: TestData.bookerReference().value,
-      isRequestBooking: false, // TODO will be true when VB-5699 implemented
+      isRequestBooking: true,
     })
     checkVisitDetailsPage.submit()
 
@@ -303,12 +298,6 @@ context('Booking journey', () => {
   })
 
   it('should show closed visit interruption card (CLOSED visit)', () => {
-    cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-
-    const bookerReference = TestData.bookerReference().value
-
     // Home page - prisoner shown
     const homePage = Page.verifyOnPage(HomePage)
     homePage.prisonerName().contains('John Smith')

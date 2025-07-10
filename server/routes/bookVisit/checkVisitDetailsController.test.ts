@@ -204,6 +204,9 @@ describe('Check visit details', () => {
       const visitRequested = TestData.visitDto({ visitSubStatus: 'REQUESTED' })
 
       beforeEach(() => {
+        sessionData.bookingJourney.selectedVisitSession = TestData.availableVisitSessionDto({
+          sessionForReview: true,
+        })
         visitService.bookVisit.mockResolvedValue(visitRequested)
       })
 
@@ -261,7 +264,7 @@ describe('Check visit details', () => {
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
               actionedBy: bookerReference,
-              isRequestBooking: false, // TODO will be true when VB-5699 implemented
+              isRequestBooking: true,
             })
           })
       })
