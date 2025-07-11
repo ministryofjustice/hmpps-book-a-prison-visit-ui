@@ -12,6 +12,7 @@ import {
   CreateApplicationDto,
   VisitDto,
 } from './orchestrationApiTypes'
+import { disableFeatureForTest, enableFeatureForTest } from './testutils/mockFeatureFlags'
 
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
@@ -331,10 +332,7 @@ describe('orchestrationApiClient', () => {
 
     describe('Feature flag FEATURE_VISIT_REQUEST enabled - use v2 API', () => {
       it('should get available visit sessions for prison / prisoner / visitors', async () => {
-        jest.replaceProperty(config, 'features', {
-          ...config.features,
-          visitRequest: true,
-        })
+        enableFeatureForTest('visitRequest')
 
         orchestrationApiClient = new OrchestrationApiClient(token)
         fakeOrchestrationApi
@@ -364,10 +362,7 @@ describe('orchestrationApiClient', () => {
 
     describe('Feature flag FEATURE_VISIT_REQUEST disabled - use original API', () => {
       it('should get available visit sessions for prison / prisoner / visitors', async () => {
-        jest.replaceProperty(config, 'features', {
-          ...config.features,
-          visitRequest: false,
-        })
+        disableFeatureForTest('visitRequest')
 
         orchestrationApiClient = new OrchestrationApiClient(token)
         fakeOrchestrationApi
