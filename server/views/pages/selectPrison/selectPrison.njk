@@ -1,0 +1,65 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Which prison are you visiting?" %}
+
+{% set backLinkHref = "https://www.gov.uk/prison-visits" %}
+
+{% set prisonSelectItems = [{ value: "", text: "Select a prison" }] %}
+{% for prison in prisons %}
+  {% set prisonSelectItems = (prisonSelectItems.push({
+    value: prison.prisonId,
+    text: prison.prisonName
+  }), prisonSelectItems) %}
+{% endfor %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <form action="{{ paths.SELECT_PRISON }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukSelect({
+          name: "prisonId",
+          label: {
+            text: "Select a prison",
+            classes: "govuk-visually-hidden"
+          },
+          hint: {
+            text: "For example, Cardiff (HMP)"
+          },
+          items: prisonSelectItems,
+          errorMessage: errors | findError('prisonId')
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+
+      </form>
+
+      <h2 class="govuk-heading-m">What if I don’t know the prisoner’s location?</h2>
+      <p>
+        You can <a href="https://www.gov.uk/find-prisoner">apply to find the prisoner’s location</a>.
+      </p>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script nonce="{{ cspNonce }}">
+    accessibleAutocomplete.enhanceSelectElement({
+      defaultValue: '',
+      selectElement: document.querySelector('#prisonId')
+    })
+  </script>
+{% endblock %}

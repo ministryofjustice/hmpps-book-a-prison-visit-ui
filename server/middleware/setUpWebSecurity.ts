@@ -41,6 +41,7 @@ export default function setUpWebSecurity(): Router {
             "'self'",
             config.apis.govukOneLogin.url,
             config.apis.govukOneLogin.url.replace('oidc', 'signin'),
+            config.pvbUrl,
           ],
           upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
