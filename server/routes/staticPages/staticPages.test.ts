@@ -1,29 +1,32 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import { appWithAllRoutes, user } from '../testutils/appSetup'
+import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
 
 let app: Express
 let userSupplier: () => Express.User
 
-afterEach(() => {
-  jest.resetAllMocks()
-})
+const authenticatedUserPages = [
+  [paths.ACCESSIBILITY, 'Accessibility statement for Visit someone in prison'],
+  [paths.PRIVACY, 'Privacy notice'],
+  [paths.TERMS, 'Terms and conditions'],
+]
 
-describe('Accessibility statement', () => {
-  it('should render accessibility statement with GOVUK One Login Header for an authenticated user with booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier })
+const unauthenticatedUserPages = [...authenticatedUserPages, [paths.SIGNED_OUT, 'You have signed out']]
+
+describe('Static content pages - authenticated users', () => {
+  it.each(authenticatedUserPages)('%s - with GOVUK One Login header', (path, pageTitle) => {
+    app = appWithAllRoutes({})
 
     return request(app)
-      .get(paths.ACCESSIBILITY)
+      .get(path)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
+        expect($('title').text()).toMatch(new RegExp(`^${pageTitle} -`))
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Accessibility statement for Visit someone in prison')
+        expect($('h1').text()).toBe(pageTitle)
 
         expect($('header .one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
@@ -34,128 +37,21 @@ describe('Accessibility statement', () => {
         expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
       })
   })
-
-  it('should render accessibility statement with fallback header for an unauthenticated user', () => {
-    userSupplier = () => undefined
-    app = appWithAllRoutes({ userSupplier })
-
-    return request(app)
-      .get(paths.ACCESSIBILITY)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Accessibility statement for Visit someone in prison')
-
-        expect($('header.govuk-header').length).toBe(1)
-        expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
-      })
-  })
 })
 
-describe('Privacy notice', () => {
-  it('should render privacy notice with GOVUK One Login Header for an authenticated user with booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier })
-
-    return request(app)
-      .get(paths.PRIVACY)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy notice -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Privacy notice')
-
-        expect($('header .one-login-header').length).toBe(1)
-        expect($('header.govuk-header').length).toBe(0)
-        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
-        expect($('.service-header__nav-list-item-link').length).toBe(3)
-        expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
-        expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
-        expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('should render privacy notice with fallback header for an unauthenticated user', () => {
+describe('Static content pages - unauthenticated users', () => {
+  it.each(unauthenticatedUserPages)('%s - with GOVUK One Login header', (path, pageTitle) => {
     userSupplier = () => undefined
     app = appWithAllRoutes({ userSupplier })
 
     return request(app)
-      .get(paths.PRIVACY)
+      .get(path)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy notice -/)
+        expect($('title').text()).toMatch(new RegExp(`^${pageTitle} -`))
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Privacy notice')
-
-        expect($('header.govuk-header').length).toBe(1)
-        expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
-      })
-  })
-})
-
-describe('Signed out', () => {
-  it('should render signed out page with fallback header', () => {
-    userSupplier = () => undefined
-    app = appWithAllRoutes({ userSupplier })
-
-    return request(app)
-      .get(paths.SIGNED_OUT)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^You have signed out -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('You have signed out')
-
-        expect($('header.govuk-header').length).toBe(1)
-        expect($('header .one-login-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
-      })
-  })
-})
-
-describe('Terms and conditions', () => {
-  it('should render terms and conditions with GOVUK One Login Header for an authenticated user with booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier })
-
-    return request(app)
-      .get(paths.TERMS)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Terms and conditions -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Terms and conditions')
-
-        expect($('header .one-login-header').length).toBe(1)
-        expect($('header.govuk-header').length).toBe(0)
-        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
-        expect($('.service-header__nav-list-item-link').length).toBe(3)
-        expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
-        expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
-        expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('should render terms and conditions with fallback header for an unauthenticated user', () => {
-    userSupplier = () => undefined
-    app = appWithAllRoutes({ userSupplier })
-
-    return request(app)
-      .get(paths.TERMS)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Terms and conditions -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Terms and conditions')
+        expect($('h1').text()).toBe(pageTitle)
 
         expect($('header.govuk-header').length).toBe(1)
         expect($('header .one-login-header').length).toBe(0)
