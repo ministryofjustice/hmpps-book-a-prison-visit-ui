@@ -1,10 +1,10 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
-import AccessibilityStatementPage from '../pages/accessibilityStatement'
+import AccessibilityStatementPage from '../pages/staticPages/accessibilityStatement'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
-import PrivacyNoticePage from '../pages/privacyNotice'
-import TermsAndConditionsPage from '../pages/termsAndConditions'
+import PrivacyNoticePage from '../pages/staticPages/privacyNotice'
+import TermsAndConditionsPage from '../pages/staticPages/termsAndConditions'
 
 context('Static content pages', () => {
   describe('Unauthenticated user', () => {

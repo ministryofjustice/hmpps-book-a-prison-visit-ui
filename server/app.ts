@@ -14,8 +14,8 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
+import authenticatedRoutes from './routes/authenticatedRoutes'
 import unauthenticatedRoutes from './routes/unauthenticatedRoutes'
-import routes from './routes'
 
 import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
@@ -37,11 +37,13 @@ export default function createApp(services: Services): express.Application {
   app.use(setupGovukOneLogin())
   app.use(analyticsConsent())
   app.use(setUpCsrf())
+
   app.use(unauthenticatedRoutes(services))
+
   app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
 
-  app.use(routes(services))
+  app.use(authenticatedRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

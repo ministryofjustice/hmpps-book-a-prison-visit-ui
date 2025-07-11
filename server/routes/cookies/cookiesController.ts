@@ -1,14 +1,14 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
-import paths from '../constants/paths'
-import config from '../config'
+import paths from '../../constants/paths'
+import config from '../../config'
 
 export default class CookiesController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/cookies', {
+      return res.render('pages/cookies/cookies', {
         errors: req.flash('errors'),
         showOLServiceNav: !!req.session.booker,
       })

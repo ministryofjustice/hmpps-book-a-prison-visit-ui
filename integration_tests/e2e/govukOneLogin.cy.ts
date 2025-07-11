@@ -1,7 +1,7 @@
 import HomePage from '../pages/home'
 import GovukOneLoginPage from '../pages/govukOneLogin'
 import Page from '../pages/page'
-import SignedOutPage from '../pages/signedOut'
+import SignedOutPage from '../pages/staticPages/signedOut'
 import paths from '../../server/constants/paths'
 
 context('Sign in with GOV.UK One Login', () => {
