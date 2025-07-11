@@ -6,6 +6,7 @@ import paths from '../constants/paths'
 import { createMockPrisonService } from '../services/testutils/mocks'
 import TestData from './testutils/testData'
 import config from '../config'
+import { disableFeatureForTest, enableFeatureForTest } from '../data/testutils/mockFeatureFlags'
 
 let app: Express
 let userSupplier: () => Express.User
@@ -15,10 +16,35 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Legacy service (PVB) redirect', () => {
-  it('should redirect requests to /select-prison to PVB URL', () => {
-    app = appWithAllRoutes({})
-    return request(app).get(paths.SELECT_PRISON).expect(302).expect('location', config.pvbUrl)
+describe('/select-prison with FEATURE_VISIT_REQUEST enabled', () => {
+  beforeEach(() => {
+    enableFeatureForTest('visitRequest')
+  })
+
+  // Full tests for this route in ./server/routes/selectPrison
+  it('should render select prison page', () => {
+    prisonService.getAllPrisonNames.mockResolvedValue([])
+
+    app = appWithAllRoutes({ services: { prisonService } })
+    return request(app)
+      .get(paths.SELECT_PRISON)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Which prison are you visiting\? -/)
+      })
+  })
+})
+
+describe('/select-prison with FEATURE_VISIT_REQUEST disabled', () => {
+  beforeEach(() => {
+    disableFeatureForTest('visitRequest')
+  })
+  describe('Legacy service (PVB) redirect', () => {
+    it('should redirect requests to /select-prison to PVB URL', () => {
+      app = appWithAllRoutes({})
+      return request(app).get(paths.SELECT_PRISON).expect(302).expect('location', config.pvbUrl)
+    })
   })
 })
 

@@ -76,14 +76,27 @@ describe('Prison service', () => {
   })
 
   describe('getPrison', () => {
-    it('should return prison config for given prison code', async () => {
+    it('should return prison config for given prison code if cache hit', async () => {
       const prison = TestData.prisonDto()
+      dataCache.get.mockResolvedValue(prison)
+
+      expect(await prisonService.getPrison(prison.code)).toStrictEqual(prison)
+
+      expect(dataCache.get).toHaveBeenCalledWith(`prison:${prison.code}`)
+      expect(dataCache.set).not.toHaveBeenCalled()
+      expect(orchestrationApiClient.getPrison).not.toHaveBeenCalled()
+    })
+
+    it('should return prison config for given prison code and save to cache if a cache miss', async () => {
+      const prison = TestData.prisonDto()
+      dataCache.get.mockResolvedValue(null)
       orchestrationApiClient.getPrison.mockResolvedValue(prison)
 
-      const results = await prisonService.getPrison(prison.code)
+      expect(await prisonService.getPrison(prison.code)).toStrictEqual(prison)
 
-      expect(orchestrationApiClient.getPrison).toHaveBeenCalledWith(prison.code)
-      expect(results).toStrictEqual(prison)
+      expect(dataCache.get).toHaveBeenCalledWith(`prison:${prison.code}`)
+      expect(dataCache.set).toHaveBeenCalledWith(`prison:${prison.code}`, prison, 300) // 5 mins
+      expect(orchestrationApiClient.getPrison).toHaveBeenCalled()
     })
   })
 
