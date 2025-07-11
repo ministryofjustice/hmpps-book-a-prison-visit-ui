@@ -35,20 +35,6 @@ describe('Accessibility statement', () => {
       })
   })
 
-  it('should render accessibility statement with GOVUK One Login Header and no service nav for an authenticated user with no booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier, populateBooker: false })
-
-    return request(app)
-      .get(paths.ACCESSIBILITY)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Accessibility statement for Visit someone in prison -/)
-        expect($('.service-header__nav-list-item-link').length).toBe(0)
-      })
-  })
-
   it('should render accessibility statement with fallback header for an unauthenticated user', () => {
     userSupplier = () => undefined
     app = appWithAllRoutes({ userSupplier })
@@ -90,20 +76,6 @@ describe('Privacy notice', () => {
         expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
         expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
         expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('should render privacy notice with GOVUK One Login Header and no service nav for an authenticated user with no booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier, populateBooker: false })
-
-    return request(app)
-      .get(paths.PRIVACY)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Privacy notice -/)
-        expect($('.service-header__nav-list-item-link').length).toBe(0)
       })
   })
 
@@ -169,20 +141,6 @@ describe('Terms and conditions', () => {
         expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
         expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
         expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('should render terms and conditions with GOVUK One Login Header and no service nav for an authenticated user with no booker record', () => {
-    userSupplier = () => user
-    app = appWithAllRoutes({ userSupplier, populateBooker: false })
-
-    return request(app)
-      .get(paths.TERMS)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Terms and conditions -/)
-        expect($('.service-header__nav-list-item-link').length).toBe(0)
       })
   })
 

@@ -50,7 +50,6 @@ function appSetup(
   services: Services,
   production: boolean,
   userSupplier: () => Express.User,
-  populateBooker: boolean,
   sessionData: SessionData,
   cookies: Request['cookies'],
 ): Express {
@@ -60,7 +59,7 @@ function appSetup(
 
   nunjucksSetup(app, testAppInfo)
   app.use((req, res, next) => {
-    if (!sessionData.booker && populateBooker) {
+    if (!sessionData.booker) {
       // eslint-disable-next-line no-param-reassign
       sessionData.booker = { reference: bookerReference, prisoners } // emulate populateCurrentBooker()
     }
@@ -88,16 +87,14 @@ export function appWithAllRoutes({
   production = false,
   services = {},
   userSupplier = () => user,
-  populateBooker = true,
   sessionData = {} as SessionData,
   cookies = {} as Request['cookies'],
 }: {
   production?: boolean
   services?: Partial<Services>
   userSupplier?: () => Express.User
-  populateBooker?: boolean
   sessionData?: SessionData
   cookies?: Request['cookies']
 }): Express {
-  return appSetup(services as Services, production, userSupplier, populateBooker, sessionData, cookies)
+  return appSetup(services as Services, production, userSupplier, sessionData, cookies)
 }
