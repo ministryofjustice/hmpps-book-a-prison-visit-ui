@@ -2,6 +2,10 @@
   min-height: 300px;
 }
 
+.autocomplete__wrapper {
+  @include govuk-typography-common();
+}
+
 .govuk-panel.visits-request-confirmation {
   background-color: govuk-colour("blue");
 }

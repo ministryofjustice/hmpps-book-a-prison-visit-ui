@@ -4,6 +4,7 @@ const paths = {
   RETURN_HOME: '/return-home', // used to clear session and redirect to HOME
 
   SELECT_PRISON: '/select-prison',
+  SELECTED_PRISON: '/visiting-selected-prison',
 
   AUTH_CALLBACK: '/auth/callback',
   AUTH_ERROR: '/auth-error',
