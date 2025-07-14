@@ -58,7 +58,7 @@ describe('Prison service', () => {
       expect(await prisonService.getAllPrisonNames()).toStrictEqual(prisonNames)
 
       expect(dataCache.get).toHaveBeenCalledWith('prisonNames')
-      expect(dataCache.set).toHaveBeenCalledWith('prisonNames', prisonNames, 86400) // 24 hours
+      expect(dataCache.set).toHaveBeenCalledWith('prisonNames', prisonNames, 3600) // 1 hour
       expect(prisonRegisterApiClient.getPrisonNames).toHaveBeenCalled()
     })
   })
@@ -122,7 +122,7 @@ describe('Prison service', () => {
       expect(await prisonService.isSupportedPrison('XYZ')).toBe(false)
 
       expect(dataCache.get).toHaveBeenCalledWith('supportedPrisonIds')
-      expect(dataCache.set).toHaveBeenCalledWith('supportedPrisonIds', prisonIds, 300)
+      expect(dataCache.set).toHaveBeenCalledWith('supportedPrisonIds', prisonIds, 300) // 5 mins
       expect(orchestrationApiClient.getSupportedPrisonIds).toHaveBeenCalled()
     })
   })
