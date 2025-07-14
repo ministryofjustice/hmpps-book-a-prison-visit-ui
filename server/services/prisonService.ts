@@ -5,7 +5,7 @@ import { PrisonNameDto } from '../data/prisonRegisterApiTypes'
 type CacheConfig = { key: string; ttlSecs: number }
 
 export default class PrisonService {
-  private readonly allPrisonNamesCache: CacheConfig = { key: 'prisonNames', ttlSecs: 60 * 60 } // 1 hour cache
+  private readonly allPrisonNamesCache: CacheConfig = { key: 'prisonNames', ttlSecs: 60 * 60 * 24 } // 24 hour cache
 
   private readonly supportedPrisonIdsCache: CacheConfig = { key: 'supportedPrisonIds', ttlSecs: 60 * 5 } // 5 min cache
 
