@@ -31,6 +31,8 @@ declare module 'express-session' {
     }
 
     bookingCancelled?: BookingCancelled
+
+    selectedPrisonId?: string
   }
 }
 

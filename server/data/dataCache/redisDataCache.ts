@@ -3,9 +3,17 @@ import type { RedisClient } from '../redisClient'
 import { DataCache } from './dataCache'
 
 export default class RedisDataCache implements DataCache {
-  private readonly prefix = 'dataCache:'
+  private readonly prefix: string
 
-  constructor(private readonly client: RedisClient) {}
+  constructor(
+    private readonly client: RedisClient,
+    private readonly gitRef: string,
+  ) {
+    // include short Git ref in prefix to invalidate data cache on deploy of new build
+    // to avoid errors should data type stored for a key change between builds
+    const shortGitRef = gitRef.slice(0, 7)
+    this.prefix = `dataCache_${shortGitRef}:`
+  }
 
   private async ensureConnected() {
     if (!this.client.isOpen) {

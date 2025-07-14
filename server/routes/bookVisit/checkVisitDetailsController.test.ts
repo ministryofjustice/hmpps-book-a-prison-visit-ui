@@ -12,7 +12,7 @@ import logger from '../../../logger'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
-import config from '../../config'
+import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 jest.mock('../../../logger')
 
@@ -131,10 +131,7 @@ describe('Check visit details', () => {
 
   describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
     beforeEach(() => {
-      jest.replaceProperty(config, 'features', {
-        ...config.features,
-        visitRequest: true,
-      })
+      enableFeatureForTest('visitRequest')
 
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
@@ -212,10 +209,7 @@ describe('Check visit details', () => {
 
       describe('Feature flag', () => {
         it('should ignore visitSubStatus and handle as a BOOKED visit when FEATURE_VISIT_REQUEST disabled', () => {
-          jest.replaceProperty(config, 'features', {
-            ...config.features,
-            visitRequest: false,
-          })
+          disableFeatureForTest('visitRequest')
 
           app = appWithAllRoutes({ services: { visitService }, sessionData })
 

@@ -4,14 +4,26 @@ import paths from '../constants/paths'
 import config from '../config'
 import CookiesController from './cookies/cookiesController'
 import staticPagesRoutes from './staticPages'
+import SelectPrisonController from './selectPrison/selectPrisonController'
+import SelectedPrisonController from './selectPrison/selectedPrisonController'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
 
-  // Legacy service (PVB) redirect
-  router.get(paths.SELECT_PRISON, (req, res) => {
-    return res.redirect(config.pvbUrl)
-  })
+  if (config.features.visitRequest) {
+    const selectPrisonController = new SelectPrisonController(prisonService)
+    const selectedPrisonController = new SelectedPrisonController(prisonService)
+
+    router.get(paths.SELECT_PRISON, selectPrisonController.view())
+    router.post(paths.SELECT_PRISON, selectPrisonController.validate(), selectPrisonController.submit())
+
+    router.get(paths.SELECTED_PRISON, selectedPrisonController.view())
+  } else {
+    // Legacy service (PVB) redirect
+    router.get(paths.SELECT_PRISON, (req, res) => {
+      return res.redirect(config.pvbUrl)
+    })
+  }
 
   // Service start page
   router.get(paths.START, async (req, res) => {

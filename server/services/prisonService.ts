@@ -9,6 +9,8 @@ export default class PrisonService {
 
   private readonly supportedPrisonIdsCache: CacheConfig = { key: 'supportedPrisonIds', ttlSecs: 60 * 5 } // 5 min cache
 
+  private readonly prisonCache: CacheConfig = { key: 'prison', ttlSecs: 60 * 5 } // 5 min cache (prisonId added to key)
+
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
     private readonly prisonRegisterApiClientFactory: RestClientBuilder<PrisonRegisterApiClient>,
@@ -40,10 +42,19 @@ export default class PrisonService {
   }
 
   async getPrison(prisonCode: string): Promise<PrisonDto> {
+    const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`)
+
+    if (cachedPrison) {
+      return cachedPrison
+    }
+
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    return orchestrationApiClient.getPrison(prisonCode)
+    const prison = await orchestrationApiClient.getPrison(prisonCode)
+
+    await this.dataCache.set<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`, prison, this.prisonCache.ttlSecs)
+    return prison
   }
 
   async isSupportedPrison(prisonCode: string): Promise<boolean> {

@@ -12,6 +12,8 @@ $path: "/assets/images/";
 // GOV.UK One Login components
 @import './components/service-header-no-imports';
 
+@import 'dist/accessible-autocomplete.min';
+
 @import './components/visits-spacing';
-@import './components/visitsCalendar.scss';
+@import './components/visitsCalendar';
 @import './local';

@@ -2,21 +2,32 @@
 import logger from '../../logger'
 import { createRedisClient } from '../../server/data/redisClient'
 
+const dataCacheKeyPattern = 'dataCache_*'
 const rateLimitKeyPattern = 'rateLimit:*'
 
+const clearDataCache = async () => {
+  await clearCache(dataCacheKeyPattern)
+  logger.info('Data cache cleared')
+  return null
+}
+
 const clearRateLimits = async () => {
+  await clearCache(rateLimitKeyPattern)
+  logger.info('Rate limits cleared')
+  return null
+}
+
+const clearCache = async (keyPattern: string) => {
   const client = createRedisClient()
   await client.connect()
 
-  const keys = await client.keys(rateLimitKeyPattern)
+  const keys = await client.keys(keyPattern)
 
   if (keys.length > 0) {
     await client.del(keys)
-    logger.info('Rate limits cleared')
   }
 
   await client.quit()
-  return Promise.resolve(null)
 }
 
 const waitUntilRateLimitsExpire = async () => {
@@ -47,4 +58,4 @@ const waitUntilRateLimitsExpire = async () => {
   return null
 }
 
-export default { clearRateLimits, waitUntilRateLimitsExpire }
+export default { clearDataCache, clearRateLimits, waitUntilRateLimitsExpire }

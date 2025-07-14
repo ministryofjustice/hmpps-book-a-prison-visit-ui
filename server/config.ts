@@ -43,7 +43,7 @@ export type RateLimitConfig = {
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
-  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  gitRef: get('GIT_REF', 'git-ref', requiredInProduction),
   branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   production,
   https: production,
@@ -94,7 +94,7 @@ export default {
       agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
-  pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),
+  pvbUrl: get('PVB_URL', 'http://localhost:9091/pvb/en/request', requiredInProduction),
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey
     booker: {
