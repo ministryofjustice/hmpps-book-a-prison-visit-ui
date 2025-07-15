@@ -359,7 +359,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPath: '/orchestration/visit-sessions/available/v2',
+        urlPath: '/orchestration/visit-sessions/public/available',
         queryParameters: {
           prisonId: { equalTo: prisonId },
           prisonerId: { equalTo: prisonerId },
