@@ -18,7 +18,7 @@ describe('redisDataCache', () => {
   const jsonDataAsString = '{"some":"data"}'
 
   beforeEach(() => {
-    dataCache = new DataCache(redisClient as unknown as RedisClient, 'gitRef')
+    dataCache = new DataCache(redisClient as unknown as RedisClient)
   })
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe('redisDataCache', () => {
 
       await expect(dataCache.get('key')).resolves.toStrictEqual(jsonData)
 
-      expect(redisClient.get).toHaveBeenCalledWith('dataCache_gitRef:key')
+      expect(redisClient.get).toHaveBeenCalledWith('dataCache_local:key')
     })
 
     it('Connects when no connection calling get data', async () => {
@@ -47,7 +47,7 @@ describe('redisDataCache', () => {
     it('Can set data', async () => {
       await dataCache.set('key', jsonData, 10)
 
-      expect(redisClient.set).toHaveBeenCalledWith('dataCache_gitRef:key', jsonDataAsString, { EX: 10 })
+      expect(redisClient.set).toHaveBeenCalledWith('dataCache_local:key', jsonDataAsString, { EX: 10 })
     })
 
     it('Connects when no connection calling set data', async () => {

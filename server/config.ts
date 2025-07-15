@@ -43,7 +43,7 @@ export type RateLimitConfig = {
 export default {
   buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
-  gitRef: get('GIT_REF', 'git-ref', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   production,
   https: production,
@@ -94,6 +94,9 @@ export default {
       agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
+  // include short Git ref in dataCache prefix to invalidate data cache on deploy of new build
+  // DATA_CACHE_PREFIX overrides for integration tests
+  dataCachePrefix: `dataCache_${get('DATA_CACHE_PREFIX', '') || get('GIT_REF', 'local').slice(0, 7)}:`,
   pvbUrl: get('PVB_URL', 'http://localhost:9091/pvb/en/request', requiredInProduction),
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey
