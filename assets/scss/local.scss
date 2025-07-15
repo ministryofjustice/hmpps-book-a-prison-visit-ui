@@ -6,6 +6,16 @@
   @include govuk-typography-common();
 }
 
+.autocomplete__dropdown-arrow-down {
+  z-index: 1;
+}
+
+.autocomplete__option > span {
+  // workaround for accessible autocomplete issue
+  // https://github.com/alphagov/accessible-autocomplete/issues/556
+  @include govuk-visually-hidden();
+}
+
 .govuk-panel.visits-request-confirmation {
   background-color: govuk-colour("blue");
 }
