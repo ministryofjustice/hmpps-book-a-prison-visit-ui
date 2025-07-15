@@ -2,7 +2,7 @@
 import logger from '../../logger'
 import { createRedisClient } from '../../server/data/redisClient'
 
-const dataCacheKeyPattern = 'dataCache_*'
+const dataCacheKeyPattern = 'dataCache_test:*'
 const rateLimitKeyPattern = 'rateLimit:*'
 
 const clearDataCache = async () => {

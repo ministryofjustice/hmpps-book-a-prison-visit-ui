@@ -27,7 +27,7 @@ export const dataAccess = () => {
   if (config.redis.enabled) {
     redisClient = createRedisClient()
   }
-  const dataCache = config.redis.enabled ? new RedisDataCache(redisClient, config.gitRef) : new InMemoryDataCache()
+  const dataCache = config.redis.enabled ? new RedisDataCache(redisClient) : new InMemoryDataCache()
 
   return {
     applicationInfo,
