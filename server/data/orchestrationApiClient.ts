@@ -210,7 +210,7 @@ export default class OrchestrationApiClient {
     bookerReference: string
   }): Promise<AvailableVisitSessionDto[]> {
     return this.restClient.get({
-      path: config.features.visitRequest ? '/visit-sessions/available/v2' : '/visit-sessions/available',
+      path: '/visit-sessions/public/available',
       query: new URLSearchParams({
         prisonId,
         prisonerId,

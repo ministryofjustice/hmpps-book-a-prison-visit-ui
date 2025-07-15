@@ -391,6 +391,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visits/requests/{prisonCode}/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get count of visit requests for a prison
+     * @description Returns an Int count for how many visit requests are open for a prison
+     */
+    get: operations['getVisitRequestsCountForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visits/notification/{prisonCode}/visits': {
     parameters: {
       query?: never
@@ -508,6 +528,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visit-sessions/public/available': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns available visit sessions with sessions marked for review for a specified prisoner and visitors combination for the date range passed in.
+     * @description Returns available visit sessions with sessions marked for review for a specified prisoner and visitors combination for the date range passed in. Marks sessions for review if prisoner alerts / restrictions or visitor restrictions are found. Used by Visits Public only, not PVB
+     */
+    get: operations['getAvailableVisitSessions']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visit-sessions/capacity': {
     parameters: {
       query?: never
@@ -538,26 +578,6 @@ export interface paths {
     /**
      * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
      * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
-     */
-    get: operations['getAvailableVisitSessions']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/visit-sessions/available/v2': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Returns available visit sessions for a specified prisoner and visitors combination for the date range passed in
-     * @description Returns available visit sessions for a specified prisoner and visitors combination for the date range passed in. Used by Visits Public only, not PVB
      */
     get: operations['getAvailableVisitSessions_1']
     put?: never
@@ -2109,15 +2129,19 @@ export interface components {
       sort?: components['schemas']['SortObject']
       /** Format: int32 */
       pageSize?: number
+      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
       sorted?: boolean
       unsorted?: boolean
+    }
+    VisitRequestsCountDto: {
+      /** Format: int32 */
+      count: number
     }
     OrchestrationVisitNotificationsDto: {
       /**
@@ -4380,6 +4404,50 @@ export interface operations {
       }
     }
   }
+  getVisitRequestsCountForPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description prisonCode
+         * @example CFI
+         */
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully retrieve count of visit requests for a prison */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['VisitRequestsCountDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to access this endpoint */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getFutureNotificationVisits: {
     parameters: {
       query?: {
@@ -4739,6 +4807,75 @@ export interface operations {
       }
     }
   }
+  getAvailableVisitSessions: {
+    parameters: {
+      query: {
+        /**
+         * @description Query by NOMIS Prison Identifier
+         * @example MDI
+         */
+        prisonId: string
+        /**
+         * @description Filter results by prisoner id
+         * @example A12345DC
+         */
+        prisonerId: string
+        /**
+         * @description List of visitors who require visit sessions
+         * @example 4729510,4729220
+         */
+        visitors?: number[]
+        /**
+         * @description The current application reference to be excluded from capacity count and double booking
+         * @example dfs-wjs-eqr
+         */
+        excludedApplicationReference?: string
+        /**
+         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
+         * @example user-1
+         */
+        username?: string
+        /**
+         * @description user type for the session
+         * @example PUBLIC
+         */
+        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Visit session information returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AvailableVisitSessionDto'][]
+        }
+      }
+      /** @description Incorrect request to Get visit sessions  */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getSessionCapacity: {
     parameters: {
       query: {
@@ -4807,7 +4944,7 @@ export interface operations {
       }
     }
   }
-  getAvailableVisitSessions: {
+  getAvailableVisitSessions_1: {
     parameters: {
       query: {
         /**
@@ -4843,75 +4980,6 @@ export interface operations {
         fromDateOverride?: number
         /** @description maximum override in days for closing session slot booking window, E.g. 28 will set max booking window to today + 28 days */
         toDateOverride?: number
-        /**
-         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
-         * @example user-1
-         */
-        username?: string
-        /**
-         * @description user type for the session
-         * @example PUBLIC
-         */
-        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Visit session information returned */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['AvailableVisitSessionDto'][]
-        }
-      }
-      /** @description Incorrect request to Get visit sessions  */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getAvailableVisitSessions_1: {
-    parameters: {
-      query: {
-        /**
-         * @description Query by NOMIS Prison Identifier
-         * @example MDI
-         */
-        prisonId: string
-        /**
-         * @description Filter results by prisoner id
-         * @example A12345DC
-         */
-        prisonerId: string
-        /**
-         * @description List of visitors who require visit sessions
-         * @example 4729510,4729220
-         */
-        visitors?: number[]
-        /**
-         * @description The current application reference to be excluded from capacity count and double booking
-         * @example dfs-wjs-eqr
-         */
-        excludedApplicationReference?: string
         /**
          * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
          * @example user-1
