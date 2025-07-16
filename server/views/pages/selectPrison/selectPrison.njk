@@ -61,6 +61,8 @@
   <script nonce="{{ cspNonce }}">
     accessibleAutocomplete.enhanceSelectElement({
       defaultValue: '',
+      confirmOnBlur: false,
+      showAllValues: true,
       selectElement: document.querySelector('#prisonId')
     })
   </script>
