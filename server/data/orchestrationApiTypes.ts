@@ -32,8 +32,7 @@ export type RegisterPrisonerForBookerDto = components['schemas']['RegisterPrison
 
 export type PrisonDto = components['schemas']['PrisonDto']
 
-// FIXME Omitting 'active' until it is removed from the API definition
-export type PrisonRegisterPrisonDto = Omit<components['schemas']['PrisonRegisterPrisonDto'], 'active'>
+export type PrisonRegisterPrisonDto = components['schemas']['PrisonRegisterPrisonDto']
 
 export type VisitDto = components['schemas']['VisitDto']
 
