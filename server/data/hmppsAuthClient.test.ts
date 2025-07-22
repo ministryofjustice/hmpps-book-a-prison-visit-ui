@@ -48,7 +48,7 @@ describe('hmppsAuthClient', () => {
       const output = await hmppsAuthClient.getSystemClientToken()
 
       expect(output).toEqual(token.access_token)
-      expect(tokenStore.setToken).toBeCalledWith('%ANONYMOUS%', token.access_token, 240)
+      expect(tokenStore.setToken).toHaveBeenCalledWith('%ANONYMOUS%', token.access_token, 240)
     })
   })
 })
