@@ -2,6 +2,8 @@ import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
+import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
+import { MoJAlert } from '../../@types/bapv'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -34,10 +36,27 @@ export default class ChooseVisitTimeController {
       bookingJourney.allVisitSessions = allVisitSessions
 
       const { selectedVisitSession } = bookingJourney
+      const isSelectedSessionStillAvailable = this.isSelectedSessionStillAvailable({
+        selectedVisitSession,
+        allVisitSessions,
+      })
 
-      const formValues = selectedVisitSession
+      const messages: MoJAlert[] = req.flash('messages') ?? []
+
+      if (selectedVisitSession && !isSelectedSessionStillAvailable) {
+        messages.push({
+          variant: 'error',
+          title: 'Your visit time is no longer available.',
+          showTitleAsHeading: true,
+          text: 'Select a new time',
+        })
+      }
+
+      const formValues = isSelectedSessionStillAvailable
         ? { visitSession: `${selectedVisitSession.sessionDate}_${selectedVisitSession.sessionTemplateReference}` }
         : {}
+
+      const selectedDate = isSelectedSessionStillAvailable ? selectedVisitSession.sessionDate : firstSessionDate
 
       const backLinkHref =
         bookingJourney.sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.SELECT_VISITORS : paths.BOOK_VISIT.CLOSED_VISIT
@@ -45,9 +64,9 @@ export default class ChooseVisitTimeController {
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
         formValues,
-        messages: req.flash('messages'),
+        messages,
         calendar,
-        selectedDate: selectedVisitSession?.sessionDate ?? firstSessionDate,
+        selectedDate,
         prisoner,
         backLinkHref,
       })
@@ -119,5 +138,23 @@ export default class ChooseVisitTimeController {
         .notEmpty()
         .withMessage('No visit time selected'),
     ]
+  }
+
+  private isSelectedSessionStillAvailable({
+    selectedVisitSession,
+    allVisitSessions,
+  }: {
+    selectedVisitSession: AvailableVisitSessionDto
+    allVisitSessions: AvailableVisitSessionDto[]
+  }): boolean {
+    if (!selectedVisitSession) {
+      return false
+    }
+    return allVisitSessions.some(
+      session =>
+        session.sessionDate === selectedVisitSession.sessionDate &&
+        session.sessionTemplateReference === selectedVisitSession.sessionTemplateReference &&
+        session.sessionRestriction === selectedVisitSession.sessionRestriction,
+    )
   }
 }
