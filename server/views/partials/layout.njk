@@ -1,9 +1,10 @@
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
+{% from "di-govuk-one-login-service-header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% set govukRebrand = true %}
 
 {% set navigationItems = [
   {
@@ -24,7 +25,6 @@
   ] if showOLServiceNav
 %}
 {% set activeLinkId = activeLink if activeLink else "home-link" %}
-{% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 
 {% set bodyAttributes = {
@@ -61,11 +61,15 @@
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
-    navigationItems: navigationItems,
-    serviceName: serviceName,
+    rebrand: true,
     activeLinkId: activeLinkId,
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink
+    serviceNavigationParams: {
+      navigation: navigationItems,
+      serviceName: applicationName,
+      navigationLabel: "{{ params.serviceName }} menu"
+    }
   }) }}
 {% else %}
   {{ govukHeader({
@@ -75,6 +79,7 @@
   }) }}
   {% if not hideGOVUKServiceNav %}
     {{ govukServiceNavigation({
+      rebrand: true,
       serviceName: applicationName,
       serviceUrl: paths.START
     }) }}
@@ -106,6 +111,7 @@
 
 {% block footer %}
   {{ govukFooter({
+    rebrand: true,
     meta: {
       items: [
         {
