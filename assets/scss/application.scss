@@ -10,7 +10,7 @@ $path: "/assets/images/";
 // @import "moj/components/interruption-card/interruption-card";
 
 // GOV.UK One Login components
-@import './components/service-header-no-imports';
+@import 'node_modules/govuk-frontend/dist';
 
 @import 'dist/accessible-autocomplete.min';
 
