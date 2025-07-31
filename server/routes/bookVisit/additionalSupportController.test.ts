@@ -72,7 +72,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Is additional support needed for any of the visitors\? -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
 
