@@ -1,11 +1,10 @@
+{% set govukRebrand = true %}
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
-
-{% set govukRebrand = true %}
 
 {% set navigationItems = [
   {
@@ -63,10 +62,11 @@
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
-    navigationItems: navigationItems,
-    serviceName: serviceName,
+    rebrand: true, 
     activeLinkId: activeLinkId,
     signOutLink: signOutLink,
+    navigationItems: navigationItems,
+    serviceName: serviceName,
     oneLoginLink: oneLoginLink
   }) }}
 {% else %}

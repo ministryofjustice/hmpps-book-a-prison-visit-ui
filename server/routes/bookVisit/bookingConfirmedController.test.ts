@@ -136,7 +136,7 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
   })
 
   describe(`GET ${paths.BOOK_VISIT.BOOKED}`, () => {
-    it('should render visit requested page (email and text message confirmation)', () => {
+    it.only('should render visit requested page (email and text message confirmation)', () => {
       return request(app)
         .get(paths.BOOK_VISIT.BOOKED)
         .expect(200)
@@ -144,9 +144,9 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit requested -/)
+          console.log('got here')
           expect($('#service-header__nav').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
-
           expect($('h1').text().trim()).toBe('Visit requested')
           expect($('[data-test="prison-name-panel"]').text()).toBe(prison.prisonName)
 
