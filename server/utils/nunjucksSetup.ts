@@ -116,5 +116,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('pluralise', pluralise)
 
+  njkEnv.addGlobal('govukRebrand', true)
+
   return njkEnv
 }

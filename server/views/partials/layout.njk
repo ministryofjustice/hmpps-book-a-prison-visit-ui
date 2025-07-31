@@ -5,6 +5,8 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
+{% set govukRebrand = true %}
+
 {% set navigationItems = [
   {
     href: paths.HOME,
@@ -69,6 +71,7 @@
   }) }}
 {% else %}
   {{ govukHeader({
+    rebrand: true,
     homepageUrl: "https://www.gov.uk",
     containerClasses: "govuk-width-container",
     classes: "govuk-header--full-width-border" if not hideGOVUKServiceNav
@@ -106,6 +109,7 @@
 
 {% block footer %}
   {{ govukFooter({
+    rebrand: true,
     meta: {
       items: [
         {
