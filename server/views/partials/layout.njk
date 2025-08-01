@@ -10,21 +10,23 @@
   {
     href: paths.HOME,
     text: "Home",
-    id: "home-link"
+    id: "home-link",
+    active: true if activeLink == "home-link"
   },
   {
     href: paths.BOOKINGS.HOME,
     text: "Bookings",
-    id: "bookings-link"
+    id: "bookings-link",
+    active: true if activeLink == "bookings-link"
   },
   {
     href: paths.VISITORS,
     text: "Visitors",
-    id: "visitors-link"
+    id: "visitors-link",
+    active: true if activeLink == "visitors-link"
   }
   ] if showOLServiceNav
 %}
-{% set activeLinkId = activeLink if activeLink else "home-link" %}
 {% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 
@@ -63,7 +65,6 @@
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
     rebrand: true, 
-    activeLinkId: activeLinkId,
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink,
     serviceNavigationParams: {
