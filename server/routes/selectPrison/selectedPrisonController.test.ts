@@ -38,7 +38,7 @@ describe('Visiting selected prison page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visiting Hewell \(HMP\) -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.SELECT_PRISON)
           expect($('h1').text().trim()).toBe('Visiting Hewell (HMP)')
 

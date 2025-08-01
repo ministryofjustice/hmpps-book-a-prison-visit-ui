@@ -86,7 +86,7 @@ describe('Contact details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Contact details -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('h1').text().trim()).toBe(`Contact details for ${adultVisitor1.firstName} ${adultVisitor1.lastName}`)
 

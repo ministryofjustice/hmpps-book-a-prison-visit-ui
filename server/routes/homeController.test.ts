@@ -116,15 +116,15 @@ describe('Page header', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+        expect($('head > title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
 
-        expect($('header .one-login-header').length).toBe(1)
+        expect($('header .rebranded-one-login-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
-        expect($('.service-header__heading').text()).toBe('Visit someone in prison')
-        expect($('.service-header__nav-list-item-link').length).toBe(3)
-        expect($('.service-header__nav-list-item-link').eq(0).text().trim()).toBe('Home')
-        expect($('.service-header__nav-list-item-link').eq(1).text().trim()).toBe('Bookings')
-        expect($('.service-header__nav-list-item-link').eq(2).text().trim()).toBe('Visitors')
+        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+        expect($('.govuk-service-navigation__link').length).toBe(3)
+        expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Home')
+        expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Bookings')
+        expect($('.govuk-service-navigation__link').eq(2).text().trim()).toBe('Visitors')
       })
   })
 
@@ -134,7 +134,7 @@ describe('Page header', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+        expect($('head > title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
         expect($('.govuk-phase-banner').text()).toContain('Beta')
       })
   })

@@ -60,7 +60,7 @@ describe('Closed visit', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^This will be a closed visit -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').length).toBe(0)
 
           expect($('h1').text()).toBe('This will be a closed visit')

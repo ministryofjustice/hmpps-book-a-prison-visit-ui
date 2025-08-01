@@ -45,7 +45,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit booked -/)
-          expect($('#service-header__nav').length).toBe(1)
+          expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visit booked')
           expect($('[data-test="booking-reference-title"]').text()).toBe(visit.applicationReference)
@@ -144,9 +144,8 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit requested -/)
-          expect($('#service-header__nav').length).toBe(1)
+          expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
-
           expect($('h1').text().trim()).toBe('Visit requested')
           expect($('[data-test="prison-name-panel"]').text()).toBe(prison.prisonName)
 
