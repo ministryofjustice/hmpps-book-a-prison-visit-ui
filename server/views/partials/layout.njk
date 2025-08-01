@@ -65,9 +65,12 @@
     rebrand: true, 
     activeLinkId: activeLinkId,
     signOutLink: signOutLink,
-    navigationItems: navigationItems,
-    serviceName: serviceName,
-    oneLoginLink: oneLoginLink
+    oneLoginLink: oneLoginLink,
+    serviceNavigationParams: {
+      serviceName: serviceName,
+      rebrand: true, 
+      navigation: navigationItems
+    }
   }) }}
 {% else %}
   {{ govukHeader({
