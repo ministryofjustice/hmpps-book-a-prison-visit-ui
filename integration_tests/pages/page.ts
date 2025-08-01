@@ -69,7 +69,8 @@ export default abstract class Page {
 
   signOut = (): PageElement => cy.get('.one-login-header').contains('a', 'Sign out').click()
 
-  goToServiceHeaderLinkByName = (name: string): PageElement => cy.get('.service-header').contains('a', name).click()
+  goToServiceHeaderLinkByName = (name: string): PageElement =>
+    cy.get('.govuk-service-navigation').contains('a', name).click()
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 
