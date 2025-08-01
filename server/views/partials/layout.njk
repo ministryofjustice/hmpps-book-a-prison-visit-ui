@@ -75,9 +75,7 @@
 {% else %}
   {{ govukHeader({
     rebrand: true,
-    homepageUrl: "https://www.gov.uk",
-    containerClasses: "govuk-width-container",
-    classes: "govuk-header--full-width-border" if not hideGOVUKServiceNav
+    homepageUrl: "https://www.gov.uk" if not hideGOVUKServiceNav
   }) }}
   {% if not hideGOVUKServiceNav %}
     {{ govukServiceNavigation({
