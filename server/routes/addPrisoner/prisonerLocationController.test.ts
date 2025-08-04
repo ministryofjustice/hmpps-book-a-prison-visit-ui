@@ -43,7 +43,7 @@ describe('Prisoner location', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Where is the prisoner you want to visit\? -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
           expect($('h1').text().trim()).toBe('Where is the prisoner you want to visit?')
 
