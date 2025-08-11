@@ -37,6 +37,7 @@ export type PrisonRegisterPrisonDto = components['schemas']['PrisonRegisterPriso
 export type VisitDto = components['schemas']['VisitDto']
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']
+
 export interface Visitor extends VisitorInfoDto {
   visitorDisplayId: string
   adult: boolean
