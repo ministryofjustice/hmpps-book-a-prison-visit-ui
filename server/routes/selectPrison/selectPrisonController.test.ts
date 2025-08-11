@@ -47,7 +47,7 @@ describe('Select a prison', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Which prison are you visiting\? -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe('https://www.gov.uk/prison-visits')
           expect($('h1').text().trim()).toBe('Which prison are you visiting?')
 

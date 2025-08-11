@@ -115,11 +115,11 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Choose the visit time -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('Choose the visit time')
 
-          expect($('[data-test="message"]').length).toBe(0)
+          expect($('.moj-alert').length).toBe(0)
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
 
           // calendar months, day listing and start day column
@@ -195,7 +195,7 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Choose the visit time -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CLOSED_VISIT)
           expect($('h1').text()).toBe('Choose the visit time')
         })
@@ -210,12 +210,12 @@ describe('Choose visit time', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.moj-alert').eq(0).text().trim()).toContain(alert.title)
-          expect($('.moj-alert').eq(0).text().trim()).toContain(alert.text)
+          expect($('.moj-alert').eq(0).text()).toContain(alert.title)
+          expect($('.moj-alert').eq(0).text()).toContain(alert.text)
         })
     })
 
-    it('should pre-populate with data in session', () => {
+    it('should pre-populate with selected date in session if selected visit session still available', () => {
       sessionData.bookingJourney.selectedVisitSession = visitSessionC
       sessionData.bookingJourney.applicationReference = application.reference
 
@@ -224,6 +224,7 @@ describe('Choose visit time', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
+          expect($('.moj-alert').length).toBe(0)
           expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
             '31 May - Friday - 2 visit times available',
           )
@@ -231,6 +232,29 @@ describe('Choose visit time', () => {
           expect($('input[name=visitSession]:checked').length).toBe(1)
           expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
           expect($('input[name=visitSession]').eq(2).prop('checked')).toBe(true)
+        })
+    })
+
+    it('should show message and NOT pre-populate with selected date in session if selected visit session no longer available', () => {
+      sessionData.bookingJourney.selectedVisitSession = TestData.availableVisitSessionDto({
+        sessionDate: 'UNAVAILABLE DATE',
+      })
+      sessionData.bookingJourney.applicationReference = application.reference
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.moj-alert').eq(0).text()).toContain('Your visit time is no longer available.')
+
+          // selected session not available; so default to highlighting first available in calendar...
+          expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
+            '30 May - Thursday - 1 visit time available',
+          )
+          expect($('input[name=visitSession]').length).toBe(4)
+          // ...but no session radio input should be checked
+          expect($('input[name=visitSession]:checked').length).toBe(0)
         })
     })
 
@@ -248,7 +272,7 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('#service-header__nav').length).toBe(0)
+          expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('A visit cannot be booked')
 

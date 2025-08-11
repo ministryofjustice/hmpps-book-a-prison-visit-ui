@@ -1,3 +1,4 @@
+{% set govukRebrand = true %}
 {% extends "govuk/template.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "components/one_login_header/service-header.njk" import govukOneLoginServiceHeader %}
@@ -9,21 +10,23 @@
   {
     href: paths.HOME,
     text: "Home",
-    id: "home-link"
+    id: "home-link",
+    active: true if activeLink == "home-link"
   },
   {
     href: paths.BOOKINGS.HOME,
     text: "Bookings",
-    id: "bookings-link"
+    id: "bookings-link",
+    active: true if activeLink == "bookings-link"
   },
   {
     href: paths.VISITORS,
     text: "Visitors",
-    id: "visitors-link"
+    id: "visitors-link",
+    active: true if activeLink == "visitors-link"
   }
   ] if showOLServiceNav
 %}
-{% set activeLinkId = activeLink if activeLink else "home-link" %}
 {% set serviceName = applicationName %}
 {% set signOutLink = paths.SIGN_OUT %}
 
@@ -61,17 +64,18 @@
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
-    navigationItems: navigationItems,
-    serviceName: serviceName,
-    activeLinkId: activeLinkId,
+    rebrand: true, 
     signOutLink: signOutLink,
-    oneLoginLink: oneLoginLink
+    oneLoginLink: oneLoginLink,
+    serviceNavigationParams: {
+      serviceName: serviceName,
+      navigation: navigationItems
+    }
   }) }}
 {% else %}
   {{ govukHeader({
-    homepageUrl: "https://www.gov.uk",
-    containerClasses: "govuk-width-container",
-    classes: "govuk-header--full-width-border" if not hideGOVUKServiceNav
+    rebrand: true,
+    homepageUrl: "https://www.gov.uk"
   }) }}
   {% if not hideGOVUKServiceNav %}
     {{ govukServiceNavigation({
@@ -106,6 +110,7 @@
 
 {% block footer %}
   {{ govukFooter({
+    rebrand: true,
     meta: {
       items: [
         {
@@ -132,7 +137,6 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script type="module" src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/service-header.js"></script>
   <script src="/assets/init-service-header.js"></script>
   <script src="/assets/cookieBanner.js"></script>
 {% block pageScripts %}
