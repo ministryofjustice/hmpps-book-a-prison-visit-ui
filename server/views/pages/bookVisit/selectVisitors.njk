@@ -3,10 +3,15 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% set pageTitle = "Who is going on the visit?" %}
 
 {% set backLinkHref = paths.HOME %}
+
+{% 
+  set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
+%}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -16,7 +21,7 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      {% if visitors | length %}
+      {% if eligibleVisitors | length %}
 
         <p>
           Up to <span data-test="visitors-max-total">{{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}</span>
@@ -35,12 +40,33 @@
         <p>At least one visitor must be 18 years or older.</p>
 
         {% set visitorList = [] %}
-        {% for visitor in visitors %}
-          {% set visitorList = (visitorList.push({
-            value: visitor.visitorDisplayId,
-            text: visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge + ")"
-          }), visitorList)%}
+        {% for visitor in eligibleVisitors %}
+
+          {% if visitor.banned %}
+            {% set visitorNameAge = visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge  + ") " + bannedTagHtml%}
+
+            {% set visitorList = (visitorList.push({
+              value: visitor.visitorDisplayId,
+              html: visitorNameAge,
+              hint: {
+                html: 
+                "<p class='banned-hint govuk-!-margin-bottom-0'>" + visitor.firstName + " is banned until " + visitor.banExpiryDate | formatDate + ".</p>
+                <p class='banned-hint'>If they are selected as a visitor, the visit must be on or after this date.</p>"
+              }
+            }), visitorList) %}
+
+          {% else %}
+            {% set visitorNameAge = visitor.firstName + " " + visitor.lastName + " (" + visitor.dateOfBirth | displayAge  + ")" %}
+
+            {% set visitorList = (visitorList.push({
+              value: visitor.visitorDisplayId,
+              text: visitorNameAge 
+            }), visitorList) %}
+          {% endif%}
+          
+          
         {% endfor %}
+  
         <form action="{{ paths.BOOK_VISIT.SELECT_VISITORS }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -56,6 +82,17 @@
             values: formValues.visitorDisplayIds,
             errorMessage: errors | findError("visitorDisplayIds")
           }) }}
+
+          {% if ineligibleVisitors %}
+          <h2 class="govuk-heading-m">Unavailable visitors</h2>
+            {% for visitor in ineligibleVisitors %}
+              <p data-test="banned-visitor-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}). {{ bannedTagHtml }}</p>
+              {% if visitor.banExpiryDate %}
+                <p data-test="ban-expiry-{{ loop.index }}" class="banned-hint govuk-!-margin-bottom-0">{{ visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.</p>
+              {% endif %}
+              <p class="banned-hint">You cannot book for this visitor.</p>
+            {% endfor %}
+          {% endif %}
 
           {{ govukButton({
             text: "Continue",

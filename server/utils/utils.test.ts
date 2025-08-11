@@ -14,7 +14,7 @@ import {
   pluralise,
 } from './utils'
 import TestData from '../routes/testutils/testData'
-import { Visitor } from '../services/bookerService'
+import { Visitor } from '../data/orchestrationApiTypes'
 
 describe('convert to title case', () => {
   it.each([

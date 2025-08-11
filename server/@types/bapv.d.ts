@@ -1,6 +1,6 @@
 import { SessionRestriction } from '../data/orchestrationApiClient'
 import { AvailableVisitSessionDto, PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiTypes'
-import { Prisoner, Visitor } from '../services/bookerService'
+import { Prisoner } from '../services/bookerService'
 
 export type Booker = {
   reference: string
@@ -28,6 +28,7 @@ export type BookingJourney = {
 
   // all eligible visitors for this visit
   eligibleVisitors?: Visitor[]
+  ineligibleVisitors?: Visitor[]
 
   // selected visitors for this visit
   selectedVisitors?: Visitor[]

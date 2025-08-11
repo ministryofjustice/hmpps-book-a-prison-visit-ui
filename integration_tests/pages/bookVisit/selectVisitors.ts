@@ -23,6 +23,10 @@ export default class SelectVisitorsPage extends Page {
     cy.get('label').contains(name).siblings('input[name=visitorDisplayIds]').check()
   }
 
+  unavailableVisitor = (index: string): PageElement => cy.get(`[data-test="banned-visitor-${index}"]`)
+
+  unavailableVisitorExpiryDate = (index: string): PageElement => cy.get(`[data-test="ban-expiry-${index}"]`)
+
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()
   }

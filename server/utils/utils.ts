@@ -3,7 +3,7 @@ import { differenceInYears, format, formatDuration, intervalToDuration, parse, p
 import { SessionData } from 'express-session'
 // eslint-disable-next-line import/no-named-as-default
 import parsePhoneNumber from 'libphonenumber-js/mobile'
-import type { Visitor } from '../services/bookerService'
+import { Visitor } from '../data/orchestrationApiTypes'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word

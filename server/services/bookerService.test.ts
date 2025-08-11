@@ -1,8 +1,8 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
-import BookerService, { Prisoner, Visitor } from './bookerService'
+import BookerService, { Prisoner, VisitorsByStatus } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
-import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
+import { BookerPrisonerValidationErrorResponse, Visitor } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 import logger from '../../logger'
 import { createMockRateLimitService } from './testutils/mocks'
@@ -256,22 +256,44 @@ describe('Booker service', () => {
     })
   })
 
-  describe('getEligibleVisitors', () => {
-    it('should return eligible visitors (those having no restrictions) for the given booker reference and prisoner number', async () => {
+  describe('getVisitorsByStatus', () => {
+    it('should return two visitor arrays (eligibile and ineligible) for the given bookerReference, prisonerNumber and policyNoticeDaysMax (maximum booking window for prison)', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
       const visitorInfoDtos = [
         TestData.visitorInfoDto({ visitorId: 100 }),
         TestData.visitorInfoDto({ visitorId: 200, visitorRestrictions: [{ restrictionType: 'BAN' }] }),
       ]
-      const expectedVisitors: Visitor[] = [{ ...visitorInfoDtos[0], visitorDisplayId: 'uuidv4-1', adult: true }]
+
+      const visitorArrays: VisitorsByStatus = {
+        eligibleVisitors: [
+          {
+            ...visitorInfoDtos[0],
+            visitorDisplayId: 'uuidv4-1',
+            adult: true,
+            eligible: true,
+            banned: false,
+            banExpiryDate: undefined,
+          },
+        ],
+        ineligibleVisitors: [
+          {
+            ...visitorInfoDtos[1],
+            visitorDisplayId: 'uuidv4-2',
+            adult: true,
+            eligible: false,
+            banned: true,
+            banExpiryDate: undefined,
+          },
+        ],
+      }
 
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
-      const results = await bookerService.getEligibleVisitors(bookerReference.value, prisonerNumber)
+      const results = await bookerService.getVisitorsByStatus(bookerReference.value, prisonerNumber, 60)
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
-      expect(results).toStrictEqual(expectedVisitors)
+      expect(results).toStrictEqual(visitorArrays)
     })
   })
 })
