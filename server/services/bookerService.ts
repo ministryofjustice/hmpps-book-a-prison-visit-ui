@@ -7,11 +7,12 @@ import {
   BookerPrisonerValidationErrorResponse,
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
-  VisitorInfoDto,
+  Visitor,
 } from '../data/orchestrationApiTypes'
 import { isAdult } from '../utils/utils'
 import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
+import { splitVisitorList } from '../routes/visitors/visitorsUtils'
 
 export type Prisoner = {
   prisonerDisplayId: string
@@ -26,9 +27,10 @@ export type Prisoner = {
   nextAvailableVoDate: string
   convictedStatus?: ConvictedStatus
 }
-export interface Visitor extends VisitorInfoDto {
-  visitorDisplayId: string
-  adult: boolean
+
+export type VisitorsByStatus = {
+  eligibleVisitors?: Visitor[]
+  ineligibleVisitors?: Visitor[]
 }
 
 export default class BookerService {
@@ -136,8 +138,12 @@ export default class BookerService {
     })
   }
 
-  async getEligibleVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
+  async getVisitorsByStatus(
+    bookerReference: string,
+    prisonerNumber: string,
+    policyNoticeDaysMax: number,
+  ): Promise<VisitorsByStatus> {
     const allVisitors = await this.getVisitors(bookerReference, prisonerNumber)
-    return allVisitors.filter(visitor => visitor.visitorRestrictions.length === 0)
+    return splitVisitorList(allVisitors, policyNoticeDaysMax)
   }
 }

@@ -17,10 +17,14 @@ export default class SelectVisitorsController {
       const { booker, bookingJourney } = req.session
 
       if (!bookingJourney.prison) {
-        ;[bookingJourney.prison, bookingJourney.eligibleVisitors] = await Promise.all([
-          this.prisonService.getPrison(bookingJourney.prisoner.prisonId),
-          this.bookerService.getEligibleVisitors(booker.reference, booker.prisoners[0].prisonerNumber),
-        ])
+        bookingJourney.prison = await this.prisonService.getPrison(bookingJourney.prisoner.prisonId)
+        const visitorsByStatus = await this.bookerService.getVisitorsByStatus(
+          booker.reference,
+          booker.prisoners[0].prisonerNumber,
+          bookingJourney.prison.policyNoticeDaysMax,
+        )
+        bookingJourney.eligibleVisitors = visitorsByStatus.eligibleVisitors
+        bookingJourney.ineligibleVisitors = visitorsByStatus.ineligibleVisitors
       }
 
       const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)
@@ -41,7 +45,8 @@ export default class SelectVisitorsController {
         errors: req.flash('errors'),
         formValues,
         prison: bookingJourney.prison,
-        visitors: bookingJourney.eligibleVisitors,
+        eligibleVisitors: bookingJourney.eligibleVisitors,
+        ineligibleVisitors: bookingJourney.ineligibleVisitors,
       })
     }
   }
