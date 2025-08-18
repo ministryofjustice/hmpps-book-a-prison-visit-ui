@@ -50,9 +50,6 @@ describe('getVisitorAvailability', () => {
   )
 })
 
-// Uses same tests as getVisitorAvailability (same input)
-// checks that the correct text/class are returned to the controller
-// so it can display the correct description of visitor availability
 describe('getVisitorAvailabilityDescription', () => {
   it.each([
     ['No banned visitor', [], { text: 'Yes', class: '' }],
