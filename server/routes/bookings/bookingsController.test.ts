@@ -154,9 +154,9 @@ describe('Cancelled visits list page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Cancelled visits -/)
+        expect($('title').text()).toMatch(/^Rejected and cancelled visits -/)
         expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
-        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('h1').text()).toBe('Rejected and cancelled visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -185,7 +185,7 @@ describe('Cancelled visits list page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('h1').text()).toBe('Rejected and cancelled visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 

@@ -1,0 +1,18 @@
+<h2 class="govuk-heading-m" data-test="change-booking-heading">How to update your request</h2>
+{% set visitRef = visit.reference %}
+
+{% if prison.phoneNumber %}
+  <p>
+    To update your request, call
+    <span data-test="prison-name">{{ prison.prisonName }}</span>
+    on <span data-test="prison-phone-number">{{ prison.phoneNumber }}</span>
+    between 9am and 5pm, Monday to Friday.
+  </p>
+{% else %}
+  <p data-test="no-prison-phone-number">
+    To update your booking,
+    <a href="{{ prison.webAddress }}">contact {{ prison.prisonName }} directly</a>.
+  </p>
+{% endif %}
+
+<p>You will need the reference to make changes. {% if visitRef %}Your request reference is <span data-test="booking-reference-changes">{{ visitRef }}</span>.{% endif %}</p>

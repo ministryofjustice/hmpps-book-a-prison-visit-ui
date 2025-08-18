@@ -4,10 +4,35 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = "Visit booking details" %}
+{% set referenceType = "Booking reference" %}
+{% if isRequest or isRejected %}
+  {% set pageTitle = "Visit request details" %}
+{% endif %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      {% if isRequest or isRejected %}
+        {% set pageTitle = "Visit request details" %}
+        {% set referenceType = "Request reference" %}
+
+        {% if isRequest %}
+          {{ mojAlert({
+            variant: "information",
+            title: "Your request needs to be reviewed",
+            showTitleAsHeading: true,
+            dismissible: false,
+            text: "This visit is not booked yet. It needs to be checked by " + prison.prisonName + "."
+          }) }}
+        {% elif isRejected %}
+          {{ mojAlert({
+            variant: "information",
+            dismissible: false,
+            text: "This request was rejected by " + prison.prisonName + "."
+          }) }}
+        {% endif %}
+      {% endif %}
 
       {# Messages #}
       {% for message in messages %}
@@ -16,7 +41,7 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m govuk-!-padding-top-5">Booking reference:
+      <h2 class="govuk-heading-m govuk-!-padding-top-5">{{ referenceType }}:
         <span data-test="booking-reference">{{ visit.reference }}</span>
       </h2>
 
@@ -73,7 +98,9 @@
         }) }}
       {% endif %}
 
-      {% if type === 'future' %}
+      {% if isRequest %}
+        {% include "partials/howToUpdateRequest.njk" %}
+      {% elif type === 'future' %}
         {% include "partials/howToChangeBooking.njk" %}
         {% include "partials/visitingInfo.njk" %}
       {% endif %}

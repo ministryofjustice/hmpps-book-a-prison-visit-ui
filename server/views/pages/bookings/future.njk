@@ -1,4 +1,5 @@
 {% extends "partials/layout.njk" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Bookings" %}
@@ -16,6 +17,12 @@
       {% if visits | length %}
         {% for visit in visits %}
           <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+          {% if visit.visitSubStatus == 'REQUESTED' %}
+            {{ govukTag({
+              text: "Awaiting review",
+              classes: "govuk-tag--red tag-margin-bottom"
+            }) }}
+          {% endif %}
           <ul class="govuk-list">
             <li>
               <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
@@ -33,7 +40,7 @@
                 </span>
               </a>
               <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-                Cancel <span class="govuk-visually-hidden">your</span> booking
+                Cancel <span class="govuk-visually-hidden">your</span> visit
                 <span class="govuk-visually-hidden">
                   for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
                 </span>
@@ -46,12 +53,12 @@
         <p data-test="no-visits">You do not have any future bookings.</p>
       {% endif %}
 
-      <h2 class="govuk-heading-m">Past and cancelled visits</h2>
+      <h2 class="govuk-heading-m">Other visits</h2>
       <p>
         <a href="{{ paths.BOOKINGS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
       </p>
       <p>
-        <a href="{{ paths.BOOKINGS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View cancelled visits</a>
+        <a href="{{ paths.BOOKINGS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
       </p>
       
     </div>

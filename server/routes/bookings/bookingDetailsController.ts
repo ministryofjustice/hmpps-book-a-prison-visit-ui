@@ -43,6 +43,8 @@ export default class BookingDetailsController {
         visit,
         showCancelButton,
         showOLServiceNav: true,
+        isRequest: visit.visitSubStatus === 'REQUESTED',
+        isRejected: visit.visitSubStatus === 'AUTO_REJECTED' || visit.visitSubStatus === 'REJECTED',
       })
     }
   }
