@@ -30,7 +30,6 @@ export default class BookingsController {
       }
 
       req.session.bookings = { type, visits }
-      console.log(visits)
 
       return res.render(`pages/bookings/${type}`, { visits, showOLServiceNav: true })
     }
