@@ -18,7 +18,7 @@ export default class SelectVisitorsController {
 
       if (!bookingJourney.prison) {
         bookingJourney.prison = await this.prisonService.getPrison(bookingJourney.prisoner.prisonId)
-        const visitorsByStatus = await this.bookerService.getVisitorsByStatus(
+        const visitorsByStatus = await this.bookerService.getVisitorsByEligibility(
           booker.reference,
           booker.prisoners[0].prisonerNumber,
           bookingJourney.prison.policyNoticeDaysMax,

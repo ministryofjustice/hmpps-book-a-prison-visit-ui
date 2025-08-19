@@ -14,7 +14,7 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { FlashFormValues } from '../../@types/bapv'
-import { VisitorsByStatus } from '../../services/bookerService'
+import { VisitorsByEligibility } from '../../services/bookerService'
 
 jest.mock('../../../logger')
 
@@ -106,7 +106,7 @@ const visitor9 = TestData.visitor({
 const eligibleVisitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8]
 const ineligibleVisitors = [visitor9]
 
-let visitors: VisitorsByStatus
+let visitors: VisitorsByEligibility
 beforeEach(() => {
   visitors = { eligibleVisitors, ineligibleVisitors }
   jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
@@ -122,7 +122,7 @@ describe('Select visitors', () => {
     let flashData: FlashData
 
     beforeEach(() => {
-      bookerService.getVisitorsByStatus.mockResolvedValue(visitors)
+      bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
       prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
@@ -200,7 +200,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(bookerService.getVisitorsByStatus).toHaveBeenCalledWith(
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith(
             bookerReference,
             prisoner.prisonerNumber,
             prison.policyNoticeDaysMax,
@@ -272,7 +272,9 @@ describe('Select visitors', () => {
     })
 
     it('should handle booker having no visitors for this prisoner', () => {
-      bookerService.getVisitorsByStatus.mockResolvedValue((visitors = { eligibleVisitors: [], ineligibleVisitors: [] }))
+      bookerService.getVisitorsByEligibility.mockResolvedValue(
+        (visitors = { eligibleVisitors: [], ineligibleVisitors: [] }),
+      )
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -292,7 +294,7 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').length).toBe(0)
 
-          expect(bookerService.getVisitorsByStatus).toHaveBeenCalledWith(
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith(
             bookerReference,
             prisoner.prisonerNumber,
             prison.policyNoticeDaysMax,
@@ -309,7 +311,7 @@ describe('Select visitors', () => {
     })
 
     it('should handle booker having no eligible adult visitors for this prisoner and redirect to cannot book page with reason', () => {
-      bookerService.getVisitorsByStatus.mockResolvedValue(
+      bookerService.getVisitorsByEligibility.mockResolvedValue(
         (visitors = { eligibleVisitors: [visitor6], ineligibleVisitors: [] }),
       ) // only a child visitor
 

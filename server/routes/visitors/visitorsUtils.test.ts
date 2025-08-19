@@ -59,7 +59,7 @@ describe('getVisitorAvailabilityDescription', () => {
       { text: 'Banned', class: 'warning' },
     ],
     [
-      'Banned visitors, with expiry',
+      'Banned visitor, with expiry',
       [
         { restrictionType: 'BAN', expiryDate: '2030-01-01' }, // 2030
       ] as Visitor['visitorRestrictions'],

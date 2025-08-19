@@ -1,6 +1,6 @@
 import { differenceInDays } from 'date-fns'
 import { formatDate } from '../../utils/utils'
-import type { Visitor } from '../../services/bookerService'
+import type { Visitor, VisitorsByEligibility } from '../../services/bookerService'
 
 export const getVisitorAvailability = (
   restrictions: Visitor['visitorRestrictions'],
@@ -24,10 +24,7 @@ export const getVisitorAvailability = (
   return { banned: true, expiryDate: expiryDates[0] }
 }
 
-export const splitVisitorList = (
-  visitors: Visitor[],
-  policyNoticeDaysMax: number,
-): { eligibleVisitors: Visitor[]; ineligibleVisitors: Visitor[] } => {
+export const splitVisitorList = (visitors: Visitor[], policyNoticeDaysMax: number): VisitorsByEligibility => {
   const today = new Date()
   const allVisitors = visitors.map(visitor => {
     const restrictionStatus = getVisitorAvailability(visitor.visitorRestrictions)

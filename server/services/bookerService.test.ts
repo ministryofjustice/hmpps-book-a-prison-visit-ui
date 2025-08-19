@@ -1,5 +1,5 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
-import BookerService, { Prisoner, Visitor, VisitorsByStatus } from './bookerService'
+import BookerService, { Prisoner, Visitor, VisitorsByEligibility } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
@@ -256,7 +256,7 @@ describe('Booker service', () => {
     })
   })
 
-  describe('getVisitorsByStatus', () => {
+  describe('getVisitorsByEligibility', () => {
     it('should return two visitor arrays (eligibile and ineligible) for the given bookerReference, prisonerNumber and policyNoticeDaysMax (maximum booking window for prison)', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
@@ -265,7 +265,7 @@ describe('Booker service', () => {
         TestData.visitorInfoDto({ visitorId: 200, visitorRestrictions: [{ restrictionType: 'BAN' }] }),
       ]
 
-      const visitorArrays: VisitorsByStatus = {
+      const visitorArrays: VisitorsByEligibility = {
         eligibleVisitors: [
           {
             ...visitorInfoDtos[0],
@@ -290,7 +290,7 @@ describe('Booker service', () => {
 
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
-      const results = await bookerService.getVisitorsByStatus(bookerReference.value, prisonerNumber, 60)
+      const results = await bookerService.getVisitorsByEligibility(bookerReference.value, prisonerNumber, 60)
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
       expect(results).toStrictEqual(visitorArrays)

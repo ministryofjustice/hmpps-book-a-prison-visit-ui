@@ -37,7 +37,7 @@ export interface Visitor extends VisitorInfoDto {
   banExpiryDate?: string
 }
 
-export type VisitorsByStatus = {
+export type VisitorsByEligibility = {
   eligibleVisitors?: Visitor[]
   ineligibleVisitors?: Visitor[]
 }
@@ -147,11 +147,11 @@ export default class BookerService {
     })
   }
 
-  async getVisitorsByStatus(
+  async getVisitorsByEligibility(
     bookerReference: string,
     prisonerNumber: string,
     policyNoticeDaysMax: number,
-  ): Promise<VisitorsByStatus> {
+  ): Promise<VisitorsByEligibility> {
     const allVisitors = await this.getVisitors(bookerReference, prisonerNumber)
     return splitVisitorList(allVisitors, policyNoticeDaysMax)
   }
