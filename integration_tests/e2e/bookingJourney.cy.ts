@@ -125,7 +125,7 @@ context('Booking journey', () => {
     selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
-    selectVisitorsPage.unavailableVisitor('1').contains('AdultBanned VisitorBanned (25 years old).')
+    selectVisitorsPage.unavailableVisitor('1').contains('AdultBanned VisitorBanned (25 years old)')
     selectVisitorsPage
       .unavailableVisitorExpiryDate('1')
       .contains(`AdultBanned is banned until ${formatDate(banExpiryDate)}`)
