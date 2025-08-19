@@ -195,7 +195,7 @@ describe('Select visitors', () => {
           expect($(`input[name=visitorDisplayIds][value=${visitor8.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 4m (4 months old)',
           )
-          expect($('[data-test="banned-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old).')
+          expect($('[data-test="banned-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
           expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 2 May 2025.')
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
