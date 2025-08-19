@@ -105,6 +105,24 @@ describe('View a single booking', () => {
         })
     })
 
+    it('should render the booking details page - requested visit', () => {
+      bookings.type = 'future'
+      bookings.visits[0].visitSubStatus = 'REQUESTED'
+
+      return request(app)
+        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text()).toBe('Visit request details')
+          expect($('.moj-alert').text()).toContain('Your request needs to be reviewed')
+          expect($('.moj-alert').text()).toContain(
+            'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
+          )
+          expect($('[data-test="change-booking-heading"]').text()).toBe('How to update your request')
+        })
+    })
+
     it('should show alternative content if prison has no phone number', () => {
       bookings.type = 'future'
       prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))

@@ -25,10 +25,10 @@ afterEach(() => {
 })
 
 describe('Bookings homepage (future visits list)', () => {
-  const futureVisitDetails = TestData.visitDetails()
+  const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
 
   it('should render the bookings home page - with a future visit', () => {
-    visitService.getFuturePublicVisits.mockResolvedValue([futureVisitDetails])
+    visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
       .get(paths.BOOKINGS.HOME)
@@ -45,11 +45,12 @@ describe('Bookings homepage (future visits list)', () => {
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
         expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.VISIT}/${futureVisitDetails.visitDisplayId}`,
+          `${paths.BOOKINGS.VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails.visitDisplayId}`,
+          `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
+        expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
 
         expect($('[data-test=change-booking-heading]').length).toBeFalsy()
 
@@ -59,7 +60,7 @@ describe('Bookings homepage (future visits list)', () => {
 
         expect(sessionData.bookings).toStrictEqual({
           type: 'future',
-          visits: [futureVisitDetails],
+          visits: futureVisitDetails,
         } as SessionData['bookings'])
       })
   })
@@ -154,9 +155,9 @@ describe('Cancelled visits list page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Cancelled visits -/)
+        expect($('title').text()).toMatch(/^Rejected and cancelled visits -/)
         expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
-        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('h1').text()).toBe('Rejected and cancelled visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -185,7 +186,7 @@ describe('Cancelled visits list page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1').text()).toBe('Cancelled visits')
+        expect($('h1').text()).toBe('Rejected and cancelled visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 

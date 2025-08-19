@@ -3,20 +3,20 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visit booking details" %}
+{% set pageTitle = "Visit request details" if isRequest or isRejected else "Visit booking details" %}
+{% set referenceType = "Request reference" if isRequest or isRejected else "Booking reference" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      {# Messages #}
       {% for message in messages %}
         {{ mojAlert(message) }}
       {% endfor %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m govuk-!-padding-top-5">Booking reference:
+      <h2 class="govuk-heading-m govuk-!-padding-top-5">{{ referenceType }}:
         <span data-test="booking-reference">{{ visit.reference }}</span>
       </h2>
 
@@ -73,7 +73,9 @@
         }) }}
       {% endif %}
 
-      {% if type === 'future' %}
+      {% if isRequest %}
+        {% include "partials/howToUpdateRequest.njk" %}
+      {% elif type === 'future' %}
         {% include "partials/howToChangeBooking.njk" %}
         {% include "partials/visitingInfo.njk" %}
       {% endif %}

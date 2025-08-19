@@ -20,13 +20,49 @@ describe('Bookings utils', () => {
           text,
         }
 
-        expect(getVisitMessages(visit)).toStrictEqual([expectedMessage])
+        expect(getVisitMessages(visit, 'Hewell (HMP)')).toStrictEqual([expectedMessage])
       })
+    })
+
+    it('Requested visit', () => {
+      const visit = TestData.visitDetails({ visitSubStatus: 'REQUESTED' })
+      const expectedMessage: MoJAlert = {
+        variant: 'information',
+        title: 'Your request needs to be reviewed',
+        showTitleAsHeading: true,
+        text: 'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
+      }
+
+      expect(getVisitMessages(visit, 'Hewell (HMP)')).toStrictEqual([expectedMessage])
+    })
+
+    it('Rejected visit', () => {
+      const visit = TestData.visitDetails({ visitStatus: 'REJECTED', visitSubStatus: 'REJECTED' })
+      const expectedMessage: MoJAlert = {
+        variant: 'information',
+        title: 'Your request was rejected',
+        showTitleAsHeading: false,
+        text: 'This request was rejected by Hewell (HMP).',
+      }
+
+      expect(getVisitMessages(visit, 'Hewell (HMP)')).toStrictEqual([expectedMessage])
+    })
+
+    it('Auto-rejected visit', () => {
+      const visit = TestData.visitDetails({ visitSubStatus: 'AUTO_REJECTED', visitStatus: 'AUTO_REJECTED' })
+      const expectedMessage: MoJAlert = {
+        variant: 'information',
+        title: 'Your request was rejected',
+        showTitleAsHeading: false,
+        text: 'This request was rejected by Hewell (HMP).',
+      }
+
+      expect(getVisitMessages(visit, 'Hewell (HMP)')).toStrictEqual([expectedMessage])
     })
 
     it('should return an empty array if no visit messages', () => {
       const visit = TestData.visitDetails()
-      const messages = getVisitMessages(visit)
+      const messages = getVisitMessages(visit, 'Hewell (HMP)')
       expect(messages).toStrictEqual([])
     })
   })
