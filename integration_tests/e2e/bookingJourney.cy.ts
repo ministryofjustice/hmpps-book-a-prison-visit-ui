@@ -1,4 +1,4 @@
-import { addDays, format, subYears } from 'date-fns'
+import { addDays, addYears, format, subYears } from 'date-fns'
 import { AvailableVisitSessionDto } from '../../server/data/orchestrationApiTypes'
 import { DateFormats } from '../../server/constants/dateFormats'
 import TestData from '../../server/routes/testutils/testData'
@@ -13,11 +13,14 @@ import VisitBookedPage from '../pages/bookVisit/visitBooked'
 import ClosedVisitPage from '../pages/bookVisit/closedVisit'
 import ContactDetailsPage from '../pages/bookVisit/contactDetails'
 import VisitRequestedPage from '../pages/bookVisit/visitRequested'
+import { formatDate } from '../../server/utils/utils'
 
 context('Booking journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()
+
+  const banExpiryDate = format(addYears(today, 1), DateFormats.ISO_DATE)
   const visitors = [
     TestData.visitorInfoDto({
       visitorId: 1000,
@@ -36,6 +39,13 @@ context('Booking journey', () => {
       firstName: 'Child',
       lastName: 'Two',
       dateOfBirth: format(subYears(today, 5), DateFormats.ISO_DATE), // 5-year-old
+    }),
+    TestData.visitorInfoDto({
+      visitorId: 4000,
+      firstName: 'AdultBanned',
+      lastName: 'VisitorBanned',
+      dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 5-year-old
+      visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: banExpiryDate }],
     }),
   ]
 
@@ -115,6 +125,10 @@ context('Booking journey', () => {
     selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
+    selectVisitorsPage.unavailableVisitor('1').contains('AdultBanned VisitorBanned (25 years old)')
+    selectVisitorsPage
+      .unavailableVisitorExpiryDate('1')
+      .contains(`AdultBanned is banned until ${formatDate(banExpiryDate)}`)
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
