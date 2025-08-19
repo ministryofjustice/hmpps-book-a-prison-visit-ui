@@ -3,6 +3,8 @@
 
 {% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Bookings" %}
+{% set referenceType = "Booking reference" %}
+
 
 {% block content %}
 
@@ -20,8 +22,10 @@
           {% if visit.visitSubStatus == 'REQUESTED' %}
             {{ govukTag({
               text: "Awaiting review",
-              classes: "govuk-tag--red tag-margin-bottom"
+              classes: "govuk-tag--red tag-margin-bottom",
+              attributes: { "data-test": "tag-" + loop.index  }
             }) }}
+            {% set referenceType = "Request reference" %}
           {% endif %}
           <ul class="govuk-list">
             <li>
@@ -30,7 +34,7 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </li>
             <li>
-              Booking reference: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
+              {{ referenceType }}: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
             </li>
             <li>
               <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
