@@ -32,12 +32,15 @@
             text: "This request was rejected by " + prison.prisonName + "."
           }) }}
         {% endif %}
+
+      {% else %}
+        {# Messages only shown on non-requested type visits #}
+        {% for message in messages %}
+          {{ mojAlert(message) }}
+        {% endfor %}
       {% endif %}
 
-      {# Messages #}
-      {% for message in messages %}
-        {{ mojAlert(message) }}
-      {% endfor %}
+     
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
