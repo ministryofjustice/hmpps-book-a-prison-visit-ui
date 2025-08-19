@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
-import { getVisitorAvailability } from './visitorsUtils'
+import { getVisitorAvailabilityDescription } from './visitorsUtils'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -19,7 +19,7 @@ export default class VisitorsController {
         : undefined
 
       const newVisitorsArray = visitors.map(visitor => {
-        return { ...visitor, canVisitorBook: getVisitorAvailability(visitor.visitorRestrictions) }
+        return { ...visitor, canVisitorBook: getVisitorAvailabilityDescription(visitor.visitorRestrictions) }
       })
 
       return res.render('pages/visitors/visitors', {

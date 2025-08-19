@@ -1,18 +1,19 @@
-import { Visitor } from '../../services/bookerService'
+import { differenceInDays } from 'date-fns'
 import { formatDate } from '../../utils/utils'
+import type { Visitor, VisitorsByEligibility } from '../../services/bookerService'
 
-// eslint-disable-next-line import/prefer-default-export
 export const getVisitorAvailability = (
   restrictions: Visitor['visitorRestrictions'],
-): { text: string; class: string } => {
+): { banned: boolean; expiryDate?: string } => {
   const bans = restrictions.filter(restriction => restriction.restrictionType === 'BAN')
+
   if (!bans.length) {
-    return { text: 'Yes', class: '' }
+    return { banned: false }
   }
   const hasPermanentBan = bans.some(restriction => restriction.expiryDate === null)
 
   if (hasPermanentBan) {
-    return { text: 'Banned', class: 'warning' }
+    return { banned: true }
   }
 
   const expiryDates = bans
@@ -20,5 +21,47 @@ export const getVisitorAvailability = (
     .sort()
     .reverse()
 
-  return { text: `Banned until ${formatDate(expiryDates[0])}`, class: 'warning' }
+  return { banned: true, expiryDate: expiryDates[0] }
+}
+
+export const splitVisitorList = (visitors: Visitor[], policyNoticeDaysMax: number): VisitorsByEligibility => {
+  const today = new Date()
+  const allVisitors = visitors.map(visitor => {
+    const restrictionStatus = getVisitorAvailability(visitor.visitorRestrictions)
+    let eligible = false
+
+    if (restrictionStatus.banned === false) {
+      eligible = true
+    } else if (restrictionStatus.banned && restrictionStatus.expiryDate === undefined) {
+      eligible = false
+    } else {
+      const difference = differenceInDays(restrictionStatus.expiryDate, today)
+
+      if (difference > policyNoticeDaysMax) {
+        eligible = false
+      } else {
+        eligible = true
+      }
+    }
+
+    return { ...visitor, eligible, banned: restrictionStatus.banned, banExpiryDate: restrictionStatus.expiryDate }
+  })
+
+  return {
+    eligibleVisitors: allVisitors.filter(visitor => visitor.eligible),
+    ineligibleVisitors: allVisitors.filter(visitor => !visitor.eligible),
+  }
+}
+
+export const getVisitorAvailabilityDescription = (
+  restrictions: Visitor['visitorRestrictions'],
+): { text: string; class: string } => {
+  const visitorAvailability = getVisitorAvailability(restrictions)
+  if (visitorAvailability.banned === false) {
+    return { text: 'Yes', class: '' }
+  }
+  if (visitorAvailability.expiryDate) {
+    return { text: `Banned until ${formatDate(visitorAvailability.expiryDate)}`, class: 'warning' }
+  }
+  return { text: 'Banned', class: 'warning' }
 }
