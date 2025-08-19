@@ -40,8 +40,8 @@ describe('Bookings utils', () => {
       const visit = TestData.visitDetails({ visitStatus: 'REJECTED', visitSubStatus: 'REJECTED' })
       const expectedMessage: MoJAlert = {
         variant: 'information',
-        title: undefined,
-        showTitleAsHeading: true,
+        title: 'Your request was rejected',
+        showTitleAsHeading: false,
         text: 'This request was rejected by Hewell (HMP).',
       }
 
@@ -52,8 +52,8 @@ describe('Bookings utils', () => {
       const visit = TestData.visitDetails({ visitSubStatus: 'AUTO_REJECTED', visitStatus: 'AUTO_REJECTED' })
       const expectedMessage: MoJAlert = {
         variant: 'information',
-        title: undefined,
-        showTitleAsHeading: true,
+        title: 'Your request was rejected',
+        showTitleAsHeading: false,
         text: 'This request was rejected by Hewell (HMP).',
       }
 
