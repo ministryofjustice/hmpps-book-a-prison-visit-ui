@@ -1,5 +1,4 @@
 <h2 class="govuk-heading-m" data-test="change-booking-heading">How to update your request</h2>
-{% set visitRef = visit.reference %}
 
 {% if prison.phoneNumber %}
   <p>
@@ -15,4 +14,4 @@
   </p>
 {% endif %}
 
-<p>You will need the reference to make changes. {% if visitRef %}Your request reference is <span data-test="booking-reference-changes">{{ visitRef }}</span>.{% endif %}</p>
+<p>You will need the reference to make changes. Your request reference is <span data-test="booking-reference-changes">{{ visit.reference }}</span>.</p>
