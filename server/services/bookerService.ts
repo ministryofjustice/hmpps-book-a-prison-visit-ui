@@ -7,11 +7,12 @@ import {
   BookerPrisonerValidationErrorResponse,
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
-  Visitor,
+  VisitorInfoDto,
 } from '../data/orchestrationApiTypes'
-import { isAdult } from '../utils/utils'
 import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
+
+import { isAdult } from '../utils/utils'
 import { splitVisitorList } from '../routes/visitors/visitorsUtils'
 
 export type Prisoner = {
@@ -26,6 +27,14 @@ export type Prisoner = {
   availableVos: number
   nextAvailableVoDate: string
   convictedStatus?: ConvictedStatus
+}
+
+export interface Visitor extends VisitorInfoDto {
+  visitorDisplayId: string
+  adult: boolean
+  eligible?: boolean
+  banned?: boolean
+  banExpiryDate?: string
 }
 
 export type VisitorsByStatus = {

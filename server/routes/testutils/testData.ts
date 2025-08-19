@@ -12,10 +12,9 @@ import type {
   ConvictedStatus,
   PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
-  Visitor,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
-import { Prisoner } from '../../services/bookerService'
+import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
 
 export default class TestData {

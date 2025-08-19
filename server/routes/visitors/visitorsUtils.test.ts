@@ -1,4 +1,4 @@
-import { Visitor } from '../../data/orchestrationApiTypes'
+import { Visitor } from '../../services/bookerService'
 import TestData from '../testutils/testData'
 import { getVisitorAvailability, getVisitorAvailabilityDescription, splitVisitorList } from './visitorsUtils'
 

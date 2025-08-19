@@ -1,6 +1,6 @@
 import { differenceInDays } from 'date-fns'
-import { Visitor } from '../../data/orchestrationApiTypes'
 import { formatDate } from '../../utils/utils'
+import type { Visitor } from '../../services/bookerService'
 
 export const getVisitorAvailability = (
   restrictions: Visitor['visitorRestrictions'],
