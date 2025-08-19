@@ -22,7 +22,7 @@
           {% if visit.visitSubStatus == 'REQUESTED' %}
             {{ govukTag({
               text: "Awaiting review",
-              classes: "govuk-tag--red tag-margin-bottom",
+              classes: "govuk-tag--red govuk-!-margin-bottom-2",
               attributes: { "data-test": "tag-" + loop.index  }
             }) }}
             {% set referenceType = "Request reference" %}

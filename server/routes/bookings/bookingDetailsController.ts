@@ -24,7 +24,7 @@ export default class BookingDetailsController {
 
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
-      const messages = getVisitMessages(visit)
+      const messages = getVisitMessages(visit, prison.prisonName)
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)

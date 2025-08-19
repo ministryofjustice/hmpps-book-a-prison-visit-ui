@@ -3,44 +3,16 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visit booking details" %}
-{% set referenceType = "Booking reference" %}
-{% if isRequest or isRejected %}
-  {% set pageTitle = "Visit request details" %}
-{% endif %}
+{% set pageTitle = "Visit request details" if isRequest or isRejected else "Visit booking details" %}
+{% set referenceType = "Request reference" if isRequest or isRejected else "Booking refernece" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      {% if isRequest or isRejected %}
-        {% set pageTitle = "Visit request details" %}
-        {% set referenceType = "Request reference" %}
-
-        {% if isRequest %}
-          {{ mojAlert({
-            variant: "information",
-            title: "Your request needs to be reviewed",
-            showTitleAsHeading: true,
-            dismissible: false,
-            text: "This visit is not booked yet. It needs to be checked by " + prison.prisonName + "."
-          }) }}
-        {% elif isRejected %}
-          {{ mojAlert({
-            variant: "information",
-            dismissible: false,
-            text: "This request was rejected by " + prison.prisonName + "."
-          }) }}
-        {% endif %}
-
-      {% else %}
-        {# Messages only shown on non-requested type visits #}
-        {% for message in messages %}
-          {{ mojAlert(message) }}
-        {% endfor %}
-      {% endif %}
-
-     
+      {% for message in messages %}
+        {{ mojAlert(message) }}
+      {% endfor %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
