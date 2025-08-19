@@ -226,6 +226,25 @@ workflows:
             - request-acceptance-tests-staging-preview-public-approval
           context: visits-public-e2e-tests
 
+      - request-preprod-preview-approval:
+          <<: *feature_branch
+          type: approval
+          requires:
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
+      - hmpps/deploy_env:
+          <<: *feature_branch
+          name: deploy_preprod_preview
+          env: "preprod"
+          context:
+            - hmpps-common-vars
+            - book-a-prison-visit-staff-ui-preprod
+          requires:
+            - request-preprod-preview-approval
+
+
       - hmpps/deploy_env:
           <<: *main_branch
           name: deploy_dev
