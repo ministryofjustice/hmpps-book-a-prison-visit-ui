@@ -3,7 +3,7 @@
 
 {% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Bookings" %}
-{% set referenceType = "Booking reference" %}
+{% set referenceType = "Request reference" if visit.visitSubStatus == "REQUESTED" else "Booking reference" %}
 
 
 {% block content %}
