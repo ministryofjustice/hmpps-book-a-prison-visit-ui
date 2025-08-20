@@ -82,7 +82,7 @@ describe('View a single booking', () => {
           // don't display this line when on the visit details page
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
 
-          expect($('[data-test="cancel-visit"]').text()).toContain('Cancel booking')
+          expect($('[data-test="cancel-visit"]').text()).toContain('Cancel visit')
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
@@ -175,6 +175,7 @@ describe('View a single booking', () => {
     it('should render the booking details page with "Visit cancelled" message', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
+      visitDetails.visitSubStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
 
       return request(app)

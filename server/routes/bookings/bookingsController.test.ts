@@ -41,6 +41,7 @@ describe('Bookings homepage (future visits list)', () => {
         expect($('h1').siblings('h2').first().text()).toBe('Future visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="tag-1"]').length).toBe(0)
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
@@ -50,6 +51,7 @@ describe('Bookings homepage (future visits list)', () => {
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
           `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
+
         expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
 
         expect($('[data-test=change-booking-heading]').length).toBeFalsy()

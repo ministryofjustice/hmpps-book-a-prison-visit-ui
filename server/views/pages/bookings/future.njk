@@ -3,8 +3,6 @@
 
 {% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Bookings" %}
-{% set referenceType = "Request reference" if visit.visitSubStatus == "REQUESTED" else "Booking reference" %}
-
 
 {% block content %}
 
@@ -18,22 +16,28 @@
 
       {% if visits | length %}
         {% for visit in visits %}
+          {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
+
           <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
-          {% if visit.visitSubStatus == 'REQUESTED' %}
-            {{ govukTag({
-              text: "Awaiting review",
-              classes: "govuk-tag--red govuk-!-margin-bottom-2",
-              attributes: { "data-test": "tag-" + loop.index  }
-            }) }}
-          {% endif %}
+
           <ul class="govuk-list">
+            {% if isRequest %}
+              <li>
+                {{ govukTag({
+                text: "Awaiting review",
+                classes: "govuk-tag--orange govuk-!-margin-bottom-2",
+                attributes: { "data-test": "tag-" + loop.index  }
+              }) }}
+              </li>
+            {% endif %}
             <li>
               <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
               to
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </li>
             <li>
-              {{ referenceType }}: <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
+              {{ "Request" if isRequest else "Booking" }} reference:
+              <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
             </li>
             <li>
               <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">

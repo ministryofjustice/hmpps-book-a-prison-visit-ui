@@ -50,11 +50,11 @@ describe('Cancel a booking - Are you sure page', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Cancel your booking -/)
+          expect($('title').text()).toMatch(/^Cancel your visit -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(
             `${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`,
           )
-          expect($('h1').text()).toBe('Are you sure you want to cancel your booking?')
+          expect($('h1').text()).toBe('Are you sure you want to cancel your visit?')
 
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')

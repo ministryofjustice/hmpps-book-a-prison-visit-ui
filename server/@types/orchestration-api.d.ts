@@ -1064,6 +1064,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Outcome text
        * @example Because he got covid
@@ -1144,7 +1145,7 @@ export interface components {
        * @example RESERVED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Sub Status
        * @example AUTO_APPROVED
@@ -1185,6 +1186,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -1736,6 +1738,9 @@ export interface components {
         | 'CANCELLED_VISIT'
         | 'REQUESTED_VISIT'
         | 'REQUESTED_VISIT_APPROVED'
+        | 'REQUESTED_VISIT_REJECTED'
+        | 'REQUESTED_VISIT_AUTO_REJECTED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
         | 'NON_ASSOCIATION_EVENT'
         | 'PRISONER_RELEASED_EVENT'
         | 'PRISONER_RECEIVED_EVENT'
@@ -1751,6 +1756,7 @@ export interface components {
         | 'CANCELLED_NON_ASSOCIATION_VISIT_EVENT'
         | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
         | 'PAIRED_VISIT_CANCELLED_IGNORED_OR_UPDATED_EVENT'
+        | 'COURT_VIDEO_APPOINTMENT_CREATED_EVENT'
       /**
        * @description What was the application method for this event
        * @enum {string}
@@ -1943,7 +1949,7 @@ export interface components {
        * @example RESERVED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Sub Status
        * @example AUTO_APPROVED
@@ -1984,6 +1990,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -2078,7 +2085,12 @@ export interface components {
        * @example VISITOR_RESTRICTION
        * @enum {string}
        */
-      attributeName: 'VISITOR_RESTRICTION' | 'VISITOR_RESTRICTION_ID' | 'VISITOR_ID' | 'PAIRED_VISIT'
+      attributeName:
+        | 'VISITOR_RESTRICTION'
+        | 'VISITOR_RESTRICTION_ID'
+        | 'VISITOR_ID'
+        | 'PAIRED_VISIT'
+        | 'APPOINTMENT_INSTANCE_ID'
       /**
        * @description Value of the attribute associated with the notification event
        * @example BAN
@@ -2123,7 +2135,7 @@ export interface components {
      * @description To filter visits by status
      * @example BOOKED
      */
-    visitStatus: ('BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN')[]
+    visitStatus: ('BOOKED' | 'CANCELLED')[]
     /**
      * @description Visit Restriction(s) - OPEN / CLOSED / UNKNOWN
      * @example OPEN
@@ -2184,6 +2196,25 @@ export interface components {
        * @enum {string}
        */
       visitRestriction: 'OPEN' | 'CLOSED' | 'UNKNOWN'
+      /**
+       * @description Visit Status
+       * @example BOOKED
+       * @enum {string}
+       */
+      visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Visit Sub Status
+       * @example REQUESTED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
     }
     PageVisitDto: {
       /** Format: int64 */
@@ -2209,10 +2240,10 @@ export interface components {
       sort?: components['schemas']['SortObject']
       /** Format: int32 */
       pageSize?: number
+      unpaged?: boolean
       paged?: boolean
       /** Format: int32 */
       pageNumber?: number
-      unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
@@ -2534,7 +2565,7 @@ export interface components {
        * @example BOOKED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
       /**
        * @description Visit Sub Status
        * @example AUTO_APPROVED
@@ -2575,6 +2606,7 @@ export interface components {
         | 'SUPERSEDED_CANCELLATION'
         | 'DETAILS_CHANGED_AFTER_BOOKING'
         | 'BOOKER_CANCELLED'
+        | 'REQUESTED_VISIT_WITHDRAWN'
       /**
        * Format: date-time
        * @description The date and time of the visit
@@ -2893,10 +2925,23 @@ export interface components {
       visitType: 'SOCIAL'
       /**
        * @description Visit Status
-       * @example RESERVED
+       * @example BOOKED
        * @enum {string}
        */
-      visitStatus: 'BOOKED' | 'CANCELLED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN'
+      visitStatus: 'BOOKED' | 'CANCELLED'
+      /**
+       * @description Visit Sub Status
+       * @example APPROVED
+       * @enum {string}
+       */
+      visitSubStatus:
+        | 'APPROVED'
+        | 'AUTO_APPROVED'
+        | 'REQUESTED'
+        | 'REJECTED'
+        | 'AUTO_REJECTED'
+        | 'WITHDRAWN'
+        | 'CANCELLED'
       /**
        * @description Visit Restriction
        * @example OPEN

@@ -2,7 +2,7 @@ import Page, { PageElement } from '../../page'
 
 export default class CancelVisitPage extends Page {
   constructor() {
-    super('Are you sure you want to cancel your booking?')
+    super('Are you sure you want to cancel your visit?')
   }
 
   visitDate = (): PageElement => cy.get(`[data-test=visit-date]`)
