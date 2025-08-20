@@ -4,8 +4,17 @@ import { SessionData } from 'express-session'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { getVisitMessages } from './bookingsUtils'
+import { VisitDetails } from '../../services/visitService'
 
 export default class BookingDetailsController {
+  // label visits with these statuses as a 'request' rather than a 'booking'
+  private readonly REQUEST_STATUSES: VisitDetails['visitSubStatus'][] = [
+    'AUTO_REJECTED',
+    'REJECTED',
+    'REQUESTED',
+    'WITHDRAWN',
+  ]
+
   public constructor(private readonly prisonService: PrisonService) {}
 
   public view(type: SessionData['bookings']['type']): RequestHandler {
@@ -43,8 +52,7 @@ export default class BookingDetailsController {
         visit,
         showCancelButton,
         showOLServiceNav: true,
-        isRequest: visit.visitSubStatus === 'REQUESTED',
-        isRejected: visit.visitSubStatus === 'AUTO_REJECTED' || visit.visitSubStatus === 'REJECTED',
+        isRequest: this.REQUEST_STATUSES.includes(visit.visitSubStatus),
       })
     }
   }

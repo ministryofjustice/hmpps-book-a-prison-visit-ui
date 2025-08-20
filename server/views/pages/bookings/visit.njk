@@ -3,8 +3,8 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visit request details" if isRequest or isRejected else "Visit booking details" %}
-{% set referenceType = "Request reference" if isRequest or isRejected else "Booking reference" %}
+{% set pageTitle = "Visit request details" if isRequest else "Visit booking details" %}
+{% set referenceType = "Request reference" if isRequest else "Booking reference" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -73,11 +73,13 @@
         }) }}
       {% endif %}
 
-      {% if isRequest %}
-        {% include "partials/howToUpdateRequest.njk" %}
-      {% elif type === 'future' %}
-        {% include "partials/howToChangeBooking.njk" %}
-        {% include "partials/visitingInfo.njk" %}
+      {% if type === 'future' %}
+        {% if isRequest %}
+          {% include "partials/howToUpdateRequest.njk" %}
+        {% else %}
+          {% include "partials/howToChangeBooking.njk" %}
+          {% include "partials/visitingInfo.njk" %}
+        {% endif %}
       {% endif %}
     </div>
   </div>
