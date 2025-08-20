@@ -21,6 +21,7 @@ context('Bookings home page', () => {
     endTimestamp: '2026-05-21T11:30:00',
     outcomeStatus: 'ESTABLISHMENT_CANCELLED',
     visitStatus: 'CANCELLED',
+    visitSubStatus: 'CANCELLED',
   })
 
   const prison = TestData.prisonDto()
