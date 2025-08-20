@@ -65,7 +65,7 @@
 
       {% if showCancelButton %}
         {{ govukButton({
-          text: "Cancel booking",
+          text: "Cancel visit",
           classes: "govuk-button--secondary",
           href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },
