@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% set pageTitle = "Cancel your booking" %}
+{% set pageTitle = "Cancel your visit" %}
 
 {% set backLinkHref = paths.BOOKINGS.VISIT + '/' + visit.visitDisplayId %}
 
@@ -12,7 +12,7 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Are you sure you want to cancel your booking?</h1>
+      <h1 class="govuk-heading-l">Are you sure you want to cancel your visit?</h1>
 
       <h2 class="govuk-heading-m">Date and time</h2>
       <ul class="govuk-list">
@@ -47,14 +47,14 @@
           items: [
             {
               value: "yes",
-              text: "Yes, cancel this booking",
+              text: "Yes, cancel this visit",
               attributes: {
                 'data-test': 'cancel-booking-yes'
               }
             },
             {
               value: "no",
-              text: "No, keep this booking",
+              text: "No, keep this visit",
               attributes: {
                 'data-test': 'cancel-booking-no'
               }
