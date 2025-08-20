@@ -175,6 +175,7 @@ describe('View a single booking', () => {
     it('should render the booking details page with "Visit cancelled" message', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
+      visitDetails.visitSubStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
 
       return request(app)
