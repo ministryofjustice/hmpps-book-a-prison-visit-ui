@@ -3,6 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set pageTitle = "Choose the visit time" %}
 
@@ -31,6 +32,25 @@
           <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>
         can attend are shown.
       </p>
+
+      {# Banned visitor details #}
+      {% if bannedVisitors | length %}
+        {% call govukInsetText({
+          attributes: { "data-test": "banned-visitors-details" }
+        }) -%}
+          {% for visitor in bannedVisitors %}
+            <span data-test="banned-visitor-name-{{ loop.index }}">
+              {{- visitor.firstName }} {{ visitor.lastName -}}
+            </span>
+            is banned until
+            <span data-test="banned-visitor-expiry-date-{{ loop.index }}">
+              {{- visitor.banExpiryDate | formatDate -}}
+            </span>.
+            <br>
+          {% endfor -%}
+          Only visit times on or after this date are shown.
+        {%- endcall %}
+      {% endif %}
 
       <nav class="visits-calendar" aria-label="Visit date selection calendar" role="navigation">
         {# Loop over months #}

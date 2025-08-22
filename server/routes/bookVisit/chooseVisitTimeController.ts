@@ -4,6 +4,7 @@ import { VisitService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
 import { MoJAlert } from '../../@types/bapv'
+import { Visitor } from '../../services/bookerService'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -17,6 +18,7 @@ export default class ChooseVisitTimeController {
       const { prisoner, prison, selectedVisitors, applicationReference } = bookingJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
+      const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors)
 
       const { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions } =
         await this.visitSessionsService.getVisitSessionsCalendar({
@@ -68,6 +70,7 @@ export default class ChooseVisitTimeController {
         calendar,
         selectedDate,
         prisoner,
+        bannedVisitors,
         backLinkHref,
       })
     }
@@ -155,6 +158,21 @@ export default class ChooseVisitTimeController {
         session.sessionDate === selectedVisitSession.sessionDate &&
         session.sessionTemplateReference === selectedVisitSession.sessionTemplateReference &&
         session.sessionRestriction === selectedVisitSession.sessionRestriction,
+    )
+  }
+
+  private getVisitorsWithFurthestBanExpiry(visitors: Visitor[]): Visitor[] {
+    return (
+      visitors
+        // banned visitors
+        .filter(visitor => visitor.banned)
+        // sort by descending ban expiry date
+        .sort((a, b) => b.banExpiryDate.localeCompare(a.banExpiryDate))
+        // filter to just visitor(s) with the furthest expiry date
+        .filter(
+          (visitor, _index, visitorsSortedByBanExpiry) =>
+            visitor.banExpiryDate === visitorsSortedByBanExpiry[0].banExpiryDate,
+        )
     )
   }
 }

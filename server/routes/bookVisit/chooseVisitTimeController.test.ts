@@ -122,6 +122,8 @@ describe('Choose visit time', () => {
           expect($('.moj-alert').length).toBe(0)
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
 
+          expect($('[data-test=banned-visitors-details]').length).toBe(0)
+
           // calendar months, day listing and start day column
           expect($('.visits-calendar h2').eq(0).text()).toBe('May 2024')
           expect($('.visits-calendar__month').eq(0).children('.visits-calendar__day').length).toBe(4)
@@ -173,6 +175,49 @@ describe('Choose visit time', () => {
             bookerReference,
             daysAhead: prison.policyNoticeDaysMax,
           })
+        })
+    })
+
+    it('should render banned visitor details for visitor ban(s) expiring last', () => {
+      const visitorWithBanExpiringFirst = TestData.visitor({
+        firstName: 'V',
+        lastName: '1',
+        banned: true,
+        banExpiryDate: '2025-08-01',
+      })
+      const visitorWithBanExpiringLast1 = TestData.visitor({
+        firstName: 'V',
+        lastName: '2',
+        banned: true,
+        banExpiryDate: '2025-08-02',
+      })
+      const visitorWithBanExpiringLast2 = TestData.visitor({
+        firstName: 'V',
+        lastName: '3',
+        banned: true,
+        banExpiryDate: '2025-08-02',
+      })
+
+      sessionData.bookingJourney.selectedVisitors = [
+        visitor, // no ban - shouldn't show
+        visitorWithBanExpiringFirst, // earlier ban - shouldn't show
+        visitorWithBanExpiringLast1, // expiring last (same date) - should show
+        visitorWithBanExpiringLast2, // expiring last (same date) - should show
+      ]
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=banned-visitors-details]').length).toBe(1)
+          expect($('[data-test^=banned-visitor-name]').length).toBe(2)
+
+          expect($('[data-test=banned-visitor-name-1]').text()).toBe('V 2')
+          expect($('[data-test=banned-visitor-expiry-date-1]').text()).toBe('2 August 2025')
+
+          expect($('[data-test=banned-visitor-name-2]').text()).toBe('V 3')
+          expect($('[data-test=banned-visitor-expiry-date-2]').text()).toBe('2 August 2025')
         })
     })
 
