@@ -1,67 +1,32 @@
-import { differenceInDays } from 'date-fns'
 import { formatDate } from '../../utils/utils'
-import type { Visitor, VisitorsByEligibility } from '../../services/bookerService'
+import type { Visitor } from '../../services/bookerService'
+import { GOVUKTableRow } from '../../@types/bapv'
 
-export const getVisitorAvailability = (
-  restrictions: Visitor['visitorRestrictions'],
-): { banned: boolean; expiryDate?: string } => {
-  const bans = restrictions.filter(restriction => restriction.restrictionType === 'BAN')
-
-  if (!bans.length) {
-    return { banned: false }
-  }
-  const hasPermanentBan = bans.some(restriction => restriction.expiryDate === null)
-
-  if (hasPermanentBan) {
-    return { banned: true }
-  }
-
-  const expiryDates = bans
-    .map(ban => ban.expiryDate)
-    .sort()
-    .reverse()
-
-  return { banned: true, expiryDate: expiryDates[0] }
-}
-
-export const splitVisitorList = (visitors: Visitor[], policyNoticeDaysMax: number): VisitorsByEligibility => {
-  const today = new Date()
-  const allVisitors = visitors.map(visitor => {
-    const restrictionStatus = getVisitorAvailability(visitor.visitorRestrictions)
-    let eligible = false
-
-    if (restrictionStatus.banned === false) {
-      eligible = true
-    } else if (restrictionStatus.banned && restrictionStatus.expiryDate === undefined) {
-      eligible = false
-    } else {
-      const difference = differenceInDays(restrictionStatus.expiryDate, today)
-
-      if (difference > policyNoticeDaysMax) {
-        eligible = false
-      } else {
-        eligible = true
-      }
+// eslint-disable-next-line import/prefer-default-export
+export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => {
+  return visitors.map((visitor, index) => {
+    let canBookText = 'Yes'
+    if (visitor.banned) {
+      canBookText = visitor.banExpiryDate ? `Banned until ${formatDate(visitor.banExpiryDate)}` : 'Banned'
     }
 
-    return { ...visitor, eligible, banned: restrictionStatus.banned, banExpiryDate: restrictionStatus.expiryDate }
+    return [
+      // Visitor name
+      {
+        text: `${visitor.firstName} ${visitor.lastName}`,
+        attributes: { 'data-test': `visitor-name-${index}` },
+      },
+      // Visitor DoB
+      {
+        text: formatDate(visitor.dateOfBirth),
+        attributes: { 'data-test': `visitor-dob-${index}` },
+      },
+      // Can you book for visitor?
+      {
+        text: canBookText,
+        classes: visitor.banned ? 'warning' : '',
+        attributes: { 'data-test': `visitor-availability-${index}` },
+      },
+    ]
   })
-
-  return {
-    eligibleVisitors: allVisitors.filter(visitor => visitor.eligible),
-    ineligibleVisitors: allVisitors.filter(visitor => !visitor.eligible),
-  }
-}
-
-export const getVisitorAvailabilityDescription = (
-  restrictions: Visitor['visitorRestrictions'],
-): { text: string; class: string } => {
-  const visitorAvailability = getVisitorAvailability(restrictions)
-  if (visitorAvailability.banned === false) {
-    return { text: 'Yes', class: '' }
-  }
-  if (visitorAvailability.expiryDate) {
-    return { text: `Banned until ${formatDate(visitorAvailability.expiryDate)}`, class: 'warning' }
-  }
-  return { text: 'Banned', class: 'warning' }
 }

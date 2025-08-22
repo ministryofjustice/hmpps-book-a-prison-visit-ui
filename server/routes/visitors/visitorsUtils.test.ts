@@ -1,177 +1,46 @@
-import { Visitor } from '../../services/bookerService'
+import { GOVUKTableRow } from '../../@types/bapv'
 import TestData from '../testutils/testData'
-import { getVisitorAvailability, getVisitorAvailabilityDescription, splitVisitorList } from './visitorsUtils'
+import { buildVisitorsTableRows } from './visitorsUtils'
 
-describe('getVisitorAvailability', () => {
-  it.each([
-    ['No banned visitor', [], { banned: false }],
-    [
-      'Banned visitor, no expiry',
-      [{ restrictionType: 'BAN', expiryDate: null }] as Visitor['visitorRestrictions'], // permanent
-      { banned: true },
-    ],
-    [
-      'Banned visitors, with expiry',
-      [
-        { restrictionType: 'BAN', expiryDate: '2029-01-01' }, // 2029
-        { restrictionType: 'BAN', expiryDate: '2030-01-01' }, // 2030
-      ] as Visitor['visitorRestrictions'],
-      { banned: true, expiryDate: '2030-01-01' },
-    ],
-    [
-      'Banned visitors (duplicate, reversed order), with expiry',
-      [
-        { restrictionType: 'BAN', expiryDate: '2030-01-01' }, // 2030
-        { restrictionType: 'BAN', expiryDate: '2025-01-01' }, // 2029
-      ] as Visitor['visitorRestrictions'],
-      { banned: true, expiryDate: '2030-01-01' },
-    ],
-    [
-      'Banned visitors, one with expiry, one without',
-      [
-        { restrictionType: 'BAN', expiryDate: '2029-01-01' }, // 2029
-        { restrictionType: 'BAN', expiryDate: null }, // permanent
-      ] as Visitor['visitorRestrictions'],
-      { banned: true },
-    ],
-    [
-      'Banned visitors, one with expiry, one without (duplicate, reversed order)',
-      [
-        { restrictionType: 'BAN', expiryDate: null }, // permanent
-        { restrictionType: 'BAN', expiryDate: '2029-01-01' }, // 2029
-      ] as Visitor['visitorRestrictions'],
-      { banned: true },
-    ],
-  ])(
-    '%s - %s - %s',
-    (_: string, restrictions: Visitor['visitorRestrictions'], expected: { banned: boolean; expiryDate?: string }) => {
-      expect(getVisitorAvailability(restrictions)).toStrictEqual(expected)
-    },
-  )
-})
-
-describe('getVisitorAvailabilityDescription', () => {
-  it.each([
-    ['No banned visitor', [], { text: 'Yes', class: '' }],
-    [
-      'Banned visitor, no expiry',
-      [{ restrictionType: 'BAN', expiryDate: null }] as Visitor['visitorRestrictions'], // permanent
-      { text: 'Banned', class: 'warning' },
-    ],
-    [
-      'Banned visitor, with expiry',
-      [
-        { restrictionType: 'BAN', expiryDate: '2030-01-01' }, // 2030
-      ] as Visitor['visitorRestrictions'],
-      { text: 'Banned until 1 January 2030', class: 'warning' },
-    ],
-  ])(
-    '%s - %s - %s',
-    (_: string, restrictions: Visitor['visitorRestrictions'], expected: { text: string; class: string }) => {
-      expect(getVisitorAvailabilityDescription(restrictions)).toStrictEqual(expected)
-    },
-  )
-})
-
-describe('splitVisitorList', () => {
-  const policyNoticeDaysMax = 30
-
-  const visitor1 = TestData.visitor() // not banned
-  const visitor2 = TestData.visitor({ visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-01-14' }] }) // expiring ban (before max booking window)
-  const visitor3 = TestData.visitor({ visitorRestrictions: [{ restrictionType: 'BAN' }] }) // permanently banned
-  const visitor4 = TestData.visitor({ visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-05-01' }] }) // expiring ban (after max booking window)
-
-  const fakeDate = new Date('2025-01-01')
-
-  beforeEach(() => {
-    jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
-  })
-
-  afterEach(() => {
-    jest.resetAllMocks()
-    jest.useRealTimers()
-  })
-
-  it('should return one eligible visitor [no ban]', async () => {
-    const eligibleVisitors: Visitor[] = [{ ...visitor1, eligible: true, banned: false, banExpiryDate: undefined }]
-    const ineligibleVisitors: Visitor[] = []
-
-    const visitors = [visitor1]
-
-    const expected = {
-      eligibleVisitors,
-      ineligibleVisitors,
-    }
-    const results = splitVisitorList(visitors, policyNoticeDaysMax)
-
-    expect(results).toStrictEqual(expected)
-  })
-
-  it('should return one eligible visitor [expiring ban, within maxBookingWindow]', async () => {
-    const eligibleVisitors: Visitor[] = [
-      { ...visitor2, eligible: true, banned: true, banExpiryDate: visitor2.visitorRestrictions[0].expiryDate },
-    ]
-    const ineligibleVisitors: Visitor[] = []
-
-    const visitors = [visitor2]
-
-    const expected = {
-      eligibleVisitors,
-      ineligibleVisitors,
-    }
-    const results = splitVisitorList(visitors, policyNoticeDaysMax)
-
-    expect(results).toStrictEqual(expected)
-  })
-
-  it('should return one ineligible visitor [permanent ban]', async () => {
-    const eligibleVisitors: Visitor[] = []
-    const ineligibleVisitors: Visitor[] = [{ ...visitor3, eligible: false, banned: true, banExpiryDate: undefined }]
-
-    const visitors = [visitor3]
-
-    const expected = {
-      eligibleVisitors,
-      ineligibleVisitors,
-    }
-    const results = splitVisitorList(visitors, policyNoticeDaysMax)
-
-    expect(results).toStrictEqual(expected)
-  })
-
-  it('should return one ineligible visitor [expiring ban, after maxBookingWindow]', async () => {
-    const eligibleVisitors: Visitor[] = []
-    const ineligibleVisitors: Visitor[] = [
-      { ...visitor4, banned: true, eligible: false, banExpiryDate: visitor4.visitorRestrictions[0].expiryDate },
+describe('buildVisitorsTableRows', () => {
+  it('should build visitor table rows for visitors listing page', () => {
+    const visitors = [
+      // No ban
+      TestData.visitor({ firstName: 'Visitor', lastName: 'One', dateOfBirth: '2000-08-01', banned: false }),
+      // Indefinite ban
+      TestData.visitor({ firstName: 'Visitor', lastName: 'Two', dateOfBirth: '2000-08-02', banned: true }),
+      // Ban with an expiry date
+      TestData.visitor({
+        firstName: 'Visitor',
+        lastName: 'Three',
+        dateOfBirth: '2000-08-03',
+        banned: true,
+        banExpiryDate: '2025-09-01',
+      }),
     ]
 
-    const visitors = [visitor4]
-
-    const expected = {
-      eligibleVisitors,
-      ineligibleVisitors,
-    }
-    const results = splitVisitorList(visitors, policyNoticeDaysMax)
-
-    expect(results).toStrictEqual(expected)
-  })
-
-  it('should correctly deal with all 4 visitor types', async () => {
-    const eligibleVisitors: Visitor[] = [
-      { ...visitor1, eligible: true, banned: false, banExpiryDate: undefined },
-      { ...visitor2, eligible: true, banned: true, banExpiryDate: visitor2.visitorRestrictions[0].expiryDate },
+    const expectedTableRows: GOVUKTableRow[] = [
+      [
+        { text: 'Visitor One', attributes: { 'data-test': 'visitor-name-0' } },
+        { text: '1 August 2000', attributes: { 'data-test': 'visitor-dob-0' } },
+        { text: 'Yes', classes: '', attributes: { 'data-test': 'visitor-availability-0' } },
+      ],
+      [
+        { text: 'Visitor Two', attributes: { 'data-test': 'visitor-name-1' } },
+        { text: '2 August 2000', attributes: { 'data-test': 'visitor-dob-1' } },
+        { text: 'Banned', classes: 'warning', attributes: { 'data-test': 'visitor-availability-1' } },
+      ],
+      [
+        { text: 'Visitor Three', attributes: { 'data-test': 'visitor-name-2' } },
+        { text: '3 August 2000', attributes: { 'data-test': 'visitor-dob-2' } },
+        {
+          text: 'Banned until 1 September 2025',
+          classes: 'warning',
+          attributes: { 'data-test': 'visitor-availability-2' },
+        },
+      ],
     ]
-    const ineligibleVisitors: Visitor[] = [
-      { ...visitor3, eligible: false, banned: true, banExpiryDate: undefined },
-      { ...visitor4, eligible: false, banned: true, banExpiryDate: visitor4.visitorRestrictions[0].expiryDate },
-    ]
-    const visitors = [visitor1, visitor2, visitor3, visitor4]
-    const expected = {
-      eligibleVisitors,
-      ineligibleVisitors,
-    }
-    const results = splitVisitorList(visitors, policyNoticeDaysMax)
 
-    expect(results).toStrictEqual(expected)
+    expect(buildVisitorsTableRows(visitors)).toStrictEqual(expectedTableRows)
   })
 })

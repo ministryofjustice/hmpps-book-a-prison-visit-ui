@@ -1,5 +1,5 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
-import BookerService, { Prisoner, Visitor, VisitorsByEligibility } from './bookerService'
+import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
@@ -235,19 +235,55 @@ describe('Booker service', () => {
   })
 
   describe('getVisitors', () => {
-    it('should return visitors for the given booker reference and prisoner number, with sequential display ID and adult (boolean) added', async () => {
+    it('should return visitors for the given booker reference and prisoner number, with sequential display ID', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
-      const visitorInfoDtos = [
-        TestData.visitorInfoDto({ visitorId: 100, dateOfBirth: '2000-01-01' }), // an adult
-        TestData.visitorInfoDto({ visitorId: 200, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
-      ]
-      const expectedVisitors: Visitor[] = [
-        { ...visitorInfoDtos[0], visitorDisplayId: 'uuidv4-1', adult: true },
-        { ...visitorInfoDtos[1], visitorDisplayId: 'uuidv4-2', adult: false },
-      ]
 
+      const visitorInfoDtos = [
+        TestData.visitorInfoDto({ visitorId: 1, dateOfBirth: '2000-01-01' }), // an adult
+        TestData.visitorInfoDto({ visitorId: 2, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
+        // with a ban with expiry date
+        TestData.visitorInfoDto({
+          visitorId: 3,
+          dateOfBirth: '2000-01-01',
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-07-01' }],
+        }),
+        // with a ban with no expiry date
+        TestData.visitorInfoDto({
+          visitorId: 4,
+          dateOfBirth: '2000-01-01',
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
+        }),
+      ]
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const expectedVisitors: Visitor[] = [
+        {
+          ...TestData.visitor(visitorInfoDtos[0]),
+          visitorDisplayId: 'uuidv4-1',
+          adult: true,
+          banned: false,
+        },
+        {
+          ...TestData.visitor(visitorInfoDtos[1]),
+          visitorDisplayId: 'uuidv4-2',
+          adult: false,
+          banned: false,
+        },
+        {
+          ...TestData.visitor(visitorInfoDtos[2]),
+          visitorDisplayId: 'uuidv4-3',
+          adult: true,
+          banned: true,
+          banExpiryDate: '2025-07-01',
+        },
+        {
+          ...TestData.visitor(visitorInfoDtos[3]),
+          visitorDisplayId: 'uuidv4-4',
+          adult: true,
+          banned: true,
+        },
+      ]
 
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
 
@@ -257,43 +293,63 @@ describe('Booker service', () => {
   })
 
   describe('getVisitorsByEligibility', () => {
-    it('should return two visitor arrays (eligibile and ineligible) for the given bookerReference, prisonerNumber and policyNoticeDaysMax (maximum booking window for prison)', async () => {
+    const fakeDate = new Date('2025-01-01T09:00:00')
+    const policyNoticeDaysMax = 28
+
+    beforeEach(() => {
+      jest.useFakeTimers({ now: fakeDate })
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('should return visitors split by eligibility for booking (determined by BAN dates and booking window)', async () => {
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+
       const visitorInfoDtos = [
-        TestData.visitorInfoDto({ visitorId: 100 }),
-        TestData.visitorInfoDto({ visitorId: 200, visitorRestrictions: [{ restrictionType: 'BAN' }] }),
+        // No ban (eligible)
+        TestData.visitorInfoDto({ firstName: 'Visitor', lastName: 'One', dateOfBirth: '2000-08-01' }),
+        // Indefinite ban (ineligible)
+        TestData.visitorInfoDto({
+          firstName: 'Visitor',
+          lastName: 'Two',
+          dateOfBirth: '2000-08-02',
+          visitorRestrictions: [{ restrictionType: 'BAN' }],
+        }),
+        // Ban with an expiry date WITHIN booking window (eligible)
+        TestData.visitorInfoDto({
+          firstName: 'Visitor',
+          lastName: 'Three',
+          dateOfBirth: '2000-08-03',
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-01-29' }], // expires on last day of booking window
+        }),
+        // Ban with an expiry date BEYOND booking window (ineligible)
+        TestData.visitorInfoDto({
+          firstName: 'Visitor',
+          lastName: 'Four',
+          dateOfBirth: '2000-08-04',
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-01-30' }], // expires day after booking window
+        }),
       ]
-
-      const visitorArrays: VisitorsByEligibility = {
-        eligibleVisitors: [
-          {
-            ...visitorInfoDtos[0],
-            visitorDisplayId: 'uuidv4-1',
-            adult: true,
-            eligible: true,
-            banned: false,
-            banExpiryDate: undefined,
-          },
-        ],
-        ineligibleVisitors: [
-          {
-            ...visitorInfoDtos[1],
-            visitorDisplayId: 'uuidv4-2',
-            adult: true,
-            eligible: false,
-            banned: true,
-            banExpiryDate: undefined,
-          },
-        ],
-      }
-
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
-      const results = await bookerService.getVisitorsByEligibility(bookerReference.value, prisonerNumber, 60)
+      const results = await bookerService.getVisitorsByEligibility(
+        bookerReference.value,
+        prisonerNumber,
+        policyNoticeDaysMax,
+      )
+
+      expect(results.eligibleVisitors.length).toBe(2)
+      expect(results.ineligibleVisitors.length).toBe(2)
+
+      expect(results.eligibleVisitors[0].lastName).toBe('One')
+      expect(results.eligibleVisitors[1].lastName).toBe('Three')
+      expect(results.ineligibleVisitors[0].lastName).toBe('Two')
+      expect(results.ineligibleVisitors[1].lastName).toBe('Four')
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
-      expect(results).toStrictEqual(visitorArrays)
     })
   })
 })

@@ -54,9 +54,9 @@ describe('Visitors page', () => {
         expect($('h1').text()).toBe('Visitors')
 
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
-        expect($('[data-test="visitor-name-1"]').text()).toBe('Joan Phillips')
-        expect($('[data-test="visitor-dob-1"]').text()).toBe('21 February 1980')
-        expect($('[data-test="visitor-availability-1"]').text()).toBe('Yes')
+        expect($('[data-test="visitor-name-0"]').text()).toBe('Joan Phillips')
+        expect($('[data-test="visitor-dob-0"]').text()).toBe('21 February 1980')
+        expect($('[data-test="visitor-availability-0"]').text()).toBe('Yes')
         expect($('[data-test=no-visitors]').length).toBe(0)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
