@@ -48,10 +48,10 @@
             {%- endset %}
 
             {% set visitorHintHtml -%}
-              <p class='secondary-text govuk-!-margin-bottom-0'>
+              <p class="secondary-text govuk-!-margin-bottom-0">
                 {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
               </p>
-              <p class='secondary-text'>If they are selected as a visitor, the visit must be on or after this date.</p>
+              <p class="secondary-text">If they are selected as a visitor, the visit must be on or after this date.</p>
             {%- endset %}
 
             {% set visitorList = (visitorList.push({
