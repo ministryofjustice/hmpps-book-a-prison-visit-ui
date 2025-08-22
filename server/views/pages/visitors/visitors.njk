@@ -15,34 +15,7 @@
         <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>’s visitors
       </h2>
 
-      {% if visitors | length %}
-
-        {% set displayRows = [] %}
-
-        {% for visitor in visitors %}
-          {% set displayRows = (displayRows.push([
-            {
-              text: visitor.firstName + " " + visitor.lastName,
-              attributes: {
-                "data-test": "visitor-name-" + loop.index
-              }
-            },
-            { 
-              text: visitor.dateOfBirth | formatDate,
-              attributes: {
-                "data-test": "visitor-dob-" + loop.index
-              }
-            },
-            {
-              text: visitor.canVisitorBook.text,
-              classes: visitor.canVisitorBook.class,
-              attributes: {
-                "data-test": "visitor-availability-" + loop.index
-              }
-            }
-          ]), displayRows)%}
-        {% endfor %}
-       
+      {% if visitorsTableRows | length %}
         {{ govukTable({
           firstCellIsHeader: false,
           head: [
@@ -56,9 +29,8 @@
               text: "Can you book a visit for them?"
             }
           ],
-          rows: displayRows
+          rows: visitorsTableRows
         }) }}
-
       {% else %}
         {{ govukWarningText({
           text: "No visitors are currently approved.",

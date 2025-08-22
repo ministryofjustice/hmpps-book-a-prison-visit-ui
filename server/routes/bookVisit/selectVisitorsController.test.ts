@@ -100,7 +100,6 @@ const visitor9 = TestData.visitor({
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
   adult: false,
-  eligible: false,
   banExpiryDate: '2025-05-02', // 1 year after currently faked date
 })
 const eligibleVisitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8]

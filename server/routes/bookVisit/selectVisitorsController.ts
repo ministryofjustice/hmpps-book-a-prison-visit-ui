@@ -18,13 +18,13 @@ export default class SelectVisitorsController {
 
       if (!bookingJourney.prison) {
         bookingJourney.prison = await this.prisonService.getPrison(bookingJourney.prisoner.prisonId)
-        const visitorsByStatus = await this.bookerService.getVisitorsByEligibility(
+        const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility(
           booker.reference,
           booker.prisoners[0].prisonerNumber,
           bookingJourney.prison.policyNoticeDaysMax,
         )
-        bookingJourney.eligibleVisitors = visitorsByStatus.eligibleVisitors
-        bookingJourney.ineligibleVisitors = visitorsByStatus.ineligibleVisitors
+        bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
+        bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
       }
 
       const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)

@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto'
 import { TooManyRequests } from 'http-errors'
+import { differenceInDays } from 'date-fns'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import {
@@ -7,13 +8,11 @@ import {
   BookerPrisonerValidationErrorResponse,
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
-  VisitorInfoDto,
 } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
 
 import { isAdult } from '../utils/utils'
-import { splitVisitorList } from '../routes/visitors/visitorsUtils'
 
 export type Prisoner = {
   prisonerDisplayId: string
@@ -29,11 +28,14 @@ export type Prisoner = {
   convictedStatus?: ConvictedStatus
 }
 
-export interface Visitor extends VisitorInfoDto {
+export type Visitor = {
   visitorDisplayId: string
+  visitorId: number
+  firstName: string
+  lastName: string
+  dateOfBirth: string
   adult: boolean
-  eligible?: boolean
-  banned?: boolean
+  banned: boolean
   banExpiryDate?: string
 }
 
@@ -140,9 +142,16 @@ export default class BookerService {
 
     return visitors.map(visitor => {
       return {
-        ...visitor,
         visitorDisplayId: randomUUID(),
+        visitorId: visitor.visitorId,
+        firstName: visitor.firstName,
+        lastName: visitor.lastName,
+        dateOfBirth: visitor.dateOfBirth ?? '',
         adult: isAdult(visitor.dateOfBirth),
+        // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs
+        banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
+        banExpiryDate: visitor.visitorRestrictions.find(restriction => restriction.restrictionType === 'BAN')
+          ?.expiryDate,
       }
     })
   }
@@ -152,7 +161,27 @@ export default class BookerService {
     prisonerNumber: string,
     policyNoticeDaysMax: number,
   ): Promise<VisitorsByEligibility> {
-    const allVisitors = await this.getVisitors(bookerReference, prisonerNumber)
-    return splitVisitorList(allVisitors, policyNoticeDaysMax)
+    const eligibleVisitors: Visitor[] = []
+    const ineligibleVisitors: Visitor[] = []
+
+    const visitors = await this.getVisitors(bookerReference, prisonerNumber)
+
+    const today = new Date()
+    visitors.forEach(visitor => {
+      let eligible = !visitor.banned
+
+      if (visitor.banned && visitor.banExpiryDate) {
+        const daysUntilBanExpires = differenceInDays(visitor.banExpiryDate, today)
+        eligible = daysUntilBanExpires < policyNoticeDaysMax
+      }
+
+      if (eligible) {
+        eligibleVisitors.push(visitor)
+      } else {
+        ineligibleVisitors.push(visitor)
+      }
+    })
+
+    return { eligibleVisitors, ineligibleVisitors }
   }
 }

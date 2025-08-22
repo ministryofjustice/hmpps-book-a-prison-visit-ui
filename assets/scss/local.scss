@@ -24,6 +24,6 @@
   color: govuk-colour("red");
 }
 
-.banned-hint { // using colour from govuk-hint
-  color: govuk-colour("dark-grey"); 
+.secondary-text {
+  color: $govuk-secondary-text-colour
 }

@@ -48,10 +48,10 @@
             {%- endset %}
 
             {% set visitorHintHtml -%}
-              <p class='banned-hint govuk-!-margin-bottom-0'>
+              <p class="secondary-text govuk-!-margin-bottom-0">
                 {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
               </p>
-              <p class='banned-hint'>If they are selected as a visitor, the visit must be on or after this date.</p>
+              <p class="secondary-text">If they are selected as a visitor, the visit must be on or after this date.</p>
             {%- endset %}
 
             {% set visitorList = (visitorList.push({
@@ -93,11 +93,11 @@
                 {{- visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}) {{ bannedTagHtml -}}
               </p>
               {% if visitor.banExpiryDate %}
-                <p data-test="ban-expiry-{{ loop.index }}" class="banned-hint govuk-!-margin-bottom-0">
+                <p data-test="ban-expiry-{{ loop.index }}" class="secondary-text govuk-!-margin-bottom-0">
                   {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
                 </p>
               {% endif %}
-              <p class="banned-hint">You cannot currently book for this visitor.</p>
+              <p class="secondary-text">You cannot currently book for this visitor.</p>
             {% endfor %}
           {% endif %}
 

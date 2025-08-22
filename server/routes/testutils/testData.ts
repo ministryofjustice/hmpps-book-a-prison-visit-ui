@@ -315,9 +315,8 @@ export default class TestData {
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-    visitorRestrictions = [],
     adult = true,
-    eligible = true,
+    banned = false,
     banExpiryDate,
   }: Partial<Visitor> = {}): Visitor => ({
     visitorDisplayId,
@@ -325,9 +324,8 @@ export default class TestData {
     lastName,
     firstName,
     dateOfBirth,
-    visitorRestrictions,
     adult,
-    eligible,
+    banned,
     banExpiryDate,
   })
 }

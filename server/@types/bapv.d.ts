@@ -78,6 +78,13 @@ export type CannotBookReason =
 
 export type FlashFormValues = Record<string, unknown>
 
+export type GOVUKTableRow = GOVUKTableRowItem[]
+
+type GOVUKTableRowItem = TextOrHtml & {
+  classes?: string
+  attributes?: { 'data-test': string }
+}
+
 export type MoJAlert = {
   variant: 'information' | 'success' | 'warning' | 'error'
   title: string

@@ -38,10 +38,10 @@ context('Visitors page', () => {
 
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.prisonerName().contains('John Smith')
-    visitorsPage.visitorName(1).contains('Joan Phillips')
-    visitorsPage.visitorDateOfBirth(1).contains('21 February 1980')
-    visitorsPage.visitorName(2).contains('Keith Richards')
-    visitorsPage.visitorDateOfBirth(2).contains('5 May 1990')
+    visitorsPage.visitorName(0).contains('Joan Phillips')
+    visitorsPage.visitorDateOfBirth(0).contains('21 February 1980')
+    visitorsPage.visitorName(1).contains('Keith Richards')
+    visitorsPage.visitorDateOfBirth(1).contains('5 May 1990')
   })
 
   it('should not show a banned visitor on booking journey Select visitors page', () => {
