@@ -45,9 +45,10 @@
           errorMessage: errors | findError('lastName')
         }) }}
 
-        {% set prisonerDobError = errors | findError('prisonerDob') %}
+        {% set prisonerDobError = errors | findError('prisonerDob-day') %}
         {{ govukDateInput({
           id: "prisonerDob",
+          namePrefix: "prisonerDob",
           fieldset: {
             legend: {
               text: "Date of birth"
@@ -61,19 +62,19 @@
               name: "day",
               classes: "govuk-input--width-2" + (" govuk-input--error" if prisonerDobError),
               autocomplete: "off",
-              value: formValues.day
+              value: formValues['prisonerDob-day']
             },
             {
               name: "month",
               classes: "govuk-input--width-2" + (" govuk-input--error" if prisonerDobError),
               autocomplete: "off",
-              value: formValues.month
+              value: formValues['prisonerDob-month']
             },
             {
               name: "year",
               classes: "govuk-input--width-4" + (" govuk-input--error" if prisonerDobError),
               autocomplete: "off",
-              value: formValues.year
+              value: formValues['prisonerDob-year']
             }
           ],
           errorMessage: prisonerDobError

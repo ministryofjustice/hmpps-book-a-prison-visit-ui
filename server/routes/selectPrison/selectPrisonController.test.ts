@@ -77,7 +77,7 @@ describe('Select a prison', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-error-summary a[href="#prisonId-error"]').text()).toBe('No prison selected')
+          expect($('.govuk-error-summary a[href="#prisonId"]').text()).toBe('No prison selected')
           expect($('#prisonId-error').text()).toContain('No prison selected')
         })
     })

@@ -83,7 +83,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     return Object.keys(errors).map(error => {
       return {
         text: errors[error].msg,
-        href: errors[error].path ? `#${errors[error].path}-error` : undefined,
+        href: errors[error].path ? `#${errors[error].path}` : undefined,
       }
     })
   })

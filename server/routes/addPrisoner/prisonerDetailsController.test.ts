@@ -9,6 +9,7 @@ import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetu
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockBookerService } from '../../services/testutils/mocks'
+import { AddPrisonerJourney, FlashFormValues } from '../../@types/bapv'
 
 let app: Express
 
@@ -56,9 +57,9 @@ describe('Prisoner details', () => {
           expect($('form[method=POST]').attr('action')).toBe(paths.ADD_PRISONER.DETAILS)
           expect($('input[name=firstName]').length).toBe(1)
           expect($('input[name=lastName]').length).toBe(1)
-          expect($('input[name=day]').length).toBe(1)
-          expect($('input[name=month]').length).toBe(1)
-          expect($('input[name=year]').length).toBe(1)
+          expect($('input[name=prisonerDob-day]').length).toBe(1)
+          expect($('input[name=prisonerDob-month]').length).toBe(1)
+          expect($('input[name=prisonerDob-year]').length).toBe(1)
           expect($('input[name=prisonNumber]').length).toBe(1)
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
         })
@@ -68,9 +69,9 @@ describe('Prisoner details', () => {
       sessionData.addPrisonerJourney.prisonerDetails = {
         firstName: 'first',
         lastName: 'last',
-        day: '1',
-        month: '2',
-        year: '2000',
+        'prisonerDob-day': '1',
+        'prisonerDob-month': '2',
+        'prisonerDob-year': '2000',
         prisonNumber: 'A1234BC',
       }
 
@@ -81,9 +82,9 @@ describe('Prisoner details', () => {
           const $ = cheerio.load(res.text)
           expect($('input[name=firstName]').val()).toBe('first')
           expect($('input[name=lastName]').val()).toBe('last')
-          expect($('input[name=day]').val()).toBe('1')
-          expect($('input[name=month]').val()).toBe('2')
-          expect($('input[name=year]').val()).toBe('2000')
+          expect($('input[name=prisonerDob-day]').val()).toBe('1')
+          expect($('input[name=prisonerDob-month]').val()).toBe('2')
+          expect($('input[name=prisonerDob-year]').val()).toBe('2000')
           expect($('input[name=prisonNumber]').val()).toBe('A1234BC')
         })
     })
@@ -91,7 +92,7 @@ describe('Prisoner details', () => {
     it('should pre-populate with data in formValues overriding that in session', () => {
       sessionData.addPrisonerJourney.prisonerDetails = {
         firstName: 'first-session',
-      }
+      } as AddPrisonerJourney['prisonerDetails']
 
       const formValues = {
         firstName: 'first-form-values',
@@ -123,7 +124,7 @@ describe('Prisoner details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-error-summary a[href="#firstName-error"]').text()).toBe('Enter a first name')
+          expect($('.govuk-error-summary a[href="#firstName"]').text()).toBe('Enter a first name')
           expect($('#firstName-error').text()).toContain('Enter a first name')
         })
     })
@@ -131,12 +132,12 @@ describe('Prisoner details', () => {
 
   describe(`POST ${paths.ADD_PRISONER.DETAILS}`, () => {
     const bookerReference = TestData.bookerReference().value
-    const prisonerDetails = {
+    const prisonerDetails: AddPrisonerJourney['prisonerDetails'] = {
       firstName: 'John',
       lastName: 'Smith',
-      day: '2',
-      month: '4',
-      year: '1975',
+      'prisonerDob-day': '2',
+      'prisonerDob-month': '4',
+      'prisonerDob-year': '1975',
       prisonNumber: 'A1234BC',
     } as const
     const registerPrisonerDto = TestData.registerPrisonerForBookerDto()
@@ -200,16 +201,34 @@ describe('Prisoner details', () => {
         expectedFlashErrors = [
           { type: 'field', location: 'body', path: 'firstName', value: '', msg: 'Enter a first name' },
           { type: 'field', location: 'body', path: 'lastName', value: '', msg: 'Enter a last name' },
-          { type: 'field', location: 'body', path: 'prisonerDob', value: 'NaN-NaN-NaN', msg: 'Enter a date of birth' },
+          {
+            type: 'field',
+            location: 'body',
+            path: 'prisonerDob-day',
+            value: '',
+            msg: 'Enter a date of birth',
+          },
           { type: 'field', location: 'body', path: 'prisonNumber', value: '', msg: 'Enter a prison number' },
         ]
 
+        const expectedFlashFormValues: FlashFormValues = {
+          firstName: '',
+          lastName: '',
+          prisonerDob: 'NaN-NaN-NaN',
+          'prisonerDob-day': '',
+          'prisonerDob-month': '',
+          'prisonerDob-year': '',
+          prisonNumber: '',
+        }
+
         return request(app)
           .post(paths.ADD_PRISONER.DETAILS)
+          .send({})
           .expect(302)
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
           })
       })
 
@@ -218,19 +237,24 @@ describe('Prisoner details', () => {
           {
             type: 'field',
             location: 'body',
-            path: 'prisonerDob',
-            value: '1975-04-NaN',
+            path: 'prisonerDob-day',
+            value: '',
             msg: 'Enter a date of birth and include a day, month and year',
           },
         ]
 
         return request(app)
           .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, day: '' })
+          .send({ ...prisonerDetails, 'prisonerDob-day': '' })
           .expect(302)
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', {
+              ...prisonerDetails,
+              prisonerDob: '1975-04-NaN',
+              'prisonerDob-day': '',
+            })
           })
       })
 
@@ -239,46 +263,58 @@ describe('Prisoner details', () => {
           {
             type: 'field',
             location: 'body',
-            path: 'prisonerDob',
-            value: '1975-13-02',
+            path: 'prisonerDob-day',
+            value: '2',
             msg: 'Date of birth must be a real date',
           },
         ]
 
         return request(app)
           .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, month: '13' })
+          .send({ ...prisonerDetails, 'prisonerDob-month': '13' })
           .expect(302)
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', {
+              ...prisonerDetails,
+              prisonerDob: '1975-13-02',
+              'prisonerDob-month': '13',
+            })
           })
       })
 
       it('should set validation error for date of birth in the future', () => {
         const tomorrow = addDays(new Date(), 1)
-        const day = tomorrow.getDate()
-        const month = tomorrow.getMonth() + 1
-        const year = tomorrow.getFullYear()
-        const dobValue = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+        const day = tomorrow.getDate().toString()
+        const month = (tomorrow.getMonth() + 1).toString()
+        const year = tomorrow.getFullYear().toString()
+        const prisonerDob = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 
         expectedFlashErrors = [
           {
             type: 'field',
             location: 'body',
-            path: 'prisonerDob',
-            value: dobValue,
+            path: 'prisonerDob-day',
+            value: day,
             msg: 'Date of birth must be in the past',
           },
         ]
 
         return request(app)
           .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, day, month, year })
+          .send({ ...prisonerDetails, 'prisonerDob-day': day, 'prisonerDob-month': month, 'prisonerDob-year': year })
           .expect(302)
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', {
+              ...prisonerDetails,
+              prisonerDob,
+              'prisonerDob-day': day,
+              'prisonerDob-month': month,
+              'prisonerDob-year': year,
+            })
           })
       })
 
@@ -300,6 +336,11 @@ describe('Prisoner details', () => {
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', {
+              ...prisonerDetails,
+              prisonerDob: '1975-04-02',
+              prisonNumber: 'A1234',
+            })
           })
       })
 
@@ -321,6 +362,11 @@ describe('Prisoner details', () => {
           .expect('Location', paths.ADD_PRISONER.DETAILS)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', {
+              ...prisonerDetails,
+              prisonerDob: '1975-04-02',
+              prisonNumber: '1234567',
+            })
           })
       })
     })

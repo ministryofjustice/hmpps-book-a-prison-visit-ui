@@ -11,7 +11,14 @@ export type Booker = {
 export type AddPrisonerJourney = {
   supportedPrisons: PrisonRegisterPrisonDto[]
   selectedPrison?: PrisonRegisterPrisonDto
-  prisonerDetails?: Record<string, string>
+  prisonerDetails?: {
+    firstName: string
+    lastName: string
+    'prisonerDob-day': string
+    'prisonerDob-month': string
+    'prisonerDob-year': string
+    prisonNumber: string
+  }
   result?: boolean
 }
 

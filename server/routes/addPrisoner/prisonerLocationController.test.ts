@@ -62,7 +62,7 @@ describe('Prisoner location', () => {
 
     it('should pre-populate prison choice if selected prison set in session', () => {
       const selectedPrison = TestData.prisonRegisterPrisonDto()
-      const prisonerDetails = { some: 'data' }
+      const prisonerDetails = { firstName: 'name' } as AddPrisonerJourney['prisonerDetails']
       sessionData.addPrisonerJourney = {
         supportedPrisons: undefined,
         selectedPrison,
@@ -102,7 +102,7 @@ describe('Prisoner location', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-error-summary a[href="#prisonId-error"]').text()).toBe('Select a prison')
+          expect($('.govuk-error-summary a[href="#prisonId"]').text()).toBe('Select a prison')
           expect($('#prisonId-error').text()).toContain('Select a prison')
         })
     })
