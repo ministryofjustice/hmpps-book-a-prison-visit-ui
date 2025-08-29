@@ -100,7 +100,7 @@ describe('Cookies page', () => {
           expect($('title').text()).toMatch(/^Error: Cookies -/)
           expect($('h1').text()).toBe('Cookies')
 
-          expect($('.govuk-error-summary a[href="#acceptAnalytics-error"]').text()).toBe('No answer selected')
+          expect($('.govuk-error-summary a[href="#acceptAnalytics"]').text()).toBe('No answer selected')
           expect($('#acceptAnalytics-error').text()).toContain('No answer selected')
         })
     })

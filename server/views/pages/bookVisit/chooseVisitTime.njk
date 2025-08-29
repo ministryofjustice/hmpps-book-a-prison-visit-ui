@@ -95,8 +95,7 @@
         {% endfor %}
       </nav>
 
-      {# if errors, add error ID so anchor link from error summary works #}
-      <form action="{{ paths.BOOK_VISIT.CHOOSE_TIME }}" method="POST" novalidate {% if errors | length%}id="visitSession-error"{% endif %} class="disable-button-on-submit">
+      <form action="{{ paths.BOOK_VISIT.CHOOSE_TIME }}" method="POST" novalidate class="disable-button-on-submit">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {# Build radio visit session items from months/dates/sessions data #}
@@ -137,7 +136,7 @@
                   classes: "govuk-visually-hidden"
                 },
                 items: visitSessionItems,
-                errorMessage: errors | findError('visitSession')
+                errorMessage: errors | findError('date-' + firstSessionDate)
               }) }}
             {% endif %}
           {% endfor %}

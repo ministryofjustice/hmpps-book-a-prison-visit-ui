@@ -68,6 +68,7 @@ export default class ChooseVisitTimeController {
         formValues,
         messages,
         calendar,
+        firstSessionDate,
         selectedDate,
         prisoner,
         bannedVisitors,
@@ -78,17 +79,24 @@ export default class ChooseVisitTimeController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
+      const { booker, bookingJourney } = req.session
+
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
+        // need to update the path in error obj to match ID of first radio input
+        // so ErrorSummary link works correctly
+        const errorsArray = errors.array()
+        if (errorsArray[0].type === 'field') {
+          errorsArray[0].path = `date-${bookingJourney.allVisitSessions[0]?.sessionDate}`
+        }
+
+        req.flash('errors', errorsArray)
         return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
       }
       const { visitSession } = matchedData<{ visitSession: string }>(req)
       const visitSessionSplit = visitSession.split('_')
       const selectedSessionDate = visitSessionSplit[0]
       const selectedSessionTemplateReference = visitSessionSplit[1]
-
-      const { booker, bookingJourney } = req.session
 
       const selectedVisitSession = bookingJourney.allVisitSessions.find(
         session =>

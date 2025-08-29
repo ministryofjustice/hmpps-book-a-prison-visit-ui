@@ -339,7 +339,7 @@ describe('Choose visit time', () => {
       const validationError: FieldValidationError = {
         type: 'field',
         location: 'body',
-        path: 'visitSession',
+        path: `date-${firstSessionDate}`,
         value: [],
         msg: 'No visit time selected',
       }
@@ -352,8 +352,8 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Error: Choose the visit time -/)
-          expect($('.govuk-error-summary a[href="#visitSession-error"]').text()).toBe('No visit time selected')
-          expect($('#visitSession-error').text()).toContain('No visit time selected')
+          expect($(`.govuk-error-summary a[href="#date-${firstSessionDate}"]`).text()).toBe('No visit time selected')
+          expect($(`#date-${firstSessionDate}-error`).text()).toContain('No visit time selected')
         })
     })
   })
@@ -491,7 +491,13 @@ describe('Choose visit time', () => {
 
     describe('Validation errors', () => {
       const expectedFlashErrors: FieldValidationError[] = [
-        { type: 'field', location: 'body', path: 'visitSession', value: undefined, msg: 'No visit time selected' },
+        {
+          type: 'field',
+          location: 'body',
+          path: `date-${firstSessionDate}`,
+          value: undefined,
+          msg: 'No visit time selected',
+        },
       ]
 
       it('should set a validation error and redirect to original page when no visit time selected', () => {

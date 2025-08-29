@@ -173,9 +173,7 @@ describe('Additional support needs', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('.govuk-error-summary a[href="#additionalSupport-error"]').text()).toBe(
-            'Enter details of the request',
-          )
+          expect($('.govuk-error-summary a[href="#additionalSupport"]').text()).toBe('Enter details of the request')
           expect($('#additionalSupport-error').text()).toContain('Enter details of the request')
         })
     })

@@ -265,7 +265,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Error: Who is going on the visit\? -/)
-          expect($('.govuk-error-summary a[href="#visitorDisplayIds-error"]').text()).toBe('No visitors selected')
+          expect($('.govuk-error-summary a[href="#visitorDisplayIds"]').text()).toBe('No visitors selected')
           expect($('#visitorDisplayIds-error').text()).toContain('No visitors selected')
         })
     })

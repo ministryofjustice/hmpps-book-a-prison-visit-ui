@@ -64,8 +64,8 @@ describe('Nunjucks Filters', () => {
         { msg: 'Field 2 message', path: 'field2' },
       ]
       const expectedResult = [
-        { text: 'Field 1 message', href: '#field1-error' },
-        { text: 'Field 2 message', href: '#field2-error' },
+        { text: 'Field 1 message', href: '#field1' },
+        { text: 'Field 2 message', href: '#field2' },
       ]
 
       const result = njk.getFilter('errorSummaryList')(errors)

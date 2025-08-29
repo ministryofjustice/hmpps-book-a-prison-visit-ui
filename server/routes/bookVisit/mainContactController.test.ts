@@ -153,7 +153,7 @@ describe('Main contact', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Error: Who is the main contact for this booking\? -/)
-          expect($('.govuk-error-summary a[href=#contact-error]').text()).toBe('No main contact selected')
+          expect($('.govuk-error-summary a[href=#contact]').text()).toBe('No main contact selected')
           expect($('#contact-error').text()).toContain('No main contact selected')
         })
     })

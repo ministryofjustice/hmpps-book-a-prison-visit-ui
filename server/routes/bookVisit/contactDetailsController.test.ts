@@ -146,8 +146,8 @@ describe('Contact details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Error: Contact details -/)
-          expect($('.govuk-error-summary a[href=#mainContactEmail-error]').text()).toBe('Enter a valid email')
-          expect($('.govuk-error-summary a[href=#mainContactPhone-error]').text()).toBe('Enter a phone number')
+          expect($('.govuk-error-summary a[href=#mainContactEmail]').text()).toBe('Enter a valid email')
+          expect($('.govuk-error-summary a[href=#mainContactPhone]').text()).toBe('Enter a phone number')
           expect($('#mainContactEmail-error').text()).toContain('Enter a valid email')
           expect($('#mainContactPhone-error').text()).toContain('Enter a phone number')
         })
