@@ -187,14 +187,14 @@ describe('Contact details', () => {
         })
     })
 
-    it('should clear existing email and phone from session when not checked, update application and redirect to check visit details page', () => {
+    it('should clear existing email from session when email not checked, update application and redirect to check visit details page', () => {
       sessionData.bookingJourney.mainContactEmail = 'existing-email'
       sessionData.bookingJourney.mainContactPhone = 'existing-phone'
 
       return request(app)
         .post(paths.BOOK_VISIT.CONTACT_DETAILS)
         .send({
-          getUpdatesBy: [],
+          getUpdatesBy: ['phone'],
           mainContactEmail: 'user@example.com',
           mainContactPhone: '07712 000 000',
         })
@@ -203,6 +203,30 @@ describe('Contact details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookingJourney.mainContactEmail).toBeUndefined()
+          expect(sessionData.bookingJourney.mainContactPhone).toBe('07712 000 000')
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookingJourney: sessionData.bookingJourney,
+          })
+        })
+    })
+
+    it('should clear existing phone number from session when phone not checked, update application and redirect to check visit details page', () => {
+      sessionData.bookingJourney.mainContactEmail = 'existing-email'
+      sessionData.bookingJourney.mainContactPhone = 'existing-phone'
+
+      return request(app)
+        .post(paths.BOOK_VISIT.CONTACT_DETAILS)
+        .send({
+          getUpdatesBy: ['email'],
+          mainContactEmail: 'user@example.com',
+          mainContactPhone: '07712 000 000',
+        })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookingJourney.mainContactEmail).toBe('user@example.com')
           expect(sessionData.bookingJourney.mainContactPhone).toBeUndefined()
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
@@ -245,6 +269,37 @@ describe('Contact details', () => {
             mainContactEmail: 'invalid-email',
             mainContactPhone: 'not-a-number',
           })
+          .expect(302)
+          .expect('location', paths.BOOK_VISIT.CONTACT_DETAILS)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookingJourney.mainContactEmail).toBeUndefined()
+            expect(sessionData.bookingJourney.mainContactPhone).toBeUndefined()
+
+            expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
+          })
+      })
+
+      it('should set validation error when email and phone both unchecked', () => {
+        expectedFlashErrors = [
+          {
+            type: 'field',
+            location: 'body',
+            path: 'getUpdatesBy',
+            value: [],
+            msg: 'Select at least one contact method',
+          },
+        ]
+        expectedFlashFormValues = {
+          getUpdatesBy: [],
+          mainContactEmail: undefined,
+          mainContactPhone: undefined,
+        }
+
+        return request(app)
+          .post(paths.BOOK_VISIT.CONTACT_DETAILS)
+          .send({})
           .expect(302)
           .expect('location', paths.BOOK_VISIT.CONTACT_DETAILS)
           .expect(() => {

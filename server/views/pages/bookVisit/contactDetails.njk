@@ -87,7 +87,9 @@
               }
             }
           ],
-          values: formValues.getUpdatesBy
+          values: formValues.getUpdatesBy,
+          errorMessage: errors | findError('getUpdatesBy')
+
         }) }}
 
         {{ govukButton({
