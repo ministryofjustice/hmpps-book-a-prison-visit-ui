@@ -53,6 +53,7 @@ export default class ContactDetailsController {
 
   public validate(): ValidationChain[] {
     return [
+      body('getUpdatesBy').isIn(['email', 'phone']).withMessage('Select at least one contact method'),
       body('getUpdatesBy').toArray(),
       body('mainContactEmail')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('email')))
