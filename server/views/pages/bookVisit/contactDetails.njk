@@ -19,11 +19,6 @@
       <p>We use contact details to send updates about the booking.</p>
       <p>The main contact can get both emails and text messages.</p>
 
-      {{ govukWarningText({
-        text: "If no contact details are provided, we cannot tell visitors if the visit is cancelled or changed.",
-        iconFallbackText: "Warning"
-      }) }}
-
       <form action="{{ paths.BOOK_VISIT.CONTACT_DETAILS }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
