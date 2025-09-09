@@ -1,5 +1,4 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -16,7 +15,7 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }} for {{ mainContactName }}</h1>
 
-      <p>We use contact details to send updates about the booking.</p>
+      <p>We use contact details to send updates about the visit.</p>
       <p>The main contact can get both emails and text messages.</p>
 
       <form action="{{ paths.BOOK_VISIT.CONTACT_DETAILS }}" method="POST" novalidate>
@@ -75,7 +74,7 @@
             },
             {
               value: "phone",
-              text: "Get updates by phone",
+              text: "Get updates by text message",
               classes: 'TEST',
               conditional: {
                 html: phoneHtml
