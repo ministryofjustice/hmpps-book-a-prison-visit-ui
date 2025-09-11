@@ -5,7 +5,6 @@ import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
-import config from '../../config'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}

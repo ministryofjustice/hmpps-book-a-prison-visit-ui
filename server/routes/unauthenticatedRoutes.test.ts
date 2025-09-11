@@ -5,8 +5,6 @@ import { appWithAllRoutes, user } from './testutils/appSetup'
 import paths from '../constants/paths'
 import { createMockPrisonService } from '../services/testutils/mocks'
 import TestData from './testutils/testData'
-import config from '../config'
-import { disableFeatureForTest, enableFeatureForTest } from '../data/testutils/mockFeatureFlags'
 
 let app: Express
 let userSupplier: () => Express.User
