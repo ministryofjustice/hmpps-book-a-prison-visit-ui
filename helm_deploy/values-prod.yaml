@@ -17,7 +17,5 @@ generic-service:
     PVB_URL: "https://www.prisonvisits.service.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
 
-    FEATURE_VISIT_REQUEST: "true"
-
 generic-prometheus-alerts:
   alertSeverity: visits-alerts

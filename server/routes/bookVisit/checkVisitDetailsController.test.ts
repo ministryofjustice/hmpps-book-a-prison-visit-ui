@@ -12,7 +12,6 @@ import logger from '../../../logger'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
-import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 jest.mock('../../../logger')
 
@@ -131,8 +130,6 @@ describe('Check visit details', () => {
 
   describe(`POST ${paths.BOOK_VISIT.CHECK_DETAILS}`, () => {
     beforeEach(() => {
-      enableFeatureForTest('visitRequest')
-
       app = appWithAllRoutes({ services: { visitService }, sessionData })
     })
 
@@ -205,37 +202,6 @@ describe('Check visit details', () => {
           sessionForReview: true,
         })
         visitService.bookVisit.mockResolvedValue(visitRequested)
-      })
-
-      describe('Feature flag', () => {
-        it('should ignore visitSubStatus and handle as a BOOKED visit when FEATURE_VISIT_REQUEST disabled', () => {
-          disableFeatureForTest('visitRequest')
-
-          app = appWithAllRoutes({ services: { visitService }, sessionData })
-
-          const expectedBookingConfirmed: BookingConfirmed = {
-            isARequest: false,
-            prison,
-            visitReference: visitRequested.reference,
-            hasEmail: true,
-            hasMobile: true,
-          }
-
-          return request(app)
-            .post(paths.BOOK_VISIT.CHECK_DETAILS)
-            .expect(302)
-            .expect('location', paths.BOOK_VISIT.BOOKED)
-            .expect(() => {
-              expect(sessionData.bookingJourney).toBe(undefined)
-              expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
-
-              expect(visitService.bookVisit).toHaveBeenCalledWith({
-                applicationReference: application.reference,
-                actionedBy: bookerReference,
-                isRequestBooking: false,
-              })
-            })
-        })
       })
 
       it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit requested page', () => {

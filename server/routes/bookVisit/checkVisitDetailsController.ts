@@ -5,7 +5,6 @@ import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { SanitisedError } from '../../sanitisedError'
 import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
-import config from '../../config'
 
 export default class CheckVisitDetailsController {
   public constructor(private readonly visitService: VisitService) {}
@@ -35,11 +34,11 @@ export default class CheckVisitDetailsController {
         const visit = await this.visitService.bookVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: booker.reference,
-          isRequestBooking: config.features.visitRequest && bookingJourney.selectedVisitSession.sessionForReview,
+          isRequestBooking: bookingJourney.selectedVisitSession.sessionForReview,
         })
 
         const bookingConfirmed: BookingConfirmed = {
-          isARequest: config.features.visitRequest && visit.visitSubStatus === 'REQUESTED',
+          isARequest: visit.visitSubStatus === 'REQUESTED',
           prison: bookingJourney.prison,
           visitReference: visit.reference,
           hasEmail: !!bookingJourney.mainContactEmail,

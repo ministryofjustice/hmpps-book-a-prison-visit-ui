@@ -7,7 +7,6 @@ import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetu
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockPrisonService } from '../../services/testutils/mocks'
-import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 import config from '../../config'
 
 let app: Express
@@ -17,8 +16,6 @@ const prisonNames = TestData.prisonNameDtos()
 const prisonService = createMockPrisonService()
 
 beforeEach(() => {
-  enableFeatureForTest('visitRequest')
-
   sessionData = {} as SessionData
   prisonService.getAllPrisonNames.mockResolvedValue(prisonNames)
 
