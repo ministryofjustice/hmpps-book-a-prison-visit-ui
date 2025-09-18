@@ -114,7 +114,7 @@ describe('Cookies page', () => {
     const analyticsNoValue = encodeURIComponent(JSON.stringify({ acceptAnalytics: 'no' }))
 
     beforeEach(() => {
-      jest.useFakeTimers({ now: new Date(fakeDate) })
+      jest.useFakeTimers({ advanceTimers: true, now: new Date(fakeDate) })
       app = appWithAllRoutes({})
     })
 

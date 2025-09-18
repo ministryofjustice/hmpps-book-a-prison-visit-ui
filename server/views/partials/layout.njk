@@ -109,27 +109,29 @@
 {% endblock %}
 
 {% block footer %}
+  {% set footerLinks = [
+    {
+      href: paths.ACCESSIBILITY,
+      text: "Accessibility"
+    },
+    {
+      href: paths.COOKIES,
+      text: "Cookies"
+    },
+    {
+      href: paths.PRIVACY,
+      text: "Privacy"
+    },
+    {
+      href: paths.TERMS,
+      text: "Terms and conditions"
+    }
+  ] %}
+
   {{ govukFooter({
     rebrand: true,
     meta: {
-      items: [
-        {
-          href: paths.ACCESSIBILITY,
-          text: "Accessibility"
-        },
-        {
-          href: paths.COOKIES,
-          text: "Cookies"
-        },
-        {
-          href: paths.PRIVACY,
-          text: "Privacy"
-        },
-        {
-          href: paths.TERMS,
-          text: "Terms and conditions"
-        }
-      ]
+      items: [] if hideFooterLinks else footerLinks
     }
   }) }}
 {% endblock %}

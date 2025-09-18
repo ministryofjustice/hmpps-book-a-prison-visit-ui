@@ -1,0 +1,24 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Sorry, the service is unavailable" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p data-test="maintenance-message">{{ maintenanceMessage }}</p>
+
+      <p>
+        We have not saved your answers. When the service is available you will need to
+        <a href="http://www.gov.uk/prison-visits">start again</a>.
+      </p>
+
+      <p>
+        <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">Or you can contact the prison directly</a>.
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

@@ -79,4 +79,58 @@ This application has several changes to core files inherited from the HMPPS Type
 * client and server public/private key pairs (in `./integration_tests/testKeys/`) for integration testing
 * a new NPM task (`oidc-wiremock`) and customisations to `start-feature` and `watch-node-feature` that ensure the OIDC Discovery Endpoint mock and a private key is available before the application starts
 
+
+## Maintenance page
+The application has a maintenance page with a service unavailable message. It can also optionally show a date when the service will be available again. The maintenance page is served for all requests except the 'health check' ones (`/health, /info, /ping`).
+
+This behaviour is controlled by two environment variables. Default values are in Helm config:
+```
+  MAINTENANCE_MODE: "false"
+  # Optional maintenance end date (in ISO format, YYYY-MM-DDTHH:MM)
+  MAINTENANCE_MODE_END_DATE_TIME: ""
+```
+
+To see the current state of these variables, use this command:
+```
+# example is for 'dev' namespace; replace with 'prod' as appropriate
+
+kubectl -n visit-someone-in-prison-frontend-svc-dev set env deployment/hmpps-book-a-prison-visit-ui --list
+```
+
+Maintenance mode can be turned on by either:
+* changing the values for an environment (e.g. prod) in Helm config, committing and deploying
+* manually changing the values for an environment and restarting the pods
+
+
+### Manually enabling maintenance mode
+To turn on maintenance mode, use one of these commands (depending on whether an end date and time should be shown):
+```
+# examples are for 'dev' namespace; replace with 'prod' as appropriate
+
+# Enable maintenance with no end date and time displayed
+kubectl -n visit-someone-in-prison-frontend-svc-dev set env deployment/hmpps-book-a-prison-visit-ui MAINTENANCE_MODE=true
+
+# Enable maintenance page that includes an end date and time
+kubectl -n visit-someone-in-prison-frontend-svc-dev set env deployment/hmpps-book-a-prison-visit-ui MAINTENANCE_MODE=true MAINTENANCE_MODE_END_DATE_TIME=2025-10-01T14:00
+```
+
+This will update the environment variables and restart the pods. To see the status of pods, use:
+```
+kubectl -n visit-someone-in-prison-backend-svc-dev get pods
+```
+Once these are restarted, the maintenance page will be active.
+
+
+### Manually disabling maintenance mode
+To turn off maintenance mode, run this command:
+```
+# example is for 'dev' namespace; replace with 'prod' as appropriate
+
+kubectl -n visit-someone-in-prison-frontend-svc-dev set env deployment/hmpps-book-a-prison-visit-ui MAINTENANCE_MODE=false
+```
+This will update the environment variables and restart the pods. Once these are restarted, the maintenance page will be turned off.
+
+
+---
+
 This project is tested with BrowserStack
