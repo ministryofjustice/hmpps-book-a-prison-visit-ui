@@ -14,6 +14,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
+import maintenancePageRoute from './routes/maintenancePageRoute'
 import authenticatedRoutes from './routes/authenticatedRoutes'
 import unauthenticatedRoutes from './routes/unauthenticatedRoutes'
 
@@ -34,6 +35,9 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
+
+  app.use(maintenancePageRoute())
+
   app.use(setupGovukOneLogin())
   app.use(analyticsConsent())
   app.use(setUpCsrf())
