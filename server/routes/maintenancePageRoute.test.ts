@@ -25,6 +25,7 @@ describe('Maintenance page', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Sorry, the service is unavailable -/)
         expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Sorry, the service is unavailable')
         expect($('[data-test="maintenance-message"]').text()).toBe('You will be able to use the service later.')
         expect($('.govuk-footer__inline-list a').length).toBe(0)
       })
@@ -44,6 +45,7 @@ describe('Maintenance page', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Sorry, the service is unavailable -/)
         expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Sorry, the service is unavailable')
         expect($('[data-test="maintenance-message"]').text()).toBe(
           'You will be able to use the service from 1:30pm on Wednesday 1 October 2025.',
         )
