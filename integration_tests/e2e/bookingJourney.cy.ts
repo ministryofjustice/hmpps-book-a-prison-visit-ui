@@ -195,6 +195,10 @@ context('Booking journey', () => {
       visit: TestData.visitDto(),
       bookerReference: TestData.bookerReference().value,
       isRequestBooking: false,
+      visitorDetails: [
+        { visitorId: 1000, visitorAge: 25 },
+        { visitorId: 3000, visitorAge: 5 },
+      ],
     })
     checkVisitDetailsPage.submit()
 
@@ -283,6 +287,10 @@ context('Booking journey', () => {
       visit: TestData.visitDto({ visitSubStatus: 'REQUESTED' }),
       bookerReference: TestData.bookerReference().value,
       isRequestBooking: true,
+      visitorDetails: [
+        { visitorId: 1000, visitorAge: 25 },
+        { visitorId: 3000, visitorAge: 5 },
+      ],
     })
     checkVisitDetailsPage.submit()
 

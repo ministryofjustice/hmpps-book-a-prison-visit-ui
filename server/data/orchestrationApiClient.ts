@@ -17,6 +17,7 @@ import {
   CancelVisitOrchestrationDto,
   PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
+  BookingRequestVisitorDetailsDto,
 } from './orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
@@ -35,10 +36,12 @@ export default class OrchestrationApiClient {
     applicationReference,
     actionedBy,
     isRequestBooking,
+    visitorDetails,
   }: {
     applicationReference: string
     actionedBy: string
     isRequestBooking: boolean
+    visitorDetails: BookingRequestVisitorDetailsDto[]
   }): Promise<VisitDto> {
     return this.restClient.put({
       path: `/visits/${applicationReference}/book`,
@@ -48,6 +51,7 @@ export default class OrchestrationApiClient {
         actionedBy,
         userType: 'PUBLIC',
         isRequestBooking,
+        visitorDetails,
       },
     })
   }

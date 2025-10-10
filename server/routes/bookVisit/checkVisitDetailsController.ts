@@ -35,6 +35,7 @@ export default class CheckVisitDetailsController {
           applicationReference: bookingJourney.applicationReference,
           actionedBy: booker.reference,
           isRequestBooking: bookingJourney.selectedVisitSession.sessionForReview,
+          visitors: bookingJourney.selectedVisitors,
         })
 
         const bookingConfirmed: BookingConfirmed = {

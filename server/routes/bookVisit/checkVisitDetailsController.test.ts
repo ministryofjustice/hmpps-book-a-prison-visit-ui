@@ -161,6 +161,7 @@ describe('Check visit details', () => {
               applicationReference: application.reference,
               actionedBy: bookerReference,
               isRequestBooking: false,
+              visitors: [visitor],
             })
           })
       })
@@ -189,6 +190,7 @@ describe('Check visit details', () => {
               applicationReference: application.reference,
               actionedBy: bookerReference,
               isRequestBooking: false,
+              visitors: [visitor],
             })
           })
       })
@@ -225,6 +227,7 @@ describe('Check visit details', () => {
               applicationReference: application.reference,
               actionedBy: bookerReference,
               isRequestBooking: true,
+              visitors: [visitor],
             })
           })
       })
@@ -283,6 +286,7 @@ describe('Check visit details', () => {
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
+                visitors: [visitor],
               })
             })
         })
@@ -310,6 +314,7 @@ describe('Check visit details', () => {
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
+                visitors: [visitor],
               })
             })
         })
@@ -336,6 +341,7 @@ describe('Check visit details', () => {
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
+                visitors: [visitor],
               })
               expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
             })
@@ -369,6 +375,7 @@ describe('Check visit details', () => {
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
+                visitors: [visitor],
               })
               expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
             })

@@ -2,6 +2,7 @@ import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
 import { BookingJourney } from '../@types/bapv'
+import { Visitor } from './bookerService'
 
 const token = 'some token'
 
@@ -159,21 +160,38 @@ describe('Visit service', () => {
     })
 
     describe('bookVisit', () => {
-      it('should book a visit from an application', async () => {
+      it('should book a visit from an application, including visitor ages data', async () => {
+        const fakeDate = new Date('2025-10-05T09:00:00')
+        jest.useFakeTimers({ now: fakeDate })
+
+        const visitors: Visitor[] = [
+          TestData.visitor({ visitorId: 1, dateOfBirth: '2025-07-01' }), // infant; age 0 years
+          TestData.visitor({ visitorId: 2, dateOfBirth: '2020-10-01' }), // child; age 5 years
+          TestData.visitor({ visitorId: 3, dateOfBirth: '2000-01-01' }), // adult; age 25 years
+        ]
+
         orchestrationApiClient.bookVisit.mockResolvedValue(visit)
 
         const results = await visitService.bookVisit({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
+          visitors,
         })
 
         expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
           applicationReference: bookingJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
+          visitorDetails: [
+            { visitorId: 1, visitorAge: 0 },
+            { visitorId: 2, visitorAge: 5 },
+            { visitorId: 3, visitorAge: 25 },
+          ],
         })
         expect(results).toStrictEqual(visit)
+
+        jest.useRealTimers()
       })
     })
 
