@@ -1,9 +1,16 @@
 import { randomUUID } from 'crypto'
+import { intervalToDuration, parseISO } from 'date-fns'
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
-import { ApplicationDto, OrchestrationVisitDto, VisitDto } from '../data/orchestrationApiTypes'
+import {
+  ApplicationDto,
+  BookingRequestVisitorDetailsDto,
+  OrchestrationVisitDto,
+  VisitDto,
+} from '../data/orchestrationApiTypes'
 import { getMainContactName } from '../utils/utils'
+import { Visitor } from './bookerService'
 
 export interface VisitDetails extends OrchestrationVisitDto {
   visitDisplayId: string
@@ -80,15 +87,30 @@ export default class VisitService {
     applicationReference,
     actionedBy,
     isRequestBooking,
+    visitors,
   }: {
     applicationReference: string
     actionedBy: string
     isRequestBooking: boolean
+    visitors: Visitor[]
   }): Promise<VisitDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy, isRequestBooking })
+    const now = new Date()
+    const visitorDetails: BookingRequestVisitorDetailsDto[] = visitors.map(visitor => {
+      const ageAsDuration = intervalToDuration({ start: parseISO(visitor.dateOfBirth), end: now })
+      const visitorAge = ageAsDuration.years ?? 0
+
+      return { visitorId: visitor.visitorId, visitorAge }
+    })
+
+    const visit = await orchestrationApiClient.bookVisit({
+      applicationReference,
+      actionedBy,
+      isRequestBooking,
+      visitorDetails,
+    })
 
     logger.info(
       `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus})`,
