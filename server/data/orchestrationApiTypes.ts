@@ -12,6 +12,8 @@ export type AvailableVisitSessionRestrictionDto = components['schemas']['Availab
 
 export type BookingOrchestrationRequestDto = components['schemas']['BookingOrchestrationRequestDto']
 
+export type BookingRequestVisitorDetailsDto = components['schemas']['BookingRequestVisitorDetailsDto']
+
 export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
 
 export type BookerPrisonerValidationErrorResponse = components['schemas']['BookerPrisonerValidationErrorResponse']

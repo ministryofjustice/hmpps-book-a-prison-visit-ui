@@ -1,9 +1,16 @@
 import { randomUUID } from 'crypto'
+import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
-import { ApplicationDto, OrchestrationVisitDto, VisitDto } from '../data/orchestrationApiTypes'
+import {
+  ApplicationDto,
+  BookingRequestVisitorDetailsDto,
+  OrchestrationVisitDto,
+  VisitDto,
+} from '../data/orchestrationApiTypes'
 import { getMainContactName } from '../utils/utils'
+import { Visitor } from './bookerService'
 
 export interface VisitDetails extends OrchestrationVisitDto {
   visitDisplayId: string
@@ -80,15 +87,24 @@ export default class VisitService {
     applicationReference,
     actionedBy,
     isRequestBooking,
+    visitors,
   }: {
     applicationReference: string
     actionedBy: string
     isRequestBooking: boolean
+    visitors: Visitor[]
   }): Promise<VisitDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visit = await orchestrationApiClient.bookVisit({ applicationReference, actionedBy, isRequestBooking })
+    const visitorDetails = this.buildVisitorDetails(visitors)
+
+    const visit = await orchestrationApiClient.bookVisit({
+      applicationReference,
+      actionedBy,
+      isRequestBooking,
+      visitorDetails,
+    })
 
     logger.info(
       `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus})`,
@@ -140,5 +156,28 @@ export default class VisitService {
 
   private addVisitDisplayIds(visits: OrchestrationVisitDto[]): VisitDetails[] {
     return visits.map(visit => ({ ...visit, visitDisplayId: randomUUID() }))
+  }
+
+  private buildVisitorDetails(visitors: Visitor[]): BookingRequestVisitorDetailsDto[] {
+    const now = new Date()
+    return visitors.map(visitor => {
+      const { visitorId } = visitor
+
+      let visitorAge: number
+      try {
+        const visitorDoB = parseISO(visitor.dateOfBirth)
+
+        if (isValid(visitorDoB)) {
+          const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
+          visitorAge = ageAsDuration?.years ?? 0
+        } else {
+          visitorAge = null
+        }
+      } catch {
+        visitorAge = null
+      }
+
+      return { visitorId, visitorAge }
+    })
   }
 }

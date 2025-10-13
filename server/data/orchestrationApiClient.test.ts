@@ -42,6 +42,7 @@ describe('orchestrationApiClient', () => {
         actionedBy: bookerReference.value,
         userType: 'PUBLIC',
         isRequestBooking: false,
+        visitorDetails: [{ visitorId: 1, visitorAge: 18 }],
       }
 
       const result = { reference: 'ab-cd-ef-gh' } as Partial<VisitDto>
@@ -55,6 +56,7 @@ describe('orchestrationApiClient', () => {
         applicationReference,
         actionedBy: bookerReference.value,
         isRequestBooking: false,
+        visitorDetails: [{ visitorId: 1, visitorAge: 18 }],
       })
 
       expect(output).toStrictEqual(result)

@@ -11,6 +11,7 @@ import {
   VisitorInfoDto,
   BookerPrisonerValidationErrorResponse,
   RegisterPrisonerForBookerDto,
+  BookingRequestVisitorDetailsDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -21,10 +22,12 @@ export default {
     visit,
     bookerReference,
     isRequestBooking,
+    visitorDetails,
   }: {
     visit: VisitDto
     bookerReference: string
     isRequestBooking: boolean
+    visitorDetails: BookingRequestVisitorDetailsDto[]
   }): SuperAgentRequest => {
     return stubFor({
       request: {
@@ -38,6 +41,7 @@ export default {
               actionedBy: bookerReference,
               userType: 'PUBLIC',
               isRequestBooking,
+              visitorDetails,
             },
           },
         ],
