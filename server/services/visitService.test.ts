@@ -165,10 +165,13 @@ describe('Visit service', () => {
         jest.useFakeTimers({ now: fakeDate })
 
         const visitors: Visitor[] = [
-          TestData.visitor({ visitorId: 1, dateOfBirth: '2025-07-01' }), // infant; age 0 years
-          TestData.visitor({ visitorId: 2, dateOfBirth: '2020-10-01' }), // child; age 5 years
-          TestData.visitor({ visitorId: 3, dateOfBirth: '2000-01-01' }), // adult; age 25 years
-        ]
+          { visitorId: 1, dateOfBirth: '2025-07-01' }, // infant; age 0 years
+          { visitorId: 2, dateOfBirth: '2020-10-01' }, // child; age 5 years
+          { visitorId: 3, dateOfBirth: '2000-01-01' }, // adult; age 25 years
+          { visitorId: 4, dateOfBirth: '' }, // missing DoB
+          { visitorId: 5, dateOfBirth: null }, // missing DoB
+          { visitorId: 6, dateOfBirth: undefined }, // missing DoB
+        ] as Visitor[]
 
         orchestrationApiClient.bookVisit.mockResolvedValue(visit)
 
@@ -187,6 +190,9 @@ describe('Visit service', () => {
             { visitorId: 1, visitorAge: 0 },
             { visitorId: 2, visitorAge: 5 },
             { visitorId: 3, visitorAge: 25 },
+            { visitorId: 4, visitorAge: null },
+            { visitorId: 5, visitorAge: null },
+            { visitorId: 6, visitorAge: null },
           ],
         })
         expect(results).toStrictEqual(visit)

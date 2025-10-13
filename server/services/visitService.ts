@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import { intervalToDuration, parseISO } from 'date-fns'
+import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
 import { BookingJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
@@ -97,13 +97,7 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const now = new Date()
-    const visitorDetails: BookingRequestVisitorDetailsDto[] = visitors.map(visitor => {
-      const ageAsDuration = intervalToDuration({ start: parseISO(visitor.dateOfBirth), end: now })
-      const visitorAge = ageAsDuration.years ?? 0
-
-      return { visitorId: visitor.visitorId, visitorAge }
-    })
+    const visitorDetails = this.buildVisitorDetails(visitors)
 
     const visit = await orchestrationApiClient.bookVisit({
       applicationReference,
@@ -162,5 +156,28 @@ export default class VisitService {
 
   private addVisitDisplayIds(visits: OrchestrationVisitDto[]): VisitDetails[] {
     return visits.map(visit => ({ ...visit, visitDisplayId: randomUUID() }))
+  }
+
+  private buildVisitorDetails(visitors: Visitor[]): BookingRequestVisitorDetailsDto[] {
+    const now = new Date()
+    return visitors.map(visitor => {
+      const { visitorId } = visitor
+
+      let visitorAge: number
+      try {
+        const visitorDoB = parseISO(visitor.dateOfBirth)
+
+        if (isValid(visitorDoB)) {
+          const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
+          visitorAge = ageAsDuration?.years ?? 0
+        } else {
+          visitorAge = null
+        }
+      } catch {
+        visitorAge = null
+      }
+
+      return { visitorId, visitorAge }
+    })
   }
 }
