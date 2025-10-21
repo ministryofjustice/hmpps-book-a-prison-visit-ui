@@ -19,6 +19,7 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register-preprod.hmpps.service.justice.gov.uk"
     PVB_URL: "https://preprod.prisonvisits.prison.service.justice.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
+    ENVIRONMENT_NAME: preprod
 
   allowlist:
     groups:
