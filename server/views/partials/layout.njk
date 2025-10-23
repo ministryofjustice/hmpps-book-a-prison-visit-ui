@@ -77,11 +77,9 @@
     rebrand: true,
     homepageUrl: "https://www.gov.uk"
   }) }}
-  {% if not hideGOVUKServiceNav %}
-    {{ govukServiceNavigation({
-      serviceName: applicationName
-    }) }}
-  {% endif %}
+  {{ govukServiceNavigation({
+    serviceName: applicationName
+  }) }}
 {% endif %}
 {% endblock %}
 
