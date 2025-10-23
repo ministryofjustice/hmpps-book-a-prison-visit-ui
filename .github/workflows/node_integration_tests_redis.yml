@@ -44,13 +44,26 @@ jobs:
         shell: bash
         run: |
           curl -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
+      - name: Run wiremock
+        shell: bash
+        run: |
+          nohup java -jar wiremock.jar --port 9091
+      - name: Wait until wiremock ready
+        shell: bash
+        run: |
+          curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:9091
+      - name: Start the feature
+        shell: bash
+        run: |
+          nohup npm run start-feature
+      - name: Wait until feature ready
+        shell: bash
+        run: |
+          curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:3007
       - name: Prepare and run integration tests
         id: integration-tests
         shell: bash
         run: |
-          nohup java -jar wiremock.jar --port 9091 &
-          curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:9091 &
-          nohup npm run start-feature
           npm run int-test
       - name: upload results
         if: ${{ !cancelled() }}
