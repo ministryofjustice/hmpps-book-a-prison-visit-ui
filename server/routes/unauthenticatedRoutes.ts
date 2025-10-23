@@ -5,6 +5,7 @@ import CookiesController from './cookies/cookiesController'
 import staticPagesRoutes from './staticPages'
 import SelectPrisonController from './selectPrison/selectPrisonController'
 import SelectedPrisonController from './selectPrison/selectedPrisonController'
+import config from '../config'
 
 export default function routes({ prisonService }: Services): Router {
   const router = Router()
@@ -12,20 +13,21 @@ export default function routes({ prisonService }: Services): Router {
   const selectPrisonController = new SelectPrisonController(prisonService)
   const selectedPrisonController = new SelectedPrisonController(prisonService)
 
-  router.get(paths.SELECT_PRISON, selectPrisonController.view())
-  router.post(paths.SELECT_PRISON, selectPrisonController.validate(), selectPrisonController.submit())
-
-  router.get(paths.SELECTED_PRISON, selectedPrisonController.view())
-
-  // Service start page
-  router.get(paths.START, async (req, res) => {
+  // Root path '/' redirect
+  router.get(paths.ROOT, async (req, res) => {
+    // home page for authenticated users
     if (req.user) {
       return res.redirect(paths.HOME)
     }
 
-    const supportedPrisons = await prisonService.getSupportedPrisons()
-    return res.render('pages/serviceStart', { supportedPrisons, hideGOVUKServiceNav: true })
+    return res.redirect(config.rootPathRedirect)
   })
+
+  // Select prison
+  router.get(paths.SELECT_PRISON, selectPrisonController.view())
+  router.post(paths.SELECT_PRISON, selectPrisonController.validate(), selectPrisonController.submit())
+
+  router.get(paths.SELECTED_PRISON, selectedPrisonController.view())
 
   // Cookies
   const cookies = new CookiesController()

@@ -32,7 +32,7 @@ export default function setUpGovukOneLogin(): Router {
     // don't pass HTTP HEAD requests for /sign-in to oicd Passport strategy because they cause an error in openid-client
     // see - https://github.com/panva/openid-client/discussions/613
     router.head(paths.SIGN_IN, (req, res, next) => {
-      res.redirect(paths.START)
+      res.redirect(paths.HOME)
     })
 
     router.get(paths.SIGN_IN, (req, res, next) => {

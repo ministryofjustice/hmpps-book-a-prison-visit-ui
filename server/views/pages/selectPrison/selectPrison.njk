@@ -4,7 +4,7 @@
 
 {% set pageTitle = "Which prison are you visiting?" %}
 
-{% set backLinkHref = "https://www.gov.uk/prison-visits" %}
+{% set backLinkHref = paths.GOVUK_START_PAGE  %}
 
 {% set prisonSelectItems = [{ value: "", text: "Select a prison" }] %}
 {% for prison in prisons %}

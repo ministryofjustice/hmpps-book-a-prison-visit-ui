@@ -10,9 +10,10 @@ describe('Nunjucks Filters', () => {
   describe('set show extra test attributes flag in DEV and STAGING', () => {
     it.each([
       ['', false],
-      ['DEV', true],
-      ['STAGING', true],
-      ['PRODUCTION', false],
+      ['dev', true],
+      ['staging', true],
+      ['preprod', false],
+      ['prod', false],
     ])(
       "when environmentName is '%s', showExtraTestAttrs should be %s",
       (environmentName: string, expected: boolean) => {
