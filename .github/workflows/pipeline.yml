@@ -39,7 +39,6 @@ jobs:
   acceptance_tests_public_staging:
     name: Acceptance tests (staging)
     uses: ./.github/workflows/acceptance_tests_public_ui.yml # LOCAL_VERSION
-    needs: [node_build]
     secrets: inherit
     with:
       environment: staging
