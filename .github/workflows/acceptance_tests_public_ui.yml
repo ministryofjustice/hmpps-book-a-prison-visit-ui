@@ -1,0 +1,40 @@
+name: Acceptance tests Public UI
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Environment
+        type: string
+        required: false
+        default: 'staging'
+
+permissions:
+  contents: read
+jobs:
+  smoke_test:
+    name: Run the acceptance test
+    runs-on: [self-hosted, hmpps-github-actions-runner]
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: 'ministryofjustice/hmpps-book-a-prison-visit-ui-tests'
+      - name: Get git status
+        run: |
+          git status
+      - name: Install Dependencies
+        run: |
+          npm ci --no-audit
+      - name: Run acceptance tests in ${{ inputs.environment }}
+        shell: bash
+        run: |
+          npm run test:ci
+      - name: Upload the artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-tests-results-${{ inputs.environment }}
+          path: |
+            /root/project/hmpps-book-a-prison-visit-ui-tests/results.xml
+            /root/project/hmpps-book-a-prison-visit-ui-tests/playwright-report
+            /root/project/hmpps-book-a-prison-visit-ui-tests/test-results
