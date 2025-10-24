@@ -33,8 +33,6 @@ generic-service:
     groups:
       - digital_staff_and_mojo
       - moj_cloud_platform
-      - circleci
-      - accessibility-testing-1
 
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
