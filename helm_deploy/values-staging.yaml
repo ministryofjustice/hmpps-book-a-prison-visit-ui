@@ -29,12 +29,12 @@ generic-service:
     ADD_PRISONER_RATE_LIMIT_PRISONER_MAX_REQUESTS: "500"
     ADD_PRISONER_RATE_LIMIT_PRISONER_WINDOW_SECS: "60"
 
-  # allowlist:
-  #   groups:
-  #     - digital_staff_and_mojo
-  #     - moj_cloud_platform
-  #     - circleci
-  #     - accessibility-testing-1
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - circleci
+      - accessibility-testing-1
 
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
