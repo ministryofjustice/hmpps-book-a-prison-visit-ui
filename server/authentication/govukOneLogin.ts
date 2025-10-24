@@ -25,7 +25,7 @@ const authenticationMiddleware = (): RequestHandler => {
       return next()
     }
 
-    req.session.returnTo = req.originalUrl === paths.START ? paths.HOME : req.originalUrl
+    req.session.returnTo = req.originalUrl
     return res.redirect(paths.SIGN_IN)
   }
 }

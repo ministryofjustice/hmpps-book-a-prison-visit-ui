@@ -34,6 +34,8 @@
   "data-google-analytics-id": googleAnalyticsId
 } %}
 
+{% set bodyClasses = ("env--" + environmentName) if environmentName %}
+
 {% block head %}
   {% if analyticsEnabled %}
     <!-- Google tag (gtag.js) -->
@@ -77,12 +79,9 @@
     rebrand: true,
     homepageUrl: "https://www.gov.uk"
   }) }}
-  {% if not hideGOVUKServiceNav %}
-    {{ govukServiceNavigation({
-      serviceName: applicationName,
-      serviceUrl: paths.START
-    }) }}
-  {% endif %}
+  {{ govukServiceNavigation({
+    serviceName: applicationName
+  }) }}
 {% endif %}
 {% endblock %}
 

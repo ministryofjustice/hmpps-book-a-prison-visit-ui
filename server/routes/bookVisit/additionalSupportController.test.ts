@@ -87,7 +87,7 @@ describe('Additional support needs', () => {
     })
 
     it('should add application reference as a test data attribute in dev', () => {
-      const replacedProp = jest.replaceProperty(config, 'environmentName', 'DEV')
+      const replacedProp = jest.replaceProperty(config, 'environmentName', 'dev')
       app = appWithAllRoutes({ sessionData })
 
       return request(app)
@@ -103,7 +103,7 @@ describe('Additional support needs', () => {
     })
 
     it('should not add application reference as a test data attribute in production', () => {
-      const replacedProp = jest.replaceProperty(config, 'environmentName', 'PRODUCTION')
+      const replacedProp = jest.replaceProperty(config, 'environmentName', 'prod')
       app = appWithAllRoutes({ sessionData })
 
       return request(app)

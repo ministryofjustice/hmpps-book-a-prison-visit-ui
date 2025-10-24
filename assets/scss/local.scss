@@ -2,6 +2,22 @@
   min-height: 300px;
 }
 
+.env--dev .govuk-service-navigation__service-name::after {
+  content: "DEV";
+}
+.env--staging .govuk-service-navigation__service-name::after {
+  content: "STAGING";
+  @extend .govuk-tag--orange;
+}
+.env--preprod .govuk-service-navigation__service-name::after {
+  content: "PREPROD";
+  @extend .govuk-tag--green;
+}
+.govuk-service-navigation__service-name::after {
+  margin-left: govuk-spacing(1);
+  @extend .govuk-tag;
+}
+
 .autocomplete__wrapper {
   @include govuk-typography-common();
 }

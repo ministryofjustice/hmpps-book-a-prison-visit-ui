@@ -1,5 +1,7 @@
 const paths = {
-  START: '/',
+  GOVUK_START_PAGE: 'https://www.gov.uk/prison-visits',
+
+  ROOT: '/',
   HOME: '/home',
   RETURN_HOME: '/return-home', // used to clear session and redirect to HOME
 

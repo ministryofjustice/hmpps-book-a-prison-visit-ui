@@ -10,14 +10,6 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
   throw new Error(`Missing env var ${name}`)
 }
 
-function translateEnvironment(gitHubEnvironmentName: string = ''): string {
-  if (['dev', 'staging'].includes(gitHubEnvironmentName)) {
-    return gitHubEnvironmentName.toUpperCase()
-  }
-
-  return ''
-}
-
 const requiredInProduction = { requireInProduction: true }
 
 export class AgentConfig {
@@ -105,7 +97,6 @@ export default {
   // include short Git ref in dataCache prefix to invalidate data cache on deploy of new build
   // DATA_CACHE_PREFIX overrides for integration tests
   dataCachePrefix: `dataCache_${get('DATA_CACHE_PREFIX', '') || get('GIT_REF', 'local').slice(0, 7)}:`,
-  pvbUrl: get('PVB_URL', 'http://localhost:9091/pvb/en/request', requiredInProduction),
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey
     booker: {
@@ -124,7 +115,9 @@ export default {
   },
   features: {},
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
-  environmentName: translateEnvironment(get('ENVIRONMENT_NAME', '')),
+  environmentName: get('ENVIRONMENT_NAME', ''),
+  pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),
+  rootPathRedirect: get('ROOT_PATH_REDIRECT', '/home'), // Where to redirect unauthenticated users to for requests to '/'
   maintenance: {
     enabled: get('MAINTENANCE_MODE', 'false') === 'true',
     endDateTime: get('MAINTENANCE_MODE_END_DATE_TIME', ''), // ISO format e.g. YYYY-MM-DDTHH:MM
