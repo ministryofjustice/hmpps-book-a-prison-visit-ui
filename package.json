@@ -61,7 +61,7 @@
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
-    "@ministryofjustice/eslint-config-hmpps": "^0.0.5",
+    "@ministryofjustice/eslint-config-hmpps": "^1.0.0",
     "@tsconfig/node22": "^22.0.2",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
