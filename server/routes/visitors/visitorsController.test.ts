@@ -86,7 +86,7 @@ describe('Visitors page', () => {
       })
   })
 
-  it('should render link a visitor journey start button if FEATURE_ADD_VISITOR enabled', () => {
+  it('should render add a visitor request journey start button if FEATURE_ADD_VISITOR enabled', () => {
     bookerService.getVisitors.mockResolvedValue([])
 
     enableFeatureForTest('addVisitor')
@@ -97,7 +97,7 @@ describe('Visitors page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('[data-test=link-a-visitor]').length).toBe(1)
+        expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
         expect($('[data-test=add-visitor-form]').length).toBe(0)
       })
   })
