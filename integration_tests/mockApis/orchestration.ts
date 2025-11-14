@@ -327,10 +327,10 @@ export default {
     prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     visitors = [TestData.visitorInfoDto()],
   }: {
-    bookerReference: BookerReference
-    prisonerNumber: string
-    visitors: VisitorInfoDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+    visitors?: VisitorInfoDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
