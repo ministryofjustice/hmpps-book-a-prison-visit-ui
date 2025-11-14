@@ -7,7 +7,7 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
   return visitors.map((visitor, index) => {
     let canBookText = 'Yes'
     if (visitor.banned) {
-      canBookText = visitor.banExpiryDate ? `Banned until ${formatDate(visitor.banExpiryDate)}` : 'Banned'
+      canBookText = `No, banned${visitor.banExpiryDate ? ` until ${formatDate(visitor.banExpiryDate)}` : ''}`
     }
 
     return [

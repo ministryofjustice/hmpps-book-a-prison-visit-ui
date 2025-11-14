@@ -21,6 +21,15 @@ const paths = {
     FAIL: '/prisoner-incorrect',
   },
 
+  ADD_VISITOR: {
+    START: '/providing-visitor-information',
+    DETAILS: '/visitor',
+    CHECK: '/check-visitor-request',
+    REQUESTED: '/visitor-requested',
+    ALREADY_REQUESTED: '/visitor-already-requested',
+    ALREADY_LINKED: '/visitor-already-linked',
+  },
+
   BOOK_VISIT: {
     ROOT: '/book-visit',
     SELECT_PRISONER: '/book-visit/select-prisoner',

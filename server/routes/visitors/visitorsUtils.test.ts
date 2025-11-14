@@ -28,13 +28,13 @@ describe('buildVisitorsTableRows', () => {
       [
         { text: 'Visitor Two', attributes: { 'data-test': 'visitor-name-1' } },
         { text: '2 August 2000', attributes: { 'data-test': 'visitor-dob-1' } },
-        { text: 'Banned', classes: 'warning', attributes: { 'data-test': 'visitor-availability-1' } },
+        { text: 'No, banned', classes: 'warning', attributes: { 'data-test': 'visitor-availability-1' } },
       ],
       [
         { text: 'Visitor Three', attributes: { 'data-test': 'visitor-name-2' } },
         { text: '3 August 2000', attributes: { 'data-test': 'visitor-dob-2' } },
         {
-          text: 'Banned until 1 September 2025',
+          text: 'No, banned until 1 September 2025',
           classes: 'warning',
           attributes: { 'data-test': 'visitor-availability-2' },
         },
