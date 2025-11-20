@@ -18,6 +18,8 @@ import {
   PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
   BookingRequestVisitorDetailsDto,
+  AddVisitorToBookerPrisonerRequestDto,
+  BookerVisitorRequestValidationErrorResponse,
 } from './orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
@@ -162,6 +164,30 @@ export default class OrchestrationApiClient {
       path: '/public/booker/register/auth',
       data: { ...authDetailDto },
     })
+  }
+
+  async addVisitorRequest({
+    bookerReference,
+    prisonerId,
+    addVisitorRequest,
+  }: {
+    bookerReference: string
+    prisonerId: string
+    addVisitorRequest: AddVisitorToBookerPrisonerRequestDto
+  }): Promise<true | BookerVisitorRequestValidationErrorResponse['validationError']> {
+    try {
+      await this.restClient.post({
+        path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
+        data: { ...addVisitorRequest },
+        raw: true, // needed because no JSON response body: an HTTP 201 is true
+      })
+      return true
+    } catch (error) {
+      if ((<SanitisedError>error)?.status === 422) {
+        return error?.data?.validationError
+      }
+      throw error
+    }
   }
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
