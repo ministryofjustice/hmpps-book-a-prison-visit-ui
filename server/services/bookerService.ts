@@ -4,8 +4,10 @@ import { differenceInDays } from 'date-fns'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import {
+  AddVisitorToBookerPrisonerRequestDto,
   AuthDetailDto,
   BookerPrisonerValidationErrorResponse,
+  BookerVisitorRequestValidationErrorResponse,
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
@@ -60,6 +62,25 @@ export default class BookerService {
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
+  }
+
+  async addVisitorRequest({
+    bookerReference,
+    prisonerId,
+    addVisitorRequest,
+  }: {
+    bookerReference: string
+    prisonerId: string
+    addVisitorRequest: AddVisitorToBookerPrisonerRequestDto
+  }): Promise<true | BookerVisitorRequestValidationErrorResponse['validationError']> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    const result = await orchestrationApiClient.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
+
+    const logMessage = result === true ? 'Requested' : `Failed (${result})`
+    logger.info(`${logMessage} adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`)
+    return result
   }
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {

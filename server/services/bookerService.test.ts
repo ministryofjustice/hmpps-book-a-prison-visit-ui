@@ -61,6 +61,44 @@ describe('Booker service', () => {
     })
   })
 
+  describe('addVisitorRequest', () => {
+    const bookerReference = 'aaaa-bbbb-cccc'
+    const prisonerId = 'A1234BC'
+    const addVisitorRequest = TestData.addVisitorRequest()
+
+    it('should send a request to add a visitor and return true', async () => {
+      orchestrationApiClient.addVisitorRequest.mockResolvedValue(true)
+
+      const result = await bookerService.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
+
+      expect(result).toBe(true)
+      expect(orchestrationApiClient.addVisitorRequest).toHaveBeenCalledWith({
+        bookerReference,
+        prisonerId,
+        addVisitorRequest,
+      })
+      expect(logger.info).toHaveBeenCalledWith(
+        `Requested adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`,
+      )
+    })
+
+    it('should send a request to add a visitor and return validation error if it fails', async () => {
+      orchestrationApiClient.addVisitorRequest.mockResolvedValue('REQUEST_ALREADY_EXISTS')
+
+      const result = await bookerService.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
+
+      expect(result).toBe('REQUEST_ALREADY_EXISTS')
+      expect(orchestrationApiClient.addVisitorRequest).toHaveBeenCalledWith({
+        bookerReference,
+        prisonerId,
+        addVisitorRequest,
+      })
+      expect(logger.info).toHaveBeenCalledWith(
+        `Failed (REQUEST_ALREADY_EXISTS) adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`,
+      )
+    })
+  })
+
   describe('registerPrisoner', () => {
     const bookerReference = TestData.bookerReference().value
     const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()

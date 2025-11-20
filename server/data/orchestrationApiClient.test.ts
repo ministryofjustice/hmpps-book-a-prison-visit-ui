@@ -239,7 +239,7 @@ describe('orchestrationApiClient', () => {
     const addVisitorRequest = TestData.addVisitorRequest()
     const prisonerId = 'A1234BC'
 
-    it('should send a request to add a visitor for a and return true for a 201 API response', async () => {
+    it('should send a request to add a visitor and return true for a 201 API response', async () => {
       fakeOrchestrationApi
         .post(
           `/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
