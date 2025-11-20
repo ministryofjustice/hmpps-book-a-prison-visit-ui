@@ -1,5 +1,7 @@
 import { components } from '../@types/orchestration-api'
 
+export type AddVisitorToBookerPrisonerRequestDto = components['schemas']['AddVisitorToBookerPrisonerRequestDto']
+
 export type ApplicationDto = components['schemas']['ApplicationDto']
 
 export type ApplicationValidationErrorResponse = components['schemas']['ApplicationValidationErrorResponse']
@@ -19,6 +21,9 @@ export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto
 export type BookerPrisonerValidationErrorResponse = components['schemas']['BookerPrisonerValidationErrorResponse']
 
 export type BookerReference = components['schemas']['BookerReference']
+
+export type BookerVisitorRequestValidationErrorResponse =
+  components['schemas']['BookerVisitorRequestValidationErrorResponse']
 
 export type CancelVisitOrchestrationDto = components['schemas']['CancelVisitOrchestrationDto']
 
