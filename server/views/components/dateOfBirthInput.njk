@@ -1,0 +1,38 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+
+{% macro dateOfBirthInput(dobFieldBaseName, formValues, errors) -%}
+  {% set errorMessage = errors | findError(dobFieldBaseName + "-day") %}
+  {{ govukDateInput({
+    id: dobFieldBaseName,
+    namePrefix: dobFieldBaseName,
+    fieldset: {
+      legend: {
+        text: "Date of birth"
+      }
+    },
+    hint: {
+      text: "For example, 27 3 1977"
+    },
+    items: [
+      {
+        name: "day",
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errorMessage),
+        autocomplete: "off",
+        value: formValues[dobFieldBaseName + "-day"]
+      },
+      {
+        name: "month",
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errorMessage),
+        autocomplete: "off",
+        value: formValues[dobFieldBaseName + "-month"]
+      },
+      {
+        name: "year",
+        classes: "govuk-input--width-4" + (" govuk-input--error" if errorMessage),
+        autocomplete: "off",
+        value: formValues[dobFieldBaseName + "-year"]
+      }
+    ],
+    errorMessage: errorMessage
+  }) }}
+{%- endmacro  %}

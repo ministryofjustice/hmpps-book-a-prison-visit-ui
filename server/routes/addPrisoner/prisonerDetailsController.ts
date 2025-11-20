@@ -1,8 +1,8 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
-import { isAfter, isValid, parseISO } from 'date-fns'
 import paths from '../../constants/paths'
 import { BookerService } from '../../services'
+import { dateOfBirthValidationChain } from '../../utils/validations'
 
 export default class PrisonerDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -87,37 +87,7 @@ export default class PrisonerDetailsController {
       body('firstName', 'Enter a first name').trim().isLength({ min: 1, max: 250 }),
       body('lastName', 'Enter a last name').trim().isLength({ min: 1, max: 250 }),
 
-      // Prisoner date of birth
-      body(['prisonerDob-day', 'prisonerDob-month', 'prisonerDob-year']).trim(),
-      // 'prisonerDob' not an actual form field but used to store combined result
-      body('prisonerDob').customSanitizer((_value, { req }) => {
-        const day = Number.parseInt(req.body?.['prisonerDob-day'], 10).toString().padStart(2, '0')
-        const month = Number.parseInt(req.body?.['prisonerDob-month'], 10).toString().padStart(2, '0')
-        const year = Number.parseInt(req.body?.['prisonerDob-year'], 10).toString()
-        return `${year}-${month}-${day}`
-      }),
-      // set any validation errors against the 'day' field so ErrorSummary links to this
-      body('prisonerDob-day').custom((_value, { req }) => {
-        const date = req.body?.prisonerDob ?? ''
-        if (date === 'NaN-NaN-NaN') {
-          throw new Error('Enter a date of birth')
-        }
-
-        if (date.includes('NaN')) {
-          throw new Error('Enter a date of birth and include a day, month and year')
-        }
-
-        const parsedDate = parseISO(date)
-        if (!isValid(parsedDate)) {
-          throw new Error('Date of birth must be a real date')
-        }
-
-        if (isAfter(parsedDate, new Date())) {
-          throw new Error('Date of birth must be in the past')
-        }
-
-        return true
-      }),
+      ...dateOfBirthValidationChain('prisonerDob'),
 
       body('prisonNumber')
         .trim()
