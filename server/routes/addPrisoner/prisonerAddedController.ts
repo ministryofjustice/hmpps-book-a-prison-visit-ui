@@ -12,7 +12,7 @@ export default class PrisonerAddedController {
 
       delete req.session.addPrisonerJourney
 
-      return res.render('pages/addPrisoner/prisonerAdded')
+      return res.render('pages/addPrisoner/prisonerAdded', { showOLServiceNav: true })
     }
   }
 }

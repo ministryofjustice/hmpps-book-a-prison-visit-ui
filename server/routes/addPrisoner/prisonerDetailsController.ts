@@ -19,7 +19,11 @@ export default class PrisonerDetailsController {
         ...req.flash('formValues')?.[0],
       }
 
-      return res.render('pages/addPrisoner/prisonerDetails', { errors: req.flash('errors'), formValues })
+      return res.render('pages/addPrisoner/prisonerDetails', {
+        showOLServiceNav: true,
+        errors: req.flash('errors'),
+        formValues,
+      })
     }
   }
 

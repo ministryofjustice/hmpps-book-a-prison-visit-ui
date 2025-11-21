@@ -37,7 +37,7 @@ describe('Prisoner not matched', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Prisoner details do not match -/)
-          expect($('#navigation').length).toBe(0)
+          expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_PRISONER.DETAILS)
           expect($('h1').text()).toBe('Prisoner details do not match')
           expect($('[data-test=prison-name]').text()).toBe(selectedPrison.prisonName)

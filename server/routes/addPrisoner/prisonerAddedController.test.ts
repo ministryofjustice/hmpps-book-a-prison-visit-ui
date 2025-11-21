@@ -37,7 +37,7 @@ describe('Prisoner added', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Prisoner added -/)
-          expect($('#navigation').length).toBe(0)
+          expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Prisoner added')
           expect(sessionData.addPrisonerJourney).toBeUndefined()

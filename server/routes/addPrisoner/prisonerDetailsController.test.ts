@@ -49,7 +49,7 @@ describe('Prisoner details', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Prisoner details -/)
-          expect($('#navigation').length).toBe(0)
+          expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
           expect($('h1').text().trim()).toBe('Prisoner details')
 
