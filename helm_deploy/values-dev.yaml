@@ -24,11 +24,10 @@ generic-service:
 
     FEATURE_ADD_VISITOR: "true"
 
-  # allowlist:
-  #   groups:
-  #     - digital_staff_and_mojo
-  #     - moj_cloud_platform
-  #     - circleci
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
 
 generic-prometheus-alerts:
   alertSeverity: visits-alerts-nonprod
