@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { BadRequest } from 'http-errors'
-import { addDays } from 'date-fns'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
@@ -232,91 +231,7 @@ describe('Prisoner details', () => {
           })
       })
 
-      it('should set validation error for partial date of birth', () => {
-        expectedFlashErrors = [
-          {
-            type: 'field',
-            location: 'body',
-            path: 'prisonerDob-day',
-            value: '',
-            msg: 'Enter a date of birth and include a day, month and year',
-          },
-        ]
-
-        return request(app)
-          .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, 'prisonerDob-day': '' })
-          .expect(302)
-          .expect('Location', paths.ADD_PRISONER.DETAILS)
-          .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', {
-              ...prisonerDetails,
-              prisonerDob: '1975-04-NaN',
-              'prisonerDob-day': '',
-            })
-          })
-      })
-
-      it('should set validation error for invalid date of birth', () => {
-        expectedFlashErrors = [
-          {
-            type: 'field',
-            location: 'body',
-            path: 'prisonerDob-day',
-            value: '2',
-            msg: 'Date of birth must be a real date',
-          },
-        ]
-
-        return request(app)
-          .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, 'prisonerDob-month': '13' })
-          .expect(302)
-          .expect('Location', paths.ADD_PRISONER.DETAILS)
-          .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', {
-              ...prisonerDetails,
-              prisonerDob: '1975-13-02',
-              'prisonerDob-month': '13',
-            })
-          })
-      })
-
-      it('should set validation error for date of birth in the future', () => {
-        const tomorrow = addDays(new Date(), 1)
-        const day = tomorrow.getDate().toString()
-        const month = (tomorrow.getMonth() + 1).toString()
-        const year = tomorrow.getFullYear().toString()
-        const prisonerDob = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-
-        expectedFlashErrors = [
-          {
-            type: 'field',
-            location: 'body',
-            path: 'prisonerDob-day',
-            value: day,
-            msg: 'Date of birth must be in the past',
-          },
-        ]
-
-        return request(app)
-          .post(paths.ADD_PRISONER.DETAILS)
-          .send({ ...prisonerDetails, 'prisonerDob-day': day, 'prisonerDob-month': month, 'prisonerDob-year': year })
-          .expect(302)
-          .expect('Location', paths.ADD_PRISONER.DETAILS)
-          .expect(() => {
-            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(flashProvider).toHaveBeenCalledWith('formValues', {
-              ...prisonerDetails,
-              prisonerDob,
-              'prisonerDob-day': day,
-              'prisonerDob-month': month,
-              'prisonerDob-year': year,
-            })
-          })
-      })
+      // further prisoner DoB input validation tests handled by server/utils/validations.test.ts
 
       it('should set validation error when prison number wrong length', () => {
         expectedFlashErrors = [
