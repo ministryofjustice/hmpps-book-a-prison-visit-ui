@@ -9,9 +9,10 @@ import {
   BookerPrisonerInfoDto,
   VisitDto,
   VisitorInfoDto,
-  BookerPrisonerValidationErrorResponse,
   RegisterPrisonerForBookerDto,
   BookingRequestVisitorDetailsDto,
+  BookerVisitorRequestValidationErrorResponse,
+  AddVisitorToBookerPrisonerRequestDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -233,6 +234,65 @@ export default {
       },
     }),
 
+  stubAddVisitorRequest: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerId = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+    addVisitorRequest = TestData.addVisitorRequest(),
+  }: {
+    bookerReference?: BookerReference
+    prisonerId?: string
+    addVisitorRequest?: AddVisitorToBookerPrisonerRequestDto
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/request`,
+        bodyPatterns: [
+          {
+            equalToJson: addVisitorRequest,
+          },
+        ],
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    }),
+
+  stubAddVisitorRequestFail: ({
+    bookerReference = TestData.bookerReference(),
+    prisonerId = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
+    addVisitorRequest = TestData.addVisitorRequest(),
+    validationError = 'REQUEST_ALREADY_EXISTS',
+  }: {
+    bookerReference?: BookerReference
+    prisonerId?: string
+    addVisitorRequest?: AddVisitorToBookerPrisonerRequestDto
+    validationError?: BookerVisitorRequestValidationErrorResponse['validationError']
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/request`,
+        bodyPatterns: [
+          {
+            equalToJson: addVisitorRequest,
+          },
+        ],
+      },
+      response: {
+        status: 422,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          status: 422,
+          errorCode: null,
+          userMessage: 'Error',
+          developerMessage: null,
+          validationError,
+        },
+      },
+    }),
+
   stubRegisterPrisoner: ({
     bookerReference = TestData.bookerReference(),
     prisoner = TestData.registerPrisonerForBookerDto(),
@@ -302,7 +362,7 @@ export default {
   }: {
     bookerReference?: BookerReference
     prisonerNumber?: string
-    validationError?: BookerPrisonerValidationErrorResponse['validationError'][number]
+    validationError?: BookerVisitorRequestValidationErrorResponse['validationError'][number]
   } = {}): SuperAgentRequest =>
     stubFor({
       request: {
@@ -327,10 +387,10 @@ export default {
     prisonerNumber = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     visitors = [TestData.visitorInfoDto()],
   }: {
-    bookerReference: BookerReference
-    prisonerNumber: string
-    visitors: VisitorInfoDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: BookerReference
+    prisonerNumber?: string
+    visitors?: VisitorInfoDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',

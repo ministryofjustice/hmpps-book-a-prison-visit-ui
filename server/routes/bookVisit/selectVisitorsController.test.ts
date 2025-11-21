@@ -15,6 +15,7 @@ import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { FlashFormValues } from '../../@types/bapv'
 import { VisitorsByEligibility } from '../../services/bookerService'
+import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 jest.mock('../../../logger')
 
@@ -199,6 +200,9 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
+          expect($('[data-test=link-a-visitor]').length).toBe(0)
+          expect($('[data-test=add-visitor-form]').length).toBe(1)
+
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith(
             bookerReference,
             prisoner.prisonerNumber,
@@ -212,6 +216,20 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookingJourney'])
+        })
+    })
+
+    it('should render add a visitor request journey start link if FEATURE_ADD_VISITOR enabled', () => {
+      enableFeatureForTest('addVisitor')
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('[data-test=add-visitor-form]').length).toBe(0)
         })
     })
 

@@ -2,6 +2,10 @@
   min-height: 300px;
 }
 
+.env--localhost .govuk-service-navigation__service-name::after {
+  content: "LOCALHOST";
+  @extend .govuk-tag--yellow;
+}
 .env--dev .govuk-service-navigation__service-name::after {
   content: "DEV";
 }

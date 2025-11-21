@@ -257,6 +257,7 @@ export interface components {
        */
       type: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
       /**
+       * Format: email
        * @description email address
        * @example example@example.com
        */

@@ -1,8 +1,9 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, matchedData, param, body, validationResult } from 'express-validator'
+import { ValidationChain, matchedData, body, validationResult } from 'express-validator'
 import { VisitService } from '../../../services'
 import paths from '../../../constants/paths'
 import { isMobilePhoneNumber } from '../../../utils/utils'
+import { validateVisitDisplayId } from '../validations'
 
 export default class CancelController {
   public constructor(private readonly visitService: VisitService) {}
@@ -78,31 +79,10 @@ export default class CancelController {
   }
 
   public validateDisplayId(): ValidationChain[] {
-    return [
-      param('visitDisplayId')
-        .isUUID()
-        .bail()
-        .custom((visitDisplayId: string, { req }: Meta & { req: Express.Request }) => {
-          const { bookings } = req.session
-          const visits = bookings?.visits ?? []
-
-          return visits.some(visit => visit.visitDisplayId === visitDisplayId)
-        }),
-    ]
+    return [validateVisitDisplayId]
   }
 
   public validateCancelChoice(): ValidationChain[] {
-    return [
-      body('cancelBooking').isIn(['yes', 'no']).withMessage('No answer selected'),
-      param('visitDisplayId')
-        .isUUID()
-        .bail()
-        .custom((visitDisplayId: string, { req }: Meta & { req: Express.Request }) => {
-          const { bookings } = req.session
-          const visits = bookings?.visits ?? []
-
-          return visits.some(visit => visit.visitDisplayId === visitDisplayId)
-        }),
-    ]
+    return [body('cancelBooking').isIn(['yes', 'no']).withMessage('No answer selected'), validateVisitDisplayId]
   }
 }

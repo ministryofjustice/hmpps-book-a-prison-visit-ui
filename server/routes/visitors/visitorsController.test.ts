@@ -6,6 +6,7 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
+import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -58,6 +59,8 @@ describe('Visitors page', () => {
         expect($('[data-test="visitor-dob-0"]').text()).toBe('21 February 1980')
         expect($('[data-test="visitor-availability-0"]').text()).toBe('Yes')
         expect($('[data-test=no-visitors]').length).toBe(0)
+        expect($('[data-test=link-a-visitor]').length).toBe(0)
+        expect($('[data-test=add-visitor-form]').length).toBe(1)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
       })
@@ -77,7 +80,25 @@ describe('Visitors page', () => {
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
         expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are currently approved')
+        expect($('[data-test=link-a-visitor]').length).toBe(0)
+        expect($('[data-test=add-visitor-form]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+      })
+  })
+
+  it('should render add a visitor request journey start button if FEATURE_ADD_VISITOR enabled', () => {
+    bookerService.getVisitors.mockResolvedValue([])
+
+    enableFeatureForTest('addVisitor')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(paths.VISITORS)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+        expect($('[data-test=add-visitor-form]').length).toBe(0)
       })
   })
 })

@@ -1,6 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set activeLink = 'visitors-link' %}
 {% set pageTitle = "Visitors" %}
@@ -16,6 +17,8 @@
       </h2>
 
       {% if visitorsTableRows | length %}
+        <h3 class="govuk-heading-s">Visitors linked to your account</h3>
+
         {{ govukTable({
           firstCellIsHeader: false,
           head: [
@@ -39,17 +42,32 @@
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m">Waiting for approval</h2>
-      <p>If you have already submitted a request to add visitors, we will contact you when your request has been approved or rejected.</p>
-      <p>We will respond within 5 working days.</p>
+      {% if features.addVisitor %}
+        <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
 
-      <h2 class="govuk-heading-m">Add a new visitor</h2>
-      <p>The person you want to book for must be on the prisoner’s visitor list.</p>
-      <p>
-        To make a request,
-        <a href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/">complete the form</a>.
-        We will respond within 5 working days.
-      </p>
+        <p>You can only book visits for people linked to your account.</p>
+        <p>Visitors must be on the prisoner’s visitor list.</p>
+        <p>We will respond to your request within 5 working days.</p>
+
+        {{ govukButton({
+          text: "Link a new visitor",
+          href: paths.ADD_VISITOR.START,
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }} 
+      {% else %}
+        <h2 class="govuk-heading-m">Waiting for approval</h2>
+        <p>If you have already submitted a request to add visitors, we will contact you when your request has been approved or rejected.</p>
+        <p>We will respond within 5 working days.</p>
+
+        <h2 class="govuk-heading-m">Add a new visitor</h2>
+        <p>The person you want to book for must be on the prisoner’s visitor list.</p>
+        <p>
+          To make a request,
+          <a data-test="add-visitor-form" href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/">complete the form</a>.
+          We will respond within 5 working days.
+        </p>
+      {% endif %}
 
     </div>
   </div>

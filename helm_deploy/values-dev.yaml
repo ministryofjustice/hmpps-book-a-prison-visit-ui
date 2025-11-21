@@ -22,6 +22,8 @@ generic-service:
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: dev
 
+    FEATURE_ADD_VISITOR: "true"
+
   allowlist:
     groups:
       - digital_staff_and_mojo

@@ -1,10 +1,11 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, matchedData, param, validationResult } from 'express-validator'
+import { ValidationChain, matchedData, validationResult } from 'express-validator'
 import { SessionData } from 'express-session'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { getVisitMessages } from './bookingsUtils'
 import { VisitDetails } from '../../services/visitService'
+import { validateVisitDisplayId } from './validations'
 
 export default class BookingDetailsController {
   // label visits with these statuses as a 'request' rather than a 'booking'
@@ -58,16 +59,6 @@ export default class BookingDetailsController {
   }
 
   public validate(): ValidationChain[] {
-    return [
-      param('visitDisplayId')
-        .isUUID()
-        .bail()
-        .custom((visitDisplayId: string, { req }: Meta & { req: Express.Request }) => {
-          const { bookings } = req.session
-          const visits = bookings?.visits ?? []
-
-          return visits.some(visit => visit.visitDisplayId === visitDisplayId)
-        }),
-    ]
+    return [validateVisitDisplayId]
   }
 }

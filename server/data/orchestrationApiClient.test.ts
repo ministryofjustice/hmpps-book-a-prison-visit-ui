@@ -6,6 +6,7 @@ import {
   ApplicationDto,
   AvailableVisitSessionDto,
   AvailableVisitSessionRestrictionDto,
+  BookerVisitorRequestValidationErrorResponse,
   BookingOrchestrationRequestDto,
   CancelVisitOrchestrationDto,
   ChangeApplicationDto,
@@ -234,6 +235,68 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('addVisitorRequest', () => {
+    const addVisitorRequest = TestData.addVisitorRequest()
+    const prisonerId = 'A1234BC'
+
+    it('should send a request to add a visitor and return true for a 201 API response', async () => {
+      fakeOrchestrationApi
+        .post(
+          `/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
+          addVisitorRequest,
+        )
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, bookerReference)
+
+      const result = await orchestrationApiClient.addVisitorRequest({
+        bookerReference: bookerReference.value,
+        prisonerId,
+        addVisitorRequest,
+      })
+
+      expect(result).toBe(true)
+    })
+
+    it('should try to send an add visitor request and return validation error code for a 422 API response', async () => {
+      fakeOrchestrationApi
+        .post(
+          `/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
+          addVisitorRequest,
+        )
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(422, <BookerVisitorRequestValidationErrorResponse>{
+          status: 422,
+          validationError: 'VISITOR_ALREADY_EXISTS',
+        })
+
+      const result = await orchestrationApiClient.addVisitorRequest({
+        bookerReference: bookerReference.value,
+        prisonerId,
+        addVisitorRequest,
+      })
+
+      expect(result).toBe('VISITOR_ALREADY_EXISTS')
+    })
+
+    it('should try to send an add visitor request and throw other API error responses', async () => {
+      fakeOrchestrationApi
+        .post(
+          `/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
+          addVisitorRequest,
+        )
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(400)
+
+      await expect(
+        orchestrationApiClient.addVisitorRequest({
+          bookerReference: bookerReference.value,
+          prisonerId,
+          addVisitorRequest,
+        }),
+      ).rejects.toThrow('Bad Request')
+    })
+  })
+
   describe('registerPrisoner', () => {
     it('should try to register a prisoner and return true for a 200 API response', async () => {
       const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
@@ -241,7 +304,7 @@ describe('orchestrationApiClient', () => {
       fakeOrchestrationApi
         .post(`/public/booker/${bookerReference.value}/permitted/prisoners/register`, registerPrisonerForBookerDto)
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, bookerReference)
+        .reply(200)
 
       const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
 
