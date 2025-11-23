@@ -25,9 +25,10 @@ const paths = {
     START: '/providing-visitor-information',
     DETAILS: '/visitor',
     CHECK: '/check-visitor-request',
-    REQUESTED: '/visitor-requested',
-    ALREADY_REQUESTED: '/visitor-already-requested',
-    ALREADY_LINKED: '/visitor-already-linked',
+    SUCCESS: '/visitor-requested',
+    FAIL_ALREADY_REQUESTED: '/visitor-already-requested',
+    FAIL_ALREADY_LINKED: '/visitor-already-linked',
+    FAIL_TOO_MANY_REQUESTS: '/too-many-visitor-requests',
   },
 
   BOOK_VISIT: {

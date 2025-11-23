@@ -1,5 +1,10 @@
 import { SessionRestriction } from '../data/orchestrationApiClient'
-import { AvailableVisitSessionDto, PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiTypes'
+import {
+  AvailableVisitSessionDto,
+  BookerVisitorRequestValidationErrorResponse,
+  PrisonDto,
+  PrisonRegisterPrisonDto,
+} from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 
 export type Booker = {
@@ -20,6 +25,19 @@ export type AddPrisonerJourney = {
     prisonNumber: string
   }
   result?: boolean
+}
+
+// data that is built up during an add visitor request journey
+export type AddVisitorJourney = {
+  visitorDetails: {
+    firstName: string
+    lastName: string
+    'visitorDob-day': string
+    'visitorDob-month': string
+    'visitorDob-year': string
+    visitorDob: string
+  }
+  result?: true | BookerVisitorRequestValidationErrorResponse['validationError']
 }
 
 // data that is built up during a booking journey
