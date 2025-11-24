@@ -2,4 +2,5 @@
 export enum DateFormats {
   ISO_DATE = 'yyyy-MM-dd',
   PRETTY_DATE = 'EEEE d MMMM yyyy',
+  SHORT_DATE = 'd/M/yyyy',
 }

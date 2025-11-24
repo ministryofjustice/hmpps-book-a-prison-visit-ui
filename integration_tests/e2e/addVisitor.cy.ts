@@ -1,5 +1,6 @@
 import TestData from '../../server/routes/testutils/testData'
 import AddVisitorStartPage from '../pages/addVisitor/addVisitorStart'
+import CheckVisitorDetailsPage from '../pages/addVisitor/checkVisitorDetails'
 import VisitorDetailsPage from '../pages/addVisitor/visitorDetails'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
@@ -40,6 +41,14 @@ context('Add a visitor', () => {
 
     // Check visitor request
     visitorDetailsPage.continue()
+    const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+    checkVisitorDetailsPage.firstName().contains('Joan')
+    checkVisitorDetailsPage.lastName().contains('Phillips')
+    checkVisitorDetailsPage.dateOfBirth().contains('21/2/1980')
+
+    // Submit request
+    cy.task('stubAddVisitorRequest')
+    checkVisitorDetailsPage.submit()
 
     // TODO expand test as journey built out
   })
