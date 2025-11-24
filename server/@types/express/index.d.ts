@@ -1,6 +1,7 @@
 import { ValidationError } from 'express-validator'
 import {
   AddPrisonerJourney,
+  AddVisitorJourney,
   Booker,
   BookingCancelled,
   BookingConfirmed,
@@ -21,6 +22,8 @@ declare module 'express-session' {
     booker: Booker
 
     addPrisonerJourney?: AddPrisonerJourney
+
+    addVisitorJourney?: AddVisitorJourney
 
     bookingJourney?: BookingJourney
     bookingConfirmed?: BookingConfirmed

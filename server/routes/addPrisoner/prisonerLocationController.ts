@@ -23,6 +23,7 @@ export default class PrisonerLocationController {
       }
 
       return res.render('pages/addPrisoner/prisonerLocation', {
+        showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
         prisons,

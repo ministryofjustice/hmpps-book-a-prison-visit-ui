@@ -11,6 +11,7 @@ export default class PrisonerNotMatchedController {
         return res.redirect(paths.RETURN_HOME)
       }
       return res.render('pages/addPrisoner/prisonerNotMatched', {
+        showOLServiceNav: true,
         prisonName: addPrisonerJourney.selectedPrison.prisonName,
       })
     }

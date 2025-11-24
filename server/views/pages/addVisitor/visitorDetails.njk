@@ -1,0 +1,57 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "components/dateOfBirthInput.njk" import dateOfBirthInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Visitor information" %}
+
+{% set backLinkHref = paths.ADD_VISITOR.START %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <form action="{{ paths.ADD_VISITOR.DETAILS }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          name: "firstName",
+          type: "text",
+          classes: "govuk-!-width-two-thirds",
+          label: {
+            text: "First name"
+          },
+          value: formValues.firstName,
+          autocomplete: "off",
+          spellcheck: "off",
+          errorMessage: errors | findError('firstName')
+        }) }}
+
+        {{ govukInput({
+          name: "lastName",
+          type: "text",
+          classes: "govuk-!-width-two-thirds",
+          label: {
+            text: "Last name"
+          },
+          value: formValues.lastName,
+          autocomplete: "off",
+          spellcheck: "off",
+          errorMessage: errors | findError('lastName')
+        }) }}
+
+        {{ dateOfBirthInput('visitorDob', formValues, errors) }}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }} 
+      </form>
+    </div>
+  </div>
+{% endblock %}

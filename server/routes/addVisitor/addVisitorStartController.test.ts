@@ -33,7 +33,7 @@ describe('Add visitor start journey page', () => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Providing visitor information -/)
           expect($('#navigation').length).toBe(1)
-          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITORS)
           expect($('h1').text().trim()).toBe('Providing visitor information')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
         })

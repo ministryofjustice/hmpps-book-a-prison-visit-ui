@@ -235,18 +235,18 @@ export default {
     }),
 
   stubAddVisitorRequest: ({
-    bookerReference = TestData.bookerReference(),
+    bookerReference = TestData.bookerReference().value,
     prisonerId = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     addVisitorRequest = TestData.addVisitorRequest(),
   }: {
-    bookerReference?: BookerReference
+    bookerReference?: string
     prisonerId?: string
     addVisitorRequest?: AddVisitorToBookerPrisonerRequestDto
   } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/request`,
+        url: `/orchestration/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
         bodyPatterns: [
           {
             equalToJson: addVisitorRequest,
@@ -260,12 +260,12 @@ export default {
     }),
 
   stubAddVisitorRequestFail: ({
-    bookerReference = TestData.bookerReference(),
+    bookerReference = TestData.bookerReference().value,
     prisonerId = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     addVisitorRequest = TestData.addVisitorRequest(),
     validationError = 'REQUEST_ALREADY_EXISTS',
   }: {
-    bookerReference?: BookerReference
+    bookerReference?: string
     prisonerId?: string
     addVisitorRequest?: AddVisitorToBookerPrisonerRequestDto
     validationError?: BookerVisitorRequestValidationErrorResponse['validationError']
@@ -273,7 +273,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/request`,
+        url: `/orchestration/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
         bodyPatterns: [
           {
             equalToJson: addVisitorRequest,

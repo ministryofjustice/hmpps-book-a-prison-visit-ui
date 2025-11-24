@@ -19,12 +19,16 @@ export default class PrisonerDetailsController {
         ...req.flash('formValues')?.[0],
       }
 
-      return res.render('pages/addPrisoner/prisonerDetails', { errors: req.flash('errors'), formValues })
+      return res.render('pages/addPrisoner/prisonerDetails', {
+        showOLServiceNav: true,
+        errors: req.flash('errors'),
+        formValues,
+      })
     }
   }
 
   public submit(): RequestHandler {
-    return async (req, res, next) => {
+    return async (req, res) => {
       const { addPrisonerJourney } = req.session
       if (!addPrisonerJourney?.selectedPrison) {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
@@ -49,36 +53,32 @@ export default class PrisonerDetailsController {
         }
       >matchedData(req)
 
-      try {
-        const { reference } = req.session.booker
-        const result = await this.bookerService.registerPrisoner(reference, {
-          prisonerId: data.prisonNumber,
-          prisonerFirstName: data.firstName,
-          prisonerLastName: data.lastName,
-          prisonerDateOfBirth: data.prisonerDob,
-          prisonId: addPrisonerJourney.selectedPrison.prisonId,
-        })
+      const { reference } = req.session.booker
+      const result = await this.bookerService.registerPrisoner(reference, {
+        prisonerId: data.prisonNumber,
+        prisonerFirstName: data.firstName,
+        prisonerLastName: data.lastName,
+        prisonerDateOfBirth: data.prisonerDob,
+        prisonId: addPrisonerJourney.selectedPrison.prisonId,
+      })
 
-        addPrisonerJourney.result = result
+      addPrisonerJourney.result = result
 
-        if (result) {
-          return res.redirect(paths.ADD_PRISONER.SUCCESS)
-        }
-
-        // if registering fails, store form field data so user can return and amend
-        addPrisonerJourney.prisonerDetails = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          'prisonerDob-day': data['prisonerDob-day'],
-          'prisonerDob-month': data['prisonerDob-month'],
-          'prisonerDob-year': data['prisonerDob-year'],
-          prisonNumber: data.prisonNumber,
-        }
-
-        return res.redirect(paths.ADD_PRISONER.FAIL)
-      } catch (error) {
-        return next(error)
+      if (result) {
+        return res.redirect(paths.ADD_PRISONER.SUCCESS)
       }
+
+      // if registering fails, store form field data so user can return and amend
+      addPrisonerJourney.prisonerDetails = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        'prisonerDob-day': data['prisonerDob-day'],
+        'prisonerDob-month': data['prisonerDob-month'],
+        'prisonerDob-year': data['prisonerDob-year'],
+        prisonNumber: data.prisonNumber,
+      }
+
+      return res.redirect(paths.ADD_PRISONER.FAIL)
     }
   }
 

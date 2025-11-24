@@ -20,7 +20,7 @@ export default function routes(services: Services): Router {
   router.use(addPrisonerRoutes(services))
 
   if (config.features.addVisitor) {
-    router.use(addVisitorRoutes())
+    router.use(addVisitorRoutes(services))
   }
 
   router.use(bookVisitRoutes(services))
