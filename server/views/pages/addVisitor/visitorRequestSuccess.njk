@@ -1,0 +1,32 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Request submitted" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: pageTitle,
+        classes: "visits-request-confirmation",
+        text: "We will review your request and reply within 5 working days."
+      }) }}
+
+      <p>You will get an email to say if your request has been approved or rejected.</p>
+
+      <p>
+        You can also view the status of your requests on
+        <a href="{{ paths.VISITORS }}">the visitors page</a>.
+      </p>
+
+      {{ govukButton({
+        text: "Link another visitor",
+        href: paths.ADD_VISITOR.START,
+        classes: "govuk-button--secondary",
+        attributes: { "data-test": "link-a-visitor" },
+        preventDoubleClick: true
+      }) }}
+    </div>
+  </div>
+{% endblock %}

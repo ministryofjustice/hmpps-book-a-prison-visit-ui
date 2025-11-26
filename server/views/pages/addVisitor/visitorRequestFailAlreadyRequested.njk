@@ -1,0 +1,35 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Visitor already requested" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p>
+        You have previously submitted a request for
+        <span data-test="visitor-name">{{ visitorDetails.firstName }} {{ visitorDetails.lastName }}</span>.
+      </p>
+
+      <p>It is waiting to be reviewed by the prison.</p>
+
+      <p>We will respond to your request within 5 working days.</p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Link another visitor",
+          href: paths.ADD_VISITOR.START,
+          classes: "govuk-button--secondary",
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">View linked and requested visitors</a>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
