@@ -86,10 +86,10 @@ describe('Add visitor request failure pages', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Cannot submit visitor request -/)
+          expect($('title').text()).toMatch(/^Visitor request cannot be submitted -/)
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
-          expect($('h1').text().trim()).toBe('Cannot submit visitor request')
+          expect($('h1').text().trim()).toBe('Visitor request cannot be submitted')
 
           expect(sessionData.addVisitorJourney).toBeUndefined()
         })
