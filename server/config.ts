@@ -109,6 +109,12 @@ export default {
       maxRequests: Number(get('ADD_PRISONER_RATE_LIMIT_PRISONER_MAX_REQUESTS', 50)),
       windowSeconds: Number(get('ADD_PRISONER_RATE_LIMIT_PRISONER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
     },
+    // Rate limit config for Add a visitor journey (add visitor requests per booker)
+    visitor: {
+      keyPrefix: 'visitor',
+      maxRequests: Number(get('ADD_VISITOR_RATE_LIMIT_BOOKER_MAX_REQUESTS', 50)),
+      windowSeconds: Number(get('ADD_VISITOR_RATE_LIMIT_BOOKER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
+    },
   },
   analytics: {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
