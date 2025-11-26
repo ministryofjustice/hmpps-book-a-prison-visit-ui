@@ -47,6 +47,7 @@
         {% if visitorRequests | length %}
           <h2 class="govuk-heading-m">Visitors awaiting review</h2>
 
+          <p>Requests to link visitors are reviewed by the prison.</p>
 
           {% set requests = [] %}
 
@@ -64,9 +65,6 @@
           {% endfor %}
 
           {{ govukTable({
-            caption: "Dates and amounts",
-            captionClasses: "govuk-table__caption--m",
-            firstCellIsHeader: true,
             head: [
               {
                 text: "Name"
@@ -75,7 +73,7 @@
                 text: "Date of birth"
               }
             ],
-            rows: requests
+            rows: [requests]
           }) }}
 
         {% endif %}

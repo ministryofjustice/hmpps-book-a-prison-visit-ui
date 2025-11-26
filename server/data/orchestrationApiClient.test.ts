@@ -236,7 +236,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getActiveVisitorRequests', () => {
-    it('should retrieve all past visits associated with a booker', async () => {
+    it('should retrieve all active visitor requests for a booker', async () => {
       const requests = [TestData.activeVisitorRequest()]
 
       fakeOrchestrationApi

@@ -20,6 +20,8 @@ export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto
 
 export type BookerPrisonerValidationErrorResponse = components['schemas']['BookerPrisonerValidationErrorResponse']
 
+export type BookerPrisonerVisitorRequestDto = components['schemas']['BookerPrisonerVisitorRequestDto']
+
 export type BookerReference = components['schemas']['BookerReference']
 
 export type BookerVisitorRequestValidationErrorResponse =
@@ -44,5 +46,3 @@ export type PrisonRegisterPrisonDto = components['schemas']['PrisonRegisterPriso
 export type VisitDto = components['schemas']['VisitDto']
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']
-
-export type BookerPrisonerVisitorRequestDto = components['schemas']['BookerPrisonerVisitorRequestDto']

@@ -22,7 +22,7 @@ import { VisitDetails } from '../../services/visitService'
 export default class TestData {
   static activeVisitorRequest = ({
     reference = 'aaaa-bbbb-cccc',
-    prisonerId = 'A1234AA',
+    prisonerId = 'A1234BC',
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',

@@ -62,7 +62,7 @@ describe('Booker service', () => {
   })
 
   describe('getActiveVisitorRequests', () => {
-    it('should active visitor requests for provided booker reference', async () => {
+    it('should get active visitor requests for provided booker reference', async () => {
       const activeVisitorRequests = [TestData.activeVisitorRequest()]
       const bookerReference = TestData.bookerReference()
       orchestrationApiClient.getActiveVisitorRequests.mockResolvedValue(activeVisitorRequests)

@@ -18,6 +18,8 @@ const prisoner = TestData.prisoner()
 const visitor = TestData.visitor()
 
 beforeEach(() => {
+  bookerService.getActiveVisitorRequests.mockResolvedValue([])
+
   sessionData = {
     booker: {
       reference: bookerReference,
@@ -99,6 +101,25 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
         expect($('[data-test=add-visitor-form]').length).toBe(0)
+      })
+  })
+
+  it('should render active visitor requests, if feature enabled', () => {
+    bookerService.getVisitors.mockResolvedValue([])
+
+    const activeVisitorRequests = [TestData.activeVisitorRequest()]
+    bookerService.getActiveVisitorRequests.mockResolvedValue(activeVisitorRequests)
+
+    enableFeatureForTest('addVisitor')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(paths.VISITORS)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test=visitor-name-1]').text()).toBe('Joan Phillips')
+        expect($('[data-test=visitor-dob-1]').text()).toBe('21 February 1980')
       })
   })
 })
