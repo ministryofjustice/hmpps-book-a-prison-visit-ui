@@ -18,11 +18,13 @@ context('Add a visitor', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.task('stubGetVisitors')
-    cy.signIn()
+
+    cy.task('clearRateLimits')
   })
 
   it('should complete the add a visitor request journey', () => {
     // Home page
+    cy.signIn()
     const homePage = Page.verifyOnPage(HomePage)
 
     // Navigate to Visitors page
@@ -63,6 +65,7 @@ context('Add a visitor', () => {
 
   it('should complete the add a visitor request journey and fail with the duplicate request warning', () => {
     // Home page
+    cy.signIn()
     const homePage = Page.verifyOnPage(HomePage)
 
     // Navigate to Visitors page
@@ -89,5 +92,58 @@ context('Add a visitor', () => {
     checkVisitorDetailsPage.submit()
     const visitorRequestFailAlreadyRequestedPage = Page.verifyOnPage(VisitorRequestFailAlreadyRequestedPage)
     visitorRequestFailAlreadyRequestedPage.getVisitorName().contains('Joan Phillips')
+  })
+
+  describe('Rate limiting', () => {
+    // using low, custom limits set in feature.env for max add visitor requests per booker
+    it('should limit the number of times a booker and request to add a visitor and allow retry after expiry', () => {
+      const attemptAddVisitorRequestJourney = (count: number) => {
+        cy.log(`Add visitor request attempt ${count}`)
+
+        // Home page
+        cy.signIn()
+        const homePage = Page.verifyOnPage(HomePage)
+
+        // Navigate to Visitors page
+        homePage.goToServiceHeaderLinkByName('Visitors')
+        const visitorsPage = Page.verifyOnPage(VisitorsPage)
+
+        // Start link a new visitor journey
+        visitorsPage.linkANewVisitor()
+        const addVisitorStartPage = Page.verifyOnPage(AddVisitorStartPage)
+
+        // Enter visitor details
+        addVisitorStartPage.continue()
+        const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage)
+        visitorDetailsPage.enterFirstName('Joan')
+        visitorDetailsPage.enterLastName('Phillips')
+        visitorDetailsPage.enterVisitorDob(21, 2, 1980)
+
+        // Check visitor request
+        visitorDetailsPage.continue()
+        const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+
+        // Submit request and get to confirmation
+        cy.task('stubAddVisitorRequest')
+        checkVisitorDetailsPage.submit()
+      }
+
+      // Try 2 times and should succeed
+      attemptAddVisitorRequestJourney(1)
+      Page.verifyOnPage(VisitorRequestSuccessPage)
+      attemptAddVisitorRequestJourney(2)
+      Page.verifyOnPage(VisitorRequestSuccessPage)
+
+      // Next attempt should fail (max visitor requests = 2)
+      attemptAddVisitorRequestJourney(3)
+      cy.contains('Too Many Requests')
+
+      // Wait for rate limits to expire
+      cy.task('waitUntilRateLimitsExpire')
+
+      // Next attempt should succeed as limit now expired
+      attemptAddVisitorRequestJourney(4)
+      Page.verifyOnPage(VisitorRequestSuccessPage)
+    })
   })
 })
