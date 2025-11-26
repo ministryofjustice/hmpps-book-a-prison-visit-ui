@@ -30,6 +30,7 @@ describe('Booker service', () => {
   let bookerService: BookerService
   const bookerRateLimit = createMockRateLimitService()
   const prisonerRateLimit = createMockRateLimitService()
+  const visitorRateLimit = createMockRateLimitService()
 
   beforeEach(() => {
     uuidCount = 0
@@ -41,6 +42,7 @@ describe('Booker service', () => {
       hmppsAuthClient,
       bookerRateLimit,
       prisonerRateLimit,
+      visitorRateLimit,
     )
   })
 
@@ -65,6 +67,10 @@ describe('Booker service', () => {
     const bookerReference = 'aaaa-bbbb-cccc'
     const prisonerId = 'A1234BC'
     const addVisitorRequest = TestData.addVisitorRequest()
+
+    beforeEach(() => {
+      visitorRateLimit.incrementAndCheckLimit.mockResolvedValue(true)
+    })
 
     it('should send a request to add a visitor and return true', async () => {
       orchestrationApiClient.addVisitorRequest.mockResolvedValue(true)
@@ -96,6 +102,19 @@ describe('Booker service', () => {
       expect(logger.info).toHaveBeenCalledWith(
         `Failed (REQUEST_ALREADY_EXISTS) adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`,
       )
+    })
+
+    describe('Rate limiting', () => {
+      it('should throw a Too Many Requests error if add visitor rate limit exceeded for booker', async () => {
+        visitorRateLimit.incrementAndCheckLimit.mockResolvedValue(false)
+
+        await expect(
+          bookerService.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest }),
+        ).rejects.toThrow(TooManyRequests)
+
+        expect(logger.info).toHaveBeenCalledWith('Rate limit exceeded for visitor requests for booker aaaa-bbbb-cccc')
+        expect(orchestrationApiClient.addVisitorRequest).not.toHaveBeenCalled()
+      })
     })
   })
 

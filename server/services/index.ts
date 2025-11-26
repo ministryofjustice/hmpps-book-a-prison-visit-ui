@@ -21,6 +21,7 @@ export const services = () => {
     hmppsAuthClient,
     new RateLimitService(rateLimitStore, config.rateLimit.booker),
     new RateLimitService(rateLimitStore, config.rateLimit.prisoner),
+    new RateLimitService(rateLimitStore, config.rateLimit.visitor),
   )
 
   const prisonService = new PrisonService(

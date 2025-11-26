@@ -21,7 +21,8 @@ import { BookerService, PrisonService, RateLimitService, VisitService, VisitSess
 
 jest.mock('..')
 
-export const createMockBookerService = () => new BookerService(null, null, null, null) as jest.Mocked<BookerService>
+export const createMockBookerService = () =>
+  new BookerService(null, null, null, null, null) as jest.Mocked<BookerService>
 
 export const createMockPrisonService = () => new PrisonService(null, null, null, null) as jest.Mocked<PrisonService>
 
