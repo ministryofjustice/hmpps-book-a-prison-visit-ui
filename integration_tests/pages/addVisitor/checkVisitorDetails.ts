@@ -5,6 +5,10 @@ export default class CheckVisitorDetailsPage extends Page {
     super('Check your request')
   }
 
+  changeDetails = (): void => {
+    cy.get('[data-test=change]').click()
+  }
+
   firstName = (): PageElement => cy.get('[data-test=first-name]')
 
   lastName = (): PageElement => cy.get('[data-test=last-name]')
