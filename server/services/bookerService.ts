@@ -7,6 +7,7 @@ import {
   AddVisitorToBookerPrisonerRequestDto,
   AuthDetailDto,
   BookerPrisonerValidationErrorResponse,
+  BookerPrisonerVisitorRequestDto,
   BookerVisitorRequestValidationErrorResponse,
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
@@ -62,6 +63,13 @@ export default class BookerService {
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
+  }
+
+  async getActiveVisitorRequests(bookerReference: string): Promise<BookerPrisonerVisitorRequestDto[]> {
+    const token = await this.hmppsAuthClient.getSystemClientToken()
+    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+
+    return orchestrationApiClient.getActiveVisitorRequests(bookerReference)
   }
 
   async addVisitorRequest({

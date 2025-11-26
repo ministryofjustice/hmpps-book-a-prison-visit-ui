@@ -61,6 +61,19 @@ describe('Booker service', () => {
     })
   })
 
+  describe('getActiveVisitorRequests', () => {
+    it('should active visitor requests for provided booker reference', async () => {
+      const activeVisitorRequests = [TestData.activeVisitorRequest()]
+      const bookerReference = TestData.bookerReference()
+      orchestrationApiClient.getActiveVisitorRequests.mockResolvedValue(activeVisitorRequests)
+
+      const result = await bookerService.getActiveVisitorRequests(bookerReference.value)
+
+      expect(orchestrationApiClient.getActiveVisitorRequests).toHaveBeenCalledWith(bookerReference.value)
+      expect(result).toBe(activeVisitorRequests)
+    })
+  })
+
   describe('addVisitorRequest', () => {
     const bookerReference = 'aaaa-bbbb-cccc'
     const prisonerId = 'A1234BC'

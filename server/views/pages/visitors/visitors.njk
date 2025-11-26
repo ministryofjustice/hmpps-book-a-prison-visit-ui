@@ -43,6 +43,43 @@
       {% endif %}
 
       {% if features.addVisitor %}
+
+        {% if visitorRequests | length %}
+          <h2 class="govuk-heading-m">Visitors awaiting review</h2>
+
+
+          {% set requests = [] %}
+
+          {% for visitor in visitorRequests %}
+            {% set requests = (requests.push(
+              {
+                text: visitor.firstName + ' ' + visitor.lastName,
+                attributes: { "data-test": "visitor-name-" + loop.index }
+              },
+              {
+                text: visitor.dateOfBirth | formatDate,
+                attributes: { "data-test": "visitor-dob-" + loop.index }
+              }
+            ), requests) %}
+          {% endfor %}
+
+          {{ govukTable({
+            caption: "Dates and amounts",
+            captionClasses: "govuk-table__caption--m",
+            firstCellIsHeader: true,
+            head: [
+              {
+                text: "Name"
+              },
+              {
+                text: "Date of birth"
+              }
+            ],
+            rows: requests
+          }) }}
+
+        {% endif %}
+
         <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
 
         <p>You can only book visits for people linked to your account.</p>

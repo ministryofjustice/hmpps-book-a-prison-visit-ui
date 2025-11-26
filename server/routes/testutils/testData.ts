@@ -13,12 +13,27 @@ import type {
   PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
+  BookerPrisonerVisitorRequestDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
 
 export default class TestData {
+  static activeVisitorRequest = ({
+    reference = 'aaaa-bbbb-cccc',
+    prisonerId = 'A1234AA',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
+  })
+
   static addVisitorRequest = ({
     firstName = 'Joan',
     lastName = 'Phillips',

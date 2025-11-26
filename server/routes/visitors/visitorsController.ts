@@ -20,9 +20,15 @@ export default class VisitorsController {
 
       const visitorsTableRows = buildVisitorsTableRows(visitors)
 
+      const allVisitorRequests = await this.bookerService.getActiveVisitorRequests(booker.reference)
+      const visitorRequests = allVisitorRequests?.filter(
+        request => request.prisonerId === booker.prisoners[0].prisonerNumber,
+      )
+
       return res.render('pages/visitors/visitors', {
         prisoner: booker.prisoners[0],
         visitorsTableRows,
+        visitorRequests,
         showOLServiceNav: true,
       })
     }

@@ -20,6 +20,7 @@ import {
   BookingRequestVisitorDetailsDto,
   AddVisitorToBookerPrisonerRequestDto,
   BookerVisitorRequestValidationErrorResponse,
+  BookerPrisonerVisitorRequestDto,
 } from './orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
 
@@ -163,6 +164,12 @@ export default class OrchestrationApiClient {
     return this.restClient.put({
       path: '/public/booker/register/auth',
       data: { ...authDetailDto },
+    })
+  }
+
+  async getActiveVisitorRequests(bookerReference: string): Promise<BookerPrisonerVisitorRequestDto[]> {
+    return this.restClient.get({
+      path: `/public/booker/${bookerReference}/permitted/visitors/requests`,
     })
   }
 
