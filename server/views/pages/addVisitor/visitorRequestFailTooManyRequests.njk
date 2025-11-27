@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Cannot submit visitor request" %}
+{% set pageTitle = "Visitor request cannot be submitted" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -8,12 +8,15 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>You already have several visitor requests waiting for review.</p>
+      <p>You have reached the limit for visitor requests.</p>
       
-      <p>You cannot make any more requests until these have been reviewed.</p>
+      <p>
+        You cannot make another request until one of your requests is reviewed.
+        You will get an email to say if your request has been approved or rejected.
+      </p>
 
       <p>You can
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">view your existing visitor requests</a>.
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">view your linked and requested visitors</a>.
       </p>
 
     </div>

@@ -53,6 +53,7 @@ export default class BookerService {
     private readonly hmppsAuthClient: HmppsAuthClient,
     private readonly bookerRateLimit: RateLimitService,
     private readonly prisonerRateLimit: RateLimitService,
+    private readonly visitorRateLimit: RateLimitService,
   ) {}
 
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
@@ -81,6 +82,13 @@ export default class BookerService {
     prisonerId: string
     addVisitorRequest: AddVisitorToBookerPrisonerRequestDto
   }): Promise<true | BookerVisitorRequestValidationErrorResponse['validationError']> {
+    const withinVisitorRequestLimit = await this.visitorRateLimit.incrementAndCheckLimit(bookerReference)
+
+    if (!withinVisitorRequestLimit) {
+      logger.info(`Rate limit exceeded for visitor requests for booker ${bookerReference}`)
+      throw new TooManyRequests()
+    }
+
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
