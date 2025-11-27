@@ -17,6 +17,16 @@ context('Add a visitor', () => {
     cy.task('stubGetSupportedPrisons')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
+    cy.task('stubGetActiveVisitorRequests', {
+      visitorRequests: [
+        TestData.activeVisitorRequest({
+          reference: 'cccc-bbbb-aaaa',
+          firstName: 'Keith',
+          lastName: 'Rogers',
+          dateOfBirth: '1990-01-15',
+        }),
+      ],
+    })
     cy.task('stubGetVisitors')
     cy.signIn()
   })
@@ -25,9 +35,11 @@ context('Add a visitor', () => {
     // Home page
     const homePage = Page.verifyOnPage(HomePage)
 
-    // Navigate to Visitors page
+    // Navigate to Visitors page - check visitor requests
     homePage.goToServiceHeaderLinkByName('Visitors')
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.requestVisitorName(1).contains('Keith Rogers')
+    visitorsPage.requestVisitorDateOfBirth(1).contains('15 January 1990')
 
     // Start link a new visitor journey
     visitorsPage.linkANewVisitor()

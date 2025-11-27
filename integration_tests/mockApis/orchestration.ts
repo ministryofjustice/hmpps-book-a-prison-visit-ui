@@ -13,6 +13,7 @@ import {
   BookingRequestVisitorDetailsDto,
   BookerVisitorRequestValidationErrorResponse,
   AddVisitorToBookerPrisonerRequestDto,
+  BookerPrisonerVisitorRequestDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -231,6 +232,25 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: bookerReference,
+      },
+    }),
+
+  stubGetActiveVisitorRequests: ({
+    bookerReference = TestData.bookerReference(),
+    visitorRequests = [TestData.activeVisitorRequest()],
+  }: {
+    bookerReference?: BookerReference
+    visitorRequests?: BookerPrisonerVisitorRequestDto[]
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/visitors/requests`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visitorRequests,
       },
     }),
 

@@ -55,11 +55,11 @@
             {% set requests = (requests.push(
               {
                 text: visitor.firstName + ' ' + visitor.lastName,
-                attributes: { "data-test": "visitor-name-" + loop.index }
+                attributes: { "data-test": "request-visitor-name-" + loop.index }
               },
               {
                 text: visitor.dateOfBirth | formatDate,
-                attributes: { "data-test": "visitor-dob-" + loop.index }
+                attributes: { "data-test": "request-visitor-dob-" + loop.index }
               }
             ), requests) %}
           {% endfor %}

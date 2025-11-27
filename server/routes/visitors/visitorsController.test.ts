@@ -118,8 +118,8 @@ describe('Visitors page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('[data-test=visitor-name-1]').text()).toBe('Joan Phillips')
-        expect($('[data-test=visitor-dob-1]').text()).toBe('21 February 1980')
+        expect($('[data-test=request-visitor-name-1]').text()).toBe('Joan Phillips')
+        expect($('[data-test=request-visitor-dob-1]').text()).toBe('21 February 1980')
       })
   })
 })
