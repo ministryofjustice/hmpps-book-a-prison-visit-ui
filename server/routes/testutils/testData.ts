@@ -20,20 +20,6 @@ import { Prisoner, Visitor } from '../../services/bookerService'
 import { VisitDetails } from '../../services/visitService'
 
 export default class TestData {
-  static activeVisitorRequest = ({
-    reference = 'aaaa-bbbb-cccc',
-    prisonerId = 'A1234BC',
-    firstName = 'Joan',
-    lastName = 'Phillips',
-    dateOfBirth = '1980-02-21',
-  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
-    reference,
-    prisonerId,
-    firstName,
-    lastName,
-    dateOfBirth,
-  })
-
   static addVisitorRequest = ({
     firstName = 'Joan',
     lastName = 'Phillips',
@@ -353,5 +339,19 @@ export default class TestData {
     adult,
     banned,
     banExpiryDate,
+  })
+
+  static visitorRequest = ({
+    reference = 'dddd-eeee-ffff',
+    prisonerId = 'A1234BC',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
   })
 }

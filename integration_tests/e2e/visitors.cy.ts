@@ -16,6 +16,14 @@ context('Visitors page', () => {
     }),
   ]
 
+  const visitorRequests = [
+    TestData.visitorRequest({
+      firstName: 'Jack',
+      lastName: 'Rogers',
+      dateOfBirth: '1990-01-15',
+    }),
+  ]
+
   const prison = TestData.prisonDto()
   const prisoner = TestData.bookerPrisonerInfoDto()
 
@@ -29,20 +37,11 @@ context('Visitors page', () => {
 
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
+    cy.task('stubGetVisitorRequests', { visitorRequests })
     cy.task('stubValidatePrisonerPass')
   })
 
   it('should show Visitors page with two visitors (one having a BAN restriction) and one visitor request', () => {
-    cy.task('stubGetActiveVisitorRequests', {
-      visitorRequests: [
-        TestData.activeVisitorRequest({
-          reference: 'cccc-bbbb-aaaa',
-          firstName: 'Jack',
-          lastName: 'Rogers',
-          dateOfBirth: '1990-01-15',
-        }),
-      ],
-    })
     const homePage = Page.verifyOnPage(HomePage)
     homePage.goToServiceHeaderLinkByName('Visitors')
 
@@ -52,9 +51,9 @@ context('Visitors page', () => {
     visitorsPage.visitorDateOfBirth(0).contains('21 February 1980')
     visitorsPage.visitorName(1).contains('Keith Richards')
     visitorsPage.visitorDateOfBirth(1).contains('5 May 1990')
-    // active visitor request
-    visitorsPage.requestVisitorName(1).contains('Jack Rogers')
-    visitorsPage.requestVisitorDateOfBirth(1).contains('15 January 1990')
+    visitorsPage.visitorRequests().should('exist')
+    visitorsPage.visitorRequestName(0).contains('Jack Rogers')
+    visitorsPage.visitorRequestDateOfBirth(0).contains('15 January 1990')
   })
 
   it('should not show a banned visitor on booking journey Select visitors page', () => {

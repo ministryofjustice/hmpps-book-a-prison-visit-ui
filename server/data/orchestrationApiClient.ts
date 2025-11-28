@@ -167,7 +167,7 @@ export default class OrchestrationApiClient {
     })
   }
 
-  async getActiveVisitorRequests(bookerReference: string): Promise<BookerPrisonerVisitorRequestDto[]> {
+  async getVisitorRequests(bookerReference: string): Promise<BookerPrisonerVisitorRequestDto[]> {
     return this.restClient.get({
       path: `/public/booker/${bookerReference}/permitted/visitors/requests`,
     })

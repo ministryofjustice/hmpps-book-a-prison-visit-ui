@@ -1,7 +1,8 @@
 import type { RequestHandler } from 'express'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
-import { buildVisitorsTableRows } from './visitorsUtils'
+import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
+import config from '../../config'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -14,22 +15,21 @@ export default class VisitorsController {
         return res.redirect(paths.HOME)
       }
 
-      const visitors = booker.prisoners.length
-        ? await this.bookerService.getVisitors(booker.reference, booker.prisoners[0].prisonerNumber)
-        : []
+      const prisoner = booker.prisoners[0]
+
+      const [visitors, allVisitorRequests] = await Promise.all([
+        this.bookerService.getVisitors(booker.reference, prisoner.prisonerNumber),
+        config.features.addVisitor ? this.bookerService.getVisitorRequests(booker.reference) : [],
+      ])
+      const visitorRequests = allVisitorRequests.filter(request => request.prisonerId === prisoner.prisonerNumber)
 
       const visitorsTableRows = buildVisitorsTableRows(visitors)
-
-      const allVisitorRequests = await this.bookerService.getActiveVisitorRequests(booker.reference)
-
-      const visitorRequests = allVisitorRequests.filter(
-        request => request.prisonerId === booker.prisoners[0].prisonerNumber,
-      )
+      const visitorRequestsTableRows = buildVisitorRequestsTableRows(visitorRequests)
 
       return res.render('pages/visitors/visitors', {
         prisoner: booker.prisoners[0],
         visitorsTableRows,
-        visitorRequests,
+        visitorRequestsTableRows,
         showOLServiceNav: true,
       })
     }

@@ -63,16 +63,16 @@ describe('Booker service', () => {
     })
   })
 
-  describe('getActiveVisitorRequests', () => {
-    it('should get active visitor requests for provided booker reference', async () => {
-      const activeVisitorRequests = [TestData.activeVisitorRequest()]
+  describe('getVisitorRequests', () => {
+    it('should get visitor requests for provided booker reference', async () => {
+      const visitorRequests = [TestData.visitorRequest()]
       const bookerReference = TestData.bookerReference()
-      orchestrationApiClient.getActiveVisitorRequests.mockResolvedValue(activeVisitorRequests)
+      orchestrationApiClient.getVisitorRequests.mockResolvedValue(visitorRequests)
 
-      const result = await bookerService.getActiveVisitorRequests(bookerReference.value)
+      const result = await bookerService.getVisitorRequests(bookerReference.value)
 
-      expect(orchestrationApiClient.getActiveVisitorRequests).toHaveBeenCalledWith(bookerReference.value)
-      expect(result).toBe(activeVisitorRequests)
+      expect(orchestrationApiClient.getVisitorRequests).toHaveBeenCalledWith(bookerReference.value)
+      expect(result).toBe(visitorRequests)
     })
   })
 

@@ -1,8 +1,8 @@
 import { formatDate } from '../../utils/utils'
 import type { Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
+import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 
-// eslint-disable-next-line import/prefer-default-export
 export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => {
   return visitors.map((visitor, index) => {
     let canBookText = 'Yes'
@@ -26,6 +26,23 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
         text: canBookText,
         classes: visitor.banned ? 'warning' : '',
         attributes: { 'data-test': `visitor-availability-${index}` },
+      },
+    ]
+  })
+}
+
+export const buildVisitorRequestsTableRows = (visitors: BookerPrisonerVisitorRequestDto[]): GOVUKTableRow[] => {
+  return visitors.map((visitor, index) => {
+    return [
+      // Visitor name
+      {
+        text: `${visitor.firstName} ${visitor.lastName}`,
+        attributes: { 'data-test': `visitor-request-name-${index}` },
+      },
+      // Visitor DoB
+      {
+        text: formatDate(visitor.dateOfBirth),
+        attributes: { 'data-test': `visitor-request-dob-${index}` },
       },
     ]
   })

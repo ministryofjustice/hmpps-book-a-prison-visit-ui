@@ -11,9 +11,11 @@ export default class VisitorsPage extends Page {
 
   visitorDateOfBirth = (index: number): PageElement => cy.get(`[data-test=visitor-dob-${index}]`)
 
-  requestVisitorName = (index: number): PageElement => cy.get(`[data-test=request-visitor-name-${index}]`)
+  visitorRequests = (): PageElement => cy.get('[data-test=visitor-requests]')
 
-  requestVisitorDateOfBirth = (index: number): PageElement => cy.get(`[data-test=request-visitor-dob-${index}]`)
+  visitorRequestName = (index: number): PageElement => cy.get(`[data-test=visitor-request-name-${index}]`)
+
+  visitorRequestDateOfBirth = (index: number): PageElement => cy.get(`[data-test=visitor-request-dob-${index}]`)
 
   linkANewVisitor = (): void => {
     cy.get('[data-test=link-a-visitor]').click()

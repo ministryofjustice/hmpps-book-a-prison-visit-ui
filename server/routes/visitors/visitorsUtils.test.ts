@@ -1,6 +1,6 @@
 import { GOVUKTableRow } from '../../@types/bapv'
 import TestData from '../testutils/testData'
-import { buildVisitorsTableRows } from './visitorsUtils'
+import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
 
 describe('buildVisitorsTableRows', () => {
   it('should build visitor table rows for visitors listing page', () => {
@@ -42,5 +42,20 @@ describe('buildVisitorsTableRows', () => {
     ]
 
     expect(buildVisitorsTableRows(visitors)).toStrictEqual(expectedTableRows)
+  })
+})
+
+describe('buildVisitorRequestsTableRows', () => {
+  it('should build visitor requests table rows for visitors listing page', () => {
+    const visitorRequests = [TestData.visitorRequest()]
+
+    const expectedTableRows: GOVUKTableRow[] = [
+      [
+        { text: 'Joan Phillips', attributes: { 'data-test': 'visitor-request-name-0' } },
+        { text: '21 February 1980', attributes: { 'data-test': 'visitor-request-dob-0' } },
+      ],
+    ]
+
+    expect(buildVisitorRequestsTableRows(visitorRequests)).toStrictEqual(expectedTableRows)
   })
 })
