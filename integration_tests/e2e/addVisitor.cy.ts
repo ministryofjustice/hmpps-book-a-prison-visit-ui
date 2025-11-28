@@ -20,7 +20,6 @@ context('Add a visitor', () => {
     cy.task('stubGetVisitors')
     cy.task('stubGetVisitorRequests', { visitorRequests: [] })
     cy.task('clearRateLimits')
-    cy.signIn()
   })
 
   it('should complete the add a visitor request journey', () => {
