@@ -235,6 +235,21 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('getVisitorRequests', () => {
+    it('should retrieve all visitor requests for a booker', async () => {
+      const requests = [TestData.visitorRequest()]
+
+      fakeOrchestrationApi
+        .get(`/public/booker/${bookerReference.value}/permitted/visitors/requests`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, requests)
+
+      const result = await orchestrationApiClient.getVisitorRequests(bookerReference.value)
+
+      expect(result).toStrictEqual(requests)
+    })
+  })
+
   describe('addVisitorRequest', () => {
     const addVisitorRequest = TestData.addVisitorRequest()
     const prisonerId = 'A1234BC'

@@ -20,7 +20,6 @@
         <h3 class="govuk-heading-s govuk-!-margin-top-5">Visitors linked to your account</h3>
 
         {{ govukTable({
-          firstCellIsHeader: false,
           head: [
             {
               text: "Name"
@@ -43,6 +42,26 @@
       {% endif %}
 
       {% if features.addVisitor %}
+
+        {% if visitorRequestsTableRows | length %}
+          <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
+
+          <p>Requests to link visitors are reviewed by the prison.</p>
+
+          {{ govukTable({
+            classes: "govuk-!-width-two-thirds",
+            head: [
+              {
+                text: "Name"
+              },
+              {
+                text: "Date of birth"
+              }
+            ],
+            rows: visitorRequestsTableRows
+          }) }}
+        {% endif %}
+
         <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
 
         <p>You can only book visits for people linked to your account.</p>

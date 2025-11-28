@@ -18,7 +18,7 @@ context('Add a visitor', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.task('stubGetVisitors')
-
+    cy.task('stubGetVisitorRequests', { visitorRequests: [] })
     cy.task('clearRateLimits')
   })
 
@@ -30,6 +30,7 @@ context('Add a visitor', () => {
     // Navigate to Visitors page
     homePage.goToServiceHeaderLinkByName('Visitors')
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
     visitorsPage.linkANewVisitor()
