@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^7.1.0",
+    "@ministryofjustice/hmpps-monitoring": "1.0.0",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",

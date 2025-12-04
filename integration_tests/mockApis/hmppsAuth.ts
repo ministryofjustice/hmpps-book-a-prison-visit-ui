@@ -24,4 +24,15 @@ const stubHmppsAuthToken = () =>
     },
   })
 
-export default { stubHmppsAuthToken }
+const stubHmppsAuthPing = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/auth/health/ping',
+    },
+    response: {
+      status: 200,
+    },
+  })
+
+export default { stubHmppsAuthToken, stubHmppsAuthPing }
