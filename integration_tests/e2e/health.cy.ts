@@ -2,6 +2,7 @@ context('Healthcheck', () => {
   context('All healthy', () => {
     beforeEach(() => {
       cy.task('reset')
+      cy.task('stubHmppsAuthPing')
       cy.task('stubOrchestrationPing')
       cy.task('stubPrisonRegisterPing')
     })
@@ -29,7 +30,7 @@ context('Healthcheck', () => {
     it('Reports correctly when token orchestration down', () => {
       cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
         expect(response.body.components.orchestration.status).to.equal('DOWN')
-        expect(response.body.components.orchestration.details).to.contain({ status: 500, retries: 2 })
+        expect(response.body.components.orchestration.details).to.contain({ status: 500, attempts: 3 })
       })
     })
 
