@@ -10,13 +10,9 @@
 
 {% set backLinkHref = paths.HOME %}
 
-{% set linkHref = features.addVisitor
-  ? paths.ADD_VISITOR.START
-  : "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" %}
+{% set linkHref = paths.ADD_VISITOR.START if features.addVisitor else "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" %}
 
-{% set linkDataTest = features.addVisitor
-  ? "link-a-visitor"
-  : "add-visitor-form" %}
+{% set linkDataTest = "link-a-visitor" if features.addVisitor else "add-visitor-form" %}
 
 {% set detailsHtml %}
   <p class="govuk-body">
@@ -25,13 +21,7 @@
     Visitors must be on the prisoner's visitor list.
     <br><br>
     To make a request,
-    <a
-      data-test="{{ linkDataTest }}"
-      href="{{ linkHref }}"
-      {% if linkTarget %}target="{{ linkTarget }}"{% endif %}
-      {% if linkRel %}rel="{{ linkRel }}"{% endif %}
-      class="govuk-link"
-    >complete the form</a>.
+    <a class="govuk-link" data-test="{{ linkDataTest }}" href="{{ linkHref }}">complete the form</a>.
     <br><br>
     We will respond to your request within 5 working days.
   </p>
