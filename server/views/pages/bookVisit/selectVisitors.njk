@@ -15,16 +15,14 @@
 {% set linkDataTest = "link-a-visitor" if features.addVisitor else "add-visitor-form" %}
 
 {% set detailsHtml %}
-  <p class="govuk-body">
-    You can only book visits for people linked to your account.
-    <br><br>
-    Visitors must be on the prisoner's visitor list.
-    <br><br>
-    To make a request,
-    <a class="govuk-link" data-test="{{ linkDataTest }}" href="{{ linkHref }}">complete the form</a>.
-    <br><br>
-    We will respond to your request within 5 working days.
+  <p class="govuk-body">You can only book visits for people linked to your account.</p>
+  <p class="govuk-body">Visitors must be on the prisoner's visitor list.</p>
+  <p class="govuk-body">To make a request,
+    <a class="govuk-link" data-test="{{ linkDataTest }}" href="{{ linkHref }}">
+      complete the form
+    </a>.
   </p>
+  <p class="govuk-body">We will respond to your request within 5 working days.</p>
 {% endset %}
 
 {% 
