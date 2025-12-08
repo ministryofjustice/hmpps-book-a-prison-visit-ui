@@ -4,10 +4,38 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageTitle = "Who is going on the visit?" %}
 
 {% set backLinkHref = paths.HOME %}
+
+{% set linkHref = features.addVisitor
+  ? paths.ADD_VISITOR.START
+  : "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" %}
+
+{% set linkDataTest = features.addVisitor
+  ? "link-a-visitor"
+  : "add-visitor-form" %}
+
+{% set detailsHtml %}
+  <p class="govuk-body">
+    You can only book visits for people linked to your account.
+    <br><br>
+    Visitors must be on the prisoner's visitor list.
+    <br><br>
+    To make a request,
+    <a
+      data-test="{{ linkDataTest }}"
+      href="{{ linkHref }}"
+      {% if linkTarget %}target="{{ linkTarget }}"{% endif %}
+      {% if linkRel %}rel="{{ linkRel }}"{% endif %}
+      class="govuk-link"
+    >complete the form</a>.
+    <br><br>
+    We will respond to your request within 5 working days.
+  </p>
+{% endset %}
 
 {% 
   set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
@@ -101,43 +129,10 @@
             {% endfor %}
           {% endif %}
 
-          {% if features.addVisitor %}
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Want to book for someone else?
-                </span>
-              </summary>
-              <div class="govuk-details__text">
-                You can only book visits for people linked to your account.
-                <br><br>
-                Visitors must be on the prisoner's visitor list.
-                <br><br>
-                To make a request, 
-                <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">complete the form</a>.
-                <br><br>
-                We will respond to your request within 5 working days.
-              </div>
-            </details>
-          {% else %}
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                  Want to book for someone else?
-                </span>
-              </summary>
-              <div class="govuk-details__text">
-                You can only book visits for people linked to your account.
-                <br><br>
-                Visitors must be on the prisoner's visitor list.
-                <br><br>
-                To make a request, 
-                <a data-test="add-visitor-form" href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/">complete the form</a>.
-                <br><br>
-                We will respond to your request within 5 working days.
-              </div>
-            </details>
-          {% endif %}
+          {{ govukDetails({
+            summaryText: "Want to book for someone else?",
+            html: detailsHtml
+          }) }}
 
           {{ govukButton({
             text: "Continue",
