@@ -4,10 +4,26 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageTitle = "Who is going on the visit?" %}
 
 {% set backLinkHref = paths.HOME %}
+
+{% set linkHref = paths.ADD_VISITOR.START if features.addVisitor else "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" %}
+
+{% set linkDataTest = "link-a-visitor" if features.addVisitor else "add-visitor-form" %}
+
+{% set detailsHtml %}
+  <p class="govuk-body">You can only book visits for people linked to your account.</p>
+  <p class="govuk-body">Visitors must be on the prisoner's visitor list.</p>
+  <p class="govuk-body">To make a request,
+    <a class="govuk-link" data-test="{{ linkDataTest }}" href="{{ linkHref }}">
+      complete the form
+    </a>.
+  </p>
+  <p class="govuk-body">We will respond to your request within 5 working days.</p>
+{% endset %}
 
 {% 
   set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
@@ -101,6 +117,11 @@
             {% endfor %}
           {% endif %}
 
+          {{ govukDetails({
+            summaryText: "Want to book for someone else?",
+            html: detailsHtml
+          }) }}
+
           {{ govukButton({
             text: "Continue",
             preventDoubleClick: true,
@@ -113,37 +134,6 @@
           text: "No visitors are currently approved.",
           iconFallbackText: "Warning"
         }) }}
-      {% endif %}
-
-      {% if features.addVisitor %}
-        <h2 class="govuk-heading-s">Visitors awaiting review</h2>
-
-        <p>
-          If you have submitted a request to link visitors to your account,
-          we will contact you when your request has been approved or rejected.
-        </p>
-        <p>We will respond to your request within 5 working days.</p>
-
-        <h2 class="govuk-heading-s">Linking new visitors to your account</h2>
-        <p>You can only book visits for people linked to your account.</p>
-        <p>Visitors must be on the prisoner’s visitor list.</p>
-        <p>
-          To make a request,
-          <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">complete the form</a>.
-        </p>
-
-      {% else %}
-        <h2 class="govuk-heading-m">Waiting for approval</h2>
-        <p>If you have already submitted a request to add visitors, we will contact you when your request has been approved or rejected.</p>
-        <p>We will respond within 5 working days.</p>
-
-        <h2 class="govuk-heading-m">Add a new visitor</h2>
-        <p>The person you want to book for must be on the prisoner’s visitor list.</p>
-        <p>
-          To make a request,
-          <a data-test="add-visitor-form" href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/">complete the form</a>.
-          We will respond within 5 working days.
-        </p>
       {% endif %}
 
     </div>
