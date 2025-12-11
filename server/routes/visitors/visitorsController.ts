@@ -17,11 +17,16 @@ export default class VisitorsController {
 
       const prisoner = booker.prisoners[0]
 
-      const [visitors, allVisitorRequests] = await Promise.all([
+      const [visitors, visitorRequests] = await Promise.all([
         this.bookerService.getVisitors(booker.reference, prisoner.prisonerNumber),
-        config.features.addVisitor ? this.bookerService.getVisitorRequests(booker.reference) : [],
+
+        config.features.addVisitor
+          ? this.bookerService.getVisitorRequests({
+              bookerReference: booker.reference,
+              prisonerId: prisoner.prisonerNumber,
+            })
+          : [],
       ])
-      const visitorRequests = allVisitorRequests.filter(request => request.prisonerId === prisoner.prisonerNumber)
 
       const visitorsTableRows = buildVisitorsTableRows(visitors)
       const visitorRequestsTableRows = buildVisitorRequestsTableRows(visitorRequests)

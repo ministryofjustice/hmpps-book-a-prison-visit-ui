@@ -113,7 +113,10 @@ describe('Visitors page', () => {
         expect($('[data-test=add-visitor-form]').length).toBe(0)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-        expect(bookerService.getVisitorRequests).toHaveBeenCalledWith(bookerReference)
+        expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
+          bookerReference,
+          prisonerId: prisoner.prisonerNumber,
+        })
       })
   })
 })
