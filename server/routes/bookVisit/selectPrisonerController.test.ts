@@ -7,7 +7,7 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { Prisoner } from '../../services/bookerService'
-import { createMockBookerService } from '../../services/testutils/mocks'
+import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { CannotBookReason } from '../../@types/bapv'
 
@@ -15,6 +15,7 @@ jest.mock('../../../logger')
 
 let app: Express
 const bookerService = createMockBookerService()
+const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 afterEach(() => {
@@ -23,21 +24,26 @@ afterEach(() => {
 
 describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
+  const prison = TestData.prisonDto()
   const prisoner = TestData.prisoner()
   const bookingConfirmed = TestData.bookingConfirmed()
+
+  beforeEach(() => {
+    prisonService.getPrison.mockResolvedValue(prison)
+  })
 
   it('should use the session validation middleware', () => {
     sessionData = {
       booker: { reference: bookerReference },
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .expect(302)
       .expect('Location', paths.HOME)
-      .expect(res => {
+      .expect(() => {
         expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
       })
   })
@@ -51,7 +57,7 @@ describe('Select prisoner', () => {
       bookingConfirmed,
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -66,8 +72,12 @@ describe('Select prisoner', () => {
           },
           bookingJourney: {
             prisoner,
+            prison,
           },
         } as SessionData)
+
+        expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+        expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
       })
   })
 
@@ -76,7 +86,7 @@ describe('Select prisoner', () => {
       booker: { reference: bookerReference, prisoners: [prisoner] },
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -115,7 +125,7 @@ describe('Select prisoner', () => {
           booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
         } as SessionData
 
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -130,6 +140,7 @@ describe('Select prisoner', () => {
               },
               bookingJourney: {
                 prisoner: prisonerWithNoVos,
+                prison,
                 cannotBookReason,
               },
             } as SessionData)
@@ -144,7 +155,7 @@ describe('Select prisoner', () => {
         booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -159,6 +170,7 @@ describe('Select prisoner', () => {
             },
             bookingJourney: {
               prisoner: prisonerWithNoVos,
+              prison,
               cannotBookReason: 'NO_VO_BALANCE',
             },
           } as SessionData)
@@ -172,7 +184,7 @@ describe('Select prisoner', () => {
         booker: { reference: bookerReference, prisoners: [remandPrisoner] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -187,6 +199,7 @@ describe('Select prisoner', () => {
             },
             bookingJourney: {
               prisoner: remandPrisoner,
+              prison,
             },
           } as SessionData)
         })

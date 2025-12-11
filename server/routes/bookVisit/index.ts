@@ -16,13 +16,9 @@ import ContactDetailsController from './contactDetailsController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const selectPrisonerController = new SelectPrisonerController(services.bookerService)
+  const selectPrisonerController = new SelectPrisonerController(services.bookerService, services.prisonService)
   const cannotBookController = new CannotBookController()
-  const selectVisitorsController = new SelectVisitorsController(
-    services.bookerService,
-    services.prisonService,
-    services.visitSessionsService,
-  )
+  const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.visitSessionsService)
   const closedVisitController = new ClosedVisitController()
   const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
   const additionalSupportController = new AdditionalSupportController()

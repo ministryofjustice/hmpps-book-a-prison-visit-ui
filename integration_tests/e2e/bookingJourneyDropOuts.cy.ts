@@ -57,6 +57,7 @@ context('Booking journey - drop-out points', () => {
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
+      cy.task('stubGetVisitorRequests')
       homePage.startBooking()
 
       // Select visitors page - choose visitors
@@ -94,6 +95,7 @@ context('Booking journey - drop-out points', () => {
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
+      cy.task('stubGetVisitorRequests')
       homePage.startBooking()
 
       // Select visitors page - choose visitors
@@ -145,6 +147,7 @@ context('Booking journey - drop-out points', () => {
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
+      cy.task('stubGetVisitorRequests')
       homePage.startBooking()
 
       // Visit cannot be booked page
@@ -197,6 +200,7 @@ context('Booking journey - drop-out points', () => {
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [childVisitor] })
       cy.task('stubValidatePrisonerPass')
+      cy.task('stubGetVisitorRequests')
       homePage.startBooking()
 
       // Visit cannot be booked page

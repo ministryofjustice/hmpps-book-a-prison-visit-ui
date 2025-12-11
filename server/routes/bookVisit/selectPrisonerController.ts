@@ -2,10 +2,13 @@ import type { RequestHandler } from 'express'
 import { NotFound } from 'http-errors'
 import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
-import { BookerService } from '../../services'
+import { BookerService, PrisonService } from '../../services'
 
 export default class SelectPrisonerController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   public selectPrisoner(): RequestHandler {
     return async (req, res) => {
@@ -18,9 +21,12 @@ export default class SelectPrisonerController {
         throw new NotFound('Prisoner not found')
       }
 
-      req.session.bookingJourney = { prisoner }
+      const [validationResult, prison] = await Promise.all([
+        this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber),
+        this.prisonService.getPrison(prisoner.prisonId),
+      ])
 
-      const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
+      req.session.bookingJourney = { prisoner, prison }
 
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
       if (validationResult === true && prisonerHasVOsOrRemand) {

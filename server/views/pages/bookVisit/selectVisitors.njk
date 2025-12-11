@@ -102,8 +102,10 @@
             errorMessage: errors | findError("visitorDisplayIds")
           }) }}
 
+
+          {# Unavailable visitors #}
           {% if ineligibleVisitors | length %}
-            <h2 class="govuk-heading-m govuk-!-padding-top-0">Unavailable visitors</h2>
+            <h2 class="govuk-heading-s">Unavailable visitors</h2>
             {% for visitor in ineligibleVisitors %}
               <p class="govuk-!-margin-bottom-2" data-test="banned-visitor-{{ loop.index }}">
                 {{- visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}) {{ bannedTagHtml -}}
@@ -117,8 +119,27 @@
             {% endfor %}
           {% endif %}
 
+
+          {# Visitor requests #}
+          {% if visitorRequests | length %}
+            <h2 class="govuk-heading-s">Visitors awaiting review</h2>
+
+            <p class="govuk-hint">
+              You cannot book for these visitors until your request is approved by the prison.
+            </p>
+
+            <ul class="govuk-list">
+              {% for visitorRequest in visitorRequests %}
+                <li data-test="visitor-request-{{ loop.index }}">
+                  {{ visitorRequest.firstName }} {{ visitorRequest.lastName }} ({{ visitorRequest.dateOfBirth | displayAge }})
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
           {{ govukDetails({
             summaryText: "Want to book for someone else?",
+            classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-8",
             html: detailsHtml
           }) }}
 

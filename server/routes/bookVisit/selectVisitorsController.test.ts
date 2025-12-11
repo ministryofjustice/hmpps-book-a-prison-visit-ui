@@ -5,11 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { randomUUID } from 'crypto'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import {
-  createMockBookerService,
-  createMockPrisonService,
-  createMockVisitSessionsService,
-} from '../../services/testutils/mocks'
+import { createMockBookerService, createMockVisitSessionsService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -22,7 +18,6 @@ jest.mock('../../../logger')
 let app: Express
 
 const bookerService = createMockBookerService()
-const prisonService = createMockPrisonService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
@@ -123,16 +118,15 @@ describe('Select visitors', () => {
 
     beforeEach(() => {
       bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
-      prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        bookingJourney: { prisoner },
+        bookingJourney: { prisoner, prison },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -165,6 +159,7 @@ describe('Select visitors', () => {
           expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
           expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
 
+          // Select visitors form
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('input[name=visitorDisplayIds]').length).toBe(8)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(0)
@@ -195,20 +190,27 @@ describe('Select visitors', () => {
           expect($(`input[name=visitorDisplayIds][value=${visitor8.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 4m (4 months old)',
           )
+
+          // Unavailable visitors
           expect($('[data-test="banned-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
           expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 2 May 2025.')
 
-          expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+          // Visitor requests
+          expect($('[data-test=visitor-request-1]').length).toBe(0)
 
+          // Link new visitor
           expect($('[data-test=link-a-visitor]').length).toBe(0)
           expect($('[data-test=add-visitor-form]').length).toBe(1)
 
-          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith(
+          expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
-            prisoner.prisonerNumber,
-            prison.policyNoticeDaysMax,
-          )
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
+            prisonerNumber: prisoner.prisonerNumber,
+            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          })
+
+          expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
 
           expect(sessionData.bookingJourney).toStrictEqual({
             prisoner,
@@ -219,17 +221,30 @@ describe('Select visitors', () => {
         })
     })
 
-    it('should render add a visitor request journey start link if FEATURE_ADD_VISITOR enabled', () => {
+    it('should render visitor requests and add a visitor request journey start link if FEATURE_ADD_VISITOR enabled', () => {
       enableFeatureForTest('addVisitor')
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      const visitorRequest = TestData.visitorRequest()
+      bookerService.getVisitorRequests.mockResolvedValue([visitorRequest])
+
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
+
+          // Visitor requests
+          expect($('[data-test=visitor-request-1]').text().trim()).toBe('Joan Phillips (44 years old)')
+
+          // Link new visitor
           expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
           expect($('[data-test=add-visitor-form]').length).toBe(0)
+
+          expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
+            bookerReference,
+            prisonerNumber: prisoner.prisonerNumber,
+          })
         })
     })
 
@@ -311,12 +326,11 @@ describe('Select visitors', () => {
 
           expect($('[data-test="continue-button"]').length).toBe(0)
 
-          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith(
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
-            prisoner.prisonerNumber,
-            prison.policyNoticeDaysMax,
-          )
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
+            prisonerNumber: prisoner.prisonerNumber,
+            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          })
 
           expect(sessionData.bookingJourney).toStrictEqual({
             prisoner,
