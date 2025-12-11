@@ -66,13 +66,13 @@ describe('Booker service', () => {
   describe('getVisitorRequests', () => {
     it('should get visitor requests for provided booker reference filtered for given prisoner', async () => {
       const bookerReference = TestData.bookerReference().value
-      const prisonerId = 'A1234BC'
-      const visitorRequest1 = TestData.visitorRequest({ prisonerId })
+      const prisonerNumber = 'A1234BC'
+      const visitorRequest1 = TestData.visitorRequest({ prisonerId: prisonerNumber })
       const visitorRequest2 = TestData.visitorRequest({ prisonerId: 'another prisoner' })
 
       orchestrationApiClient.getVisitorRequests.mockResolvedValue([visitorRequest1, visitorRequest2])
 
-      const result = await bookerService.getVisitorRequests({ bookerReference, prisonerId })
+      const result = await bookerService.getVisitorRequests({ bookerReference, prisonerNumber })
 
       expect(orchestrationApiClient.getVisitorRequests).toHaveBeenCalledWith(bookerReference)
       expect(result).toStrictEqual([visitorRequest1])
@@ -378,7 +378,7 @@ describe('Booker service', () => {
     })
 
     it('should return visitors split by eligibility for booking (determined by BAN dates and booking window)', async () => {
-      const bookerReference = TestData.bookerReference()
+      const bookerReference = TestData.bookerReference().value
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
 
       const visitorInfoDtos = [
@@ -408,11 +408,11 @@ describe('Booker service', () => {
       ]
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
-      const results = await bookerService.getVisitorsByEligibility(
-        bookerReference.value,
+      const results = await bookerService.getVisitorsByEligibility({
+        bookerReference,
         prisonerNumber,
         policyNoticeDaysMax,
-      )
+      })
 
       expect(results.eligibleVisitors.length).toBe(2)
       expect(results.ineligibleVisitors.length).toBe(2)
@@ -422,7 +422,7 @@ describe('Booker service', () => {
       expect(results.ineligibleVisitors[0].lastName).toBe('Two')
       expect(results.ineligibleVisitors[1].lastName).toBe('Four')
 
-      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference, prisonerNumber)
     })
   })
 })

@@ -4,6 +4,8 @@ import { differenceInYears } from 'date-fns'
 import { BookerService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
+import config from '../../config'
+import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 
 export default class SelectVisitorsController {
   public constructor(
@@ -14,15 +16,25 @@ export default class SelectVisitorsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookingJourney } = req.session
-      const { prison } = bookingJourney
+      const { prison, prisoner } = bookingJourney
 
-      const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility(
-        booker.reference,
-        booker.prisoners[0].prisonerNumber,
-        prison.policyNoticeDaysMax,
-      )
-      bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
-      bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
+      // only request visitors once per journey so random visitor UUIDs don't change
+      if (!bookingJourney.eligibleVisitors) {
+        const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility({
+          bookerReference: booker.reference,
+          prisonerNumber: prisoner.prisonerNumber,
+          policyNoticeDaysMax: prison.policyNoticeDaysMax,
+        })
+        bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
+        bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
+      }
+
+      const visitorRequests = config.features.addVisitor
+        ? await this.bookerService.getVisitorRequests({
+            bookerReference: booker.reference,
+            prisonerNumber: prisoner.prisonerNumber,
+          })
+        : ([] as BookerPrisonerVisitorRequestDto[])
 
       const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)
       if (bookingJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
@@ -44,6 +56,7 @@ export default class SelectVisitorsController {
         prison,
         eligibleVisitors: bookingJourney.eligibleVisitors,
         ineligibleVisitors: bookingJourney.ineligibleVisitors,
+        visitorRequests,
       })
     }
   }

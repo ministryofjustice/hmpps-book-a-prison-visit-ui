@@ -115,7 +115,7 @@ describe('Visitors page', () => {
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
           bookerReference,
-          prisonerId: prisoner.prisonerNumber,
+          prisonerNumber: prisoner.prisonerNumber,
         })
       })
   })

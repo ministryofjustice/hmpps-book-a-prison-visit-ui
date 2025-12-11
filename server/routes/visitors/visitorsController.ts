@@ -23,7 +23,7 @@ export default class VisitorsController {
         config.features.addVisitor
           ? this.bookerService.getVisitorRequests({
               bookerReference: booker.reference,
-              prisonerId: prisoner.prisonerNumber,
+              prisonerNumber: prisoner.prisonerNumber,
             })
           : [],
       ])

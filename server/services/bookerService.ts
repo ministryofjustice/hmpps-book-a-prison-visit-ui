@@ -68,17 +68,17 @@ export default class BookerService {
 
   async getVisitorRequests({
     bookerReference,
-    prisonerId,
+    prisonerNumber,
   }: {
     bookerReference: string
-    prisonerId: string
+    prisonerNumber: string
   }): Promise<BookerPrisonerVisitorRequestDto[]> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const allVisitorRequests = await orchestrationApiClient.getVisitorRequests(bookerReference)
 
-    return allVisitorRequests.filter(request => request.prisonerId === prisonerId)
+    return allVisitorRequests.filter(request => request.prisonerId === prisonerNumber)
   }
 
   async addVisitorRequest({
@@ -201,11 +201,15 @@ export default class BookerService {
     })
   }
 
-  async getVisitorsByEligibility(
-    bookerReference: string,
-    prisonerNumber: string,
-    policyNoticeDaysMax: number,
-  ): Promise<VisitorsByEligibility> {
+  async getVisitorsByEligibility({
+    bookerReference,
+    prisonerNumber,
+    policyNoticeDaysMax,
+  }: {
+    bookerReference: string
+    prisonerNumber: string
+    policyNoticeDaysMax: number
+  }): Promise<VisitorsByEligibility> {
     const eligibleVisitors: Visitor[] = []
     const ineligibleVisitors: Visitor[] = []
 
