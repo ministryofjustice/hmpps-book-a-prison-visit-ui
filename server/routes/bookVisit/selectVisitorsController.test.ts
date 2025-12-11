@@ -5,11 +5,7 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { randomUUID } from 'crypto'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import {
-  createMockBookerService,
-  createMockPrisonService,
-  createMockVisitSessionsService,
-} from '../../services/testutils/mocks'
+import { createMockBookerService, createMockVisitSessionsService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -22,7 +18,6 @@ jest.mock('../../../logger')
 let app: Express
 
 const bookerService = createMockBookerService()
-const prisonService = createMockPrisonService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
@@ -123,16 +118,15 @@ describe('Select visitors', () => {
 
     beforeEach(() => {
       bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
-      prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        bookingJourney: { prisoner },
+        bookingJourney: { prisoner, prison },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -208,7 +202,6 @@ describe('Select visitors', () => {
             prisoner.prisonerNumber,
             prison.policyNoticeDaysMax,
           )
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData.bookingJourney).toStrictEqual({
             prisoner,
@@ -221,7 +214,7 @@ describe('Select visitors', () => {
 
     it('should render add a visitor request journey start link if FEATURE_ADD_VISITOR enabled', () => {
       enableFeatureForTest('addVisitor')
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -316,7 +309,6 @@ describe('Select visitors', () => {
             prisoner.prisonerNumber,
             prison.policyNoticeDaysMax,
           )
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
 
           expect(sessionData.bookingJourney).toStrictEqual({
             prisoner,

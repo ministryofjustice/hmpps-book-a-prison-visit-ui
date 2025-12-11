@@ -45,11 +45,11 @@ export type BookingJourney = {
   // selected prisoner for this visit
   prisoner: Prisoner
 
+  // prison for this visit
+  prison: PrisonDto
+
   // may be set during journey to flag why a visit cannot be booked
   cannotBookReason?: CannotBookReason
-
-  // prison for this visit
-  prison?: PrisonDto
 
   // all eligible visitors for this visit
   eligibleVisitors?: Visitor[]

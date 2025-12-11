@@ -17,6 +17,7 @@ describe('bookVisitSessionValidator', () => {
   const next = jest.fn()
 
   const bookerReference = TestData.bookerReference().value
+  const prison = TestData.prisonDto()
   const prisoner = TestData.prisoner()
   const visitor = TestData.visitor()
   const sessionRestriction: SessionRestriction = 'OPEN'
@@ -97,7 +98,7 @@ describe('bookVisitSessionValidator', () => {
         })
       })
 
-      describe('prisoner', () => {
+      describe('prisoner and prison', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
@@ -105,13 +106,13 @@ describe('bookVisitSessionValidator', () => {
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.CLOSED_VISIT, expected: 'redirect' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
-          req = createMockReq({ method, path, bookingJourney: { prisoner } })
+          req = createMockReq({ method, path, bookingJourney: { prisoner, prison } })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
         })
       })
 
-      describe('...add prison and eligibleVisitors', () => {
+      describe('...add eligibleVisitors', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
@@ -123,7 +124,7 @@ describe('bookVisitSessionValidator', () => {
           req = createMockReq({
             method,
             path,
-            bookingJourney: { prisoner, prison: TestData.prisonDto(), eligibleVisitors: [visitor] },
+            bookingJourney: { prisoner, prison, eligibleVisitors: [visitor] },
           })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
@@ -145,7 +146,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookingJourney: {
               prisoner,
-              prison: TestData.prisonDto(),
+              prison,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -172,7 +173,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookingJourney: {
               prisoner,
-              prison: TestData.prisonDto(),
+              prison,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -203,7 +204,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookingJourney: {
               prisoner,
-              prison: TestData.prisonDto(),
+              prison,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -243,7 +244,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookingJourney: {
               prisoner,
-              prison: TestData.prisonDto(),
+              prison,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -282,7 +283,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookingJourney: {
               prisoner,
-              prison: TestData.prisonDto(),
+              prison,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -305,7 +306,7 @@ describe('bookVisitSessionValidator', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'next' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
-          req = createMockReq({ method, path, bookingJourney: { prisoner, cannotBookReason: 'NO_VO_BALANCE' } })
+          req = createMockReq({ method, path, bookingJourney: { prisoner, prison, cannotBookReason: 'NO_VO_BALANCE' } })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
         })
@@ -315,7 +316,7 @@ describe('bookVisitSessionValidator', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
-          req = createMockReq({ method, path, bookingJourney: { prisoner } })
+          req = createMockReq({ method, path, bookingJourney: { prisoner, prison } })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
         })

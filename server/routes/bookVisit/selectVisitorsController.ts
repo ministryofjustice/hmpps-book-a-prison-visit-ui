@@ -1,31 +1,28 @@
 import type { RequestHandler } from 'express'
 import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { differenceInYears } from 'date-fns'
-import { BookerService, PrisonService, VisitSessionsService } from '../../services'
+import { BookerService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
 
 export default class SelectVisitorsController {
   public constructor(
     private readonly bookerService: BookerService,
-    private readonly prisonService: PrisonService,
     private readonly visitSessionService: VisitSessionsService,
   ) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
       const { booker, bookingJourney } = req.session
+      const { prison } = bookingJourney
 
-      if (!bookingJourney.prison) {
-        bookingJourney.prison = await this.prisonService.getPrison(bookingJourney.prisoner.prisonId)
-        const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility(
-          booker.reference,
-          booker.prisoners[0].prisonerNumber,
-          bookingJourney.prison.policyNoticeDaysMax,
-        )
-        bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
-        bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
-      }
+      const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility(
+        booker.reference,
+        booker.prisoners[0].prisonerNumber,
+        prison.policyNoticeDaysMax,
+      )
+      bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
+      bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
 
       const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)
       if (bookingJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
@@ -44,7 +41,7 @@ export default class SelectVisitorsController {
       return res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
         formValues,
-        prison: bookingJourney.prison,
+        prison,
         eligibleVisitors: bookingJourney.eligibleVisitors,
         ineligibleVisitors: bookingJourney.ineligibleVisitors,
       })
