@@ -16,16 +16,20 @@ export default class SelectVisitorsPage extends Page {
 
   visitorsAdultAge = (): PageElement => cy.get('[data-test=visitors-adult-age]')
 
-  // visitor list
+  // Visitor list
   getVisitorByNameLabel = (name: string): PageElement => cy.get('input[name=visitorDisplayIds] + label').contains(name)
 
   selectVisitorByName = (name: string): void => {
     cy.get('label').contains(name).siblings('input[name=visitorDisplayIds]').check()
   }
 
-  unavailableVisitor = (index: string): PageElement => cy.get(`[data-test="banned-visitor-${index}"]`)
+  // Unavailable visitors
+  unavailableVisitor = (index: number): PageElement => cy.get(`[data-test="banned-visitor-${index}"]`)
 
-  unavailableVisitorExpiryDate = (index: string): PageElement => cy.get(`[data-test="ban-expiry-${index}"]`)
+  unavailableVisitorExpiryDate = (index: number): PageElement => cy.get(`[data-test="ban-expiry-${index}"]`)
+
+  // Visitor requests
+  visitorRequest = (index: number): PageElement => cy.get(`[data-test=visitor-request-${index}]`)
 
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()

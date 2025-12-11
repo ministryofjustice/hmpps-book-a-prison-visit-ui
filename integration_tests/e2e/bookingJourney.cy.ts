@@ -42,8 +42,8 @@ context('Booking journey', () => {
     }),
     TestData.visitorInfoDto({
       visitorId: 4000,
-      firstName: 'AdultBanned',
-      lastName: 'VisitorBanned',
+      firstName: 'Adult',
+      lastName: 'Banned',
       dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 5-year-old
       visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: banExpiryDate }],
     }),
@@ -110,6 +110,7 @@ context('Booking journey', () => {
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
+    cy.task('stubGetVisitorRequests')
     homePage.startBooking()
 
     // Select visitors page - choose visitors
@@ -125,10 +126,9 @@ context('Booking journey', () => {
     selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
-    selectVisitorsPage.unavailableVisitor('1').contains('AdultBanned VisitorBanned (25 years old)')
-    selectVisitorsPage
-      .unavailableVisitorExpiryDate('1')
-      .contains(`AdultBanned is banned until ${formatDate(banExpiryDate)}`)
+    selectVisitorsPage.unavailableVisitor(1).contains('Adult Banned (25 years old)')
+    selectVisitorsPage.unavailableVisitorExpiryDate(1).contains(`Adult is banned until ${formatDate(banExpiryDate)}`)
+    selectVisitorsPage.visitorRequest(1).contains('Joan Phillips')
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
@@ -219,6 +219,7 @@ context('Booking journey', () => {
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
+    cy.task('stubGetVisitorRequests')
     homePage.startBooking()
 
     // Select visitors page - choose visitors
@@ -313,6 +314,7 @@ context('Booking journey', () => {
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
+    cy.task('stubGetVisitorRequests')
     homePage.startBooking()
 
     // Select visitors page - choose visitors
@@ -328,6 +330,7 @@ context('Booking journey', () => {
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
+    cy.task('stubGetVisitorRequests')
     homePage.startBooking()
 
     // Select visitors page - choose visitors
