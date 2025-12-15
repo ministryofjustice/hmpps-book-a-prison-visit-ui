@@ -35,9 +35,11 @@ jobs:
     secrets: inherit
   node_integration_tests:
     name: node integration tests
-    uses: ./.github/workflows/node_integration_tests_redis.yml # LOCAL_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
+    with:
+      redis_tag: '7'
   # acceptance_tests_public_staging:
   #   name: Acceptance tests (staging)
   #   uses: ./.github/workflows/acceptance_tests_public_ui.yml # LOCAL_VERSION
