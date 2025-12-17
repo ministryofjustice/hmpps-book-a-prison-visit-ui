@@ -33,6 +33,8 @@ generic-service:
     ADD_VISITOR_RATE_LIMIT_BOOKER_MAX_REQUESTS: "500"
     ADD_VISITOR_RATE_LIMIT_BOOKER_WINDOW_SECS: "60"
 
+    FEATURE_ADD_VISITOR: "true"
+
   allowlist:
     groups:
       - digital_staff_and_mojo
