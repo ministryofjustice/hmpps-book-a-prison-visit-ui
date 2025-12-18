@@ -19,5 +19,7 @@ generic-service:
     GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
     ENVIRONMENT_NAME: prod
 
+    FEATURE_ADD_VISITOR: "true"
+
 generic-prometheus-alerts:
   alertSeverity: visits-alerts
