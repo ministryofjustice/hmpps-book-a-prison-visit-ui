@@ -10,10 +10,17 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>There are no available visit times in the next 28 days.</p>
-      <p>Try again later to see if new visit times have become available.</p>
-      <p>You can <a href="{{ paths.HOME }}" class="govuk-link--no-visited-state" data-test="return-to-home">return to the homepage</a>.</p>
+      <p>
+        There are currently no available visit times for
+        <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>.
+      </p>
 
+      <p>Try again later to see if new visit times have become available.</p>
+
+      <p>
+        If you believe the prisoner should have available visit times, you can
+        <a href="{{ prison.webAddress }}" data-test="prison-website">contact the prison directly</a>.
+      </p>
     </div>
   </div>
 {% endblock %}
