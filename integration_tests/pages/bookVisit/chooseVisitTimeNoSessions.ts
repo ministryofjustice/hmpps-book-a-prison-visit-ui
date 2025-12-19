@@ -1,4 +1,4 @@
-import Page from '../page'
+import Page, { PageElement } from '../page'
 
 export default class ChooseVisitTimeNoSessionsPage extends Page {
   constructor() {
@@ -7,7 +7,7 @@ export default class ChooseVisitTimeNoSessionsPage extends Page {
     cy.contains('no available visit times')
   }
 
-  returnToHome = (): void => {
-    cy.get('[data-test="return-to-home"]').click()
-  }
+  prisonerName = (): PageElement => cy.get('[data-test=prisoner-name]')
+
+  prisonWebsite = (): PageElement => cy.get('[data-test=prison-website]')
 }

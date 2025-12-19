@@ -31,7 +31,7 @@ export default class ChooseVisitTimeController {
         })
 
       if (allVisitSessionIds.length === 0) {
-        return res.render('pages/bookVisit/chooseVisitTimeNoSessions')
+        return res.render('pages/bookVisit/chooseVisitTimeNoSessions', { prison, prisoner })
       }
 
       bookingJourney.allVisitSessionIds = allVisitSessionIds

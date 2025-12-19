@@ -77,10 +77,10 @@ context('Booking journey - drop-out points', () => {
       })
       selectVisitorsPage.continue()
 
-      // No sessions so drop-out page and return to home
+      // No sessions so arrive on drop-out page
       const chooseVisitTimeNoSessionsPage = Page.verifyOnPage(ChooseVisitTimeNoSessionsPage)
-      chooseVisitTimeNoSessionsPage.returnToHome()
-      Page.verifyOnPage(HomePage)
+      chooseVisitTimeNoSessionsPage.prisonerName().contains('John Smith')
+      chooseVisitTimeNoSessionsPage.prisonWebsite().should('have.attr', 'href', prison.webAddress)
     })
 
     it('should return to choose time page with message when selected session no longer available', () => {
