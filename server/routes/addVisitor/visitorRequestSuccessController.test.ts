@@ -52,7 +52,7 @@ describe('Add visitor request success page', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Request submitted')
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
 
           expect(sessionData.addVisitorJourney).toBeUndefined()
         })
