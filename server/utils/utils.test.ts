@@ -172,7 +172,7 @@ describe('pluralise', () => {
       ['has one matomo cookie', { _pk_id2: 'test', abc: 'test' }, ['_pk_id2']],
       ['has two matomo cookies', { _pk_id2: 'test', abc: 'test', _pk_ses34: 'test' }, ['_pk_id2', '_pk_ses34']],
       ['has no matomo cookies', { abc: 'test' }, []],
-    ])('%s - %s - %s',(_: string, cookies: Request['cookies'], expected: string[]) => {
+    ])('%s - %s - %s', (_: string, cookies: Request['cookies'], expected: string[]) => {
       expect(getMatomoCookieNames(cookies)).toStrictEqual(expected)
     })
   })
