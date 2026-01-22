@@ -30,7 +30,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.locals.oneLoginLink = config.apis.govukOneLogin.homeUrl
   app.locals.paths = paths
   app.locals.dateFormats = DateFormats
-  app.locals.googleAnalyticsId = config.analytics.googleAnalyticsId
   app.locals.features = config.features
 
   // Cachebusting version string

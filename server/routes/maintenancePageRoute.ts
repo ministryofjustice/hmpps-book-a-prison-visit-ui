@@ -22,7 +22,7 @@ export default function maintenancePage(): Router {
       }
 
       // don't load analytics or display cookie banner
-      res.locals.analyticsEnabled = false
+      res.locals.analyticsConsentGiven = false
 
       return res.render('pages/maintenancePage', { maintenanceMessage, hideFooterLinks: true })
     })

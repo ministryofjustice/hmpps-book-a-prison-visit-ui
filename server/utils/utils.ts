@@ -94,3 +94,7 @@ export const getMainContactName = (mainContact: Visitor | string): string => {
 export const isMobilePhoneNumber = (phoneNumber: string): boolean => {
   return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
 }
+
+export const getMatomoCookieNames = (cookies: Request['cookies']): string[] => {
+  return Object.keys(cookies).filter(cookieName => cookieName.startsWith('_pk_id') || cookieName.startsWith('_pk_ses'))
+}

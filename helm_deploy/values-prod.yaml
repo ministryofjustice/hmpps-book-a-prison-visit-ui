@@ -16,7 +16,6 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register.hmpps.service.justice.gov.uk"
     PVB_URL: "https://www.prisonvisits.service.gov.uk/en/request"
     ROOT_PATH_REDIRECT: "https://www.gov.uk/prison-visits"
-    GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
     ENVIRONMENT_NAME: prod
 
     FEATURE_ADD_VISITOR: "true"

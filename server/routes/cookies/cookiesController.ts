@@ -2,15 +2,45 @@ import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import paths from '../../constants/paths'
 import config from '../../config'
+import { getMatomoCookieNames } from '../../utils/utils'
 
 export default class CookiesController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
+      const matomoCookieNames = getMatomoCookieNames(req.cookies)
+      const cookieDescriptions: (
+        | { text: string; attributes: { 'data-test': string } }
+        | { text: string; attributes?: undefined }
+      )[][] = []
+
+      matomoCookieNames.forEach(cookieName => {
+        if (cookieName.startsWith('_pk_id')) {
+          cookieDescriptions.push([
+            {
+              text: cookieName,
+              attributes: { 'data-test': 'matomo-id-cookie-name' },
+            },
+            { text: 'Stores a unique visitor ID.' },
+            { text: '13 months' },
+          ])
+        } else if (cookieName.startsWith('_pk_ses')) {
+          cookieDescriptions.push([
+            {
+              text: cookieName,
+              attributes: { 'data-test': 'matomo-session-cookie-name' },
+            },
+            { text: 'Session cookie temporarily stores data for the visit.' },
+            { text: '30 minutes' },
+          ])
+        }
+      })
+
       return res.render('pages/cookies/cookies', {
         errors: req.flash('errors'),
         showOLServiceNav: !!req.session.booker,
+        cookieDescriptions,
       })
     }
   }
@@ -38,13 +68,10 @@ export default class CookiesController {
       })
 
       if (acceptAnalytics === 'no') {
-        const domain = config.domain.includes('localhost') ? 'localhost' : 'justice.gov.uk'
+        const domain = req.hostname
 
-        res.clearCookie('_ga', { domain, secure: false, httpOnly: false })
-        res.clearCookie(`_ga_${config.analytics.googleAnalyticsId.replace('G-', '')}`, {
-          domain,
-          secure: false,
-          httpOnly: false,
+        getMatomoCookieNames(req.cookies).forEach(cookie => {
+          res.clearCookie(cookie, { domain, secure: false, httpOnly: false })
         })
       }
 

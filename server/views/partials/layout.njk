@@ -31,22 +31,44 @@
 {% set signOutLink = paths.SIGN_OUT %}
 
 {% set bodyAttributes = {
-  "data-google-analytics-id": googleAnalyticsId
+  "data-matomo-site-id": matomoSiteId,
+  "data-matomo-container-id": matomoContainerId
 } %}
 
 {% set bodyClasses = ("env--" + environmentName) if environmentName %}
 
 {% block head %}
-  {% if analyticsEnabled %}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ googleAnalyticsId }}" data-test="google-analytics"></script>
-    <script nonce="{{ cspNonce }}">
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+  {% if matomoEnabled and analyticsConsentGiven %}
+    {% if matomoSiteId %}
+      <!-- Matomo -->
+      <script nonce="{{ cspNonce }}" data-test="matomo-analytics">
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u="{{ matomoUrl }}/";
+          _paq.push(['setTrackerUrl', u+'matomo.php']);
+          _paq.push(['setSiteId', '{{ matomoSiteId }}']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+      <!-- End Matomo Code -->
+    {% endif %}
 
-      gtag('config', '{{ googleAnalyticsId }}');
-    </script>
+    {% if matomoContainerId %}
+      <!-- Matomo Tag Manager -->
+      <script nonce="{{ cspNonce }}" data-test="matomo-tag-manager">
+        var _mtm = window._mtm = window._mtm || [];
+        _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
+        (function() {
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src='{{ matomoUrl }}/js/container_{{ matomoContainerId }}.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>
+      <!-- End Matomo Tag Manager -->
+    {% endif %}
   {% endif %}
 
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
@@ -57,7 +79,7 @@
 {%- endblock %}
 
 {% block bodyStart %}
-  {% if analyticsEnabled == undefined %}
+  {% if matomoEnabled and analyticsConsentGiven == undefined %}
     {%- include "partials/cookieBanner.njk" -%}
   {% endif %}
 {% endblock %}

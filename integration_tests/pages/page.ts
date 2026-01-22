@@ -45,7 +45,7 @@ export default abstract class Page {
     )
   }
 
-  googleAnalytics = (): PageElement => cy.get('[data-test=google-analytics]')
+  matomoAnalytics = (): PageElement => cy.get('[data-test=matomo-analytics]')
 
   cookieBanner = (): PageElement => cy.get('#cookie-banner')
 

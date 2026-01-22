@@ -18,7 +18,7 @@ context('Cookie consent and analytics', () => {
     it('should show cookie banner, set cookie when analytics accepted and load analytics', () => {
       // Home page - analytics script should not be present initially
       const homePage = Page.verifyOnPage(HomePage)
-      homePage.googleAnalytics().should('not.exist')
+      homePage.matomoAnalytics().should('not.exist')
 
       // Cookie banner - accept analytics
       homePage.acceptAnalytics()
@@ -30,7 +30,7 @@ context('Cookie consent and analytics', () => {
       // go to Cookies page - should be no banner and analytics should load
       homePage.goToFooterLinkByName('Cookies')
       const cookiesPage = Page.verifyOnPage(CookiesPage)
-      cookiesPage.googleAnalytics().should('exist')
+      cookiesPage.matomoAnalytics().should('exist')
       cookiesPage.cookieBanner().should('not.exist')
       cookiesPage.acceptAnalyticsRadio().should('be.checked')
     })
@@ -38,7 +38,7 @@ context('Cookie consent and analytics', () => {
     it('should show cookie banner, set cookie when analytics rejected and not load analytics', () => {
       // Home page - analytics script should not be present initially
       const homePage = Page.verifyOnPage(HomePage)
-      homePage.googleAnalytics().should('not.exist')
+      homePage.matomoAnalytics().should('not.exist')
 
       // Cookie banner - reject analytics
       homePage.rejectAnalytics()
@@ -50,7 +50,7 @@ context('Cookie consent and analytics', () => {
       // go to Cookies page - should be no banner and analytics should not load
       homePage.goToFooterLinkByName('Cookies')
       const cookiesPage = Page.verifyOnPage(CookiesPage)
-      cookiesPage.googleAnalytics().should('not.exist')
+      cookiesPage.matomoAnalytics().should('not.exist')
       cookiesPage.cookieBanner().should('not.exist')
       cookiesPage.rejectAnalyticsRadio().should('be.checked')
     })
@@ -66,18 +66,21 @@ context('Cookie consent and analytics', () => {
       homePage.goToFooterLinkByName('Cookies')
       const cookiesPage = Page.verifyOnPage(CookiesPage)
       cookiesPage.cookieBanner().should('not.exist')
-      cy.getCookie('_ga').should('exist')
-      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
+      cy.getAllCookies().then(cookies => {
+        const cookieName = cookies.find(cookie => cookie.name.startsWith('_pk_id')).name
+        cy.getCookie(cookieName).should('exist')
+        cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
 
-      // reject analytics via cookies page form
-      cookiesPage.rejectAnalyticsRadio().check()
-      cookiesPage.saveCookieSettings()
+        // reject analytics via cookies page form
+        cookiesPage.rejectAnalyticsRadio().check()
+        cookiesPage.saveCookieSettings()
 
-      // cookie preference should be set and analytics cookies removed
-      cookiesPage.checkOnPage()
-      checkCookie({ acceptAnalytics: 'no' })
-      cy.getCookie('_ga').should('not.exist')
-      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+        // cookie preference should be set and analytics cookies removed
+        cookiesPage.checkOnPage()
+        checkCookie({ acceptAnalytics: 'no' })
+        cy.getCookie(cookieName).should('not.exist')
+        cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+      })
     })
 
     it('should remove previously set analytics cookies when rejecting (via cookie banner)', () => {
@@ -92,27 +95,30 @@ context('Cookie consent and analytics', () => {
       cookiesPage.saveCookieSettings()
       cookiesPage.cookieBanner().should('not.exist')
       checkCookie({ acceptAnalytics: 'yes' })
-      cy.getCookie('_ga').should('exist')
-      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
+      cy.getAllCookies().then(cookies => {
+        const cookieName = cookies.find(cookie => cookie.name.startsWith('_pk_id')).name
+        cy.getCookie(cookieName).should('exist')
+        cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
 
-      // Remove 'cookie_policy' cookie (to trigger banner) and go to home page
-      cy.clearCookie('cookie_policy')
-      cookiesPage.goToServiceHeaderLinkByName('Home')
-      homePage.checkOnPage()
-      homePage.cookieBanner().should('be.visible')
-      homePage.googleAnalytics().should('not.exist')
+        // Remove 'cookie_policy' cookie (to trigger banner) and go to home page
+        cy.clearCookie('cookie_policy')
+        cookiesPage.goToServiceHeaderLinkByName('Home')
+        homePage.checkOnPage()
+        homePage.cookieBanner().should('be.visible')
+        homePage.matomoAnalytics().should('not.exist')
 
-      // Reject cookies via banner
-      homePage.rejectAnalytics()
-      homePage.hideAnalyticsRejectedMessage()
-      checkCookie({ acceptAnalytics: 'no' })
+        // Reject cookies via banner
+        homePage.rejectAnalytics()
+        homePage.hideAnalyticsRejectedMessage()
+        checkCookie({ acceptAnalytics: 'no' })
 
-      // Go to cookies page - _ga cookies should not be set
-      homePage.goToFooterLinkByName('Cookies')
-      cookiesPage.checkOnPage()
-      cookiesPage.rejectAnalyticsRadio().should('be.checked')
-      cy.getCookie('_ga').should('not.exist')
-      cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+        // Go to cookies page - _ga cookies should not be set
+        homePage.goToFooterLinkByName('Cookies')
+        cookiesPage.checkOnPage()
+        cookiesPage.rejectAnalyticsRadio().should('be.checked')
+        cy.getCookie(cookieName).should('not.exist')
+        cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('not.exist'))
+      })
     })
   })
 })

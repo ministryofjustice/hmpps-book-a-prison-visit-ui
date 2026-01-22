@@ -65,7 +65,11 @@ export declare global {
 
     interface Locals {
       user: Express.User
-      analyticsEnabled?: boolean
+      analyticsConsentGiven?: boolean
+      matomoEnabled?: boolean
+      matomoContainerId?: string
+      matomoSiteId?: string
+      matomoUrl?: string
     }
   }
 }

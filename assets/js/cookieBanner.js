@@ -28,15 +28,23 @@
     banner.hidden = true
   }
 
+  function getMatomoCookieNames() {
+    try {
+      return document.cookie.split('; ')
+        .map(cookie => cookie.split('=')[0])
+        .filter(cookieName => cookieName.startsWith('_pk_id') || cookieName.startsWith('_pk_ses'))
+    } catch (e) {
+      return []
+    }
+  }
+
   function removeAnalyticsCookies() {
-    const domain = location.hostname === 'localhost' ? 'localhost' : 'justice.gov.uk'
     const expires = new Date(0).toUTCString()
-    const gaID = document
-      .querySelector('[data-google-analytics-id]')
-      ?.getAttribute('data-google-analytics-id')
-      .replace('G-', '')
-    document.cookie = `_ga=; domain=${domain}; expires=${expires}; path=/;`
-    document.cookie = `_ga_${gaID}=; domain=${domain}; expires=${expires}; path=/;`
+    const matomoCookies = getMatomoCookieNames()
+
+    matomoCookies.forEach(cookieName => {
+      document.cookie = `${cookieName}=; domain=${location.hostname}; expires=${expires}; path=/;`
+    })
   }
 
   function setAnalyticsPreferenceCookie(acceptAnalytics) {
