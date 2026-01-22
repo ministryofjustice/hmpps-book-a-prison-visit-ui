@@ -14,6 +14,7 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   AddVisitorToBookerPrisonerRequestDto,
   BookerPrisonerVisitorRequestDto,
+  CreateVisitorRequestResponseDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -258,10 +259,12 @@ export default {
     bookerReference = TestData.bookerReference().value,
     prisonerId = TestData.bookerPrisonerInfoDto().prisoner.prisonerNumber,
     addVisitorRequest = TestData.addVisitorRequest(),
+    visitorRequestResponse = TestData.createVisitorRequestResponseDto(),
   }: {
     bookerReference?: string
     prisonerId?: string
     addVisitorRequest?: AddVisitorToBookerPrisonerRequestDto
+    visitorRequestResponse?: CreateVisitorRequestResponseDto
   } = {}): SuperAgentRequest =>
     stubFor({
       request: {
@@ -276,6 +279,7 @@ export default {
       response: {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: visitorRequestResponse,
       },
     }),
 

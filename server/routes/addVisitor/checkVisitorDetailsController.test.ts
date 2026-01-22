@@ -74,7 +74,8 @@ describe('Check visitor request details', () => {
   describe(`POST ${paths.ADD_VISITOR.CHECK}`, () => {
     describe('Send visitor request', () => {
       it.each([
-        ['request added', true, paths.ADD_VISITOR.SUCCESS],
+        ['request successful', 'REQUESTED', paths.ADD_VISITOR.SUCCESS],
+        ['auto approval', 'AUTO_APPROVED', paths.ADD_VISITOR.AUTO_APPROVED],
         ['too many requests', 'MAX_IN_PROGRESS_REQUESTS_REACHED', paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS],
         ['request already exists', 'REQUEST_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED],
         ['visitor already linked', 'VISITOR_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_LINKED],

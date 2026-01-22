@@ -14,6 +14,7 @@ import type {
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
   BookerPrisonerVisitorRequestDto,
+  CreateVisitorRequestResponseDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
@@ -117,6 +118,18 @@ export default class TestData {
     hasEmail = true,
     hasMobile = true,
   }: Partial<BookingConfirmed> = {}): BookingConfirmed => ({ isARequest, prison, visitReference, hasEmail, hasMobile })
+
+  static createVisitorRequestResponseDto = ({
+    reference = 'abcd',
+    status = 'REQUESTED',
+    bookerReference = 'aaaa-bbbb-cccc',
+    prisonerId = 'A1234BC',
+  }: Partial<CreateVisitorRequestResponseDto> = {}): CreateVisitorRequestResponseDto => ({
+    reference,
+    status,
+    bookerReference,
+    prisonerId,
+  })
 
   static registerPrisonerForBookerDto = ({
     prisonerId = 'A1234BC',

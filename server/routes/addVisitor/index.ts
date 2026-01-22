@@ -24,7 +24,8 @@ export default function routes(services: Services): Router {
   router.get(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.view())
   router.post(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.submit())
 
-  router.get(paths.ADD_VISITOR.SUCCESS, visitorRequestSuccessController.view())
+  router.get(paths.ADD_VISITOR.SUCCESS, visitorRequestSuccessController.viewRequested())
+  router.get(paths.ADD_VISITOR.AUTO_APPROVED, visitorRequestSuccessController.viewApproved())
 
   router.get(
     [

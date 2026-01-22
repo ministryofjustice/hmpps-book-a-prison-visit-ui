@@ -27,6 +27,8 @@ export type BookerReference = components['schemas']['BookerReference']
 export type BookerVisitorRequestValidationErrorResponse =
   components['schemas']['BookerVisitorRequestValidationErrorResponse']
 
+export type CreateVisitorRequestResponseDto = components['schemas']['CreateVisitorRequestResponseDto']
+
 export type CancelVisitOrchestrationDto = components['schemas']['CancelVisitOrchestrationDto']
 
 export type ChangeApplicationDto = components['schemas']['ChangeApplicationDto']

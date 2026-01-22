@@ -37,7 +37,7 @@ export type AddVisitorJourney = {
     'visitorDob-year': string
     visitorDob: string
   }
-  result?: true | BookerVisitorRequestValidationErrorResponse['validationError']
+  result?: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
 }
 
 // data that is built up during a booking journey

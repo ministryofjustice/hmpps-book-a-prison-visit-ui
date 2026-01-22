@@ -26,6 +26,7 @@ const paths = {
     DETAILS: '/visitor',
     CHECK: '/check-visitor-request',
     SUCCESS: '/visitor-requested',
+    AUTO_APPROVED: '/visitor-approved',
     FAIL_ALREADY_REQUESTED: '/visitor-already-requested',
     FAIL_ALREADY_LINKED: '/visitor-already-linked',
     FAIL_TOO_MANY_REQUESTS: '/too-many-visitor-requests',
