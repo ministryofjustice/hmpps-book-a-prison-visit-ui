@@ -9,7 +9,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        text: visitorName + " has been linked to your account."
+        text: visitorName + " has been linked to your account"
       }) }}
 
       <p data-test="visitor-approved">{{ visitorName }} will appear as a visitor when you book visits for {{ prisoner | prisonerNameFirstLast }}.</p>
@@ -17,7 +17,7 @@
       <div class="govuk-button-group">
         {{ govukButton({
           text: "Book a visit",
-          href: paths.BOOK_VISIT.SELECT_VISITORS,
+          href: paths.HOME,
           attributes: { "data-test": "book-a-visit" },
           preventDoubleClick: true
         }) }}
