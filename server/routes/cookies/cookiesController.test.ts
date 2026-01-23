@@ -138,7 +138,7 @@ describe('Cookies page', () => {
         .expect('Set-Cookie', `cookie_policy=${analyticsYesValue}; Path=/; Expires=${expectedCookieExpiry}`)
     })
 
-    it.only('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (localhost)', () => {
+    it('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (localhost)', () => {
       const acceptAnalyticsNoCookie = `cookie_policy=${analyticsNoValue}; Path=/; Expires=${expectedCookieExpiry}`
       const acceptAnalyticsCheck = new RegExp(acceptAnalyticsNoCookie)
 

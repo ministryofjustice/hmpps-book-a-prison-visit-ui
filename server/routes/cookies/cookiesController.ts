@@ -3,6 +3,7 @@ import { body, matchedData, ValidationChain, validationResult } from 'express-va
 import paths from '../../constants/paths'
 import config from '../../config'
 import { getMatomoCookieNames } from '../../utils/utils'
+import logger from '../../../logger'
 
 export default class CookiesController {
   public constructor() {}
@@ -67,12 +68,12 @@ export default class CookiesController {
         encode: String,
       })
 
-      console.log(`acceptAnalytics: ${acceptAnalytics}`)
-console.log(req.hostname)
+      logger.info(`acceptAnalytics: ${acceptAnalytics}`)
+      logger.info(req.hostname)
       if (acceptAnalytics === 'no') {
         const domain = req.hostname
 
-        console.log(req.cookies)
+        logger.info(req.cookies)
         getMatomoCookieNames(req.cookies).forEach(cookie => {
           res.clearCookie(cookie, { domain, secure: false, httpOnly: false })
         })
