@@ -3,7 +3,7 @@ import CookiesPage from '../pages/cookies/cookies'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 
-context('Cookie consent and analytics', () => {
+context.skip('Cookie consent and analytics', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')

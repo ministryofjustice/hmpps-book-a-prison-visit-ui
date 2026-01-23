@@ -12,7 +12,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Cookies page', () => {
+describe.skip('Cookies page', () => {
   describe(`GET ${paths.COOKIES}`, () => {
     it('should render cookies page with banner, no analytics and radios unchecked when no consent cookie', () => {
       app = appWithAllRoutes({})

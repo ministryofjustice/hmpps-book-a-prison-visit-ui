@@ -16,6 +16,8 @@ export default class CookiesController {
         | { text: string; attributes?: undefined }
       )[][] = []
 
+      logger.info(JSON.stringify(matomoCookieNames))
+
       matomoCookieNames.forEach(cookieName => {
         if (cookieName.startsWith('_pk_id')) {
           cookieDescriptions.push([

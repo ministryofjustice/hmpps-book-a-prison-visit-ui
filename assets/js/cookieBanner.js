@@ -41,6 +41,7 @@
   function removeAnalyticsCookies() {
     const expires = new Date(0).toUTCString()
     const matomoCookies = getMatomoCookieNames()
+    console.log(matomoCookies)
 
     matomoCookies.forEach(cookieName => {
       document.cookie = `${cookieName}=; domain=${location.hostname}; expires=${expires}; path=/;`
