@@ -67,9 +67,12 @@ export default class CookiesController {
         encode: String,
       })
 
+      console.log(`acceptAnalytics: ${acceptAnalytics}`)
+console.log(req.hostname)
       if (acceptAnalytics === 'no') {
         const domain = req.hostname
 
+        console.log(req.cookies)
         getMatomoCookieNames(req.cookies).forEach(cookie => {
           res.clearCookie(cookie, { domain, secure: false, httpOnly: false })
         })
