@@ -60,7 +60,7 @@ describe('Prisoner details', () => {
           expect($('input[name=prisonerDob-month]').length).toBe(1)
           expect($('input[name=prisonerDob-year]').length).toBe(1)
           expect($('input[name=prisonNumber]').length).toBe(1)
-          expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+          expect($('[data-test="confirm-button"]').text().trim()).toBe('Confirm and send')
         })
     })
 

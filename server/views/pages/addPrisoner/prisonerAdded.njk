@@ -1,5 +1,6 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = "Prisoner added" %}
 
@@ -13,9 +14,16 @@
       <p>The prisoner details you submitted were successfully matched.</p>
 
       <p>
-        To book a visit for this prisoner, you need to
-        <a href="{{ paths.ADD_VISITOR.START if features.addVisitor else "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" }}">add visitors</a>.
+        To book a visit for this prisoner, you need to add visitors.
       </p>
+
+      {{ govukButton({
+        text: "Add visitors",
+        href: paths.ADD_VISITOR.START,
+        attributes: { "data-test": "add-visitors-button" },
+        preventDoubleClick: true
+      }) }}
+
     </div>
   </div>
 {% endblock %}

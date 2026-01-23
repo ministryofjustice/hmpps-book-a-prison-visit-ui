@@ -26,6 +26,6 @@ export default class PrisonerDetailsPage extends Page {
   }
 
   continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
+    cy.get('[data-test="confirm-button"]').click()
   }
 }
