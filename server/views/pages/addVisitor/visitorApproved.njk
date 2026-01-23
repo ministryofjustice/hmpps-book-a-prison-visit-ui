@@ -9,27 +9,28 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        classes: "visits-request-confirmation",
         text: visitorName + " has been linked to your account."
       }) }}
 
       <p data-test="visitor-approved">{{ visitorName }} will appear as a visitor when you book visits for {{ prisoner | prisonerNameFirstLast }}.</p>
 
-      {{ govukButton({
-        text: "Book a visit",
-        href: paths.BOOK_VISIT.SELECT_VISITORS,
-        attributes: { "data-test": "book-a-visit" },
-        preventDoubleClick: true
-      }) }}
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Book a visit",
+          href: paths.BOOK_VISIT.SELECT_VISITORS,
+          attributes: { "data-test": "book-a-visit" },
+          preventDoubleClick: true
+        }) }}
 
+        {{ govukButton({
+          text: "Link another visitor",
+          href: paths.ADD_VISITOR.DETAILS,
+          classes: "govuk-button--secondary",
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </div>
 
-      {{ govukButton({
-        text: "Link another visitor",
-        href: paths.ADD_VISITOR.DETAILS,
-        classes: "govuk-button--secondary",
-        attributes: { "data-test": "link-a-visitor" },
-        preventDoubleClick: true
-      }) }}
     </div>
   </div>
 {% endblock %}
