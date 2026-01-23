@@ -106,7 +106,10 @@ context('Add a visitor', () => {
       visitorRequestResponse: TestData.createVisitorRequestResponseDto({ status: 'AUTO_APPROVED' }),
     })
     checkVisitorDetailsPage.submit()
-    Page.verifyOnPage(VisitorApprovedPage)
+    const visitorApprovedPage = Page.verifyOnPage(VisitorApprovedPage)
+    visitorApprovedPage
+      .visitorApprovedText()
+      .contains('Joan Phillips will appear as a visitor when you book visits for John Smith')
   })
 
   it('should complete the add a visitor request journey and fail with the duplicate request warning', () => {

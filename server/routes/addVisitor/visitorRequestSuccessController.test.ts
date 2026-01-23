@@ -15,14 +15,14 @@ beforeEach(() => {
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
-        firstName: 'first',
-        lastName: 'last',
+        firstName: 'First',
+        lastName: 'Last',
         'visitorDob-day': '1',
         'visitorDob-month': '2',
         'visitorDob-year': '2000',
         visitorDob: '2000-02-01',
       },
-      result: true,
+      result: 'REQUESTED',
     },
   } as SessionData
   app = appWithAllRoutes({ sessionData })
@@ -71,7 +71,10 @@ describe('Add visitor request success page', () => {
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
           expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
-          expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.BOOK_VISIT.ROOT)
+          expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
+          expect($('[data-test="visitor-approved"]').text()).toStrictEqual(
+            'First Last will appear as a visitor when you book visits for John Smith.',
+          )
 
           expect(sessionData.addVisitorJourney).toBeUndefined()
         })

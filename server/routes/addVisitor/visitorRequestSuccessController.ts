@@ -21,11 +21,11 @@ export default class VisitorRequestSuccessController {
       }
 
       const visitorName = `${req.session.addVisitorJourney.visitorDetails.firstName} ${req.session.addVisitorJourney.visitorDetails.lastName}`
-      const prisonerName = `${req.session.booker.prisoners[0].firstName} ${req.session.booker.prisoners[0].lastName}`
+      const prisoner = req.session.booker.prisoners[0]
 
       delete req.session.addVisitorJourney
 
-      return res.render('pages/addVisitor/visitorApproved', { showOLServiceNav: true, visitorName, prisonerName })
+      return res.render('pages/addVisitor/visitorApproved', { showOLServiceNav: true, visitorName, prisoner })
     }
   }
 }

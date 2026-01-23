@@ -2,6 +2,7 @@ import { SessionRestriction } from '../data/orchestrationApiClient'
 import {
   AvailableVisitSessionDto,
   BookerVisitorRequestValidationErrorResponse,
+  CreateVisitorRequestResponseDto,
   PrisonDto,
   PrisonRegisterPrisonDto,
 } from '../data/orchestrationApiTypes'

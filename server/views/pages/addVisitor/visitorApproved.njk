@@ -13,11 +13,11 @@
         text: visitorName + " has been linked to your account."
       }) }}
 
-      <p>{{ visitorName }} will appear as a visitor when you book visits for {{ prisonerName }}</p>
+      <p data-test="visitor-approved">{{ visitorName }} will appear as a visitor when you book visits for {{ prisoner | prisonerNameFirstLast }}.</p>
 
       {{ govukButton({
         text: "Book a visit",
-        href: paths.BOOK_VISIT.ROOT,
+        href: paths.BOOK_VISIT.SELECT_VISITORS,
         attributes: { "data-test": "book-a-visit" },
         preventDoubleClick: true
       }) }}
