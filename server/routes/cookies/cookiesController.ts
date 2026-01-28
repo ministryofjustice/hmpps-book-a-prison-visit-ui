@@ -10,40 +10,9 @@ export default class CookiesController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const matomoCookieNames = getMatomoCookieNames(req.cookies)
-      const cookieDescriptions: (
-        | { text: string; attributes: { 'data-test': string } }
-        | { text: string; attributes?: undefined }
-      )[][] = []
-
-      logger.info(JSON.stringify(matomoCookieNames))
-
-      matomoCookieNames.forEach(cookieName => {
-        if (cookieName.startsWith('_pk_id')) {
-          cookieDescriptions.push([
-            {
-              text: cookieName,
-              attributes: { 'data-test': 'matomo-id-cookie-name' },
-            },
-            { text: 'Stores a unique visitor ID.' },
-            { text: '13 months' },
-          ])
-        } else if (cookieName.startsWith('_pk_ses')) {
-          cookieDescriptions.push([
-            {
-              text: cookieName,
-              attributes: { 'data-test': 'matomo-session-cookie-name' },
-            },
-            { text: 'Session cookie temporarily stores data for the visit.' },
-            { text: '30 minutes' },
-          ])
-        }
-      })
-
       return res.render('pages/cookies/cookies', {
         errors: req.flash('errors'),
         showOLServiceNav: !!req.session.booker,
-        cookieDescriptions,
       })
     }
   }
@@ -76,10 +45,9 @@ export default class CookiesController {
         const domain = req.hostname
         logger.info(domain)
 
-        logger.info(req.cookies)
         const matomoCookieNames = getMatomoCookieNames(req.cookies)
 
-        logger.info(req.cookies)
+        logger.info(matomoCookieNames)
 
         matomoCookieNames.forEach(cookie => {
           logger.info(`clearing ${cookie}`)
