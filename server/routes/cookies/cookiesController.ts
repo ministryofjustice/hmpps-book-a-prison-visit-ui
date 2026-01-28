@@ -83,7 +83,7 @@ export default class CookiesController {
 
         matomoCookieNames.forEach(cookie => {
           logger.info(`clearing ${cookie}`)
-          res.clearCookie(cookie, { domain, secure: false, httpOnly: false })
+          res.clearCookie(cookie, { domain, secure: false, httpOnly: false, sameSite: 'lax' })
         })
       }
 
