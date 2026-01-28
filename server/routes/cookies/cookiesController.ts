@@ -76,7 +76,12 @@ export default class CookiesController {
         const domain = req.hostname
 
         logger.info(req.cookies)
-        getMatomoCookieNames(req.cookies).forEach(cookie => {
+        const matomoCookieNames = getMatomoCookieNames(req.cookies)
+
+        logger.info(req.cookies)
+
+        matomoCookieNames.forEach(cookie => {
+          logger.info(`clearing ${cookie}`)
           res.clearCookie(cookie, { domain, secure: false, httpOnly: false })
         })
       }
