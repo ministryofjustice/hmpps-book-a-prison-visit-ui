@@ -6,7 +6,7 @@ export default class VisitorRequestFailController {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
 
-      if (!addVisitorJourney?.result === undefined) {
+      if (addVisitorJourney?.result === undefined) {
         return res.redirect(paths.VISITORS)
       }
 
