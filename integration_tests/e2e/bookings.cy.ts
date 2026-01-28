@@ -1,9 +1,9 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
-import BookingsPage from '../pages/bookings/bookings'
-import CancelledVisitsPage from '../pages/bookings/cancel/cancelledVisits'
-import PastVisitsPage from '../pages/bookings/pastVisits'
-import VisitDetailsPage from '../pages/bookings/visit'
+import BookingsPage from '../pages/visits/bookings'
+import CancelledVisitsPage from '../pages/visits/cancel/cancelledVisits'
+import PastVisitsPage from '../pages/visits/pastVisits'
+import VisitDetailsPage from '../pages/visits/visit'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 

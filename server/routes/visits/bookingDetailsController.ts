@@ -45,7 +45,7 @@ export default class BookingDetailsController {
         (type === 'cancelled' && paths.BOOKINGS.CANCELLED) ||
         paths.BOOKINGS.HOME
 
-      return res.render('pages/bookings/visit', {
+      return res.render('pages/visits/visit', {
         backLinkHref,
         prison,
         type,
