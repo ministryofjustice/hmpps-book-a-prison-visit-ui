@@ -2,6 +2,8 @@ import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import paths from '../../constants/paths'
 import config from '../../config'
+import { getMatomoCookieNames } from '../../utils/utils'
+import logger from '../../../logger'
 
 export default class CookiesController {
   public constructor() {}
@@ -37,14 +39,35 @@ export default class CookiesController {
         encode: String,
       })
 
+      logger.info(`acceptAnalytics: ${acceptAnalytics}`)
       if (acceptAnalytics === 'no') {
-        const domain = config.domain.includes('localhost') ? 'localhost' : 'justice.gov.uk'
+        const domain = req.hostname
+        logger.info(domain)
 
-        res.clearCookie('_ga', { domain, secure: false, httpOnly: false })
-        res.clearCookie(`_ga_${config.analytics.googleAnalyticsId.replace('G-', '')}`, {
-          domain,
-          secure: false,
-          httpOnly: false,
+        const matomoCookieNames = getMatomoCookieNames(req.cookies)
+
+        logger.info(matomoCookieNames)
+
+        matomoCookieNames.forEach(cookie => {
+          logger.info(`clearing ${cookie}`)
+          logger.info(
+            JSON.stringify({
+              domain,
+              secure: false,
+              httpOnly: false,
+              sameSite: 'lax',
+              priority: 'medium',
+              signed: false,
+            }),
+          )
+          res.clearCookie(cookie, {
+            domain,
+            secure: false,
+            httpOnly: false,
+            sameSite: 'lax',
+            priority: 'medium',
+            signed: false,
+          })
         })
       }
 

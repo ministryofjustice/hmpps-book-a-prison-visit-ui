@@ -8,9 +8,9 @@ export default function analyticsConsent(): RequestHandler {
         ? cookiePolicy.acceptAnalytics === 'yes'
         : undefined
 
-      res.locals.analyticsEnabled = acceptAnalytics
+      res.locals.analyticsConsentGiven = acceptAnalytics
     } catch {
-      res.locals.analyticsEnabled = undefined
+      res.locals.analyticsConsentGiven = undefined
     }
 
     return next()

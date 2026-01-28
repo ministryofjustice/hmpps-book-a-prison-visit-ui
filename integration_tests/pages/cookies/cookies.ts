@@ -5,7 +5,7 @@ export default class CookiesPage extends Page {
     super('Cookies')
   }
 
-  getAnalyticsCookieName = (): PageElement => cy.get('[data-test="ga-cookie-name"]')
+  getAnalyticsCookieName = (): PageElement => cy.get('[data-test="matomo-id-cookie-name"]')
 
   acceptAnalyticsRadio = (): PageElement => cy.get('input[name=acceptAnalytics][value=yes]')
 

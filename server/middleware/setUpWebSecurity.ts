@@ -17,7 +17,7 @@ export default function setUpWebSecurity(): Router {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          defaultSrc: ["'self'"],
+          defaultSrc: ["'self'", config.analytics.matomoUrl],
           // This nonce allows us to use scripts with the use of the `cspNonce` local, e.g (in a Nunjucks template):
           // <script nonce="{{ cspNonce }}">
           // or
@@ -27,16 +27,11 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: [
             "'self'",
             (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
-            'https://*.googletagmanager.com',
+            config.analytics.matomoUrl,
           ],
           styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           fontSrc: ["'self'"],
-          imgSrc: ["'self'", 'data:', 'https://*.google-analytics.com', 'https://*.googletagmanager.com'],
-          connectSrc: [
-            'https://*.google-analytics.com',
-            'https://*.analytics.google.com',
-            'https://*.googletagmanager.com',
-          ],
+          imgSrc: ["'self'", 'data:'],
           formAction: [
             "'self'",
             config.apis.govukOneLogin.url,
@@ -46,7 +41,7 @@ export default function setUpWebSecurity(): Router {
           upgradeInsecureRequests: process.env.NODE_ENV === 'development' ? null : [],
         },
       },
-      crossOriginEmbedderPolicy: true,
+      crossOriginEmbedderPolicy: false,
     }),
   )
   return router

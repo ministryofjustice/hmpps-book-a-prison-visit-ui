@@ -120,7 +120,10 @@ export default {
     },
   },
   analytics: {
-    googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
+    enabled: get('MATOMO_ENABLED', 'false', requiredInProduction) === 'true',
+    matomoContainerId: get('MATOMO_CONTAINER_ID', ''),
+    matomoSiteId: get('MATOMO_SITE_ID', ''),
+    matomoUrl: get('MATOMO_URL', ''),
   },
   features: {
     addVisitor: get('FEATURE_ADD_VISITOR', 'false') === 'true',

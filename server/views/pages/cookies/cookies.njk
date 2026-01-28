@@ -87,28 +87,19 @@
         rows: [
           [
             {
-              text: "_ga"
+              text: '_pk_id',
+              attributes: { 'data-test': 'matomo-id-cookie-name' }
             },
-            {
-              text: "Checks if you’ve visited the service before. This helps us count how many people visit our site."
-            },
-            {
-              text: "2 years"
-            }
+            { text: 'Stores a unique visitor ID.' },
+            { text: '13 months' }
           ],
           [
             {
-              text: "_ga_" + (googleAnalyticsId | replace("G-", "")),
-              attributes: {
-                "data-test": "ga-cookie-name"
-              }
+              text: '_pk_ses',
+              attributes: { 'data-test': 'matomo-session-cookie-name' }
             },
-            {
-              text: "Used by Google Analytics to find and track an individual session with your device."
-            },
-            {
-              text: "2 years"
-            }
+            { text: 'Session cookie temporarily stores data for the visit.' },
+            { text: '30 minutes' }
           ]
         ]
       }) }}
@@ -129,12 +120,12 @@
               {
                 value: "yes",
                 text: "Yes",
-                checked: analyticsEnabled == true
+                checked: analyticsConsentGiven == true
               },
               {
                 value: "no",
                 text: "No",
-                checked: analyticsEnabled == false
+                checked: analyticsConsentGiven == false
               }
             ],
             errorMessage: errors | findError("acceptAnalytics")

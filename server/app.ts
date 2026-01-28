@@ -20,7 +20,9 @@ import unauthenticatedRoutes from './routes/unauthenticatedRoutes'
 
 import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
+import setUpAnalytics from './middleware/setupAnalytics'
 import analyticsConsent from './middleware/analyticsConsent'
+import config from './config'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -46,6 +48,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(govukOneLogin.authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
+  app.use(setUpAnalytics(config.analytics))
 
   app.use(authenticatedRoutes(services))
 
