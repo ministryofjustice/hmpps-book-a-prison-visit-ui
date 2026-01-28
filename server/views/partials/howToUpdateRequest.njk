@@ -9,12 +9,12 @@
   </p>
 {% else %}
   <p data-test="no-prison-phone-number">
-    To update your booking,
+    To update your request,
     <a href="{{ prison.webAddress }}">contact {{ prison.prisonName }} directly</a>.
   </p>
 {% endif %}
 
 <p>
-  You will need the reference to make changes.
+  You will need the visit reference to make changes.
   Your request reference is <span data-test="booking-reference-changes">{{ visit.reference }}</span>.
 </p>

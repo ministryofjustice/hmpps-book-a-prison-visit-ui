@@ -48,16 +48,16 @@ const paths = {
   },
 
   BOOKINGS: {
-    HOME: '/bookings',
-    PAST: '/bookings/past-visits',
-    CANCELLED: '/bookings/cancelled-visits',
-    VISIT: '/bookings/details',
-    VISIT_PAST: '/bookings/past/details',
-    VISIT_CANCELLED: '/bookings/cancelled/details',
+    HOME: '/visits',
+    PAST: '/visits/past-visits',
+    CANCELLED: '/visits/cancelled-visits',
+    VISIT: '/visits/details',
+    VISIT_PAST: '/visits/past/details',
+    VISIT_CANCELLED: '/visits/cancelled/details',
 
     // Cancel journey
-    CANCEL_VISIT: '/bookings/cancel-booking',
-    CANCEL_CONFIRMATION: '/bookings/booking-cancelled',
+    CANCEL_VISIT: '/visits/cancel-booking',
+    CANCEL_CONFIRMATION: '/visits/booking-cancelled',
   },
 
   VISITORS: '/visitors',

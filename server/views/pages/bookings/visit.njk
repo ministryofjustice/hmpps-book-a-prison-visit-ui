@@ -3,8 +3,7 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visit request details" if isRequest else "Visit booking details" %}
-{% set referenceType = "Request reference" if isRequest else "Booking reference" %}
+{% set pageTitle = "Visit details" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -16,7 +15,7 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m govuk-!-padding-top-5">{{ referenceType }}:
+      <h2 class="govuk-heading-m govuk-!-padding-top-5">Visit reference:
         <span data-test="booking-reference">{{ visit.reference }}</span>
       </h2>
 

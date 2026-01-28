@@ -54,7 +54,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
 
           expect($('[data-test="booking-reference-changes"]').text()).toBe(visit.applicationReference)
           expect($('[data-test="cancel-visit-content"]').text()).toBe(
-            'Or you can cancel your booking from the bookings page.',
+            'Or you can cancel your visit from the visits page.',
           )
           expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.BOOKINGS.HOME)
 

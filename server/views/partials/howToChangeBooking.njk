@@ -1,25 +1,25 @@
-<h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your booking</h2>
+<h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your visit</h2>
 {% set visitReference = bookingConfirmed.visitReference if bookingConfirmed.visitReference else visit.reference %}
 
 {% if prison.phoneNumber %}
   <p>
-    To update your booking, call
+    To update your visit, call
     <span data-test="prison-name">{{ prison.prisonName }}</span>
     on <span data-test="prison-phone-number">{{ prison.phoneNumber }}</span>
     between 9am and 5pm, Monday to Friday.
   </p>
 {% else %}
   <p data-test="no-prison-phone-number">
-    To update your booking,
+    To update your visit,
     <a href="{{ prison.webAddress }}">contact {{ prison.prisonName }} directly</a>.
   </p>
 {% endif %}
 
 <p>
-  You will need the booking reference to make changes.
-  Your booking reference is <span data-test="booking-reference-changes">{{ visitReference }}</span>.
+  You will need the visit reference to make changes.
+  Your visit reference is <span data-test="booking-reference-changes">{{ visitReference }}</span>.
 </p>
 
 {% if bookingConfirmed %}
-  <p data-test="cancel-visit-content">Or you can cancel your booking from <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">the bookings page</a>.</p>
+  <p data-test="cancel-visit-content">Or you can cancel your visit from <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">the visits page</a>.</p>
 {% endif %}

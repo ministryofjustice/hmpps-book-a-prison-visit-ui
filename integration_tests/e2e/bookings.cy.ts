@@ -45,7 +45,7 @@ context('Bookings home page', () => {
     })
 
     const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Bookings')
+    homePage.goToServiceHeaderLinkByName('Visits')
     const bookingsPage = Page.verifyOnPage(BookingsPage)
     bookingsPage.visitDate(1).contains('Thursday 21 May 2026')
     bookingsPage.visitStartTime(1).contains('10am')
@@ -75,7 +75,7 @@ context('Bookings home page', () => {
     })
 
     const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Bookings')
+    homePage.goToServiceHeaderLinkByName('Visits')
     const bookingsPage = Page.verifyOnPage(BookingsPage)
 
     cy.task('stubGetPastPublicVisits', {
@@ -105,7 +105,7 @@ context('Bookings home page', () => {
     })
 
     const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Bookings')
+    homePage.goToServiceHeaderLinkByName('Visits')
     const bookingsPage = Page.verifyOnPage(BookingsPage)
 
     cy.task('stubGetCancelledPublicVisits', {

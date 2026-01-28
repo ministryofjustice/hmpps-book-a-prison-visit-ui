@@ -56,9 +56,9 @@ describe('View a single booking', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Visit booking details -/)
+          expect($('title').text()).toMatch(/^Visit details -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
-          expect($('h1').text()).toBe('Visit booking details')
+          expect($('h1').text()).toBe('Visit details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
@@ -83,7 +83,7 @@ describe('View a single booking', () => {
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel visit')
-          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
+          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
@@ -114,7 +114,7 @@ describe('View a single booking', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text()).toBe('Visit request details')
+          expect($('h1').text()).toBe('Visit details')
           expect($('.moj-alert').text()).toContain('Your request needs to be reviewed')
           expect($('.moj-alert').text()).toContain(
             'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
@@ -148,9 +148,9 @@ describe('View a single booking', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Visit booking details -/)
+          expect($('title').text()).toMatch(/^Visit details -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.PAST)
-          expect($('h1').text()).toBe('Visit booking details')
+          expect($('h1').text()).toBe('Visit details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
@@ -183,9 +183,9 @@ describe('View a single booking', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Visit booking details -/)
+          expect($('title').text()).toMatch(/^Visit details -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
-          expect($('h1').text()).toBe('Visit booking details')
+          expect($('h1').text()).toBe('Visit details')
 
           expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')

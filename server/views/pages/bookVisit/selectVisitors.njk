@@ -17,7 +17,7 @@
 {% set detailsHtml %}
   <p class="govuk-body">You can only book visits for people linked to your account.</p>
   <p class="govuk-body">Visitors must be on the prisoner's visitor list.</p>
-  <p class="govuk-body">To make a request,
+  <p class="govuk-body">To make a request to book a visit for someone new
     <a class="govuk-link" data-test="{{ linkDataTest }}" href="{{ linkHref }}">
       complete the form
     </a>.
@@ -115,7 +115,7 @@
                   {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
                 </p>
               {% endif %}
-              <p class="secondary-text">You cannot currently book for this visitor.</p>
+              <p class="secondary-text">You cannot currently book a visit for this visitor.</p>
             {% endfor %}
           {% endif %}
 

@@ -24,7 +24,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Bookings homepage (future visits list)', () => {
+describe('Visits homepage (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
 
   it('should render the bookings home page - with a future visit', () => {
@@ -35,9 +35,9 @@ describe('Bookings homepage (future visits list)', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Bookings -/)
+        expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
-        expect($('h1').text()).toBe('Bookings')
+        expect($('h1').text()).toBe('Visits')
         expect($('h1').siblings('h2').first().text()).toBe('Future visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
@@ -75,7 +75,7 @@ describe('Bookings homepage (future visits list)', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('h1').text()).toBe('Bookings')
+        expect($('h1').text()).toBe('Visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test=change-booking-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()

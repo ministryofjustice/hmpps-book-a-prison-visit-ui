@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Only bookings made using GOV.UK One Login are shown.</p>
+      <p>Only requests and visits booked using GOV.UK One Login are shown.</p>
 
       {% if visits | length %}
         {% for visit in visits %}
@@ -26,7 +26,7 @@
               <a href="{{ paths.BOOKINGS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
-                  of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                  of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
                 </span>
               </a>
             </li>
@@ -34,7 +34,7 @@
         {% endfor %}
 
       {% else %}
-        <p data-test="no-visits">You do not have any cancelled bookings.</p>
+        <p data-test="no-visits">You do not have any cancelled visits.</p>
       {% endif %}
 
     </div>

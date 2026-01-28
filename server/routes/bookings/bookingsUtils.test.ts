@@ -3,7 +3,7 @@ import { VisitDetails } from '../../services/visitService'
 import TestData from '../testutils/testData'
 import { getVisitMessages } from './bookingsUtils'
 
-describe('Bookings utils', () => {
+describe('Visits utils', () => {
   const { prisonName } = TestData.prisonDto()
 
   describe('getVisitMessages - build messages (MoJ Alerts) to show on visit details page', () => {

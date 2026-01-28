@@ -2,7 +2,7 @@ import Page, { PageElement } from '../page'
 
 export default class BookingsPage extends Page {
   constructor() {
-    super('Booking')
+    super('Visit')
   }
 
   visitDate = (index: number): PageElement => cy.get(`[data-test=visit-date-${index}]`)
