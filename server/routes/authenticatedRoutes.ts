@@ -5,7 +5,7 @@ import paths from '../constants/paths'
 import addPrisonerRoutes from './addPrisoner'
 import addVisitorRoutes from './addVisitor'
 import bookVisitRoutes from './bookVisit'
-import bookingsRoutes from './bookings'
+import bookingsRoutes from './visits'
 import visitorsRoutes from './visitors'
 import config from '../config'
 

@@ -22,7 +22,7 @@ export default class CancelController {
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
-      return res.render('pages/bookings/cancel/cancel', {
+      return res.render('pages/visits/cancel/cancel', {
         errors: req.flash('errors'),
         visit,
         visitDisplayId,

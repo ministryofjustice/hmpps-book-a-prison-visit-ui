@@ -12,7 +12,7 @@ export default class CancelConfirmedController {
         return res.redirect(paths.BOOKINGS.HOME)
       }
 
-      return res.render('pages/bookings/cancel/cancelConfirmed', {
+      return res.render('pages/visits/cancel/cancelConfirmed', {
         bookingCancelled,
         showOLServiceNav: true,
       })
