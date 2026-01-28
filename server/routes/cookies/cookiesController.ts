@@ -40,7 +40,6 @@ export default class CookiesController {
       })
 
       logger.info(`acceptAnalytics: ${acceptAnalytics}`)
-      logger.info(req.hostname)
       if (acceptAnalytics === 'no') {
         const domain = req.hostname
         logger.info(domain)
@@ -51,7 +50,14 @@ export default class CookiesController {
 
         matomoCookieNames.forEach(cookie => {
           logger.info(`clearing ${cookie}`)
-          res.clearCookie(cookie, { domain, secure: false, httpOnly: false, sameSite: 'lax' })
+          res.clearCookie(cookie, {
+            domain,
+            secure: false,
+            httpOnly: false,
+            sameSite: 'lax',
+            priority: 'medium',
+            signed: false,
+          })
         })
       }
 
