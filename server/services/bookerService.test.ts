@@ -88,19 +88,19 @@ describe('Booker service', () => {
       visitorRateLimit.incrementAndCheckLimit.mockResolvedValue(true)
     })
 
-    it('should send a request to add a visitor and return true', async () => {
-      orchestrationApiClient.addVisitorRequest.mockResolvedValue(true)
+    it('should send a request to add a visitor and return "REQUESTED"', async () => {
+      orchestrationApiClient.addVisitorRequest.mockResolvedValue('REQUESTED')
 
       const result = await bookerService.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
 
-      expect(result).toBe(true)
+      expect(result).toBe('REQUESTED')
       expect(orchestrationApiClient.addVisitorRequest).toHaveBeenCalledWith({
         bookerReference,
         prisonerId,
         addVisitorRequest,
       })
       expect(logger.info).toHaveBeenCalledWith(
-        `Requested adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`,
+        `Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: REQUESTED`,
       )
     })
 
@@ -116,7 +116,7 @@ describe('Booker service', () => {
         addVisitorRequest,
       })
       expect(logger.info).toHaveBeenCalledWith(
-        `Failed (REQUEST_ALREADY_EXISTS) adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`,
+        `Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: REQUEST_ALREADY_EXISTS`,
       )
     })
 

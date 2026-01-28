@@ -42,8 +42,11 @@ export default class CheckVisitorDetailsController {
       addVisitorJourney.result = result
 
       switch (result) {
-        case true:
+        case 'REQUESTED':
           return res.redirect(paths.ADD_VISITOR.SUCCESS)
+
+        case 'AUTO_APPROVED':
+          return res.redirect(paths.ADD_VISITOR.AUTO_APPROVED)
 
         case 'MAX_IN_PROGRESS_REQUESTS_REACHED':
           return res.redirect(paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS)

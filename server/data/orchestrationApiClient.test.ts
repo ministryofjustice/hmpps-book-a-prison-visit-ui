@@ -252,16 +252,17 @@ describe('orchestrationApiClient', () => {
 
   describe('addVisitorRequest', () => {
     const addVisitorRequest = TestData.addVisitorRequest()
+    const createVisitorRequestResponseDto = TestData.createVisitorRequestResponseDto()
     const prisonerId = 'A1234BC'
 
-    it('should send a request to add a visitor and return true for a 201 API response', async () => {
+    it('should send a request to add a visitor and "REQUESTED" for a 201 API response', async () => {
       fakeOrchestrationApi
         .post(
           `/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/permitted/visitors/request`,
           addVisitorRequest,
         )
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(201, bookerReference)
+        .reply(201, createVisitorRequestResponseDto)
 
       const result = await orchestrationApiClient.addVisitorRequest({
         bookerReference: bookerReference.value,
@@ -269,7 +270,7 @@ describe('orchestrationApiClient', () => {
         addVisitorRequest,
       })
 
-      expect(result).toBe(true)
+      expect(result).toStrictEqual('REQUESTED')
     })
 
     it('should try to send an add visitor request and return validation error code for a 422 API response', async () => {

@@ -1,6 +1,6 @@
 import Page from '../page'
 
-export default class VisitorRequestSuccessPage extends Page {
+export default class VisitorRequestedPage extends Page {
   constructor() {
     super('Request submitted')
   }

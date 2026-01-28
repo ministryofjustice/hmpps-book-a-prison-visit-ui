@@ -146,6 +146,46 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visitor-requests/{requestReference}/reject': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Reject visitor request and notify them of the outcome.
+     * @description Reject visitor request and notify them of the outcome.
+     */
+    put: operations['rejectVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/visitor-requests/{requestReference}/approve': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Approve visitor request and link visitor to booker's prisoner.
+     * @description Approve visitor request and link visitor to booker's prisoner.
+     */
+    put: operations['approveVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/retry-dlq/{dlqName}': {
     parameters: {
       query?: never
@@ -207,6 +247,27 @@ export interface paths {
      * @description Authenticate one login details against pre populated bookers and return BookerReference object to be used for all other api calls for booker information
      */
     put: operations['bookerAuthorisation']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison/{prisonId}/prisoners/{prisonerId}/visit-orders/balance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get visit order balance of the prisoner
+     * @description Get visit order balance of the prisoner
+     */
+    get: operations['getVisitOrderBalanceForPrisoner']
+    /** Manually adjust a prisoner's visit order balance */
+    put: operations['updatePrisonerVisitOrderBalance']
     post?: never
     delete?: never
     options?: never
@@ -592,6 +653,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visitor-requests/{requestReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a single visitor request for review
+     * @description Returns a single visitor request, with prisoner's approved visitor list
+     */
+    get: operations['getSingleVisitorRequestForReview']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visit-sessions': {
     parameters: {
       query?: never
@@ -960,6 +1041,66 @@ export interface paths {
      * @description Get the prisoner's profile page
      */
     get: operations['getPrisonerProfile']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison/{prisonId}/prisoners/{prisonerId}/visit-orders/history': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get visit order history for a prisoner since the from date.
+     * @description Get visit order history for a prisoner since the from date.
+     */
+    get: operations['getVisitOrderHistoryForPrisoner']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison/{prisonCode}/visitor-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a list of all active visitor requests for a prison via prison code
+     * @description Get a list of all active visitor requests for a prison via prison code
+     */
+    get: operations['getVisitorRequestsByPrisonCode']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prison/{prisonCode}/visitor-requests/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a count of all visitor requests for a prison via prison code
+     * @description Get a count of all visitor requests for a prison via prison code
+     */
+    get: operations['getVisitorRequestsCountByPrisonCode']
     put?: never
     post?: never
     delete?: never
@@ -1695,6 +1836,72 @@ export interface components {
       /** @description allow over booking */
       allowOverBooking: boolean
     }
+    RejectVisitorRequestDto: {
+      /**
+       * @description Rejection Reason type
+       * @example ALREADY_LINKED
+       * @enum {string}
+       */
+      rejectionReason: 'ALREADY_LINKED' | 'REJECT'
+    }
+    PrisonVisitorRequestDto: {
+      /**
+       * @description Visitor Request reference
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Booker reference
+       * @example wwe-egg-wwf
+       */
+      bookerReference: string
+      /**
+       * @description Booker email
+       * @example test@test.com
+       */
+      bookerEmail: string
+      /**
+       * @description Prisoner ID for whom visitor was requested
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description First Name, as entered on visitor request
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last Name, as entered on visitor request
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth, as entered on visitor request
+       * @example 2000-01-01
+       */
+      dateOfBirth: string
+      /**
+       * Format: date
+       * @description Date request was submitted
+       * @example 2025-10-28
+       */
+      requestedOn: string
+      /**
+       * @description The current status of the request
+       * @example REQUESTED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+    }
+    ApproveVisitorRequestDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact you wish to approve and link (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
+    }
     RetryDlqResult: {
       /** Format: int32 */
       messagesFoundCount: number
@@ -1717,6 +1924,71 @@ export interface components {
       /** @description This value is the booker reference and should be used to acquire booker information */
       value: string
     }
+    PrisonerBalanceAdjustmentDto: {
+      /**
+       * Format: int32
+       * @description VOs that need to be added or removed (can be negative, negative denotes REMOVE)
+       * @example 5
+       */
+      voAmount?: number
+      /**
+       * Format: int32
+       * @description PVOs that need to be added or removed (can be negative, negative denotes REMOVE)
+       * @example 5
+       */
+      pvoAmount?: number
+      /**
+       * @description Adjustment Reason Type
+       * @enum {string}
+       */
+      adjustmentReasonType:
+        | 'GOVERNOR_ADJUSTMENT'
+        | 'BALANCE_TRANSFER_FROM_PREVIOUS_PRISON'
+        | 'CORRECTIVE_ACTION'
+        | 'EXCHANGE_FOR_PIN_PHONE_CREDIT'
+        | 'OTHER'
+      /** @description Adjustment Reason Text */
+      adjustmentReasonText?: string
+      /**
+       * @description Staff user ID
+       * @example ABC1234
+       */
+      userName: string
+    }
+    PrisonerBalanceAdjustmentValidationErrorResponse: {
+      /** Format: int32 */
+      status: number
+      /** Format: int32 */
+      errorCode?: number
+      userMessage?: string
+      developerMessage?: string
+      validationErrors: (
+        | 'VO_OR_PVO_NOT_SUPPLIED'
+        | 'VO_TOTAL_POST_ADJUSTMENT_ABOVE_MAX'
+        | 'VO_TOTAL_POST_ADJUSTMENT_BELOW_ZERO'
+        | 'PVO_TOTAL_POST_ADJUSTMENT_ABOVE_MAX'
+        | 'PVO_TOTAL_POST_ADJUSTMENT_BELOW_ZERO'
+      )[]
+    }
+    VisitOrderPrisonerBalanceDto: {
+      /**
+       * @description nomsNumber of the prisoner
+       * @example AA123456
+       */
+      prisonerId: string
+      /**
+       * Format: int32
+       * @description The total of available and accumulated VO balance - any negative VO balance
+       * @example 5
+       */
+      voBalance: number
+      /**
+       * Format: int32
+       * @description The total of available PVO balance - any negative VO balance
+       * @example 5
+       */
+      pvoBalance: number
+    }
     /** @description Prison exclude date */
     ExcludeDateDto: {
       /**
@@ -1737,11 +2009,6 @@ export interface components {
        */
       visitorId: number
       /**
-       * @description Active / Inactive permitted visitor
-       * @example true
-       */
-      active: boolean
-      /**
        * @description Flag to determine if the booker should be notified of the registration
        * @example true
        */
@@ -1755,11 +2022,6 @@ export interface components {
        * @example 5871791
        */
       visitorId: number
-      /**
-       * @description Active / Inactive permitted visitor
-       * @example true
-       */
-      active: boolean
     }
     AddVisitorToBookerPrisonerRequestDto: {
       /** @description First name of the visitor in request */
@@ -1785,6 +2047,29 @@ export interface components {
         | 'MAX_IN_PROGRESS_REQUESTS_REACHED'
         | 'REQUEST_ALREADY_EXISTS'
         | 'VISITOR_ALREADY_EXISTS'
+    }
+    CreateVisitorRequestResponseDto: {
+      /**
+       * @description Reference of newly created visitor request
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Status of newly created visitor request
+       * @example REQUESTED or AUTO_APPROVED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+      /**
+       * @description Reference of booker who submitted the request
+       * @example abc-def-ghi
+       */
+      bookerReference: string
+      /**
+       * @description The id of the booker's prisoner for the visitor request
+       * @example AA123456
+       */
+      prisonerId: string
     }
     /** @description Details to register a prisoner to a booker. */
     RegisterPrisonerForBookerDto: {
@@ -2497,15 +2782,15 @@ export interface components {
       sort?: components['schemas']['SortObject']
       /** Format: int32 */
       pageSize?: number
-      paged?: boolean
       /** Format: int32 */
       pageNumber?: number
+      paged?: boolean
       unpaged?: boolean
     }
     SortObject: {
       empty?: boolean
-      sorted?: boolean
       unsorted?: boolean
+      sorted?: boolean
     }
     OrchestrationVisitRequestSummaryDto: {
       /** @description Visit reference */
@@ -2597,6 +2882,102 @@ export interface components {
     NotificationCountDto: {
       /** Format: int32 */
       count: number
+    }
+    SingleVisitorRequestForReviewDto: {
+      /**
+       * @description Visitor Request reference
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Booker reference
+       * @example wwe-egg-wwf
+       */
+      bookerReference: string
+      /**
+       * @description Booker email
+       * @example test@test.com
+       */
+      bookerEmail: string
+      /**
+       * @description Prisoner ID for whom visitor was requested
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Prisoner first name
+       * @example John
+       */
+      prisonerFirstName: string
+      /**
+       * @description Prisoner last name
+       * @example Smith
+       */
+      prisonerLastName: string
+      /**
+       * @description First Name, as entered on visitor request
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last Name, as entered on visitor request
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth, as entered on visitor request
+       * @example 2000-01-01
+       */
+      dateOfBirth: string
+      /**
+       * Format: date
+       * @description Date request was submitted
+       * @example 2025-10-28
+       */
+      requestedOn: string
+      /**
+       * @description The current status of the request
+       * @example REQUESTED
+       * @enum {string}
+       */
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+      /**
+       * @description Date request was submitted
+       * @example 2025-10-28
+       */
+      socialContacts: components['schemas']['SocialContactsDto'][]
+    }
+    /** @description Social Contact */
+    SocialContactsDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
+      /**
+       * @description First name
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last name
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth
+       * @example 2000-01-31
+       */
+      dateOfBirth?: string
+      /**
+       * Format: date
+       * @description Date when visitor was last approved for a visit (approved / auto-approved)
+       * @example 2025-09-12
+       */
+      lastApprovedForVisitDate?: string
     }
     /** @description Visit Session */
     VisitSessionDto: {
@@ -3131,37 +3512,6 @@ export interface components {
        */
       lastName?: string
     }
-    /** @description Social Contact */
-    SocialContactsDto: {
-      /**
-       * Format: int64
-       * @description Identifier for this contact (Person in NOMIS)
-       * @example 5871791
-       */
-      visitorId: number
-      /**
-       * @description First name
-       * @example John
-       */
-      firstName: string
-      /**
-       * @description Last name
-       * @example Smith
-       */
-      lastName: string
-      /**
-       * Format: date
-       * @description Date of birth
-       * @example 2000-01-31
-       */
-      dateOfBirth?: string
-      /**
-       * Format: date
-       * @description Date when visitor was last approved for a visit (approved / auto-approved)
-       * @example 2025-09-12
-       */
-      lastApprovedForVisitDate?: string
-    }
     BookerPrisonerVisitorRequestDto: {
       /**
        * @description Visitor Request reference
@@ -3460,6 +3810,209 @@ export interface components {
        * @example Smith
        */
       lastName?: string
+    }
+    VisitOrderHistoryAttributesDto: {
+      /**
+       * @description Visit order history attribute type
+       * @example VISIT_REFERENCE
+       * @enum {string}
+       */
+      attributeType:
+        | 'VISIT_REFERENCE'
+        | 'INCENTIVE_LEVEL'
+        | 'OLD_PRISONER_ID'
+        | 'NEW_PRISONER_ID'
+        | 'ADJUSTMENT_REASON_TYPE'
+      /** @description Visit order history attribute value */
+      attributeValue: string
+    }
+    VisitOrderHistoryDetailsDto: {
+      /**
+       * @description nomsNumber of the prisoner
+       * @example AA123456
+       */
+      prisonerId: string
+      /**
+       * @description First Name
+       * @example Robert
+       */
+      firstName: string
+      /**
+       * @description Last name
+       * @example Larsen
+       */
+      lastName: string
+      /**
+       * @description Convicted Status
+       * @example Convicted
+       * @enum {string}
+       */
+      convictedStatus?: 'Convicted' | 'Remand'
+      /**
+       * @description Incentive level
+       * @example Standard
+       */
+      incentiveLevel?: string
+      /**
+       * @description Category description (from list of assessments)
+       * @example Category C
+       */
+      category?: string
+      /** @description List of Visit Order History */
+      visitOrderHistory: components['schemas']['VisitOrderHistoryDto'][]
+    }
+    VisitOrderHistoryDto: {
+      /**
+       * @description Visit Order History Type
+       * @example VO_ALLOCATION
+       * @enum {string}
+       */
+      visitOrderHistoryType:
+        | 'MIGRATION'
+        | 'VO_ACCUMULATION'
+        | 'VO_ALLOCATION'
+        | 'VO_AND_PVO_ALLOCATION'
+        | 'PVO_ALLOCATION'
+        | 'VO_EXPIRATION'
+        | 'VO_AND_PVO_EXPIRATION'
+        | 'PVO_EXPIRATION'
+        | 'ALLOCATION_USED_BY_VISIT'
+        | 'ALLOCATION_REFUNDED_BY_VISIT_CANCELLED'
+        | 'PRISONER_BALANCE_RESET'
+        | 'SYNC_FROM_NOMIS'
+        | 'ALLOCATION_ADDED_AFTER_PRISONER_MERGE'
+        | 'ADMIN_RESET_NEGATIVE_BALANCE'
+        | 'MANUAL_PRISONER_BALANCE_ADJUSTMENT'
+      /**
+       * Format: date-time
+       * @description Visit order history created data and time
+       * @example 2018-12-01T13:45:00
+       */
+      createdTimeStamp: string
+      /**
+       * Format: int32
+       * @description VO balance after the visit order event
+       * @example 5
+       */
+      voBalance: number
+      /**
+       * Format: int32
+       * @description VO balance change
+       * @example -1
+       */
+      voBalanceChange: number
+      /**
+       * Format: int32
+       * @description PVO balance after the visit order event
+       * @example 5
+       */
+      pvoBalance: number
+      /**
+       * Format: int32
+       * @description PVO balance change
+       * @example -1
+       */
+      pvoBalanceChange: number
+      /**
+       * @description Username for who triggered the event, SYSTEM if system generated or STAFF full name if STAFF event (e.g. manual adjustment)
+       * @example SYSTEM
+       */
+      userName: string
+      /** @description Comment added by STAFF, null if SYSTEM event or if no comment was entered by STAFF */
+      comment?: string
+      /** @description Key, value combination of attributes */
+      attributes: components['schemas']['VisitOrderHistoryAttributesDto'][]
+    }
+    PrisonerBalanceDto: {
+      /**
+       * @description nomsNumber of the prisoner
+       * @example AA123456
+       */
+      prisonerId: string
+      /**
+       * Format: int32
+       * @description The total of available and accumulated VO balance - any negative VO balance
+       * @example 5
+       */
+      voBalance: number
+      /**
+       * Format: int32
+       * @description The total of available PVO balance - any negative VO balance
+       * @example 5
+       */
+      pvoBalance: number
+      /**
+       * @description First name of the prisoner
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last name of the prisoner
+       * @example Smith
+       */
+      lastName: string
+    }
+    PrisonVisitorRequestListEntryDto: {
+      /**
+       * @description Visitor Request reference
+       * @example abc-def-ghi
+       */
+      reference: string
+      /**
+       * @description Booker reference
+       * @example wwe-egg-wwf
+       */
+      bookerReference: string
+      /**
+       * @description Booker email
+       * @example test@test.com
+       */
+      bookerEmail: string
+      /**
+       * @description Prisoner ID for whom visitor was requested
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description Prisoner first name
+       * @example John
+       */
+      prisonerFirstName: string
+      /**
+       * @description Prisoner last name
+       * @example Smith
+       */
+      prisonerLastName: string
+      /**
+       * @description First Name, as entered on visitor request
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last Name, as entered on visitor request
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * Format: date
+       * @description Date of birth, as entered on visitor request
+       * @example 2000-01-01
+       */
+      dateOfBirth: string
+      /**
+       * Format: date
+       * @description Date request was submitted
+       * @example 2025-10-28
+       */
+      requestedOn: string
+    }
+    VisitorRequestsCountByPrisonCodeDto: {
+      /**
+       * Format: int32
+       * @description Count of visitor requests for prison
+       * @example 5
+       */
+      count: number
     }
     /** @description Is the date passed excluded */
     IsExcludeDateDto: {
@@ -4060,6 +4613,130 @@ export interface operations {
       }
     }
   }
+  rejectVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RejectVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visitor request rejected and booker informed */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to reject visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to reject visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker or visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  approveVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visitor request approved and visitor linked to booker's prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to approve visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to approve visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker or visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   retryDlq: {
     parameters: {
       query?: never
@@ -4171,6 +4848,137 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitOrderBalanceForPrisoner: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonerId: string
+        prisonId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Return balance of prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonerBalanceDto']
+        }
+      }
+      /** @description Incorrect request to get visit order balance of prisoner */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get visit order balance of prisoner */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner not found on visit allocation api, cannot get balance */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updatePrisonerVisitOrderBalance: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonerId: string
+        prisonId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PrisonerBalanceAdjustmentDto']
+      }
+    }
+    responses: {
+      /** @description Prisoner's visit order balance successfully adjusted */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['VisitOrderPrisonerBalanceDto']
+        }
+      }
+      /** @description Bad request to adjust balance, prisoner on remand or invalid data submitted via DTO */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to adjust a prisoner's visit order balance */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner not found on visit allocation api, cannot adjust balance */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prisoner balance adjustment validation failed */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PrisonerBalanceAdjustmentValidationErrorResponse']
         }
       }
     }
@@ -4887,7 +5695,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': string
+          '*/*': components['schemas']['CreateVisitorRequestResponseDto']
         }
       }
       /** @description Incorrect request to submit a visitor request */
@@ -5599,6 +6407,64 @@ export interface operations {
       }
       /** @description Failed to get a visit reference by client reference */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getSingleVisitorRequestForReview: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successfully return a single visitor request and prisoner's approved visitor list */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SingleVisitorRequestForReviewDto']
+        }
+      }
+      /** @description Incorrect request to get a single visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get a single visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker not found or Visitor request not found */
+      404: {
         headers: {
           [name: string]: unknown
         }
@@ -6660,6 +7526,165 @@ export interface operations {
       }
       /** @description Incorrect request to the prisoner profile page */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitOrderHistoryForPrisoner: {
+    parameters: {
+      query: {
+        /**
+         * @description Date from which the visit order history will be returned
+         * @example 2025-01-01
+         */
+        fromDate: string
+        /**
+         * @description Maximum number of results to return, if null, returns all results starting from the date passed in fromDate.
+         * @example 100
+         */
+        maxResults?: number
+      }
+      header?: never
+      path: {
+        prisonId: string
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Return visit order history for a prisoner since the from date. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['VisitOrderHistoryDetailsDto']
+        }
+      }
+      /** @description Incorrect request to get visit order history for a prisoner since the from date. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get visit order history */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitorRequestsByPrisonCode: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description List successfully returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestListEntryDto'][]
+        }
+      }
+      /** @description Incorrect request to get list of active visitor requests for prison. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get list of active visitor requests for prison */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getVisitorRequestsCountByPrisonCode: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Count successfully returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['VisitorRequestsCountByPrisonCodeDto']
+        }
+      }
+      /** @description Incorrect request to get count of visitor requests for prison. */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get count of visitor requests for prison */
+      403: {
         headers: {
           [name: string]: unknown
         }
