@@ -74,6 +74,7 @@ export default class CookiesController {
       logger.info(req.hostname)
       if (acceptAnalytics === 'no') {
         const domain = req.hostname
+        logger.info(domain)
 
         logger.info(req.cookies)
         const matomoCookieNames = getMatomoCookieNames(req.cookies)
