@@ -15,14 +15,14 @@ beforeEach(() => {
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
-        firstName: 'first',
-        lastName: 'last',
+        firstName: 'First',
+        lastName: 'Last',
         'visitorDob-day': '1',
         'visitorDob-month': '2',
         'visitorDob-year': '2000',
         visitorDob: '2000-02-01',
       },
-      result: true,
+      result: 'REQUESTED',
     },
   } as SessionData
   app = appWithAllRoutes({ sessionData })
@@ -53,6 +53,28 @@ describe('Add visitor request success page', () => {
           expect($('h1').text().trim()).toBe('Request submitted')
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+
+          expect(sessionData.addVisitorJourney).toBeUndefined()
+        })
+    })
+
+    it('should render add visitor journey auto approved page and clear session data', () => {
+      return request(app)
+        .get(paths.ADD_VISITOR.AUTO_APPROVED)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Visitor linked/)
+          expect($('#navigation').length).toBe(1)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text().trim()).toBe('Visitor linked')
+          expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
+          expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="visitor-approved"]').text()).toStrictEqual(
+            'First Last will appear as a visitor when you book visits for John Smith.',
+          )
 
           expect(sessionData.addVisitorJourney).toBeUndefined()
         })

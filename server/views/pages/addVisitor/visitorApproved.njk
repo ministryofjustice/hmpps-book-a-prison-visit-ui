@@ -1,0 +1,36 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = "Visitor linked" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: pageTitle,
+        text: visitorName + " has been linked to your account"
+      }) }}
+
+      <p data-test="visitor-approved">{{ visitorName }} will appear as a visitor when you book visits for {{ prisoner | prisonerNameFirstLast }}.</p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Book a visit",
+          href: paths.HOME,
+          attributes: { "data-test": "book-a-visit" },
+          preventDoubleClick: true
+        }) }}
+
+        {{ govukButton({
+          text: "Link another visitor",
+          href: paths.ADD_VISITOR.DETAILS,
+          classes: "govuk-button--secondary",
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

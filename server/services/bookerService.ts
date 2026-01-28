@@ -10,6 +10,7 @@ import {
   BookerPrisonerVisitorRequestDto,
   BookerVisitorRequestValidationErrorResponse,
   ConvictedStatus,
+  CreateVisitorRequestResponseDto,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
 import { SanitisedError } from '../sanitisedError'
@@ -89,7 +90,9 @@ export default class BookerService {
     bookerReference: string
     prisonerId: string
     addVisitorRequest: AddVisitorToBookerPrisonerRequestDto
-  }): Promise<true | BookerVisitorRequestValidationErrorResponse['validationError']> {
+  }): Promise<
+    CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
+  > {
     const withinVisitorRequestLimit = await this.visitorRateLimit.incrementAndCheckLimit(bookerReference)
 
     if (!withinVisitorRequestLimit) {
@@ -102,8 +105,7 @@ export default class BookerService {
 
     const result = await orchestrationApiClient.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
 
-    const logMessage = result === true ? 'Requested' : `Failed (${result})`
-    logger.info(`${logMessage} adding visitor to prisoner ${prisonerId} for booker ${bookerReference}`)
+    logger.info(`Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: ${result}`)
     return result
   }
 

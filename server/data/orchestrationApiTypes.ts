@@ -35,6 +35,8 @@ export type ConvictedStatus = BookerPrisonerInfoDto['prisoner']['convictedStatus
 
 export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
+export type CreateVisitorRequestResponseDto = components['schemas']['CreateVisitorRequestResponseDto']
+
 export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
 
 export type RegisterPrisonerForBookerDto = components['schemas']['RegisterPrisonerForBookerDto']
