@@ -39,6 +39,7 @@
 
 {% block head %}
   {% if matomoEnabled and analyticsConsentGiven %}
+    <script nonce="{{ cspNonce }}">console.log('TRACKING ENABLED')</script>
     {% if matomoSiteId %}
       <!-- Matomo -->
       <script nonce="{{ cspNonce }}" data-test="matomo-analytics">
