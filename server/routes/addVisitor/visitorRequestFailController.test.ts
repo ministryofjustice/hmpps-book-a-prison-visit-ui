@@ -101,7 +101,12 @@ describe('Add visitor request failure pages', () => {
         })
     })
 
-    it('should redirect to visitors page if add visitor request result not in session', () => {
+    it('should redirect to visitors page if add visitor request journey not in session', () => {
+      delete sessionData.addVisitorJourney
+      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
+    })
+
+    it('should redirect to visitors page if add visitor request journey result not in session', () => {
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
   })
