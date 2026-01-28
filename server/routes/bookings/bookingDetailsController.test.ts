@@ -83,7 +83,7 @@ describe('View a single booking', () => {
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel visit')
-          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`/bookings/cancel-booking/${visitDisplayId}`)
+          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
