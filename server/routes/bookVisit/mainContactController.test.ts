@@ -82,10 +82,10 @@ describe('Main contact', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Who is the main contact for this booking\? -/)
+          expect($('title').text()).toMatch(/^Who is the main contact for this visit\? -/)
           expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
-          expect($('h1').text().trim()).toBe('Who is the main contact for this booking?')
+          expect($('h1').text().trim()).toBe('Who is the main contact for this visit?')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
           expect($('input[name="contact"]').length).toBe(2) // Only adult visitor and 'Someone else'
@@ -152,7 +152,7 @@ describe('Main contact', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Error: Who is the main contact for this booking\? -/)
+          expect($('title').text()).toMatch(/^Error: Who is the main contact for this visit\? -/)
           expect($('.govuk-error-summary a[href=#contact]').text()).toBe('No main contact selected')
           expect($('#contact-error').text()).toContain('No main contact selected')
         })

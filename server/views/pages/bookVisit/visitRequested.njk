@@ -36,7 +36,7 @@
         <p data-test="request-confirmation-message">{{ requestConfirmationMessage }}</p>
       {% endif %}
 
-      <p>Request reference: <span data-test="request-reference">{{ bookingConfirmed.visitReference }}</span></p>
+      <p>Visit reference: <span data-test="request-reference">{{ bookingConfirmed.visitReference }}</span></p>
 
 
       <h2 class="govuk-heading-m">What happens next</h2>
@@ -53,7 +53,7 @@
       {% endif %}
       
       <p>
-        <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">Your bookings page</a>
+        <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">Your visits page</a>
         also shows the status of upcoming visits.
       </p>
 

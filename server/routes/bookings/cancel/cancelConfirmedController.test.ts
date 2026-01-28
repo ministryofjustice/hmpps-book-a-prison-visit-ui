@@ -29,9 +29,9 @@ describe('Cancel a booking - Booking cancelled', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Booking cancelled -/)
+          expect($('title').text()).toMatch(/^Visit cancelled -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(undefined)
-          expect($('h1').text()).toContain('Booking cancelled')
+          expect($('h1').text()).toContain('Visit cancelled')
           expect($('h2').text()).toContain('What happens next')
           expect($('[data-test=confirmation-notification-message]').text()).toContain(
             'An email and a text message will be sent',

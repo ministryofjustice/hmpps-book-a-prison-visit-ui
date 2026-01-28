@@ -1,19 +1,19 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = "Booking cancelled" %}
+{% set pageTitle = "Visit cancelled" %}
 
 {% if not bookingCancelled.hasEmail and bookingCancelled.hasMobile %}
   {% set confirmationMessage =
-    "A text message will be sent to the main contact to confirm the booking has been cancelled." %}
+    "A text message will be sent to the main contact to confirm the visit has been cancelled." %}
 {% endif %}
 {% if bookingCancelled.hasEmail and bookingCancelled.hasMobile %}
   {% set confirmationMessage =
-    "An email and a text message will be sent to the main contact to confirm the booking has been cancelled." %}
+    "An email and a text message will be sent to the main contact to confirm the visit has been cancelled." %}
 {% endif %}
 {% if bookingCancelled.hasEmail and not bookingCancelled.hasMobile %}
   {% set confirmationMessage =
-    "An email will be sent to the main contact to confirm the booking has been cancelled." %}
+    "An email will be sent to the main contact to confirm the visit has been cancelled." %}
 {% endif %}
 
 {% block content %}
@@ -31,7 +31,7 @@
       {% endif %}
 
       <p>
-        When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your bookings</a>.
+        When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your visits</a>.
       </p>
 
       <p>

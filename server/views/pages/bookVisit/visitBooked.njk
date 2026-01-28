@@ -5,15 +5,15 @@
 
 {% if not bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
   {% set confirmationMessage =
-    "A text message confirming the visit will be sent to the main contact. This will include the booking reference." %}
+    "A text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
 {% if bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
   {% set confirmationMessage =
-    "An email and a text message confirming the visit will be sent to the main contact. This will include the booking reference." %}
+    "An email and a text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
 {% if bookingConfirmed.hasEmail and not bookingConfirmed.hasMobile %}
   {% set confirmationMessage =
-    "An email confirming the visit will be sent to the main contact. This will include the booking reference." %}
+    "An email confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
 
 {% block content %}
@@ -21,14 +21,14 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        html: 'Your booking reference is<br><strong data-test="booking-reference-title">' + bookingConfirmed.visitReference + "</strong>"
+        html: 'Your visit reference is<br><strong data-test="booking-reference-title">' + bookingConfirmed.visitReference + "</strong>"
       }) }}
 
       {% if confirmationMessage %}
         <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
       {% endif %}
 
-      <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your bookings</a>.</p>
+      <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your visits</a>.</p>
 
       <p>You can help us to improve this service by giving <a href="https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/">feedback</a>.</p>
 

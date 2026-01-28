@@ -2,7 +2,7 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set activeLink = 'bookings-link' %}
-{% set pageTitle = "Bookings" %}
+{% set pageTitle = "Visits" %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Only bookings made using GOV.UK One Login are shown.</p>
+      <p>Only requests and visits booked using GOV.UK One Login are shown.</p>
 
       <h2 class="govuk-heading-m">Future visits</h2>
 
@@ -36,14 +36,14 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </li>
             <li>
-              {{ "Request" if isRequest else "Booking" }} reference:
+              Visit reference:
               <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
             </li>
             <li>
               <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
-                  of your booking for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                  of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
                 </span>
               </a>
               <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
@@ -57,7 +57,7 @@
         {% endfor %}
 
       {% else %}
-        <p data-test="no-visits">You do not have any future bookings.</p>
+        <p data-test="no-visits">You do not have any future visits.</p>
       {% endif %}
 
       <h2 class="govuk-heading-m">Other visits</h2>

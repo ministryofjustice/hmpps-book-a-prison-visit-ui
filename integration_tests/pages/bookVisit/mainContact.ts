@@ -2,7 +2,7 @@ import Page from '../page'
 
 export default class MainContactPage extends Page {
   constructor() {
-    super('Who is the main contact for this booking?')
+    super('Who is the main contact for this visit?')
   }
 
   selectVisitorByName = (name: string): void => {
