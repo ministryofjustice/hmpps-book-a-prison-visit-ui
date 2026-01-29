@@ -7,7 +7,7 @@ import { getVisitMessages } from './bookingsUtils'
 import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
 
-export default class BookingDetailsController {
+export default class VisitDetailsController {
   // label visits with these statuses as a 'request' rather than a 'booking'
   private readonly REQUEST_STATUSES: VisitDetails['visitSubStatus'][] = [
     'AUTO_REJECTED',
@@ -24,7 +24,7 @@ export default class BookingDetailsController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {
-        return res.redirect(paths.BOOKINGS.HOME)
+        return res.redirect(paths.VISITS.HOME)
       }
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
@@ -41,9 +41,7 @@ export default class BookingDetailsController {
       const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       const backLinkHref =
-        (type === 'past' && paths.BOOKINGS.PAST) ||
-        (type === 'cancelled' && paths.BOOKINGS.CANCELLED) ||
-        paths.BOOKINGS.HOME
+        (type === 'past' && paths.VISITS.PAST) || (type === 'cancelled' && paths.VISITS.CANCELLED) || paths.VISITS.HOME
 
       return res.render('pages/visits/visit', {
         backLinkHref,

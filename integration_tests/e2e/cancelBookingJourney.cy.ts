@@ -1,9 +1,9 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
-import BookingsPage from '../pages/visits/bookings'
+import VisitsPage from '../pages/visits/visits'
 import CancelConfirmedPage from '../pages/visits/cancel/cancelConfirmed'
 import CancelVisitPage from '../pages/visits/cancel/cancelVisit'
-import VisitDetailsPage from '../pages/visits/visit'
+import VisitDetailsPage from '../pages/visits/visitDetails'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 
@@ -26,7 +26,7 @@ context('Cancel booking journey', () => {
     cy.signIn()
   })
 
-  it('should navigate to Future bookings page, then view visit details and cancel it', () => {
+  it('should navigate to Future visits page, then view visit details and cancel it', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
@@ -34,15 +34,15 @@ context('Cancel booking journey', () => {
 
     const homePage = Page.verifyOnPage(HomePage)
     homePage.goToServiceHeaderLinkByName('Visits')
-    const bookingsPage = Page.verifyOnPage(BookingsPage)
-    bookingsPage.visitDate(1).contains('Thursday 21 May 2026')
-    bookingsPage.visitStartTime(1).contains('10am')
-    bookingsPage.visitEndTime(1).contains('11:30am')
-    bookingsPage.visitReference(1).contains('ab-cd-ef-gh')
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    visitsPage.visitStartTime(1).contains('10am')
+    visitsPage.visitEndTime(1).contains('11:30am')
+    visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
-    bookingsPage.visitLink(1).click()
+    visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.HOME)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.cancelVisitButton().contains('Cancel visit')
     visitDetailsPage.cancelVisitButton().click()

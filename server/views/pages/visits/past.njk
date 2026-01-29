@@ -3,7 +3,7 @@
 {% set activeLink = 'bookings-link' %}
 {% set pageTitle = "Past visits" %}
 
-{% set backLinkHref = paths.BOOKINGS.HOME %}
+{% set backLinkHref = paths.VISITS.HOME %}
 
 {% block content %}
 
@@ -23,7 +23,7 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </li>
             <li>
-              <a href="{{ paths.BOOKINGS.VISIT_PAST }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+              <a href="{{ paths.VISITS.VISIT_PAST }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
                   of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}

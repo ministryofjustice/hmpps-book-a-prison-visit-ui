@@ -21,14 +21,14 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        html: 'Your visit reference is<br><strong data-test="booking-reference-title">' + bookingConfirmed.visitReference + "</strong>"
+        html: 'Your visit reference is<br><strong data-test="visit-reference-title">' + bookingConfirmed.visitReference + "</strong>"
       }) }}
 
       {% if confirmationMessage %}
         <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
       {% endif %}
 
-      <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.BOOKINGS.HOME }}">check the details of your visits</a>.</p>
+      <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.VISITS.HOME }}">check the details of your visits</a>.</p>
 
       <p>You can help us to improve this service by giving <a href="https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/">feedback</a>.</p>
 

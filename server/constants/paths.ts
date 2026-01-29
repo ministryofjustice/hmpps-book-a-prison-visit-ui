@@ -47,11 +47,11 @@ const paths = {
     REQUESTED: '/book-visit/visit-requested',
   },
 
-  BOOKINGS: {
+  VISITS: {
     HOME: '/visits',
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',
-    VISIT: '/visits/details',
+    DETAILS: '/visits/details',
     VISIT_PAST: '/visits/past/details',
     VISIT_CANCELLED: '/visits/cancelled/details',
 
