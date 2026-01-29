@@ -7,7 +7,7 @@ import { getVisitMessages } from './bookingsUtils'
 import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
 
-export default class BookingDetailsController {
+export default class VisitDetailsController {
   // label visits with these statuses as a 'request' rather than a 'booking'
   private readonly REQUEST_STATUSES: VisitDetails['visitSubStatus'][] = [
     'AUTO_REJECTED',

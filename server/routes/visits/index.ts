@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { Services } from '../../services'
 import paths from '../../constants/paths'
 import BookingsController from './bookingsController'
-import BookingDetailsController from './bookingDetailsController'
+import VisitDetailsController from './visitDetailsController'
 import CancelController from './cancel/cancelController'
 import CancelConfirmedController from './cancel/cancelConfirmedController'
 
@@ -10,7 +10,7 @@ export default function routes(services: Services): Router {
   const router = Router()
 
   const bookingsController = new BookingsController(services.visitService)
-  const bookingDetailsController = new BookingDetailsController(services.prisonService)
+  const visitDetailsController = new VisitDetailsController(services.prisonService)
   const cancelVisitController = new CancelController(services.visitService)
   const cancelVisitConfirmationController = new CancelConfirmedController()
 
@@ -20,20 +20,20 @@ export default function routes(services: Services): Router {
 
   router.get(
     `${paths.BOOKINGS.VISIT}/:visitDisplayId`,
-    bookingDetailsController.validate(),
-    bookingDetailsController.view('future'),
+    visitDetailsController.validate(),
+    visitDetailsController.view('future'),
   )
 
   router.get(
     `${paths.BOOKINGS.VISIT_PAST}/:visitDisplayId`,
-    bookingDetailsController.validate(),
-    bookingDetailsController.view('past'),
+    visitDetailsController.validate(),
+    visitDetailsController.view('past'),
   )
 
   router.get(
     `${paths.BOOKINGS.VISIT_CANCELLED}/:visitDisplayId`,
-    bookingDetailsController.validate(),
-    bookingDetailsController.view('cancelled'),
+    visitDetailsController.validate(),
+    visitDetailsController.view('cancelled'),
   )
 
   router.get(

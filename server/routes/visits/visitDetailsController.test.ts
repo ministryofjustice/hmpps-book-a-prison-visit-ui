@@ -48,7 +48,7 @@ describe('View a single booking', () => {
       jest.useRealTimers()
     })
 
-    it('should render the booking details page', () => {
+    it('should render the visit details page', () => {
       bookings.type = 'future'
 
       return request(app)
@@ -60,7 +60,7 @@ describe('View a single booking', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -77,7 +77,7 @@ describe('View a single booking', () => {
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference-changes"]').text()).toBe('ab-cd-ef-gh')
 
           // don't display this line when on the visit details page
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
@@ -89,7 +89,7 @@ describe('View a single booking', () => {
         })
     })
 
-    it('should render the booking details page - no main contact details', () => {
+    it('should render the visit details page - no main contact details', () => {
       bookings.type = 'future'
       bookings.visits[0].visitContact.email = undefined
       bookings.visits[0].visitContact.telephone = undefined
@@ -105,7 +105,7 @@ describe('View a single booking', () => {
         })
     })
 
-    it('should render the booking details page - requested visit', () => {
+    it('should render the visit details page - requested visit', () => {
       bookings.type = 'future'
       bookings.visits[0].visitSubStatus = 'REQUESTED'
 
@@ -140,7 +140,7 @@ describe('View a single booking', () => {
   })
 
   describe('Past booking', () => {
-    it('should render the booking details page', () => {
+    it('should render the visit details page', () => {
       bookings.type = 'past'
 
       return request(app)
@@ -152,7 +152,7 @@ describe('View a single booking', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.PAST)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -161,7 +161,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
@@ -172,7 +172,7 @@ describe('View a single booking', () => {
   })
 
   describe('Cancelled booking', () => {
-    it('should render the booking details page with "Visit cancelled" message', () => {
+    it('should render the visit details page with "Visit cancelled" message', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.visitSubStatus = 'CANCELLED'
@@ -187,7 +187,7 @@ describe('View a single booking', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -198,7 +198,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
