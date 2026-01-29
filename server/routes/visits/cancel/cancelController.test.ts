@@ -51,7 +51,9 @@ describe('Cancel a booking - Are you sure page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Cancel your visit -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+          expect($('[data-test="back-link"]').attr('href')).toBe(
+            `${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`,
+          )
           expect($('h1').text()).toBe('Are you sure you want to cancel your visit?')
 
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
@@ -131,7 +133,7 @@ describe('Cancel a booking - Are you sure page', () => {
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=no')
         .expect(302)
-        .expect('location', `${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('location', `${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })

@@ -19,7 +19,7 @@ export default function routes(services: Services): Router {
   router.get(paths.VISITS.CANCELLED, bookingsController.view('cancelled'))
 
   router.get(
-    `${paths.VISITS.VISIT}/:visitDisplayId`,
+    `${paths.VISITS.DETAILS}/:visitDisplayId`,
     visitDetailsController.validate(),
     visitDetailsController.view('future'),
   )

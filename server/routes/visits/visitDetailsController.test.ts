@@ -52,7 +52,7 @@ describe('View a single booking', () => {
       bookings.type = 'future'
 
       return request(app)
-        .get(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -95,7 +95,7 @@ describe('View a single booking', () => {
       bookings.visits[0].visitContact.telephone = undefined
 
       return request(app)
-        .get(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -110,7 +110,7 @@ describe('View a single booking', () => {
       bookings.visits[0].visitSubStatus = 'REQUESTED'
 
       return request(app)
-        .get(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -128,7 +128,7 @@ describe('View a single booking', () => {
       prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
 
       return request(app)
-        .get(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -211,14 +211,14 @@ describe('View a single booking', () => {
   describe('Validation', () => {
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
       bookings.type = 'future'
-      return request(app).get(`${paths.VISITS.VISIT}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
+      return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should redirect to bookings home page if an unrecognised (not in session) visitDisplayId is passed', () => {
       bookings.type = 'future'
       const unrecognisedUUID = randomUUID()
       return request(app)
-        .get(`${paths.VISITS.VISIT}/${unrecognisedUUID}`)
+        .get(`${paths.VISITS.DETAILS}/${unrecognisedUUID}`)
         .expect(302)
         .expect('location', paths.VISITS.HOME)
     })

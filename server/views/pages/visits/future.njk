@@ -40,7 +40,7 @@
               <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
             </li>
             <li>
-              <a href="{{ paths.VISITS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+              <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
                   of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}

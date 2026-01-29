@@ -51,7 +51,7 @@ const paths = {
     HOME: '/visits',
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',
-    VISIT: '/visits/details',
+    DETAILS: '/visits/details',
     VISIT_PAST: '/visits/past/details',
     VISIT_CANCELLED: '/visits/cancelled/details',
 

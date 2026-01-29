@@ -50,7 +50,7 @@ export default class CancelController {
       }
 
       if (cancelBooking === 'no') {
-        return res.redirect(`${paths.VISITS.VISIT}/${visitDisplayId}`)
+        return res.redirect(`${paths.VISITS.DETAILS}/${visitDisplayId}`)
       }
 
       const { booker, bookings } = req.session
