@@ -24,7 +24,7 @@ export default class VisitDetailsController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {
-        return res.redirect(paths.BOOKINGS.HOME)
+        return res.redirect(paths.VISITS.HOME)
       }
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
@@ -41,9 +41,7 @@ export default class VisitDetailsController {
       const showCancelButton = nowTimestamp < visitStartTimestamp && visit.visitStatus !== 'CANCELLED'
 
       const backLinkHref =
-        (type === 'past' && paths.BOOKINGS.PAST) ||
-        (type === 'cancelled' && paths.BOOKINGS.CANCELLED) ||
-        paths.BOOKINGS.HOME
+        (type === 'past' && paths.VISITS.PAST) || (type === 'cancelled' && paths.VISITS.CANCELLED) || paths.VISITS.HOME
 
       return res.render('pages/visits/visit', {
         backLinkHref,

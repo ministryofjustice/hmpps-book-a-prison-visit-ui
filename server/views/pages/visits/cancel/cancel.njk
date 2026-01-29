@@ -4,7 +4,7 @@
 
 {% set pageTitle = "Cancel your visit" %}
 
-{% set backLinkHref = paths.BOOKINGS.VISIT + '/' + visit.visitDisplayId %}
+{% set backLinkHref = paths.VISITS.VISIT + '/' + visit.visitDisplayId %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -39,7 +39,7 @@
         {% endfor %}
       </ul>
 
-      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.VISITS.CANCEL_VISIT }}/{{ visitDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({

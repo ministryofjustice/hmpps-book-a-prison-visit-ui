@@ -42,7 +42,7 @@ context('Cancel booking journey', () => {
 
     visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.HOME)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.cancelVisitButton().contains('Cancel visit')
     visitDetailsPage.cancelVisitButton().click()

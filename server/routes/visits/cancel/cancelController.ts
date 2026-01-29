@@ -14,7 +14,7 @@ export default class CancelController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
-        return res.redirect(paths.BOOKINGS.HOME)
+        return res.redirect(paths.VISITS.HOME)
       }
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
@@ -43,14 +43,14 @@ export default class CancelController {
         req.flash('errors', errors.array())
 
         if (!visitDisplayId) {
-          return res.redirect(paths.BOOKINGS.HOME)
+          return res.redirect(paths.VISITS.HOME)
         }
 
-        return res.redirect(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
+        return res.redirect(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
       }
 
       if (cancelBooking === 'no') {
-        return res.redirect(`${paths.BOOKINGS.VISIT}/${visitDisplayId}`)
+        return res.redirect(`${paths.VISITS.VISIT}/${visitDisplayId}`)
       }
 
       const { booker, bookings } = req.session
@@ -61,7 +61,7 @@ export default class CancelController {
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)
       if (nowTimestamp > visitStartTimestamp) {
-        return res.redirect(paths.BOOKINGS.PAST)
+        return res.redirect(paths.VISITS.PAST)
       }
 
       await this.visitService.cancelVisit({
@@ -74,7 +74,7 @@ export default class CancelController {
         hasMobile: isMobilePhoneNumber(visit.visitContact.telephone),
       }
 
-      return res.redirect(paths.BOOKINGS.CANCEL_CONFIRMATION)
+      return res.redirect(paths.VISITS.CANCEL_CONFIRMATION)
     }
   }
 

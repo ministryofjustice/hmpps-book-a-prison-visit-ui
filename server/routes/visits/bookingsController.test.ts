@@ -31,7 +31,7 @@ describe('Visits homepage (future visits list)', () => {
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
-      .get(paths.BOOKINGS.HOME)
+      .get(paths.VISITS.HOME)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -46,10 +46,10 @@ describe('Visits homepage (future visits list)', () => {
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
         expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.VISIT}/${futureVisitDetails[0].visitDisplayId}`,
+          `${paths.VISITS.VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
+          `${paths.VISITS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
 
         expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
@@ -71,7 +71,7 @@ describe('Visits homepage (future visits list)', () => {
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
-      .get(paths.BOOKINGS.HOME)
+      .get(paths.VISITS.HOME)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -97,19 +97,19 @@ describe('Past visits list page', () => {
     visitService.getPastPublicVisits.mockResolvedValue([pastVisitDetails])
 
     return request(app)
-      .get(paths.BOOKINGS.PAST)
+      .get(paths.VISITS.PAST)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Past visits -/)
-        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
         expect($('h1').text()).toBe('Past visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
+          `${paths.VISITS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
 
@@ -128,7 +128,7 @@ describe('Past visits list page', () => {
     visitService.getPastPublicVisits.mockResolvedValue([])
 
     return request(app)
-      .get(paths.BOOKINGS.PAST)
+      .get(paths.VISITS.PAST)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -153,19 +153,19 @@ describe('Cancelled visits list page', () => {
     visitService.getCancelledPublicVisits.mockResolvedValue([cancelledVisitDetails])
 
     return request(app)
-      .get(paths.BOOKINGS.CANCELLED)
+      .get(paths.VISITS.CANCELLED)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Rejected and cancelled visits -/)
-        expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
         expect($('h1').text()).toBe('Rejected and cancelled visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
-          `${paths.BOOKINGS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,
+          `${paths.VISITS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
 
@@ -184,7 +184,7 @@ describe('Cancelled visits list page', () => {
     visitService.getCancelledPublicVisits.mockResolvedValue([])
 
     return request(app)
-      .get(paths.BOOKINGS.CANCELLED)
+      .get(paths.VISITS.CANCELLED)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)

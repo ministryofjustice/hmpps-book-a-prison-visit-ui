@@ -47,7 +47,7 @@ const paths = {
     REQUESTED: '/book-visit/visit-requested',
   },
 
-  BOOKINGS: {
+  VISITS: {
     HOME: '/visits',
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',

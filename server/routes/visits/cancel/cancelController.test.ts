@@ -46,14 +46,12 @@ describe('Cancel a booking - Are you sure page', () => {
   describe('GET - Display visit information on cancellation page', () => {
     it('should render the cancel confirmation page', () => {
       return request(app)
-        .get(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Cancel your visit -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(
-            `${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`,
-          )
+          expect($('[data-test="back-link"]').attr('href')).toBe(`${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
           expect($('h1').text()).toBe('Are you sure you want to cancel your visit?')
 
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
@@ -62,7 +60,7 @@ describe('Cancel a booking - Are you sure page', () => {
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('[data-test="visitor-name-1"]').text()).toContain('Keith Phillips')
           expect($('form[method=POST]').attr('action')).toBe(
-            `${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`,
+            `${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`,
           )
         })
     })
@@ -82,10 +80,10 @@ describe('Cancel a booking - Are you sure page', () => {
 
     it('should cancel the visit, set data in session and redirect to confirmation page - with email and phone number', () => {
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
         .expect(302)
-        .expect('location', paths.BOOKINGS.CANCEL_CONFIRMATION)
+        .expect('location', paths.VISITS.CANCEL_CONFIRMATION)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(1)
           expect(visitService.cancelVisit).toHaveBeenCalledWith({
@@ -101,10 +99,10 @@ describe('Cancel a booking - Are you sure page', () => {
       sessionData.bookings.visits[0].visitContact.email = undefined
 
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
         .expect(302)
-        .expect('location', paths.BOOKINGS.CANCEL_CONFIRMATION)
+        .expect('location', paths.VISITS.CANCEL_CONFIRMATION)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(1)
           expect(visitService.cancelVisit).toHaveBeenCalledWith({
@@ -119,10 +117,10 @@ describe('Cancel a booking - Are you sure page', () => {
       fakeDate = new Date('2025-01-01')
       jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=yes')
         .expect(302)
-        .expect('location', `${paths.BOOKINGS.PAST}`)
+        .expect('location', `${paths.VISITS.PAST}`)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })
@@ -130,10 +128,10 @@ describe('Cancel a booking - Are you sure page', () => {
 
     it('should redirect to visit details page if "no" is selected', () => {
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=no')
         .expect(302)
-        .expect('location', `${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('location', `${paths.VISITS.VISIT}/${visitDetails.visitDisplayId}`)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })
@@ -148,10 +146,10 @@ describe('Cancel a booking - Are you sure page', () => {
         value: 'test',
       }
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .send('cancelBooking=test')
         .expect(302)
-        .expect('location', `${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('location', `${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedValidationError])
@@ -167,9 +165,9 @@ describe('Cancel a booking - Are you sure page', () => {
         value: undefined,
       }
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect(302)
-        .expect('location', `${paths.BOOKINGS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
+        .expect('location', `${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('errors', [expectedValidationError])
@@ -178,10 +176,10 @@ describe('Cancel a booking - Are you sure page', () => {
 
     it('should NOT cancel the visit if invalid visit ID is posted', () => {
       return request(app)
-        .post(`${paths.BOOKINGS.CANCEL_VISIT}/test`)
+        .post(`${paths.VISITS.CANCEL_VISIT}/test`)
         .send('cancelBooking=yes')
         .expect(302)
-        .expect('location', paths.BOOKINGS.HOME)
+        .expect('location', paths.VISITS.HOME)
         .expect(() => {
           expect(visitService.cancelVisit).toHaveBeenCalledTimes(0)
         })

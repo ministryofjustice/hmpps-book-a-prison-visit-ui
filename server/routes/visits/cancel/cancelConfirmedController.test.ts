@@ -25,7 +25,7 @@ describe('Cancel a booking - Booking cancelled', () => {
       sessionData.bookingCancelled = { hasEmail: true, hasMobile: true }
 
       return request(app)
-        .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+        .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -44,7 +44,7 @@ describe('Cancel a booking - Booking cancelled', () => {
         sessionData.bookingCancelled = { hasEmail: true, hasMobile: false }
 
         return request(app)
-          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -56,7 +56,7 @@ describe('Cancel a booking - Booking cancelled', () => {
         sessionData.bookingCancelled = { hasEmail: false, hasMobile: true }
 
         return request(app)
-          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -68,7 +68,7 @@ describe('Cancel a booking - Booking cancelled', () => {
         sessionData.bookingCancelled = { hasEmail: false, hasMobile: false }
 
         return request(app)
-          .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
+          .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
           .expect('Content-Type', /html/)
           .expect(res => {
             const $ = cheerio.load(res.text)
@@ -80,10 +80,7 @@ describe('Cancel a booking - Booking cancelled', () => {
     it('should redirect to bookings page if bookingCancelled data not set', () => {
       sessionData.bookingCancelled = undefined
 
-      return request(app)
-        .get(`${paths.BOOKINGS.CANCEL_CONFIRMATION}`)
-        .expect(302)
-        .expect('location', paths.BOOKINGS.HOME)
+      return request(app).get(`${paths.VISITS.CANCEL_CONFIRMATION}`).expect(302).expect('location', paths.VISITS.HOME)
     })
   })
 })

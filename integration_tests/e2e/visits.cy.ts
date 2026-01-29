@@ -54,7 +54,7 @@ context('Visits home page', () => {
 
     visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.HOME)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
@@ -92,7 +92,7 @@ context('Visits home page', () => {
     pastVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.PAST)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.PAST)
     visitDetailsPage.visitDate().contains('Tuesday 30 May 2023')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
@@ -122,7 +122,7 @@ context('Visits home page', () => {
     cancelledVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.CANCELLED)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.CANCELLED)
     visitDetailsPage.getMessages(0).contains(/Visit cancelled(.*)This visit was cancelled by the prison\./)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')

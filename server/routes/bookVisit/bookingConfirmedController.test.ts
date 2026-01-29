@@ -56,7 +56,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
           expect($('[data-test="cancel-visit-content"]').text()).toBe(
             'Or you can cancel your visit from the visits page.',
           )
-          expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.BOOKINGS.HOME)
+          expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.VISITS.HOME)
 
           expect($('[data-test="prison-specific-content"]').length).toBe(1)
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
