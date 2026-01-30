@@ -56,8 +56,8 @@ const paths = {
     VISIT_CANCELLED: '/visits/cancelled/details',
 
     // Cancel journey
-    CANCEL_VISIT: '/visits/cancel-booking',
-    CANCEL_CONFIRMATION: '/visits/booking-cancelled',
+    CANCEL_VISIT: '/visits/cancel-visit',
+    CANCEL_CONFIRMATION: '/visits/visit-cancelled',
   },
 
   VISITORS: '/visitors',
