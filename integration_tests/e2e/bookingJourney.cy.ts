@@ -204,7 +204,7 @@ context('Booking journey', () => {
 
     // Visit booked
     const visitBookedPage = Page.verifyOnPage(VisitBookedPage)
-    visitBookedPage.bookingReference().contains('ab-cd-ef-gh')
+    visitBookedPage.visitReference().contains('ab-cd-ef-gh')
     visitBookedPage
       .confirmationNotificationMessage()
       .contains('An email and a text message confirming the visit will be sent')

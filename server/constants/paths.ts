@@ -47,17 +47,17 @@ const paths = {
     REQUESTED: '/book-visit/visit-requested',
   },
 
-  BOOKINGS: {
+  VISITS: {
     HOME: '/visits',
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',
-    VISIT: '/visits/details',
+    DETAILS: '/visits/details',
     VISIT_PAST: '/visits/past/details',
     VISIT_CANCELLED: '/visits/cancelled/details',
 
     // Cancel journey
-    CANCEL_VISIT: '/visits/cancel-booking',
-    CANCEL_CONFIRMATION: '/visits/booking-cancelled',
+    CANCEL_VISIT: '/visits/cancel-visit',
+    CANCEL_CONFIRMATION: '/visits/visit-cancelled',
   },
 
   VISITORS: '/visitors',

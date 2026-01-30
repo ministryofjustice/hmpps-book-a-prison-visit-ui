@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% set activeLink = 'bookings-link' %}
+{% set activeLink = 'visits-link' %}
 {% set pageTitle = "Visits" %}
 
 {% block content %}
@@ -40,13 +40,13 @@
               <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
             </li>
             <li>
-              <a href="{{ paths.BOOKINGS.VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+              <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
                   of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
                 </span>
               </a>
-              <a href="{{ paths.BOOKINGS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
+              <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
                 Cancel <span class="govuk-visually-hidden">your</span> visit
                 <span class="govuk-visually-hidden">
                   for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
@@ -62,10 +62,10 @@
 
       <h2 class="govuk-heading-m">Other visits</h2>
       <p>
-        <a href="{{ paths.BOOKINGS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
+        <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
       </p>
       <p>
-        <a href="{{ paths.BOOKINGS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
+        <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
       </p>
       
     </div>

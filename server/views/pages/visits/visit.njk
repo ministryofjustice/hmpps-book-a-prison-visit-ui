@@ -1,4 +1,4 @@
-{% set activeLink = 'bookings-link' %}
+{% set activeLink = 'visits-link' %}
 {% extends "partials/layout.njk" %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -16,7 +16,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m govuk-!-padding-top-5">Visit reference:
-        <span data-test="booking-reference">{{ visit.reference }}</span>
+        <span data-test="visit-reference">{{ visit.reference }}</span>
       </h2>
 
       <h3 class="govuk-heading-s govuk-!-padding-top-4">Date and time</h3>
@@ -66,7 +66,7 @@
         {{ govukButton({
           text: "Cancel visit",
           classes: "govuk-button--secondary",
-          href: paths.BOOKINGS.CANCEL_VISIT + '/' + visit.visitDisplayId,
+          href: paths.VISITS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },
           preventDoubleClick: true
         }) }}

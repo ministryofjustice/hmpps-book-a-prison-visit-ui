@@ -48,15 +48,15 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visit booked')
-          expect($('[data-test="booking-reference-title"]').text()).toBe(visit.applicationReference)
+          expect($('[data-test="visit-reference-title"]').text()).toBe(visit.applicationReference)
 
           expect($('[data-test="confirmation-notification-message"]').text()).toContain('An email and a text')
 
-          expect($('[data-test="booking-reference-changes"]').text()).toBe(visit.applicationReference)
+          expect($('[data-test="visit-reference-changes"]').text()).toBe(visit.applicationReference)
           expect($('[data-test="cancel-visit-content"]').text()).toBe(
             'Or you can cancel your visit from the visits page.',
           )
-          expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.BOOKINGS.HOME)
+          expect($('[data-test="cancel-visit-content"] > a').attr('href')).toBe(paths.VISITS.HOME)
 
           expect($('[data-test="prison-specific-content"]').length).toBe(1)
           expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)

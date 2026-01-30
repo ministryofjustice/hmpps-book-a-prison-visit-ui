@@ -48,19 +48,19 @@ describe('View a single booking', () => {
       jest.useRealTimers()
     })
 
-    it('should render the booking details page', () => {
+    it('should render the visit details page', () => {
       bookings.type = 'future'
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit details -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -77,25 +77,25 @@ describe('View a single booking', () => {
           expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
           expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
           expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference-changes"]').text()).toBe('ab-cd-ef-gh')
 
           // don't display this line when on the visit details page
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toContain('Cancel visit')
-          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.BOOKINGS.CANCEL_VISIT}/${visitDisplayId}`)
+          expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
     })
 
-    it('should render the booking details page - no main contact details', () => {
+    it('should render the visit details page - no main contact details', () => {
       bookings.type = 'future'
       bookings.visits[0].visitContact.email = undefined
       bookings.visits[0].visitContact.telephone = undefined
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -105,12 +105,12 @@ describe('View a single booking', () => {
         })
     })
 
-    it('should render the booking details page - requested visit', () => {
+    it('should render the visit details page - requested visit', () => {
       bookings.type = 'future'
       bookings.visits[0].visitSubStatus = 'REQUESTED'
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -128,7 +128,7 @@ describe('View a single booking', () => {
       prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -140,19 +140,19 @@ describe('View a single booking', () => {
   })
 
   describe('Past booking', () => {
-    it('should render the booking details page', () => {
+    it('should render the visit details page', () => {
       bookings.type = 'past'
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT_PAST}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.VISIT_PAST}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit details -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.PAST)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.PAST)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -161,7 +161,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
@@ -172,22 +172,22 @@ describe('View a single booking', () => {
   })
 
   describe('Cancelled booking', () => {
-    it('should render the booking details page with "Visit cancelled" message', () => {
+    it('should render the visit details page with "Visit cancelled" message', () => {
       bookings.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.visitSubStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
 
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
+        .get(`${paths.VISITS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visit details -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOKINGS.CANCELLED)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.CANCELLED)
           expect($('h1').text()).toBe('Visit details')
 
-          expect($('[data-test="booking-reference"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
@@ -198,7 +198,7 @@ describe('View a single booking', () => {
           expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
           expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
           expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="booking-reference-changes"]').length).toBeFalsy()
+          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
 
           expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
           expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
@@ -211,16 +211,16 @@ describe('View a single booking', () => {
   describe('Validation', () => {
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
       bookings.type = 'future'
-      return request(app).get(`${paths.BOOKINGS.VISIT}/NOT-A-UUID`).expect(302).expect('location', paths.BOOKINGS.HOME)
+      return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should redirect to bookings home page if an unrecognised (not in session) visitDisplayId is passed', () => {
       bookings.type = 'future'
       const unrecognisedUUID = randomUUID()
       return request(app)
-        .get(`${paths.BOOKINGS.VISIT}/${unrecognisedUUID}`)
+        .get(`${paths.VISITS.DETAILS}/${unrecognisedUUID}`)
         .expect(302)
-        .expect('location', paths.BOOKINGS.HOME)
+        .expect('location', paths.VISITS.HOME)
     })
   })
 })

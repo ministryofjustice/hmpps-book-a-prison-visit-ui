@@ -1,8 +1,8 @@
 import Page, { PageElement } from '../page'
 
-export default class BookingsPage extends Page {
+export default class VisitsPage extends Page {
   constructor() {
-    super('Visit')
+    super('Visits')
   }
 
   visitDate = (index: number): PageElement => cy.get(`[data-test=visit-date-${index}]`)

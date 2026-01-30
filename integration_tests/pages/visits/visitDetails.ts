@@ -5,7 +5,7 @@ export default class VisitDetailsPage extends Page {
     super('Visit details')
   }
 
-  bookingReference = (): PageElement => cy.get('[data-test="booking-reference"]')
+  visitReference = (): PageElement => cy.get('[data-test="visit-reference"]')
 
   visitDate = (): PageElement => cy.get('[data-test="visit-date"]')
 

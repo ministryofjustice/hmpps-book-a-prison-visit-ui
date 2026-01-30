@@ -1,13 +1,13 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
-import BookingsPage from '../pages/bookings/bookings'
-import CancelledVisitsPage from '../pages/bookings/cancel/cancelledVisits'
-import PastVisitsPage from '../pages/bookings/pastVisits'
-import VisitDetailsPage from '../pages/bookings/visit'
+import VisitsPage from '../pages/visits/visits'
+import CancelledVisitsPage from '../pages/visits/cancel/cancelledVisits'
+import PastVisitsPage from '../pages/visits/pastVisits'
+import VisitDetailsPage from '../pages/visits/visitDetails'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 
-context('Bookings home page', () => {
+context('Visits home page', () => {
   const orchestrationVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',
@@ -46,15 +46,15 @@ context('Bookings home page', () => {
 
     const homePage = Page.verifyOnPage(HomePage)
     homePage.goToServiceHeaderLinkByName('Visits')
-    const bookingsPage = Page.verifyOnPage(BookingsPage)
-    bookingsPage.visitDate(1).contains('Thursday 21 May 2026')
-    bookingsPage.visitStartTime(1).contains('10am')
-    bookingsPage.visitEndTime(1).contains('11:30am')
-    bookingsPage.visitReference(1).contains('ab-cd-ef-gh')
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    visitsPage.visitStartTime(1).contains('10am')
+    visitsPage.visitEndTime(1).contains('11:30am')
+    visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
-    bookingsPage.visitLink(1).click()
+    visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.HOME)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
@@ -76,14 +76,14 @@ context('Bookings home page', () => {
 
     const homePage = Page.verifyOnPage(HomePage)
     homePage.goToServiceHeaderLinkByName('Visits')
-    const bookingsPage = Page.verifyOnPage(BookingsPage)
+    const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetPastPublicVisits', {
       bookerReference: bookerReference.value,
       visits: [pastVisitDto],
     })
 
-    bookingsPage.pastVisitsLink().click()
+    visitsPage.pastVisitsLink().click()
 
     const pastVisitsPage = Page.verifyOnPage(PastVisitsPage)
     pastVisitsPage.visitDate(1).contains('Tuesday 30 May 2023')
@@ -92,7 +92,7 @@ context('Bookings home page', () => {
     pastVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.PAST)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.PAST)
     visitDetailsPage.visitDate().contains('Tuesday 30 May 2023')
     visitDetailsPage.visitStartTime().contains('10am')
     visitDetailsPage.visitEndTime().contains('11:30am')
@@ -106,14 +106,14 @@ context('Bookings home page', () => {
 
     const homePage = Page.verifyOnPage(HomePage)
     homePage.goToServiceHeaderLinkByName('Visits')
-    const bookingsPage = Page.verifyOnPage(BookingsPage)
+    const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetCancelledPublicVisits', {
       bookerReference: bookerReference.value,
       visits: [cancelledVisitDto],
     })
 
-    bookingsPage.cancelledVisitsLink().click()
+    visitsPage.cancelledVisitsLink().click()
 
     const cancelledVisitsPage = Page.verifyOnPage(CancelledVisitsPage)
     cancelledVisitsPage.visitDate(1).contains('Thursday 21 May 2026')
@@ -122,7 +122,7 @@ context('Bookings home page', () => {
     cancelledVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
-    visitDetailsPage.backLink().should('have.attr', 'href', paths.BOOKINGS.CANCELLED)
+    visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.CANCELLED)
     visitDetailsPage.getMessages(0).contains(/Visit cancelled(.*)This visit was cancelled by the prison\./)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
     visitDetailsPage.visitStartTime().contains('10am')

@@ -9,10 +9,10 @@ export default class CancelConfirmedController {
       const { bookingCancelled } = req.session
 
       if (!bookingCancelled) {
-        return res.redirect(paths.BOOKINGS.HOME)
+        return res.redirect(paths.VISITS.HOME)
       }
 
-      return res.render('pages/bookings/cancel/cancelConfirmed', {
+      return res.render('pages/visits/cancel/cancelConfirmed', {
         bookingCancelled,
         showOLServiceNav: true,
       })
