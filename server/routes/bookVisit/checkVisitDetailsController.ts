@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { BookingConfirmed } from '../../@types/bapv'
+import { BookVisitConfirmed } from '../../@types/bapv'
 import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
@@ -11,45 +11,45 @@ export default class CheckVisitDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookingJourney } = req.session
+      const { bookVisitJourney } = req.session
 
       res.render('pages/bookVisit/checkVisitDetails', {
-        additionalSupport: bookingJourney.visitorSupport,
-        mainContactName: getMainContactName(bookingJourney.mainContact),
-        mainContactPhone: bookingJourney.mainContactPhone,
-        mainContactEmail: bookingJourney.mainContactEmail,
-        sessionDate: bookingJourney.selectedVisitSession.sessionDate,
-        sessionTimeSlot: bookingJourney.selectedVisitSession.sessionTimeSlot,
-        visitors: bookingJourney.selectedVisitors,
-        prisoner: bookingJourney.prisoner,
+        additionalSupport: bookVisitJourney.visitorSupport,
+        mainContactName: getMainContactName(bookVisitJourney.mainContact),
+        mainContactPhone: bookVisitJourney.mainContactPhone,
+        mainContactEmail: bookVisitJourney.mainContactEmail,
+        sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+        sessionTimeSlot: bookVisitJourney.selectedVisitSession.sessionTimeSlot,
+        visitors: bookVisitJourney.selectedVisitors,
+        prisoner: bookVisitJourney.prisoner,
       })
     }
   }
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { bookingJourney, booker } = req.session
+      const { bookVisitJourney, booker } = req.session
 
       try {
         const visit = await this.visitService.bookVisit({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           actionedBy: booker.reference,
-          isRequestBooking: bookingJourney.selectedVisitSession.sessionForReview,
-          visitors: bookingJourney.selectedVisitors,
+          isRequestBooking: bookVisitJourney.selectedVisitSession.sessionForReview,
+          visitors: bookVisitJourney.selectedVisitors,
         })
 
-        const bookingConfirmed: BookingConfirmed = {
+        const bookVisitConfirmed: BookVisitConfirmed = {
           isARequest: visit.visitSubStatus === 'REQUESTED',
-          prison: bookingJourney.prison,
+          prison: bookVisitJourney.prison,
           visitReference: visit.reference,
-          hasEmail: !!bookingJourney.mainContactEmail,
-          hasMobile: isMobilePhoneNumber(bookingJourney.mainContactPhone),
+          hasEmail: !!bookVisitJourney.mainContactEmail,
+          hasMobile: isMobilePhoneNumber(bookVisitJourney.mainContactPhone),
         }
-        req.session.bookingConfirmed = bookingConfirmed
+        req.session.bookVisitConfirmed = bookVisitConfirmed
 
-        delete req.session.bookingJourney
+        delete req.session.bookVisitJourney
 
-        return res.redirect(bookingConfirmed.isARequest ? paths.BOOK_VISIT.REQUESTED : paths.BOOK_VISIT.BOOKED)
+        return res.redirect(bookVisitConfirmed.isARequest ? paths.BOOK_VISIT.REQUESTED : paths.BOOK_VISIT.BOOKED)
       } catch (error) {
         if (error.status === 422) {
           const validationErrors =
@@ -60,12 +60,12 @@ export default class CheckVisitDetailsController {
           }
 
           if (validationErrors.includes('APPLICATION_INVALID_PRISON_PRISONER_MISMATCH')) {
-            bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+            bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
             return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
           }
 
           if (validationErrors.includes('APPLICATION_INVALID_NO_VO_BALANCE')) {
-            bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
+            bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
             return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
           }
 
@@ -75,7 +75,7 @@ export default class CheckVisitDetailsController {
             showTitleAsHeading: true,
             text: 'Select a new time',
           })
-          delete bookingJourney.selectedVisitSession
+          delete bookVisitJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
 

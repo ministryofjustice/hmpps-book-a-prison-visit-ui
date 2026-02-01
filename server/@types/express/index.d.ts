@@ -3,9 +3,9 @@ import {
   AddPrisonerJourney,
   AddVisitorJourney,
   Booker,
-  BookingCancelled,
-  BookingConfirmed,
-  BookingJourney,
+  VisitCancelled,
+  BookVisitConfirmed,
+  BookVisitJourney,
   FlashFormValues,
   MoJAlert,
 } from '../bapv'
@@ -25,15 +25,15 @@ declare module 'express-session' {
 
     addVisitorJourney?: AddVisitorJourney
 
-    bookingJourney?: BookingJourney
-    bookingConfirmed?: BookingConfirmed
+    bookVisitJourney?: BookVisitJourney
+    bookVisitConfirmed?: BookVisitConfirmed
 
-    bookings?: {
+    visits?: {
       type: 'future' | 'past' | 'cancelled'
       visits: VisitDetails[]
     }
 
-    bookingCancelled?: BookingCancelled
+    visitCancelled?: VisitCancelled
 
     selectedPrisonId?: string
   }

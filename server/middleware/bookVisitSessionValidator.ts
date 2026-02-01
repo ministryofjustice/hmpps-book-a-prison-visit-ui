@@ -19,7 +19,7 @@ const journeyOrder: string[] = [
 
 export default function bookVisitSessionValidator(): RequestHandler {
   return (req, res, next) => {
-    const { booker, bookingJourney, bookingConfirmed } = req.session
+    const { booker, bookVisitJourney, bookVisitConfirmed } = req.session
     const { baseUrl, method, path } = req
     const requestPath = `${baseUrl}${path}`
 
@@ -37,16 +37,18 @@ export default function bookVisitSessionValidator(): RequestHandler {
 
     // Booking confirmed (check first because bookingJourney cleared just before this stage)
     if (requestPath === paths.BOOK_VISIT.BOOKED || requestPath === paths.BOOK_VISIT.REQUESTED) {
-      return bookingConfirmed && !bookingJourney ? next() : logAndRedirect(res, method, requestPath, booker.reference)
+      return bookVisitConfirmed && !bookVisitJourney
+        ? next()
+        : logAndRedirect(res, method, requestPath, booker.reference)
     }
 
     // Cannot book page - requires reason to be set
     if (requestPath === paths.BOOK_VISIT.CANNOT_BOOK) {
-      return bookingJourney?.cannotBookReason ? next() : logAndRedirect(res, method, requestPath, booker.reference)
+      return bookVisitJourney?.cannotBookReason ? next() : logAndRedirect(res, method, requestPath, booker.reference)
     }
 
     // Select visitors
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookingJourney?.prisoner) {
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) && !bookVisitJourney?.prisoner) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
@@ -54,7 +56,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.SELECT_VISITORS) &&
       method === 'POST' &&
-      (!bookingJourney.prison || !bookingJourney.eligibleVisitors?.length)
+      (!bookVisitJourney.prison || !bookVisitJourney.eligibleVisitors?.length)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
@@ -63,10 +65,10 @@ export default function bookVisitSessionValidator(): RequestHandler {
     if (
       (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CLOSED_VISIT) ||
         journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME)) &&
-      (!bookingJourney.prison ||
-        !bookingJourney.eligibleVisitors?.length ||
-        !bookingJourney.selectedVisitors?.length ||
-        !bookingJourney.sessionRestriction)
+      (!bookVisitJourney.prison ||
+        !bookVisitJourney.eligibleVisitors?.length ||
+        !bookVisitJourney.selectedVisitors?.length ||
+        !bookVisitJourney.sessionRestriction)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
@@ -75,7 +77,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHOOSE_TIME) &&
       method === 'POST' &&
-      (!bookingJourney.allVisitSessionIds?.length || !bookingJourney.allVisitSessions?.length)
+      (!bookVisitJourney.allVisitSessionIds?.length || !bookVisitJourney.allVisitSessions?.length)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
@@ -83,7 +85,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
     // Additional support page
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.ADDITIONAL_SUPPORT) &&
-      (!bookingJourney.selectedVisitSession || !bookingJourney.applicationReference)
+      (!bookVisitJourney.selectedVisitSession || !bookVisitJourney.applicationReference)
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
@@ -91,18 +93,18 @@ export default function bookVisitSessionValidator(): RequestHandler {
     // Main contact page
     if (
       journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.MAIN_CONTACT) &&
-      typeof bookingJourney.visitorSupport !== 'string'
+      typeof bookVisitJourney.visitorSupport !== 'string'
     ) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
     // Contact details page
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CONTACT_DETAILS) && !bookingJourney.mainContact) {
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CONTACT_DETAILS) && !bookVisitJourney.mainContact) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
     // Check details page
-    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHECK_DETAILS) && !bookingJourney.mainContact) {
+    if (journeyStage >= journeyOrder.indexOf(paths.BOOK_VISIT.CHECK_DETAILS) && !bookVisitJourney.mainContact) {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 

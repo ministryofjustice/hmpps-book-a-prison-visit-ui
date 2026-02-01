@@ -32,7 +32,7 @@ describe('A visit cannot be booked', () => {
           reference: bookerReference,
           prisoners: [prisonerWithoutVOs],
         },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner: prisonerWithoutVOs,
         },
       } as SessionData
@@ -50,8 +50,8 @@ describe('A visit cannot be booked', () => {
         })
     })
 
-    it('should render cannot book page and clear bookingJourney data - NO_VO_BALANCE', () => {
-      sessionData.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
+    it('should render cannot book page and clear bookVisitJourney data - NO_VO_BALANCE', () => {
+      sessionData.bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -66,12 +66,12 @@ describe('A visit cannot be booked', () => {
           expect($('main p').eq(0).text()).toContain('has used their allowance of visits')
           expect($('[data-test=book-from-date]').text().trim()).toBe('Monday 1 July 2024')
 
-          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookVisitJourney).toBe(undefined)
         })
     })
 
-    it('should render cannot book page and clear bookingJourney data - TRANSFER_OR_RELEASE', () => {
-      sessionData.bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+    it('should render cannot book page and clear bookVisitJourney data - TRANSFER_OR_RELEASE', () => {
+      sessionData.bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -86,12 +86,12 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
           expect($('main p').eq(0).text()).toContain('moved to another prison or been released')
 
-          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookVisitJourney).toBe(undefined)
         })
     })
 
     it('should render cannot book page and clear bookingJourney data - UNSUPPORTED_PRISON', () => {
-      sessionData.bookingJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+      sessionData.bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -106,12 +106,12 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
           expect($('main p').eq(0).text()).toContain('not currently supported')
 
-          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookVisitJourney).toBe(undefined)
         })
     })
 
-    it('should render cannot book page and clear bookingJourney data - NO_ELIGIBLE_ADULT_VISITOR', () => {
-      sessionData.bookingJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+    it('should render cannot book page and clear bookVisitJourney data - NO_ELIGIBLE_ADULT_VISITOR', () => {
+      sessionData.bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -124,7 +124,7 @@ describe('A visit cannot be booked', () => {
 
           expect($('main p').eq(0).text()).toContain('One person on a visit must be 18 years old or older')
 
-          expect(sessionData.bookingJourney).toBe(undefined)
+          expect(sessionData.bookVisitJourney).toBe(undefined)
         })
     })
   })

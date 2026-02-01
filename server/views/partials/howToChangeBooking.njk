@@ -1,5 +1,5 @@
 <h2 class="govuk-heading-m" data-test="change-booking-heading">How to change your visit</h2>
-{% set visitReference = bookingConfirmed.visitReference if bookingConfirmed.visitReference else visit.reference %}
+{% set visitReference = bookVisitConfirmed.visitReference if bookVisitConfirmed.visitReference else visit.reference %}
 
 {% if prison.phoneNumber %}
   <p>
@@ -20,6 +20,6 @@
   Your visit reference is <span data-test="visit-reference-changes">{{ visitReference }}</span>.
 </p>
 
-{% if bookingConfirmed %}
+{% if bookVisitConfirmed %}
   <p data-test="cancel-visit-content">Or you can cancel your visit from <a class="govuk-link--no-visited-state" href="{{ paths.VISITS.HOME }}">the visits page</a>.</p>
 {% endif %}

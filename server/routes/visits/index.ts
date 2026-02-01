@@ -1,22 +1,22 @@
 import { Router } from 'express'
 import { Services } from '../../services'
 import paths from '../../constants/paths'
-import BookingsController from './bookingsController'
+import VisitsController from './visitsController'
 import VisitDetailsController from './visitDetailsController'
-import CancelController from './cancel/cancelController'
-import CancelConfirmedController from './cancel/cancelConfirmedController'
+import CancelVisitController from './cancel/cancelVisitController'
+import CancelVisitConfirmedController from './cancel/cancelVisitConfirmedController'
 
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const bookingsController = new BookingsController(services.visitService)
+  const visitsController = new VisitsController(services.visitService)
   const visitDetailsController = new VisitDetailsController(services.prisonService)
-  const cancelVisitController = new CancelController(services.visitService)
-  const cancelVisitConfirmationController = new CancelConfirmedController()
+  const cancelVisitController = new CancelVisitController(services.visitService)
+  const cancelVisitConfirmedController = new CancelVisitConfirmedController()
 
-  router.get(paths.VISITS.HOME, bookingsController.view('future'))
-  router.get(paths.VISITS.PAST, bookingsController.view('past'))
-  router.get(paths.VISITS.CANCELLED, bookingsController.view('cancelled'))
+  router.get(paths.VISITS.HOME, visitsController.view('future'))
+  router.get(paths.VISITS.PAST, visitsController.view('past'))
+  router.get(paths.VISITS.CANCELLED, visitsController.view('cancelled'))
 
   router.get(
     `${paths.VISITS.DETAILS}/:visitDisplayId`,
@@ -48,7 +48,7 @@ export default function routes(services: Services): Router {
     cancelVisitController.submit(),
   )
 
-  router.get(`${paths.VISITS.CANCEL_CONFIRMATION}`, cancelVisitConfirmationController.view())
+  router.get(`${paths.VISITS.CANCEL_CONFIRMATION}`, cancelVisitConfirmedController.view())
 
   return router
 }

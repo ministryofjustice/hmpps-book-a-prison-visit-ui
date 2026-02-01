@@ -38,7 +38,7 @@ context('Visits home page', () => {
     cy.signIn()
   })
 
-  it('should show Bookings home page with future visits and navigate to view the visit details', () => {
+  it('should show Visits home page with future visits and navigate to view the visit details', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],

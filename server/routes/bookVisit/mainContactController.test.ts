@@ -33,7 +33,7 @@ const visitSession = TestData.availableVisitSessionDto()
 beforeEach(() => {
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
-    bookingJourney: {
+    bookVisitJourney: {
       prisoner,
       prison,
       eligibleVisitors: [adultVisitor1, adultVisitor2, childVisitor],
@@ -64,7 +64,7 @@ describe('Main contact', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookVisitJourney.prisoner = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -97,7 +97,7 @@ describe('Main contact', () => {
     })
 
     it('should pre-populate with data in session (main contact)', () => {
-      sessionData.bookingJourney.mainContact = adultVisitor1
+      sessionData.bookVisitJourney.mainContact = adultVisitor1
 
       return request(app)
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -111,7 +111,7 @@ describe('Main contact', () => {
     })
 
     it('should pre-populate with data in session (other contact)', () => {
-      sessionData.bookingJourney.mainContact = 'Different Person'
+      sessionData.bookVisitJourney.mainContact = 'Different Person'
 
       return request(app)
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
@@ -125,7 +125,7 @@ describe('Main contact', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookingJourney.mainContact = adultVisitor1
+      sessionData.bookVisitJourney.mainContact = adultVisitor1
       const formValues = { contact: 'someoneElse', someoneElseName: 'Different Person' }
       flashData = { formValues: [formValues] }
 
@@ -168,7 +168,7 @@ describe('Main contact', () => {
         .expect('location', paths.BOOK_VISIT.CONTACT_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney.mainContact).toStrictEqual(adultVisitor1)
+          expect(sessionData.bookVisitJourney.mainContact).toStrictEqual(adultVisitor1)
         })
     })
 
@@ -180,7 +180,7 @@ describe('Main contact', () => {
         .expect('location', paths.BOOK_VISIT.CONTACT_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney.mainContact).toStrictEqual('Someone Else')
+          expect(sessionData.bookVisitJourney.mainContact).toStrictEqual('Someone Else')
         })
     })
 
@@ -202,7 +202,7 @@ describe('Main contact', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+            expect(sessionData.bookVisitJourney.mainContact).toBe(undefined)
           })
       })
 
@@ -219,7 +219,7 @@ describe('Main contact', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+            expect(sessionData.bookVisitJourney.mainContact).toBe(undefined)
           })
       })
 
@@ -246,7 +246,7 @@ describe('Main contact', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+            expect(sessionData.bookVisitJourney.mainContact).toBe(undefined)
           })
       })
 
@@ -267,7 +267,7 @@ describe('Main contact', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+            expect(sessionData.bookVisitJourney.mainContact).toBe(undefined)
           })
       })
 
@@ -288,7 +288,7 @@ describe('Main contact', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.mainContact).toBe(undefined)
+            expect(sessionData.bookVisitJourney.mainContact).toBe(undefined)
           })
       })
     })

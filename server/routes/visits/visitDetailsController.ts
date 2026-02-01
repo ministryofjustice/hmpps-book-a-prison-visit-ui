@@ -3,7 +3,7 @@ import { ValidationChain, matchedData, validationResult } from 'express-validato
 import { SessionData } from 'express-session'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
-import { getVisitMessages } from './bookingsUtils'
+import { getVisitMessages } from './visitsUtils'
 import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
 
@@ -18,9 +18,9 @@ export default class VisitDetailsController {
 
   public constructor(private readonly prisonService: PrisonService) {}
 
-  public view(type: SessionData['bookings']['type']): RequestHandler {
+  public view(type: SessionData['visits']['type']): RequestHandler {
     return async (req, res) => {
-      const { bookings } = req.session
+      const { visits: bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {

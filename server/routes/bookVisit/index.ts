@@ -6,7 +6,7 @@ import ChooseVisitTimeController from './chooseVisitTimeController'
 import AdditionalSupportController from './additionalSupportController'
 import MainContactController from './mainContactController'
 import CheckVisitDetailsController from './checkVisitDetailsController'
-import BookingConfirmedController from './bookingConfirmedController'
+import BookVisitConfirmedController from './bookVisitConfirmedController'
 import paths from '../../constants/paths'
 import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidator'
 import CannotBookController from './cannotBookController'
@@ -25,7 +25,7 @@ export default function routes(services: Services): Router {
   const mainContactController = new MainContactController()
   const contactDetailsController = new ContactDetailsController(services.visitService)
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
-  const bookingConfirmedController = new BookingConfirmedController()
+  const bookVisitConfirmedController = new BookVisitConfirmedController()
 
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
@@ -57,6 +57,6 @@ export default function routes(services: Services): Router {
   router.get(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.view())
   router.post(paths.BOOK_VISIT.CHECK_DETAILS, checkVisitDetailsController.submit())
 
-  router.get([paths.BOOK_VISIT.BOOKED, paths.BOOK_VISIT.REQUESTED], bookingConfirmedController.view())
+  router.get([paths.BOOK_VISIT.BOOKED, paths.BOOK_VISIT.REQUESTED], bookVisitConfirmedController.view())
   return router
 }

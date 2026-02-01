@@ -9,7 +9,7 @@ export default class ContactDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookingJourney
+      const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookVisitJourney
 
       const formValues = {
         mainContactEmail,
@@ -35,17 +35,17 @@ export default class ContactDetailsController {
         return res.redirect(paths.BOOK_VISIT.CONTACT_DETAILS)
       }
 
-      const { bookingJourney } = req.session
+      const { bookVisitJourney } = req.session
       const { getUpdatesBy, mainContactEmail, mainContactPhone } = matchedData<{
         getUpdatesBy?: string[]
         mainContactEmail?: string
         mainContactPhone?: string
       }>(req)
 
-      bookingJourney.mainContactEmail = getUpdatesBy.includes('email') ? mainContactEmail : undefined
-      bookingJourney.mainContactPhone = getUpdatesBy.includes('phone') ? mainContactPhone : undefined
+      bookVisitJourney.mainContactEmail = getUpdatesBy.includes('email') ? mainContactEmail : undefined
+      bookVisitJourney.mainContactPhone = getUpdatesBy.includes('phone') ? mainContactPhone : undefined
 
-      await this.visitService.changeVisitApplication({ bookingJourney })
+      await this.visitService.changeVisitApplication({ bookVisitJourney })
 
       return res.redirect(paths.BOOK_VISIT.CHECK_DETAILS)
     }

@@ -4,10 +4,10 @@ import createError from 'http-errors'
 import { VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 
-export default class BookingsController {
+export default class VisitsController {
   public constructor(private readonly visitService: VisitService) {}
 
-  public view(type: SessionData['bookings']['type']): RequestHandler {
+  public view(type: SessionData['visits']['type']): RequestHandler {
     return async (req, res, next) => {
       const { booker } = req.session
 
@@ -29,7 +29,7 @@ export default class BookingsController {
           return next(createError(500, `Invalid bookings type: ${type}`))
       }
 
-      req.session.bookings = { type, visits }
+      req.session.visits = { type, visits }
 
       return res.render(`pages/visits/${type}`, { visits, showOLServiceNav: true })
     }

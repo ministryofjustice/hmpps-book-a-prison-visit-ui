@@ -3,15 +3,15 @@
 
 {% set pageTitle = "Visit booked" %}
 
-{% if not bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
+{% if not bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
   {% set confirmationMessage =
     "A text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
-{% if bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
+{% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
   {% set confirmationMessage =
     "An email and a text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
-{% if bookingConfirmed.hasEmail and not bookingConfirmed.hasMobile %}
+{% if bookVisitConfirmed.hasEmail and not bookVisitConfirmed.hasMobile %}
   {% set confirmationMessage =
     "An email confirming the visit will be sent to the main contact. This will include the visit reference." %}
 {% endif %}
@@ -21,7 +21,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        html: 'Your visit reference is<br><strong data-test="visit-reference-title">' + bookingConfirmed.visitReference + "</strong>"
+        html: 'Your visit reference is<br><strong data-test="visit-reference-title">' + bookVisitConfirmed.visitReference + "</strong>"
       }) }}
 
       {% if confirmationMessage %}

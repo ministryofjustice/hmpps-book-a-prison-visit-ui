@@ -5,12 +5,12 @@ import paths from '../../../constants/paths'
 import { isMobilePhoneNumber } from '../../../utils/utils'
 import { validateVisitDisplayId } from '../validations'
 
-export default class CancelController {
+export default class CancelVisitController {
   public constructor(private readonly visitService: VisitService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookings } = req.session
+      const { visits: bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
@@ -33,8 +33,8 @@ export default class CancelController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { cancelBooking, visitDisplayId } = matchedData<{
-        cancelBooking: 'yes' | 'no'
+      const { cancelVisit, visitDisplayId } = matchedData<{
+        cancelVisit: 'yes' | 'no'
         visitDisplayId: string
       }>(req)
 
@@ -49,11 +49,11 @@ export default class CancelController {
         return res.redirect(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
       }
 
-      if (cancelBooking === 'no') {
+      if (cancelVisit === 'no') {
         return res.redirect(`${paths.VISITS.DETAILS}/${visitDisplayId}`)
       }
 
-      const { booker, bookings } = req.session
+      const { booker, visits: bookings } = req.session
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
@@ -69,7 +69,7 @@ export default class CancelController {
         actionedBy: booker.reference,
       })
 
-      req.session.bookingCancelled = {
+      req.session.visitCancelled = {
         hasEmail: !!visit.visitContact.email,
         hasMobile: isMobilePhoneNumber(visit.visitContact.telephone),
       }
@@ -83,6 +83,6 @@ export default class CancelController {
   }
 
   public validateCancelChoice(): ValidationChain[] {
-    return [body('cancelBooking').isIn(['yes', 'no']).withMessage('No answer selected'), validateVisitDisplayId]
+    return [body('cancelVisit').isIn(['yes', 'no']).withMessage('No answer selected'), validateVisitDisplayId]
   }
 }

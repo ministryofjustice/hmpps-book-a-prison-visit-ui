@@ -26,7 +26,7 @@ export default class SelectPrisonerController {
         this.prisonService.getPrison(prisoner.prisonId),
       ])
 
-      req.session.bookingJourney = { prisoner, prison }
+      req.session.bookVisitJourney = { prisoner, prison }
 
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
       if (validationResult === true && prisonerHasVOsOrRemand) {
@@ -38,15 +38,15 @@ export default class SelectPrisonerController {
         validationResult === 'PRISONER_TRANSFERRED_SUPPORTED_PRISON' ||
         validationResult === 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON'
       ) {
-        req.session.bookingJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+        req.session.bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
       }
 
       if (validationResult === 'REGISTERED_PRISON_NOT_SUPPORTED') {
-        req.session.bookingJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+        req.session.bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
       }
 
       if (validationResult === true) {
-        req.session.bookingJourney.cannotBookReason = 'NO_VO_BALANCE'
+        req.session.bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
       }
 
       return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)

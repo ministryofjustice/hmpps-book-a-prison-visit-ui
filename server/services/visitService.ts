@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
-import { BookingJourney } from '../@types/bapv'
+import { BookVisitJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
 import {
   ApplicationDto,
@@ -22,22 +22,22 @@ export default class VisitService {
   ) {}
 
   async createVisitApplication({
-    bookingJourney,
+    bookVisitJourney,
     bookerReference,
   }: {
-    bookingJourney: BookingJourney
+    bookVisitJourney: BookVisitJourney
     bookerReference: string
   }): Promise<ApplicationDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visitorIds = bookingJourney.selectedVisitors.map(visitor => visitor.visitorId)
+    const visitorIds = bookVisitJourney.selectedVisitors.map(visitor => visitor.visitorId)
 
     const application = await orchestrationApiClient.createVisitApplication({
-      prisonerId: bookingJourney.prisoner.prisonerNumber,
-      sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-      sessionDate: bookingJourney.selectedVisitSession.sessionDate,
-      applicationRestriction: bookingJourney.selectedVisitSession.sessionRestriction,
+      prisonerId: bookVisitJourney.prisoner.prisonerNumber,
+      sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+      sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+      applicationRestriction: bookVisitJourney.selectedVisitSession.sessionRestriction,
       visitorIds,
       bookerReference,
     })
@@ -46,12 +46,12 @@ export default class VisitService {
     return application
   }
 
-  async changeVisitApplication({ bookingJourney }: { bookingJourney: BookingJourney }): Promise<ApplicationDto> {
+  async changeVisitApplication({ bookVisitJourney }: { bookVisitJourney: BookVisitJourney }): Promise<ApplicationDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const { mainContact } = bookingJourney
-    const { mainContactEmail, mainContactPhone } = bookingJourney
+    const { mainContact } = bookVisitJourney
+    const { mainContactEmail, mainContactPhone } = bookVisitJourney
 
     const visitContact = mainContact
       ? {
@@ -61,25 +61,27 @@ export default class VisitService {
         }
       : undefined
 
-    const visitors = bookingJourney.selectedVisitors.map(visitor => {
+    const visitors = bookVisitJourney.selectedVisitors.map(visitor => {
       return {
         nomisPersonId: visitor.visitorId,
         visitContact: typeof mainContact === 'object' ? mainContact.visitorId === visitor.visitorId : false,
       }
     })
 
-    const visitorSupport = bookingJourney.visitorSupport ? { description: bookingJourney.visitorSupport } : undefined
+    const visitorSupport = bookVisitJourney.visitorSupport
+      ? { description: bookVisitJourney.visitorSupport }
+      : undefined
 
     const application = await orchestrationApiClient.changeVisitApplication({
-      applicationReference: bookingJourney.applicationReference,
-      applicationRestriction: bookingJourney.selectedVisitSession.sessionRestriction,
-      sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-      sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+      applicationReference: bookVisitJourney.applicationReference,
+      applicationRestriction: bookVisitJourney.selectedVisitSession.sessionRestriction,
+      sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+      sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
       visitContact,
       visitors,
       visitorSupport,
     })
-    logger.info(`Visit application '${bookingJourney.applicationReference}' changed`)
+    logger.info(`Visit application '${bookVisitJourney.applicationReference}' changed`)
     return application
   }
 

@@ -17,14 +17,14 @@ const prison = TestData.prisonDto()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookings: SessionData['bookings']
+let bookings: SessionData['visits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
   visitDetails = TestData.visitDetails({ visitDisplayId })
   bookings = { type: undefined, visits: [visitDetails] }
 
-  sessionData = { bookings } as SessionData
+  sessionData = { visits: bookings } as SessionData
 
   prisonService.getPrison.mockResolvedValue(prison)
 

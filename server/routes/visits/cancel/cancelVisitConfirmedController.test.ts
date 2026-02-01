@@ -22,7 +22,7 @@ afterEach(() => {
 describe('Cancel a booking - Booking cancelled', () => {
   describe('GET - Display Booking cancelled page', () => {
     it('should render the page confirming the visit has been cancelled (email and text message)', () => {
-      sessionData.bookingCancelled = { hasEmail: true, hasMobile: true }
+      sessionData.visitCancelled = { hasEmail: true, hasMobile: true }
 
       return request(app)
         .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
@@ -41,7 +41,7 @@ describe('Cancel a booking - Booking cancelled', () => {
 
     describe('Confirmation message variations', () => {
       it('email only', () => {
-        sessionData.bookingCancelled = { hasEmail: true, hasMobile: false }
+        sessionData.visitCancelled = { hasEmail: true, hasMobile: false }
 
         return request(app)
           .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
@@ -53,7 +53,7 @@ describe('Cancel a booking - Booking cancelled', () => {
       })
 
       it('mobile phone only', () => {
-        sessionData.bookingCancelled = { hasEmail: false, hasMobile: true }
+        sessionData.visitCancelled = { hasEmail: false, hasMobile: true }
 
         return request(app)
           .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
@@ -65,7 +65,7 @@ describe('Cancel a booking - Booking cancelled', () => {
       })
 
       it('no email or mobile phone', () => {
-        sessionData.bookingCancelled = { hasEmail: false, hasMobile: false }
+        sessionData.visitCancelled = { hasEmail: false, hasMobile: false }
 
         return request(app)
           .get(`${paths.VISITS.CANCEL_CONFIRMATION}`)
@@ -78,7 +78,7 @@ describe('Cancel a booking - Booking cancelled', () => {
     })
 
     it('should redirect to bookings page if bookingCancelled data not set', () => {
-      sessionData.bookingCancelled = undefined
+      sessionData.visitCancelled = undefined
 
       return request(app).get(`${paths.VISITS.CANCEL_CONFIRMATION}`).expect(302).expect('location', paths.VISITS.HOME)
     })

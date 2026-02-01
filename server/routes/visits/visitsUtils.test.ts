@@ -1,7 +1,7 @@
 import { MoJAlert } from '../../@types/bapv'
 import { VisitDetails } from '../../services/visitService'
 import TestData from '../testutils/testData'
-import { getVisitMessages } from './bookingsUtils'
+import { getVisitMessages } from './visitsUtils'
 
 describe('Visits utils', () => {
   const { prisonName } = TestData.prisonDto()

@@ -43,24 +43,24 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({
-          name: "cancelBooking",
+          name: "cancelVisit",
           items: [
             {
               value: "yes",
               text: "Yes, cancel this visit",
               attributes: {
-                'data-test': 'cancel-booking-yes'
+                'data-test': 'cancel-visit-yes'
               }
             },
             {
               value: "no",
               text: "No, keep this visit",
               attributes: {
-                'data-test': 'cancel-booking-no'
+                'data-test': 'cancel-visit-no'
               }
             }
           ],
-          errorMessage: errors | findError('cancelBooking')
+          errorMessage: errors | findError('cancelVisit')
         }) }}
           
         {{ govukButton({

@@ -1,7 +1,7 @@
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
-import { BookingJourney } from '../@types/bapv'
+import { BookVisitJourney } from '../@types/bapv'
 import { Visitor } from './bookerService'
 
 const token = 'some token'
@@ -31,7 +31,7 @@ describe('Visit service', () => {
     jest.resetAllMocks()
   })
 
-  describe('Booking journey', () => {
+  describe('Book visit journey', () => {
     const bookerReference = TestData.bookerReference().value
     const visitorOne = TestData.visitor({ visitorId: 100 })
     const visitorTwo = TestData.visitor({ visitorId: 200 })
@@ -41,10 +41,10 @@ describe('Visit service', () => {
     const visit = TestData.visitDto()
     const visitSession = TestData.availableVisitSessionDto()
 
-    let bookingJourney: BookingJourney
+    let bookVisitJourney: BookVisitJourney
 
     beforeEach(() => {
-      bookingJourney = {
+      bookVisitJourney = {
         prisoner: TestData.prisoner(),
         prison: TestData.prisonDto(),
         eligibleVisitors: [visitorOne, visitorTwo, visitorThree],
@@ -64,13 +64,13 @@ describe('Visit service', () => {
       it('should create and return a visit application from booking journey data', async () => {
         orchestrationApiClient.createVisitApplication.mockResolvedValue(application)
 
-        const results = await visitService.createVisitApplication({ bookingJourney, bookerReference })
+        const results = await visitService.createVisitApplication({ bookVisitJourney, bookerReference })
 
         expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
-          prisonerId: bookingJourney.prisoner.prisonerNumber,
+          prisonerId: bookVisitJourney.prisoner.prisonerNumber,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
           visitorIds: [100, 200],
           bookerReference,
         })
@@ -89,13 +89,13 @@ describe('Visit service', () => {
 
         orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
 
-        const results = await visitService.changeVisitApplication({ bookingJourney })
+        const results = await visitService.changeVisitApplication({ bookVisitJourney })
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -104,9 +104,9 @@ describe('Visit service', () => {
       })
 
       it('should should handle a custom main contact and no phone number or email', async () => {
-        bookingJourney.mainContact = 'Someone Else'
-        bookingJourney.mainContactEmail = undefined
-        bookingJourney.mainContactPhone = undefined
+        bookVisitJourney.mainContact = 'Someone Else'
+        bookVisitJourney.mainContactEmail = undefined
+        bookVisitJourney.mainContactPhone = undefined
 
         const visitContact = { name: 'Someone Else' }
         const visitors = [
@@ -117,13 +117,13 @@ describe('Visit service', () => {
 
         orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
 
-        const results = await visitService.changeVisitApplication({ bookingJourney })
+        const results = await visitService.changeVisitApplication({ bookVisitJourney })
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -132,10 +132,10 @@ describe('Visit service', () => {
       })
 
       it('should handle minimal available session data', async () => {
-        bookingJourney.visitorSupport = undefined
-        bookingJourney.mainContact = undefined
-        bookingJourney.mainContactEmail = undefined
-        bookingJourney.mainContactPhone = undefined
+        bookVisitJourney.visitorSupport = undefined
+        bookVisitJourney.mainContact = undefined
+        bookVisitJourney.mainContactEmail = undefined
+        bookVisitJourney.mainContactPhone = undefined
 
         const visitors = [
           { nomisPersonId: 100, visitContact: false },
@@ -144,13 +144,13 @@ describe('Visit service', () => {
 
         orchestrationApiClient.changeVisitApplication.mockResolvedValue(application)
 
-        const results = await visitService.changeVisitApplication({ bookingJourney })
+        const results = await visitService.changeVisitApplication({ bookVisitJourney })
 
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookingJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookingJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
           visitContact: undefined,
           visitors,
           visitorSupport: undefined,
@@ -176,14 +176,14 @@ describe('Visit service', () => {
         orchestrationApiClient.bookVisit.mockResolvedValue(visit)
 
         const results = await visitService.bookVisit({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
           visitors,
         })
 
         expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
           visitorDetails: [
@@ -206,12 +206,12 @@ describe('Visit service', () => {
         orchestrationApiClient.cancelVisit.mockResolvedValue()
 
         await visitService.cancelVisit({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
         })
 
         expect(orchestrationApiClient.cancelVisit).toHaveBeenCalledWith({
-          applicationReference: bookingJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference,
           actionedBy: 'aaaa-bbbb-cccc',
         })
       })
