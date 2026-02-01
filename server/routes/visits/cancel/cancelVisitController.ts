@@ -10,7 +10,7 @@ export default class CancelVisitController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { visits: bookings } = req.session
+      const { bookedVisits: bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== 'future') {
@@ -53,7 +53,7 @@ export default class CancelVisitController {
         return res.redirect(`${paths.VISITS.DETAILS}/${visitDisplayId}`)
       }
 
-      const { booker, visits: bookings } = req.session
+      const { booker, bookedVisits: bookings } = req.session
       const { visits } = bookings
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 

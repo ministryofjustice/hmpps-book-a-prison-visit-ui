@@ -7,7 +7,7 @@ import { VisitDetails } from '../../services/visitService'
 export default class VisitsController {
   public constructor(private readonly visitService: VisitService) {}
 
-  public view(type: SessionData['visits']['type']): RequestHandler {
+  public view(type: SessionData['bookedVisits']['type']): RequestHandler {
     return async (req, res, next) => {
       const { booker } = req.session
 
@@ -29,7 +29,7 @@ export default class VisitsController {
           return next(createError(500, `Invalid bookings type: ${type}`))
       }
 
-      req.session.visits = { type, visits }
+      req.session.bookedVisits = { type, visits }
 
       return res.render(`pages/visits/${type}`, { visits, showOLServiceNav: true })
     }

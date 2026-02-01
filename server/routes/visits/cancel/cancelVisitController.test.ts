@@ -20,7 +20,7 @@ const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookings: SessionData['visits']
+let bookings: SessionData['bookedVisits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
@@ -32,7 +32,7 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    visits: bookings,
+    bookedVisits: bookings,
   } as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
@@ -97,8 +97,8 @@ describe('Cancel a booking - Are you sure page', () => {
     })
 
     it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
-      sessionData.visits.visits[0].visitContact.telephone = undefined
-      sessionData.visits.visits[0].visitContact.email = undefined
+      sessionData.bookedVisits.visits[0].visitContact.telephone = undefined
+      sessionData.bookedVisits.visits[0].visitContact.email = undefined
 
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)

@@ -18,9 +18,9 @@ export default class VisitDetailsController {
 
   public constructor(private readonly prisonService: PrisonService) {}
 
-  public view(type: SessionData['visits']['type']): RequestHandler {
+  public view(type: SessionData['bookedVisits']['type']): RequestHandler {
     return async (req, res) => {
-      const { visits: bookings } = req.session
+      const { bookedVisits: bookings } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookings.type !== type) {

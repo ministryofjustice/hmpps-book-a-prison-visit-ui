@@ -28,7 +28,7 @@ declare module 'express-session' {
     bookVisitJourney?: BookVisitJourney
     bookVisitConfirmed?: BookVisitConfirmed
 
-    visits?: {
+    bookedVisits?: {
       type: 'future' | 'past' | 'cancelled'
       visits: VisitDetails[]
     }
