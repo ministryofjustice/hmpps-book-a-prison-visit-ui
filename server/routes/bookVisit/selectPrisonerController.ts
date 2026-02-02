@@ -21,12 +21,13 @@ export default class SelectPrisonerController {
         throw new NotFound('Prisoner not found')
       }
 
-      const [validationResult, prison] = await Promise.all([
-        this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber),
-        this.prisonService.getPrison(prisoner.prisonId),
-      ])
-
-      req.session.bookVisitJourney = { prisoner, prison }
+      const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
+      if (validationResult === true) {
+        const prison = await this.prisonService.getPrison(prisoner.prisonId)
+        req.session.bookVisitJourney = { prisoner, prison }
+      } else {
+        req.session.bookVisitJourney = { prisoner }
+      }
 
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
       if (validationResult === true && prisonerHasVOsOrRemand) {
