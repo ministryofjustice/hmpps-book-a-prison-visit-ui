@@ -65,6 +65,7 @@ describe('Select prisoner', () => {
       .expect(302)
       .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
       .expect(() => {
+        expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
         expect(sessionData).toStrictEqual({
           booker: {
             reference: bookerReference,
@@ -133,6 +134,7 @@ describe('Select prisoner', () => {
           .expect(302)
           .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
           .expect(() => {
+            expect(prisonService.getPrison).not.toHaveBeenCalled()
             expect(sessionData).toStrictEqual({
               booker: {
                 reference: bookerReference,
@@ -140,7 +142,6 @@ describe('Select prisoner', () => {
               },
               bookVisitJourney: {
                 prisoner: prisonerWithNoVos,
-                prison,
                 cannotBookReason,
               },
             } as SessionData)
@@ -163,6 +164,7 @@ describe('Select prisoner', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(() => {
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
@@ -192,6 +194,7 @@ describe('Select prisoner', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(() => {
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
