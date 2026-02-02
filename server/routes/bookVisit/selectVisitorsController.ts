@@ -15,18 +15,18 @@ export default class SelectVisitorsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker, bookingJourney } = req.session
-      const { prison, prisoner } = bookingJourney
+      const { booker, bookVisitJourney } = req.session
+      const { prison, prisoner } = bookVisitJourney
 
       // only request visitors once per journey so random visitor UUIDs don't change
-      if (!bookingJourney.eligibleVisitors) {
+      if (!bookVisitJourney.eligibleVisitors) {
         const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility({
           bookerReference: booker.reference,
           prisonerNumber: prisoner.prisonerNumber,
           policyNoticeDaysMax: prison.policyNoticeDaysMax,
         })
-        bookingJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
-        bookingJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
+        bookVisitJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
+        bookVisitJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
       }
 
       const visitorRequests = config.features.addVisitor
@@ -36,14 +36,14 @@ export default class SelectVisitorsController {
           })
         : ([] as BookerPrisonerVisitorRequestDto[])
 
-      const isAtLeastOneAdultVisitor = bookingJourney.eligibleVisitors.some(visitor => visitor.adult)
-      if (bookingJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
-        req.session.bookingJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+      const isAtLeastOneAdultVisitor = bookVisitJourney.eligibleVisitors.some(visitor => visitor.adult)
+      if (bookVisitJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
+        req.session.bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
         return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
       }
 
       const selectedVisitorDisplayIds = {
-        visitorDisplayIds: bookingJourney.selectedVisitors?.map(visitor => visitor.visitorDisplayId) ?? [],
+        visitorDisplayIds: bookVisitJourney.selectedVisitors?.map(visitor => visitor.visitorDisplayId) ?? [],
       }
       const formValues = {
         ...selectedVisitorDisplayIds,
@@ -54,8 +54,8 @@ export default class SelectVisitorsController {
         errors: req.flash('errors'),
         formValues,
         prison,
-        eligibleVisitors: bookingJourney.eligibleVisitors,
-        ineligibleVisitors: bookingJourney.ineligibleVisitors,
+        eligibleVisitors: bookVisitJourney.eligibleVisitors,
+        ineligibleVisitors: bookVisitJourney.ineligibleVisitors,
         visitorRequests,
       })
     }
@@ -71,20 +71,20 @@ export default class SelectVisitorsController {
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 
-      const { bookingJourney } = req.session
+      const { bookVisitJourney } = req.session
       const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: string[] }>(req)
 
-      const selectedVisitors = bookingJourney.eligibleVisitors.filter(visitor =>
+      const selectedVisitors = bookVisitJourney.eligibleVisitors.filter(visitor =>
         visitorDisplayIds.includes(visitor.visitorDisplayId),
       )
 
-      bookingJourney.selectedVisitors = selectedVisitors
+      bookVisitJourney.selectedVisitors = selectedVisitors
 
       const sessionRestriction = await this.visitSessionService.getSessionRestriction({
-        prisonerId: bookingJourney.prisoner.prisonerNumber,
+        prisonerId: bookVisitJourney.prisoner.prisonerNumber,
         visitorIds: selectedVisitors.map(visitor => visitor.visitorId),
       })
-      bookingJourney.sessionRestriction = sessionRestriction
+      bookVisitJourney.sessionRestriction = sessionRestriction
 
       return res.redirect(sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.CHOOSE_TIME : paths.BOOK_VISIT.CLOSED_VISIT)
     }
@@ -97,7 +97,7 @@ export default class SelectVisitorsController {
         .isUUID()
         // filter out any invalid or duplicate visitorDisplayId values
         .customSanitizer((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
-          const allVisitorDisplaysIds = req.session.bookingJourney.eligibleVisitors.map(
+          const allVisitorDisplaysIds = req.session.bookVisitJourney.eligibleVisitors.map(
             visitor => visitor.visitorDisplayId,
           )
 
@@ -114,7 +114,7 @@ export default class SelectVisitorsController {
         // validate visitor totals
         .custom((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
           const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
-            req.session.bookingJourney.prison
+            req.session.bookVisitJourney.prison
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {
@@ -122,7 +122,7 @@ export default class SelectVisitorsController {
           }
 
           // calculate selected visitor ages
-          const { eligibleVisitors } = req.session.bookingJourney
+          const { eligibleVisitors } = req.session.bookVisitJourney
           const today = new Date()
           const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
             const { dateOfBirth } = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)

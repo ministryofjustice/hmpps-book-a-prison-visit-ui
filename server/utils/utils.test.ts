@@ -128,8 +128,8 @@ describe('pluralise', () => {
       const sessionData: Partial<Record<keyof SessionData, string>> = {
         booker: 'BOOKER DATA',
         addPrisonerJourney: 'ADD PRISONER JOURNEY DATA',
-        bookingJourney: 'BOOKING JOURNEY DATA',
-        bookingConfirmed: 'BOOKING CONFIRMATION DATA',
+        bookVisitJourney: 'BOOK VISIT JOURNEY DATA',
+        bookVisitConfirmed: 'BOOK VISIT CONFIRMATION DATA',
       }
       const req = { session: sessionData } as unknown as Request
 

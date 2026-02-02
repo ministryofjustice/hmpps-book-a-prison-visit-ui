@@ -6,7 +6,7 @@ export default class CannotBookController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { prisoner, cannotBookReason } = req.session.bookingJourney
+      const { prisoner, cannotBookReason } = req.session.bookVisitJourney
       clearSession(req)
 
       return res.render('pages/bookVisit/cannotBook', { prisoner, cannotBookReason })

@@ -7,7 +7,7 @@ import VisitDetailsPage from '../pages/visits/visitDetails'
 import HomePage from '../pages/home'
 import Page from '../pages/page'
 
-context('Cancel booking journey', () => {
+context('Cancel visit journey', () => {
   const orchestrationVisitDto = TestData.orchestrationVisitDto({
     startTimestamp: '2026-05-21T10:00:00',
     endTimestamp: '2026-05-21T11:30:00',
@@ -53,14 +53,14 @@ context('Cancel booking journey', () => {
     cancelVisitPage.visitEndTime().contains('11:30am')
     cancelVisitPage.prisonerName().contains('John Smith')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
-    cancelVisitPage.cancelBookingNo().click()
+    cancelVisitPage.cancelVisitNo().click()
     cancelVisitPage.confirmButton()
 
     Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.cancelVisitButton().click()
 
     Page.verifyOnPage(CancelVisitPage)
-    cancelVisitPage.cancelBookingYes().click()
+    cancelVisitPage.cancelVisitYes().click()
 
     cy.task('stubCancelVisit', {
       reference: orchestrationVisitDto.reference,

@@ -60,10 +60,10 @@ describe('Visits homepage (future visits list)', () => {
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'future',
           visits: futureVisitDetails,
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 
@@ -82,10 +82,10 @@ describe('Visits homepage (future visits list)', () => {
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'future',
           visits: [],
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 })
@@ -117,10 +117,10 @@ describe('Past visits list page', () => {
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'past',
           visits: [pastVisitDetails],
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 
@@ -138,10 +138,10 @@ describe('Past visits list page', () => {
 
         expect(visitService.getPastPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'past',
           visits: [],
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 })
@@ -173,10 +173,10 @@ describe('Cancelled visits list page', () => {
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'cancelled',
           visits: [cancelledVisitDetails],
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 
@@ -194,10 +194,10 @@ describe('Cancelled visits list page', () => {
 
         expect(visitService.getCancelledPublicVisits).toHaveBeenCalledWith(bookerReference)
 
-        expect(sessionData.bookings).toStrictEqual({
+        expect(sessionData.bookedVisits).toStrictEqual({
           type: 'cancelled',
           visits: [],
-        } as SessionData['bookings'])
+        } as SessionData['bookedVisits'])
       })
   })
 })

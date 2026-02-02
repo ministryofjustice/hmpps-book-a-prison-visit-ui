@@ -9,7 +9,7 @@ import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import CannotBookPage from '../pages/bookVisit/cannotBook'
 
-context('Booking journey - drop-out points', () => {
+context('Book visit journey - drop-out points', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()
@@ -44,7 +44,7 @@ context('Booking journey - drop-out points', () => {
     cy.task('stubHmppsAuthToken')
   })
 
-  describe('Booking journey - drop-out points', () => {
+  describe('Book visit journey - drop-out points', () => {
     it('should show drop-out page when no available visit sessions', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })

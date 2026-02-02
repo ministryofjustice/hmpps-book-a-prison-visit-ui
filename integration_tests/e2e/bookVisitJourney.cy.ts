@@ -15,7 +15,7 @@ import ContactDetailsPage from '../pages/bookVisit/contactDetails'
 import VisitRequestedPage from '../pages/bookVisit/visitRequested'
 import { formatDate } from '../../server/utils/utils'
 
-context('Booking journey', () => {
+context('Book visit journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()

@@ -38,7 +38,7 @@ describe('Additional support needs', () => {
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner,
           prison,
           eligibleVisitors: [visitor],
@@ -54,7 +54,7 @@ describe('Additional support needs', () => {
       app = appWithAllRoutes({ sessionData })
     })
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookVisitJourney.prisoner = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -96,7 +96,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('[data-test-app-ref]').attr('data-test-app-ref')).toBe(
-            sessionData.bookingJourney.applicationReference,
+            sessionData.bookVisitJourney.applicationReference,
           )
           replacedProp.replaceValue('environmentName')
         })
@@ -117,7 +117,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in session (no support)', () => {
-      sessionData.bookingJourney.visitorSupport = ''
+      sessionData.bookVisitJourney.visitorSupport = ''
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -130,7 +130,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in session (support required)', () => {
-      sessionData.bookingJourney.visitorSupport = 'Wheelchair access'
+      sessionData.bookVisitJourney.visitorSupport = 'Wheelchair access'
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -143,7 +143,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookingJourney.visitorSupport = 'Wheelchair access'
+      sessionData.bookVisitJourney.visitorSupport = 'Wheelchair access'
       const formValues = { additionalSupportRequired: 'no', additionalSupport: '' }
       flashData = { formValues: [formValues] }
 
@@ -186,7 +186,7 @@ describe('Additional support needs', () => {
           reference: bookerReference,
           prisoners: [prisoner],
         },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner,
           prison,
           eligibleVisitors: [visitor],
@@ -210,7 +210,7 @@ describe('Additional support needs', () => {
         .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney.visitorSupport).toBe('Wheelchair access')
+          expect(sessionData.bookVisitJourney.visitorSupport).toBe('Wheelchair access')
         })
     })
 
@@ -222,7 +222,7 @@ describe('Additional support needs', () => {
         .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney.visitorSupport).toBe('')
+          expect(sessionData.bookVisitJourney.visitorSupport).toBe('')
         })
     })
 
@@ -250,7 +250,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
           })
       })
 
@@ -273,7 +273,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
           })
       })
 
@@ -297,7 +297,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
           })
       })
     })

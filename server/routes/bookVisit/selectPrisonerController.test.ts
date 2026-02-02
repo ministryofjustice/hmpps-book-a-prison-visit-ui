@@ -26,7 +26,7 @@ describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
   const prison = TestData.prisonDto()
   const prisoner = TestData.prisoner()
-  const bookingConfirmed = TestData.bookingConfirmed()
+  const bookVisitConfirmed = TestData.bookVisitConfirmed()
 
   beforeEach(() => {
     prisonService.getPrison.mockResolvedValue(prison)
@@ -53,8 +53,8 @@ describe('Select prisoner', () => {
 
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
-      bookingJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
-      bookingConfirmed,
+      bookVisitJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
+      bookVisitConfirmed,
     } as SessionData
 
     app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
@@ -70,7 +70,7 @@ describe('Select prisoner', () => {
             reference: bookerReference,
             prisoners: [prisoner],
           },
-          bookingJourney: {
+          bookVisitJourney: {
             prisoner,
             prison,
           },
@@ -138,7 +138,7 @@ describe('Select prisoner', () => {
                 reference: bookerReference,
                 prisoners: [prisonerWithNoVos],
               },
-              bookingJourney: {
+              bookVisitJourney: {
                 prisoner: prisonerWithNoVos,
                 prison,
                 cannotBookReason,
@@ -168,7 +168,7 @@ describe('Select prisoner', () => {
               reference: bookerReference,
               prisoners: [prisonerWithNoVos],
             },
-            bookingJourney: {
+            bookVisitJourney: {
               prisoner: prisonerWithNoVos,
               prison,
               cannotBookReason: 'NO_VO_BALANCE',
@@ -197,7 +197,7 @@ describe('Select prisoner', () => {
               reference: bookerReference,
               prisoners: [remandPrisoner],
             },
-            bookingJourney: {
+            bookVisitJourney: {
               prisoner: remandPrisoner,
               prison,
             },

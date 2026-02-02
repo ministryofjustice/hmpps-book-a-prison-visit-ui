@@ -14,8 +14,8 @@ export default class ChooseVisitTimeController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookingJourney, booker } = req.session
-      const { prisoner, prison, selectedVisitors, applicationReference } = bookingJourney
+      const { bookVisitJourney, booker } = req.session
+      const { prisoner, prison, selectedVisitors, applicationReference } = bookVisitJourney
 
       const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
       const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors)
@@ -34,10 +34,10 @@ export default class ChooseVisitTimeController {
         return res.render('pages/bookVisit/chooseVisitTimeNoSessions', { prison, prisoner })
       }
 
-      bookingJourney.allVisitSessionIds = allVisitSessionIds
-      bookingJourney.allVisitSessions = allVisitSessions
+      bookVisitJourney.allVisitSessionIds = allVisitSessionIds
+      bookVisitJourney.allVisitSessions = allVisitSessions
 
-      const { selectedVisitSession } = bookingJourney
+      const { selectedVisitSession } = bookVisitJourney
       const isSelectedSessionStillAvailable = this.isSelectedSessionStillAvailable({
         selectedVisitSession,
         allVisitSessions,
@@ -61,7 +61,9 @@ export default class ChooseVisitTimeController {
       const selectedDate = isSelectedSessionStillAvailable ? selectedVisitSession.sessionDate : firstSessionDate
 
       const backLinkHref =
-        bookingJourney.sessionRestriction === 'OPEN' ? paths.BOOK_VISIT.SELECT_VISITORS : paths.BOOK_VISIT.CLOSED_VISIT
+        bookVisitJourney.sessionRestriction === 'OPEN'
+          ? paths.BOOK_VISIT.SELECT_VISITORS
+          : paths.BOOK_VISIT.CLOSED_VISIT
 
       return res.render('pages/bookVisit/chooseVisitTime', {
         errors: req.flash('errors'),
@@ -79,7 +81,7 @@ export default class ChooseVisitTimeController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { booker, bookingJourney } = req.session
+      const { booker, bookVisitJourney } = req.session
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -87,7 +89,7 @@ export default class ChooseVisitTimeController {
         // so ErrorSummary link works correctly
         const errorsArray = errors.array()
         if (errorsArray[0].type === 'field') {
-          errorsArray[0].path = `date-${bookingJourney.allVisitSessions[0]?.sessionDate}`
+          errorsArray[0].path = `date-${bookVisitJourney.allVisitSessions[0]?.sessionDate}`
         }
 
         req.flash('errors', errorsArray)
@@ -98,26 +100,26 @@ export default class ChooseVisitTimeController {
       const selectedSessionDate = visitSessionSplit[0]
       const selectedSessionTemplateReference = visitSessionSplit[1]
 
-      const selectedVisitSession = bookingJourney.allVisitSessions.find(
+      const selectedVisitSession = bookVisitJourney.allVisitSessions.find(
         session =>
           session.sessionTemplateReference === selectedSessionTemplateReference &&
           session.sessionDate === selectedSessionDate,
       )
 
-      bookingJourney.selectedVisitSession = selectedVisitSession
+      bookVisitJourney.selectedVisitSession = selectedVisitSession
 
       try {
         // first time through: create an application
-        if (bookingJourney.applicationReference === undefined) {
+        if (bookVisitJourney.applicationReference === undefined) {
           const application = await this.visitService.createVisitApplication({
-            bookingJourney,
+            bookVisitJourney,
             bookerReference: booker.reference,
           })
 
-          bookingJourney.applicationReference = application.reference
+          bookVisitJourney.applicationReference = application.reference
         } else {
           // existing application so update it
-          await this.visitService.changeVisitApplication({ bookingJourney })
+          await this.visitService.changeVisitApplication({ bookVisitJourney })
         }
       } catch (error) {
         // HTTP 400 Bad Request is the response when a session is no longer available
@@ -129,7 +131,7 @@ export default class ChooseVisitTimeController {
             text: 'Select a new time.',
           })
 
-          delete bookingJourney.selectedVisitSession
+          delete bookVisitJourney.selectedVisitSession
           return res.redirect(paths.BOOK_VISIT.CHOOSE_TIME)
         }
         return next(error)
@@ -143,7 +145,7 @@ export default class ChooseVisitTimeController {
     return [
       body('visitSession')
         .customSanitizer((visitSession: string, { req }: Meta & { req: Express.Request }) => {
-          const { allVisitSessionIds } = req.session.bookingJourney
+          const { allVisitSessionIds } = req.session.bookVisitJourney
           return allVisitSessionIds.includes(visitSession) ? visitSession : undefined
         })
         .notEmpty()

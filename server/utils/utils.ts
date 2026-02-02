@@ -79,7 +79,7 @@ export const isAdult = (dateOfBirth: string, referenceDate: Date = new Date()): 
 }
 
 export const clearSession = (req: Request): void => {
-  ;['addPrisonerJourney', 'bookingJourney', 'bookingConfirmed'].forEach((sessionItem: keyof SessionData) => {
+  ;['addPrisonerJourney', 'bookVisitJourney', 'bookVisitConfirmed'].forEach((sessionItem: keyof SessionData) => {
     delete req.session[sessionItem]
   })
 }

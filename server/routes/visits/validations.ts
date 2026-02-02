@@ -5,8 +5,8 @@ export const validateVisitDisplayId = param('visitDisplayId')
   .isUUID()
   .bail()
   .custom((visitDisplayId: string, { req }: Meta & { req: Express.Request }) => {
-    const { bookings } = req.session
-    const visits = bookings?.visits ?? []
+    const { bookedVisits } = req.session
+    const visits = bookedVisits?.visits ?? []
 
     return visits.some(visit => visit.visitDisplayId === visitDisplayId)
   })

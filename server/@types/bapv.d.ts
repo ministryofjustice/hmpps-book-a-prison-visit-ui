@@ -41,8 +41,8 @@ export type AddVisitorJourney = {
   result?: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
 }
 
-// data that is built up during a booking journey
-export type BookingJourney = {
+// data that is built up during a visit booking journey
+export type BookVisitJourney = {
   // selected prisoner for this visit
   prisoner: Prisoner
 
@@ -83,7 +83,7 @@ export type BookingJourney = {
   mainContactPhone?: string
 }
 
-export type BookingConfirmed = {
+export type BookVisitConfirmed = {
   isARequest: boolean
   prison: PrisonDto
   visitReference: string
@@ -91,7 +91,7 @@ export type BookingConfirmed = {
   hasMobile: boolean
 }
 
-export type BookingCancelled = {
+export type VisitCancelled = {
   hasEmail: boolean
   hasMobile: boolean
 }

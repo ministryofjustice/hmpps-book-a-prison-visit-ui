@@ -19,7 +19,7 @@ const visit = TestData.visitDto()
 beforeEach(() => {
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
-    bookingConfirmed: {
+    bookVisitConfirmed: {
       isARequest: false,
       prison,
       visitReference: visit.applicationReference,
@@ -72,7 +72,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
     })
 
     it('should show alternative content if prison has no phone number', () => {
-      sessionData.bookingConfirmed.prison.phoneNumber = null
+      sessionData.bookVisitConfirmed.prison.phoneNumber = null
 
       return request(app)
         .get(paths.BOOK_VISIT.BOOKED)
@@ -88,7 +88,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
 
     describe('Booking confirmation message variations', () => {
       it('email only', () => {
-        sessionData.bookingConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed.hasMobile = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -101,7 +101,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
       })
 
       it('mobile phone only', () => {
-        sessionData.bookingConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed.hasEmail = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -114,8 +114,8 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
       })
 
       it('no email or mobile phone', () => {
-        sessionData.bookingConfirmed.hasEmail = undefined
-        sessionData.bookingConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed.hasMobile = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -132,7 +132,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
 
 describe('Booking confirmed (BOOKED - REQUESTED)', () => {
   beforeEach(() => {
-    sessionData.bookingConfirmed.isARequest = true
+    sessionData.bookVisitConfirmed.isARequest = true
   })
 
   describe(`GET ${paths.BOOK_VISIT.BOOKED}`, () => {
@@ -159,7 +159,7 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
 
     describe('Request confirmation message variations', () => {
       it('email only', () => {
-        sessionData.bookingConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed.hasMobile = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -173,7 +173,7 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
       })
 
       it('mobile phone only', () => {
-        sessionData.bookingConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed.hasEmail = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -187,8 +187,8 @@ describe('Booking confirmed (BOOKED - REQUESTED)', () => {
       })
 
       it('no email or mobile phone', () => {
-        sessionData.bookingConfirmed.hasEmail = undefined
-        sessionData.bookingConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed.hasMobile = undefined
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)

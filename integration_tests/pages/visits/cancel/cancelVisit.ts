@@ -15,9 +15,9 @@ export default class CancelVisitPage extends Page {
 
   visitorName = (index: number): PageElement => cy.get(`[data-test=visitor-name-${index}]`)
 
-  cancelBookingNo = (): PageElement => cy.get(`[data-test=cancel-booking-no`)
+  cancelVisitNo = (): PageElement => cy.get(`[data-test=cancel-visit-no`)
 
-  cancelBookingYes = (): PageElement => cy.get(`[data-test=cancel-booking-yes`)
+  cancelVisitYes = (): PageElement => cy.get(`[data-test=cancel-visit-yes`)
 
   confirmButton = (): void => {
     cy.get('[data-test="confirm-button"]').click()

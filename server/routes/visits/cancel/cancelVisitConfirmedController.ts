@@ -1,12 +1,12 @@
 import type { RequestHandler } from 'express'
 import paths from '../../../constants/paths'
 
-export default class CancelConfirmedController {
+export default class CancelVisitConfirmedController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookingCancelled } = req.session
+      const { visitCancelled: bookingCancelled } = req.session
 
       if (!bookingCancelled) {
         return res.redirect(paths.VISITS.HOME)

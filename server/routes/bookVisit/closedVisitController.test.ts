@@ -29,7 +29,7 @@ describe('Closed visit', () => {
     beforeEach(() => {
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner,
           prison,
           eligibleVisitors: [visitor],
@@ -42,7 +42,7 @@ describe('Closed visit', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookVisitJourney.prisoner = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CLOSED_VISIT)

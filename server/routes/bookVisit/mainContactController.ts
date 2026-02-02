@@ -7,7 +7,7 @@ export default class MainContactController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { selectedVisitors, mainContact } = req.session.bookingJourney
+      const { selectedVisitors, mainContact } = req.session.bookVisitJourney
 
       const adultVisitors = selectedVisitors.filter(visitor => visitor.adult)
 
@@ -41,19 +41,19 @@ export default class MainContactController {
         return res.redirect(paths.BOOK_VISIT.MAIN_CONTACT)
       }
 
-      const { bookingJourney } = req.session
+      const { bookVisitJourney } = req.session
       const { contact, someoneElseName } = matchedData<{
         contact?: string
         someoneElseName?: string
       }>(req)
 
       if (contact === 'someoneElse') {
-        bookingJourney.mainContact = someoneElseName
+        bookVisitJourney.mainContact = someoneElseName
       } else {
-        const contactVisitor = bookingJourney.selectedVisitors.find(
+        const contactVisitor = bookVisitJourney.selectedVisitors.find(
           visitor => visitor.visitorDisplayId.toString() === contact,
         )
-        bookingJourney.mainContact = contactVisitor
+        bookVisitJourney.mainContact = contactVisitor
       }
 
       return res.redirect(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -69,7 +69,7 @@ export default class MainContactController {
             return contact
           }
 
-          const selectedAdultVisitorIds = req.session.bookingJourney.selectedVisitors
+          const selectedAdultVisitorIds = req.session.bookVisitJourney.selectedVisitors
             .filter(visitor => visitor.adult)
             .map(visitor => visitor.visitorDisplayId.toString())
 

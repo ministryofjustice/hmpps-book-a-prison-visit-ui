@@ -84,7 +84,7 @@ describe('Choose visit time', () => {
           reference: bookerReference,
           prisoners: [prisoner],
         },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner,
           prison,
           eligibleVisitors: [visitor],
@@ -97,7 +97,7 @@ describe('Choose visit time', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookVisitJourney.prisoner = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -198,7 +198,7 @@ describe('Choose visit time', () => {
         banExpiryDate: '2025-08-02',
       })
 
-      sessionData.bookingJourney.selectedVisitors = [
+      sessionData.bookVisitJourney.selectedVisitors = [
         visitor, // no ban - shouldn't show
         visitorWithBanExpiringFirst, // earlier ban - shouldn't show
         visitorWithBanExpiringLast1, // expiring last (same date) - should show
@@ -226,13 +226,13 @@ describe('Choose visit time', () => {
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)
         .expect(() => {
-          expect(sessionData.bookingJourney.allVisitSessionIds).toStrictEqual(allVisitSessionIds)
-          expect(sessionData.bookingJourney.allVisitSessions).toStrictEqual(allVisitSessions)
+          expect(sessionData.bookVisitJourney.allVisitSessionIds).toStrictEqual(allVisitSessionIds)
+          expect(sessionData.bookVisitJourney.allVisitSessions).toStrictEqual(allVisitSessions)
         })
     })
 
     it('should have back link to closed visit page if sessionRestriction is CLOSED', () => {
-      sessionData.bookingJourney.sessionRestriction = 'CLOSED'
+      sessionData.bookVisitJourney.sessionRestriction = 'CLOSED'
 
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -261,8 +261,8 @@ describe('Choose visit time', () => {
     })
 
     it('should pre-populate with selected date in session if selected visit session still available', () => {
-      sessionData.bookingJourney.selectedVisitSession = visitSessionC
-      sessionData.bookingJourney.applicationReference = application.reference
+      sessionData.bookVisitJourney.selectedVisitSession = visitSessionC
+      sessionData.bookVisitJourney.applicationReference = application.reference
 
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -281,10 +281,10 @@ describe('Choose visit time', () => {
     })
 
     it('should show message and NOT pre-populate with selected date in session if selected visit session no longer available', () => {
-      sessionData.bookingJourney.selectedVisitSession = TestData.availableVisitSessionDto({
+      sessionData.bookVisitJourney.selectedVisitSession = TestData.availableVisitSessionDto({
         sessionDate: 'UNAVAILABLE DATE',
       })
-      sessionData.bookingJourney.applicationReference = application.reference
+      sessionData.bookVisitJourney.applicationReference = application.reference
 
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -365,7 +365,7 @@ describe('Choose visit time', () => {
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisoner] },
-        bookingJourney: {
+        bookVisitJourney: {
           prisoner,
           prison,
           eligibleVisitors: [visitor],
@@ -389,21 +389,21 @@ describe('Choose visit time', () => {
           expect(flashProvider).not.toHaveBeenCalled()
 
           expect(visitService.createVisitApplication).toHaveBeenCalledWith({
-            bookingJourney: sessionData.bookingJourney,
+            bookVisitJourney: sessionData.bookVisitJourney,
             bookerReference,
           })
           expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
 
-          expect(sessionData.bookingJourney.selectedVisitSession.sessionDate).toBe('2024-05-30')
-          expect(sessionData.bookingJourney.selectedVisitSession.sessionTemplateReference).toBe('a')
-          expect(sessionData.bookingJourney.applicationReference).toBe(application.reference)
+          expect(sessionData.bookVisitJourney.selectedVisitSession.sessionDate).toBe('2024-05-30')
+          expect(sessionData.bookVisitJourney.selectedVisitSession.sessionTemplateReference).toBe('a')
+          expect(sessionData.bookVisitJourney.applicationReference).toBe(application.reference)
         })
     })
 
     it('should update an in-progress visit application with selected date/time and store data in session', () => {
-      const { bookingJourney } = sessionData
-      bookingJourney.selectedVisitSession = visitSessionA
-      bookingJourney.applicationReference = application.reference
+      const { bookVisitJourney } = sessionData
+      bookVisitJourney.selectedVisitSession = visitSessionA
+      bookVisitJourney.applicationReference = application.reference
 
       return request(app)
         .post(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -415,12 +415,12 @@ describe('Choose visit time', () => {
 
           expect(visitService.createVisitApplication).not.toHaveBeenCalled()
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
-            bookingJourney,
+            bookVisitJourney,
           })
 
-          expect(bookingJourney.selectedVisitSession.sessionDate).toBe('2024-06-02')
-          expect(bookingJourney.selectedVisitSession.sessionTemplateReference).toBe('d')
-          expect(bookingJourney.applicationReference).toBe(application.reference)
+          expect(bookVisitJourney.selectedVisitSession.sessionDate).toBe('2024-06-02')
+          expect(bookVisitJourney.selectedVisitSession.sessionTemplateReference).toBe('d')
+          expect(bookVisitJourney.applicationReference).toBe(application.reference)
         })
     })
 
@@ -443,19 +443,19 @@ describe('Choose visit time', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
             expect(visitService.createVisitApplication).toHaveBeenCalledWith({
-              bookingJourney: sessionData.bookingJourney,
+              bookVisitJourney: sessionData.bookVisitJourney,
               bookerReference,
             })
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
 
-            expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
           })
       })
 
       it('should set message in flash and redirect to current page when change application returns 400 Bad Request', () => {
-        const { bookingJourney } = sessionData
-        bookingJourney.selectedVisitSession = visitSessionA
-        bookingJourney.applicationReference = application.reference
+        const { bookVisitJourney } = sessionData
+        bookVisitJourney.selectedVisitSession = visitSessionA
+        bookVisitJourney.applicationReference = application.reference
 
         visitService.changeVisitApplication.mockRejectedValue(new BadRequest())
 
@@ -468,10 +468,10 @@ describe('Choose visit time', () => {
             expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
             expect(visitService.createVisitApplication).not.toHaveBeenCalled()
             expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
-              bookingJourney: sessionData.bookingJourney,
+              bookVisitJourney: sessionData.bookVisitJourney,
             })
 
-            expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
           })
       })
 
@@ -484,7 +484,7 @@ describe('Choose visit time', () => {
           .expect(500)
           .expect(() => {
             expect(flashProvider).not.toHaveBeenCalled()
-            expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSessionA)
+            expect(sessionData.bookVisitJourney.selectedVisitSession).toStrictEqual(visitSessionA)
           })
       })
     })

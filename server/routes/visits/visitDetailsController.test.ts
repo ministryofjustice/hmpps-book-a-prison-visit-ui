@@ -17,14 +17,14 @@ const prison = TestData.prisonDto()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookings: SessionData['bookings']
+let bookedVisits: SessionData['bookedVisits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
   visitDetails = TestData.visitDetails({ visitDisplayId })
-  bookings = { type: undefined, visits: [visitDetails] }
+  bookedVisits = { type: undefined, visits: [visitDetails] }
 
-  sessionData = { bookings } as SessionData
+  sessionData = { bookedVisits } as SessionData
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -49,7 +49,7 @@ describe('View a single booking', () => {
     })
 
     it('should render the visit details page', () => {
-      bookings.type = 'future'
+      bookedVisits.type = 'future'
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -90,9 +90,9 @@ describe('View a single booking', () => {
     })
 
     it('should render the visit details page - no main contact details', () => {
-      bookings.type = 'future'
-      bookings.visits[0].visitContact.email = undefined
-      bookings.visits[0].visitContact.telephone = undefined
+      bookedVisits.type = 'future'
+      bookedVisits.visits[0].visitContact.email = undefined
+      bookedVisits.visits[0].visitContact.telephone = undefined
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -106,8 +106,8 @@ describe('View a single booking', () => {
     })
 
     it('should render the visit details page - requested visit', () => {
-      bookings.type = 'future'
-      bookings.visits[0].visitSubStatus = 'REQUESTED'
+      bookedVisits.type = 'future'
+      bookedVisits.visits[0].visitSubStatus = 'REQUESTED'
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -124,7 +124,7 @@ describe('View a single booking', () => {
     })
 
     it('should show alternative content if prison has no phone number', () => {
-      bookings.type = 'future'
+      bookedVisits.type = 'future'
       prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
 
       return request(app)
@@ -141,7 +141,7 @@ describe('View a single booking', () => {
 
   describe('Past booking', () => {
     it('should render the visit details page', () => {
-      bookings.type = 'past'
+      bookedVisits.type = 'past'
 
       return request(app)
         .get(`${paths.VISITS.VISIT_PAST}/${visitDetails.visitDisplayId}`)
@@ -173,7 +173,7 @@ describe('View a single booking', () => {
 
   describe('Cancelled booking', () => {
     it('should render the visit details page with "Visit cancelled" message', () => {
-      bookings.type = 'cancelled'
+      bookedVisits.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.visitSubStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
@@ -210,12 +210,12 @@ describe('View a single booking', () => {
 
   describe('Validation', () => {
     it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
-      bookings.type = 'future'
+      bookedVisits.type = 'future'
       return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should redirect to bookings home page if an unrecognised (not in session) visitDisplayId is passed', () => {
-      bookings.type = 'future'
+      bookedVisits.type = 'future'
       const unrecognisedUUID = randomUUID()
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${unrecognisedUUID}`)

@@ -5,7 +5,7 @@ import { SessionData } from 'express-session'
 import { InternalServerError } from 'http-errors'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
-import { BookingConfirmed, MoJAlert } from '../../@types/bapv'
+import { BookVisitConfirmed, MoJAlert } from '../../@types/bapv'
 import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -31,7 +31,7 @@ const visitSession = TestData.availableVisitSessionDto()
 beforeEach(() => {
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
-    bookingJourney: {
+    bookVisitJourney: {
       prisoner,
       prison,
       eligibleVisitors: [visitor],
@@ -68,7 +68,7 @@ describe('Check visit details', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
+      sessionData.bookVisitJourney.prisoner = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
@@ -107,9 +107,9 @@ describe('Check visit details', () => {
     })
 
     it('should show alternative text when no additional support or contact details provided', () => {
-      sessionData.bookingJourney.visitorSupport = ''
-      sessionData.bookingJourney.mainContactEmail = undefined
-      sessionData.bookingJourney.mainContactPhone = undefined
+      sessionData.bookVisitJourney.visitorSupport = ''
+      sessionData.bookVisitJourney.mainContactEmail = undefined
+      sessionData.bookVisitJourney.mainContactPhone = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
@@ -141,7 +141,7 @@ describe('Check visit details', () => {
       })
 
       it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
-        const expectedBookingConfirmed: BookingConfirmed = {
+        const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
           prison,
           visitReference: visitBooked.reference,
@@ -154,8 +154,8 @@ describe('Check visit details', () => {
           .expect(302)
           .expect('location', paths.BOOK_VISIT.BOOKED)
           .expect(() => {
-            expect(sessionData.bookingJourney).toBe(undefined)
-            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
+            expect(sessionData.bookVisitConfirmed).toStrictEqual(expectedBookVisitConfirmed)
 
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
@@ -167,10 +167,10 @@ describe('Check visit details', () => {
       })
 
       it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
-        sessionData.bookingJourney.mainContactEmail = undefined
-        sessionData.bookingJourney.mainContactPhone = undefined
+        sessionData.bookVisitJourney.mainContactEmail = undefined
+        sessionData.bookVisitJourney.mainContactPhone = undefined
 
-        const expectedBookingConfirmed: BookingConfirmed = {
+        const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
           prison,
           visitReference: visitBooked.reference,
@@ -183,8 +183,8 @@ describe('Check visit details', () => {
           .expect(302)
           .expect('location', paths.BOOK_VISIT.BOOKED)
           .expect(() => {
-            expect(sessionData.bookingJourney).toBe(undefined)
-            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
+            expect(sessionData.bookVisitConfirmed).toStrictEqual(expectedBookVisitConfirmed)
 
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
@@ -200,14 +200,14 @@ describe('Check visit details', () => {
       const visitRequested = TestData.visitDto({ visitSubStatus: 'REQUESTED' })
 
       beforeEach(() => {
-        sessionData.bookingJourney.selectedVisitSession = TestData.availableVisitSessionDto({
+        sessionData.bookVisitJourney.selectedVisitSession = TestData.availableVisitSessionDto({
           sessionForReview: true,
         })
         visitService.bookVisit.mockResolvedValue(visitRequested)
       })
 
       it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit requested page', () => {
-        const expectedBookingConfirmed: BookingConfirmed = {
+        const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: true,
           prison,
           visitReference: visitRequested.reference,
@@ -220,8 +220,8 @@ describe('Check visit details', () => {
           .expect(302)
           .expect('location', paths.BOOK_VISIT.REQUESTED)
           .expect(() => {
-            expect(sessionData.bookingJourney).toBe(undefined)
-            expect(sessionData.bookingConfirmed).toStrictEqual(expectedBookingConfirmed)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
+            expect(sessionData.bookVisitConfirmed).toStrictEqual(expectedBookVisitConfirmed)
 
             expect(visitService.bookVisit).toHaveBeenCalledWith({
               applicationReference: application.reference,
@@ -257,9 +257,9 @@ describe('Check visit details', () => {
             .expect(422)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
-              expect(sessionData.bookingJourney).not.toBe(undefined)
-              expect(sessionData.bookingConfirmed).toBe(undefined)
-              expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+              expect(sessionData.bookVisitJourney).not.toBe(undefined)
+              expect(sessionData.bookVisitConfirmed).toBe(undefined)
+              expect(sessionData.bookVisitJourney.selectedVisitSession).toStrictEqual(visitSession)
             })
         })
 
@@ -279,9 +279,9 @@ describe('Check visit details', () => {
             .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
-              expect(sessionData.bookingJourney).not.toBe(undefined)
-              expect(sessionData.bookingJourney.cannotBookReason).toBe('TRANSFER_OR_RELEASE')
-              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookVisitJourney).not.toBe(undefined)
+              expect(sessionData.bookVisitJourney.cannotBookReason).toBe('TRANSFER_OR_RELEASE')
+              expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
@@ -307,9 +307,9 @@ describe('Check visit details', () => {
             .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
-              expect(sessionData.bookingJourney).not.toBe(undefined)
-              expect(sessionData.bookingJourney.cannotBookReason).toBe('NO_VO_BALANCE')
-              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookVisitJourney).not.toBe(undefined)
+              expect(sessionData.bookVisitJourney.cannotBookReason).toBe('NO_VO_BALANCE')
+              expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
@@ -335,15 +335,15 @@ describe('Check visit details', () => {
             .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
             .expect(() => {
               expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
-              expect(sessionData.bookingJourney).not.toBe(undefined)
-              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookVisitJourney).not.toBe(undefined)
+              expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
               })
-              expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+              expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
             })
         })
 
@@ -369,15 +369,15 @@ describe('Check visit details', () => {
             .expect('location', paths.BOOK_VISIT.CHOOSE_TIME)
             .expect(() => {
               expect(flashProvider).toHaveBeenCalledWith('messages', expectedFlashMessage)
-              expect(sessionData.bookingJourney).not.toBe(undefined)
-              expect(sessionData.bookingConfirmed).toBe(undefined)
+              expect(sessionData.bookVisitJourney).not.toBe(undefined)
+              expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
               })
-              expect(sessionData.bookingJourney.selectedVisitSession).toBe(undefined)
+              expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
             })
         })
       })
@@ -390,9 +390,9 @@ describe('Check visit details', () => {
           .expect(500)
           .expect(() => {
             expect(flashProvider).not.toHaveBeenCalled()
-            expect(sessionData.bookingJourney).not.toBe(undefined)
-            expect(sessionData.bookingConfirmed).toBe(undefined)
-            expect(sessionData.bookingJourney.selectedVisitSession).toStrictEqual(visitSession)
+            expect(sessionData.bookVisitJourney).not.toBe(undefined)
+            expect(sessionData.bookVisitConfirmed).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitSession).toStrictEqual(visitSession)
           })
       })
     })

@@ -123,15 +123,14 @@ describe('Select visitors', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        bookingJourney: { prisoner, prison },
+        bookVisitJourney: { prisoner, prison },
       } as SessionData
 
       app = appWithAllRoutes({ services: { bookerService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookingJourney.prisoner = undefined
-
+      sessionData.bookVisitJourney.prisoner = undefined
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
@@ -212,12 +211,12 @@ describe('Select visitors', () => {
 
           expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
 
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: visitors.eligibleVisitors,
             ineligibleVisitors: visitors.ineligibleVisitors,
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
         })
     })
 
@@ -249,7 +248,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -265,7 +264,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookingJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
       const formValues = { visitorDisplayIds: [visitor2.visitorDisplayId, visitor7.visitorDisplayId] }
       flashData = { formValues: [formValues] }
 
@@ -332,12 +331,12 @@ describe('Select visitors', () => {
             policyNoticeDaysMax: prison.policyNoticeDaysMax,
           })
 
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: [],
             ineligibleVisitors: [],
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
         })
     })
 
@@ -351,13 +350,13 @@ describe('Select visitors', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(() => {
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: [visitor6],
             ineligibleVisitors: [],
             cannotBookReason: 'NO_ELIGIBLE_ADULT_VISITOR',
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
         })
     })
   })
@@ -367,7 +366,7 @@ describe('Select visitors', () => {
       visitSessionsService.getSessionRestriction.mockResolvedValue('OPEN')
 
       sessionData = {
-        bookingJourney: { prisoner, prison, eligibleVisitors: visitors.eligibleVisitors },
+        bookVisitJourney: { prisoner, prison, eligibleVisitors: visitors.eligibleVisitors },
       } as SessionData
 
       app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
@@ -381,13 +380,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'OPEN',
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -405,13 +404,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CLOSED_VISIT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'CLOSED',
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -434,13 +433,13 @@ describe('Select visitors', () => {
         .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookingJourney).toStrictEqual({
+          expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
             prison,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3], // duplicate '1' & unrecognised UUID filtered out
             sessionRestriction: 'OPEN',
-          } as SessionData['bookingJourney'])
+          } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -470,7 +469,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -485,7 +484,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -509,7 +508,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -527,7 +526,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -550,7 +549,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -568,7 +567,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookingJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
           })
       })
     })

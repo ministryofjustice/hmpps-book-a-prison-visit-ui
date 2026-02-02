@@ -4,11 +4,11 @@
 {% set pageTitle = "Visit requested" %}
 
 {# Build messages for email and/or mobile notifications #}
-{% if bookingConfirmed.hasEmail or bookingConfirmed.hasMobile %}
+{% if bookVisitConfirmed.hasEmail or bookVisitConfirmed.hasMobile %}
 
-  {% if bookingConfirmed.hasEmail and bookingConfirmed.hasMobile %}
+  {% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
     {% set notificationMethods = "An email and a text message" %}
-  {% elseif bookingConfirmed.hasEmail %}
+  {% elseif bookVisitConfirmed.hasEmail %}
     {% set notificationMethods = "An email" %}
   {% else %}
     {% set notificationMethods = "A text message" %}
@@ -28,7 +28,7 @@
         classes: "visits-request-confirmation",
         html:
           'It will now be reviewed by <span data-test="prison-name-panel">' +
-            (bookingConfirmed.prison.prisonName | escape) +
+            (bookVisitConfirmed.prison.prisonName | escape) +
           "</span>"
       }) }}
 
@@ -36,7 +36,7 @@
         <p data-test="request-confirmation-message">{{ requestConfirmationMessage }}</p>
       {% endif %}
 
-      <p>Visit reference: <span data-test="request-reference">{{ bookingConfirmed.visitReference }}</span></p>
+      <p>Visit reference: <span data-test="request-reference">{{ bookVisitConfirmed.visitReference }}</span></p>
 
 
       <h2 class="govuk-heading-m">What happens next</h2>
@@ -44,7 +44,7 @@
       <p>Your visit is not booked yet. It needs to be checked.</p>
 
       <p>
-        <span data-test="prison-name">{{ bookingConfirmed.prison.prisonName }}</span>
+        <span data-test="prison-name">{{ bookVisitConfirmed.prison.prisonName }}</span>
         will confirm or reject your request.
       </p>
 

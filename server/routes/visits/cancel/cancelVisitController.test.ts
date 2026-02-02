@@ -9,7 +9,7 @@ import { createMockVisitService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import paths from '../../../constants/paths'
 import { VisitDetails } from '../../../services/visitService'
-import { BookingCancelled } from '../../../@types/bapv'
+import { VisitCancelled } from '../../../@types/bapv'
 
 let app: Express
 
@@ -20,7 +20,7 @@ const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookings: SessionData['bookings']
+let bookings: SessionData['bookedVisits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
@@ -32,7 +32,7 @@ beforeEach(() => {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookings,
+    bookedVisits: bookings,
   } as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
@@ -83,7 +83,7 @@ describe('Cancel a booking - Are you sure page', () => {
     it('should cancel the visit, set data in session and redirect to confirmation page - with email and phone number', () => {
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
-        .send('cancelBooking=yes')
+        .send('cancelVisit=yes')
         .expect(302)
         .expect('location', paths.VISITS.CANCEL_CONFIRMATION)
         .expect(() => {
@@ -92,17 +92,17 @@ describe('Cancel a booking - Are you sure page', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
-          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasEmail: true, hasMobile: true })
+          expect(sessionData.visitCancelled).toStrictEqual(<VisitCancelled>{ hasEmail: true, hasMobile: true })
         })
     })
 
     it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
-      sessionData.bookings.visits[0].visitContact.telephone = undefined
-      sessionData.bookings.visits[0].visitContact.email = undefined
+      sessionData.bookedVisits.visits[0].visitContact.telephone = undefined
+      sessionData.bookedVisits.visits[0].visitContact.email = undefined
 
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
-        .send('cancelBooking=yes')
+        .send('cancelVisit=yes')
         .expect(302)
         .expect('location', paths.VISITS.CANCEL_CONFIRMATION)
         .expect(() => {
@@ -111,7 +111,7 @@ describe('Cancel a booking - Are you sure page', () => {
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
           })
-          expect(sessionData.bookingCancelled).toStrictEqual(<BookingCancelled>{ hasEmail: false, hasMobile: false })
+          expect(sessionData.visitCancelled).toStrictEqual(<VisitCancelled>{ hasEmail: false, hasMobile: false })
         })
     })
 
@@ -120,7 +120,7 @@ describe('Cancel a booking - Are you sure page', () => {
       jest.useFakeTimers({ advanceTimers: true, now: fakeDate })
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
-        .send('cancelBooking=yes')
+        .send('cancelVisit=yes')
         .expect(302)
         .expect('location', `${paths.VISITS.PAST}`)
         .expect(() => {
@@ -131,7 +131,7 @@ describe('Cancel a booking - Are you sure page', () => {
     it('should redirect to visit details page if "no" is selected', () => {
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
-        .send('cancelBooking=no')
+        .send('cancelVisit=no')
         .expect(302)
         .expect('location', `${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
         .expect(() => {
@@ -143,13 +143,13 @@ describe('Cancel a booking - Are you sure page', () => {
       const expectedValidationError: FieldValidationError = {
         location: 'body',
         msg: 'No answer selected',
-        path: 'cancelBooking',
+        path: 'cancelVisit',
         type: 'field',
         value: 'test',
       }
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
-        .send('cancelBooking=test')
+        .send('cancelVisit=test')
         .expect(302)
         .expect('location', `${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)
         .expect(() => {
@@ -162,7 +162,7 @@ describe('Cancel a booking - Are you sure page', () => {
       const expectedValidationError: FieldValidationError = {
         location: 'body',
         msg: 'No answer selected',
-        path: 'cancelBooking',
+        path: 'cancelVisit',
         type: 'field',
         value: undefined,
       }
