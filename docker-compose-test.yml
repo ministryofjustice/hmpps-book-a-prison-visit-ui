@@ -1,5 +1,17 @@
 services:
 
+  onelogin-simulator:
+    image: ghcr.io/govuk-one-login/simulator:latest
+    platform: linux/amd64
+    ports:
+      - "9090:3000"
+    environment:
+      - CLIENT_ID=oneLoginClientId
+      - IDENTITY_VERIFICATION_SUPPORTED=false
+      - POST_LOGOUT_REDIRECT_URLS=http://localhost:3007/signed-out
+      - REDIRECT_URLS=http://localhost:3007/auth/callback
+      - SIMULATOR_URL=http://localhost:9090
+
   redis:
      image: 'redis:8.4'
      networks:

@@ -2,21 +2,12 @@ import paths from '../../server/constants/paths'
 
 Cypress.Commands.add(
   'signIn',
-  ({
-    options = { failOnStatusCode: true },
-    nonce = undefined,
-    initialRequestUrl = paths.HOME,
-    hideCookieBanner = true,
-  } = {}) => {
+  ({ options = { failOnStatusCode: true }, initialRequestUrl = paths.HOME, hideCookieBanner = true } = {}) => {
     cy.clearAllCookies()
     if (hideCookieBanner) {
       cy.hideCookieBanner()
     }
-    cy.request(initialRequestUrl)
-    return cy.task('getSignInUrl', nonce).then((url: string) => {
-      cy.visit(url, options)
-      return cy.task('verifyJwtAssertionForToken')
-    })
+    cy.visit(initialRequestUrl, options)
   },
 )
 

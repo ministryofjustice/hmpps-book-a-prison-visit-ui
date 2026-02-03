@@ -28,8 +28,8 @@ describe('populateCurrentBooker', () => {
       locals: {
         user: {
           sub: 'user1',
-          email: 'user1@example.com',
-          phone_number: '+440123456789',
+          email: 'test@example.com',
+          phone_number: '07123456789',
         },
       },
       redirect: jest.fn(),

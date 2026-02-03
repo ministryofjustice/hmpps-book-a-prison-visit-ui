@@ -72,9 +72,9 @@ export default {
       systemClientSecret: get('SYSTEM_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
     govukOneLogin: {
-      url: get('GOVUK_ONE_LOGIN_URL', 'http://localhost:9091/govukOneLogin', requiredInProduction),
+      url: get('GOVUK_ONE_LOGIN_URL', 'http://localhost:9090', requiredInProduction),
       homeUrl: get('GOVUK_ONE_LOGIN_HOME_URL', '', requiredInProduction),
-      clientId: get('GOVUK_ONE_LOGIN_CLIENT_ID', 'clientId', requiredInProduction),
+      clientId: get('GOVUK_ONE_LOGIN_CLIENT_ID', 'oneLoginClientId', requiredInProduction),
       privateKey: get('GOVUK_ONE_LOGIN_PRIVATE_KEY', 'privateKey', requiredInProduction),
       vtr: process.env.GOVUK_ONE_LOGIN_VTR === 'LOW' ? '["Cl"]' : '["Cl.Cm"]',
     },

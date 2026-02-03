@@ -10,7 +10,6 @@ import SignedOutPage from '../pages/staticPages/signedOut'
 context('Add a prisoner', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
 
     cy.task('stubGetSupportedPrisons')

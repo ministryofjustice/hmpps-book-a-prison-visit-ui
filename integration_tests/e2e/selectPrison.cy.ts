@@ -1,5 +1,5 @@
 import paths from '../../server/constants/paths'
-import GovukOneLoginPage from '../pages/govukOneLogin'
+import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SelectedPrisonPage from '../pages/selectPrison/selectedPrison'
 import SelectPrisonPage from '../pages/selectPrison/selectPrison'
@@ -9,10 +9,9 @@ context('Select a prison', () => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
     cy.task('stubPrisonNames')
-    cy.task('stubSignIn')
   })
 
-  it('should select a supported prison and go to GOVUK One Login', () => {
+  it('should select a supported prison and be redirected to home page (via GOVUK One Login)', () => {
     cy.hideCookieBanner()
 
     // Start at select prison page and type into autocomplete input
@@ -29,10 +28,13 @@ context('Select a prison', () => {
     const selectedPrisonPage = Page.verifyOnPage(SelectedPrisonPage, 'Hewell (HMP)')
 
     // Continue
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners')
     selectedPrisonPage.continue()
 
-    // Redirected to GOV.UK One Login Page
-    Page.verifyOnPage(GovukOneLoginPage)
+    // Home page (via GOVUK One Login)
+    Page.verifyOnPage(HomePage)
   })
 
   it('should select an unsupported prison be redirected to PVB', () => {

@@ -93,7 +93,6 @@ context('Book visit journey', () => {
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
 
     cy.task('stubGetBookerReference')
