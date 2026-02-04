@@ -39,7 +39,7 @@ jobs:
     needs: [node_build]
     secrets: inherit
     with:
-      redis_tag: '8'
+      redis_tag: '7'
   # acceptance_tests_public_staging:
   #   name: Acceptance tests (staging)
   #   uses: ./.github/workflows/acceptance_tests_public_ui.yml # LOCAL_VERSION

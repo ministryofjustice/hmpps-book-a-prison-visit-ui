@@ -13,7 +13,7 @@ services:
       - SIMULATOR_URL=http://localhost:9090
 
   redis:
-     image: 'redis:8.4'
+     image: 'redis:7'
      networks:
        - hmpps_int
      ports:
