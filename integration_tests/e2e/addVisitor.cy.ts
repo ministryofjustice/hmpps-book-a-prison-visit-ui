@@ -12,7 +12,6 @@ import VisitorsPage from '../pages/visitors/visitors'
 context('Add a visitor', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
 
     cy.task('stubGetSupportedPrisons')

@@ -1,7 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
 import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
-import govukOneLogin from './integration_tests/mockApis/govukOneLogin'
 import pvb from './integration_tests/mockApis/pvb'
 import redisHelpers from './integration_tests/redis/redisHelpers'
 import orchestrationService from './integration_tests/mockApis/orchestration'
@@ -23,7 +22,6 @@ export default defineConfig({
       on('task', {
         reset: () => Promise.all([redisHelpers.clearDataCache(), resetStubs()]),
         ...hmppsAuth,
-        ...govukOneLogin,
         ...redisHelpers,
         ...orchestrationService,
         ...prisonRegister,

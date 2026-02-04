@@ -33,9 +33,9 @@ import { FlashFormValues, MoJAlert } from '../../@types/bapv'
 export const user: Express.User = {
   sub: 'user1',
   phone_number_verified: true,
-  phone_number: '+440123456789',
+  phone_number: '07123456789',
   email_verified: true,
-  email: 'user1@example.com',
+  email: 'test@example.com',
 }
 
 const bookerReference = TestData.bookerReference().value

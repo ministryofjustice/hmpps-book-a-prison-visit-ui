@@ -62,7 +62,7 @@ export default class TestData {
 
   static authDetailDto = ({
     oneLoginSub = 'sub_user1',
-    email = 'user1@example.com',
+    email = 'test@example.com',
     phoneNumber = undefined,
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
 

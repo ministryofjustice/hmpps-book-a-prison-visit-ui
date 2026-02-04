@@ -40,7 +40,6 @@ context('Book visit journey - drop-out points', () => {
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
   })
 

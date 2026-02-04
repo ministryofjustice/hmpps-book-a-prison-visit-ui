@@ -47,7 +47,7 @@ And then, to build the assets and start the app with nodemon:
 
 ### Running integration tests
 
-For local running, start a wiremock instance by:
+For local running, start wiremock, Redis and GOV.UK One Login Simulator instances by:
 
 `docker-compose -f docker-compose-test.yml up`
 

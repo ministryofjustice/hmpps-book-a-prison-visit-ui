@@ -28,7 +28,6 @@ context('Static content pages', () => {
   describe('Authenticated user', () => {
     it('should be able to navigate to static content pages from home page using footer links', () => {
       cy.task('reset')
-      cy.task('stubSignIn')
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')

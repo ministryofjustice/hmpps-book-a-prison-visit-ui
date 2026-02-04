@@ -6,7 +6,6 @@ import Page from '../pages/page'
 context('Cookie consent and analytics', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
