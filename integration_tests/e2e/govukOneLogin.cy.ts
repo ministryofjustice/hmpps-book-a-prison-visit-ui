@@ -2,6 +2,7 @@ import HomePage from '../pages/home'
 import Page from '../pages/page'
 import SignedOutPage from '../pages/staticPages/signedOut'
 import paths from '../../server/constants/paths'
+import { AuthoriseError, IdTokenError } from '../mockApis/govukOneLoginSimulator'
 
 context('GOV.UK One Login', () => {
   const serviceSignInUrl = new RegExp(`${Cypress.config('baseUrl')}${paths.SIGN_IN}`)
@@ -9,13 +10,14 @@ context('GOV.UK One Login', () => {
 
   beforeEach(() => {
     cy.task('reset')
+
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners')
   })
 
   describe('Sign in / sign out', () => {
     it('User can sign in and view home page', () => {
-      cy.task('stubHmppsAuthToken')
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners')
       cy.signIn()
 
       Page.verifyOnPage(HomePage)
@@ -23,19 +25,12 @@ context('GOV.UK One Login', () => {
 
     it('User can request a specific page and be redirected to this after sign in', () => {
       const page = '/deep-link' // will be a 404, but OK as testing original URL preserved
-      cy.task('stubHmppsAuthToken')
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners')
       cy.signIn({ options: { failOnStatusCode: false }, initialRequestUrl: page })
       cy.location('pathname').should('equal', page)
       cy.contains('404')
     })
 
     it('User can log out', () => {
-      cy.task('stubHmppsAuthToken')
-      cy.task('stubGetBookerReference')
-      cy.task('stubGetPrisoners')
-
       cy.signIn()
       const homePage = Page.verifyOnPage(HomePage)
 
@@ -90,11 +85,36 @@ context('GOV.UK One Login', () => {
     })
   })
 
-  describe('Validation errors', () => {
-    // FIXME use simulator's error config options
-    it.skip('User sent to auth error page if sign in fails', () => {
-      cy.signIn({ options: { failOnStatusCode: false } })
-      cy.get('h1').contains('Sorry, there is a problem with the service')
+  describe('Validation errors - authorisation', () => {
+    const authoriseErrorTestCases: AuthoriseError[] = ['ACCESS_DENIED', 'TEMPORARILY_UNAVAILABLE']
+
+    authoriseErrorTestCases.forEach(error => {
+      it(`User sent to auth error page if GOV.UK One Login returns authorisation error ${error}`, () => {
+        cy.task('setAuthoriseError', error)
+        cy.signIn({ options: { failOnStatusCode: false } })
+        cy.get('h1').contains('Sorry, there is a problem with the service')
+      })
+    })
+  })
+
+  describe('Validation errors - ID token', () => {
+    const idTokenErrorTestCases: IdTokenError[] = [
+      'INVALID_ISS',
+      'INVALID_AUD',
+      'INVALID_ALG_HEADER',
+      'INVALID_SIGNATURE',
+      'TOKEN_EXPIRED',
+      // 'TOKEN_NOT_VALID_YET',
+      'NONCE_NOT_MATCHING',
+      // 'INCORRECT_VOT',
+    ]
+
+    idTokenErrorTestCases.forEach(error => {
+      it(`User sent to auth error page if GOV.UK One Login returns ID token error ${error}`, () => {
+        cy.task('setIdTokenError', error)
+        cy.signIn({ options: { failOnStatusCode: false } })
+        cy.get('h1').contains('Sorry, there is a problem with the service')
+      })
     })
   })
 })
