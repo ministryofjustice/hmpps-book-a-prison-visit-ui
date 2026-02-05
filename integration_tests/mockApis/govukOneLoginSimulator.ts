@@ -24,4 +24,9 @@ const setIdTokenError = (error: IdTokenError): SuperAgentRequest =>
 
 const resetErrors = (): SuperAgentRequest => superagent.post(url).send({ errorConfiguration: {} })
 
-export { setAuthoriseError, setIdTokenError, resetErrors }
+const publishNewIdTokenSigningKeys = (): SuperAgentRequest =>
+  superagent.post(url).send({ publishNewIdTokenSigningKeys: true })
+
+const useNewIdTokenSigningKeys = (): SuperAgentRequest => superagent.post(url).send({ useNewIdTokenSigningKeys: true })
+
+export { setAuthoriseError, setIdTokenError, resetErrors, publishNewIdTokenSigningKeys, useNewIdTokenSigningKeys }
