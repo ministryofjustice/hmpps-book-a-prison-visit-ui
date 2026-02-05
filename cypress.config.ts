@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
+import { setAuthoriseError, setIdTokenError, resetErrors } from './integration_tests/mockApis/govukOneLoginSimulator'
 import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
 import pvb from './integration_tests/mockApis/pvb'
 import redisHelpers from './integration_tests/redis/redisHelpers'
@@ -7,6 +8,7 @@ import orchestrationService from './integration_tests/mockApis/orchestration'
 import prisonRegister from './integration_tests/mockApis/prisonRegister'
 
 export default defineConfig({
+  allowCypressEnv: false,
   chromeWebSecurity: false,
   fixturesFolder: 'integration_tests/fixtures',
   screenshotsFolder: 'integration_tests/screenshots',
@@ -20,7 +22,9 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on) {
       on('task', {
-        reset: () => Promise.all([redisHelpers.clearDataCache(), resetStubs()]),
+        reset: () => Promise.all([redisHelpers.clearDataCache(), resetStubs(), resetErrors()]),
+        setAuthoriseError,
+        setIdTokenError,
         ...hmppsAuth,
         ...redisHelpers,
         ...orchestrationService,
