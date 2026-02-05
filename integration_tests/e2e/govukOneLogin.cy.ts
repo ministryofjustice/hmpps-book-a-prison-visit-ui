@@ -19,7 +19,6 @@ context('GOV.UK One Login', () => {
   describe('Sign in / sign out', () => {
     it('User can sign in and view home page', () => {
       cy.signIn()
-
       Page.verifyOnPage(HomePage)
     })
 
@@ -104,9 +103,9 @@ context('GOV.UK One Login', () => {
       'INVALID_ALG_HEADER',
       'INVALID_SIGNATURE',
       'TOKEN_EXPIRED',
-      // 'TOKEN_NOT_VALID_YET',
+      // FIXME 'TOKEN_NOT_VALID_YET', handle this scenario as part of updating openid-client (VB-4781)
       'NONCE_NOT_MATCHING',
-      // 'INCORRECT_VOT',
+      // FIXME 'INCORRECT_VOT', handle this scenario as part of updating openid-client (VB-4781)
     ]
 
     idTokenErrorTestCases.forEach(error => {
