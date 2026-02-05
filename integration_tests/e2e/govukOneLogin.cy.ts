@@ -29,17 +29,17 @@ context('GOV.UK One Login', () => {
       cy.contains('404')
     })
 
-    it('User can log out', () => {
+    it('User can sign out and be redirected to the signed out page', () => {
       cy.signIn()
       const homePage = Page.verifyOnPage(HomePage)
 
       homePage.signOut()
 
+      // Being redirected to the signed out page confirms that
+      // the 'post_logout_redirect_uri' configuration and idToken store is working
       const signedOutPage = Page.verifyOnPage(SignedOutPage)
       signedOutPage.signInLink().should('have.attr', 'href', paths.SIGN_IN)
     })
-
-    // TODO test post_logout_redirect_uri
   })
 
   describe('Unauthenticated user access', () => {
