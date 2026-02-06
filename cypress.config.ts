@@ -1,6 +1,12 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
-import { setAuthoriseError, setIdTokenError, resetErrors } from './integration_tests/mockApis/govukOneLoginSimulator'
+import {
+  setAuthoriseError,
+  setIdTokenError,
+  resetErrors,
+  publishNewIdTokenSigningKeys,
+  useNewIdTokenSigningKeys,
+} from './integration_tests/mockApis/govukOneLoginSimulator'
 import hmppsAuth from './integration_tests/mockApis/hmppsAuth'
 import pvb from './integration_tests/mockApis/pvb'
 import redisHelpers from './integration_tests/redis/redisHelpers'
@@ -25,6 +31,8 @@ export default defineConfig({
         reset: () => Promise.all([redisHelpers.clearDataCache(), resetStubs(), resetErrors()]),
         setAuthoriseError,
         setIdTokenError,
+        publishNewIdTokenSigningKeys,
+        useNewIdTokenSigningKeys,
         ...hmppsAuth,
         ...redisHelpers,
         ...orchestrationService,

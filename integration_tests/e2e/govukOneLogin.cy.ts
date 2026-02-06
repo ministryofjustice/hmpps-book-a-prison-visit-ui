@@ -29,12 +29,14 @@ context('GOV.UK One Login', () => {
       cy.contains('404')
     })
 
-    it('User can log out', () => {
+    it('User can sign out and be redirected to the signed out page', () => {
       cy.signIn()
       const homePage = Page.verifyOnPage(HomePage)
 
       homePage.signOut()
 
+      // Being redirected to the signed out page confirms that
+      // the 'post_logout_redirect_uri' configuration and idToken store is working
       const signedOutPage = Page.verifyOnPage(SignedOutPage)
       signedOutPage.signInLink().should('have.attr', 'href', paths.SIGN_IN)
     })
@@ -115,5 +117,40 @@ context('GOV.UK One Login', () => {
         cy.get('h1').contains('Sorry, there is a problem with the service')
       })
     })
+  })
+
+  describe('ID Token signing key rotation', () => {
+    // openid-client (v5) will re-request keys as necessary from /.well-known/jwks.json
+    // but not more than once per minute. So, this test retries up to 6 times with a 10 second delay
+    // after the first attempt.
+    // Most likely NO wait here as any previous tests will have 'used up' the key refresh delay since app startup.
+    // See implementation https://github.com/panva/openid-client/blob/45c96f67ce0644bd829f61e82fba3dd8c051c89e/lib/helpers/issuer.js#L81
+    // TODO check behaviour same when openid-client upgraded to v6 (VB-4781)
+    it(
+      'Sign in, sign out then rotate keys and sign in again',
+      { retries: { openMode: 6, runMode: 6 }, screenshotOnRunFailure: false },
+      () => {
+        if (Cypress.currentRetry > 0) {
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(10000) // 10 seconds
+        }
+
+        // Sign in
+        cy.signIn()
+        const homePage = Page.verifyOnPage(HomePage)
+
+        // Sign out
+        homePage.signOut()
+        Page.verifyOnPage(SignedOutPage)
+
+        // Rotate keys
+        cy.task('publishNewIdTokenSigningKeys')
+        cy.task('useNewIdTokenSigningKeys')
+
+        // Sign in again successfully with new keys
+        cy.signIn()
+        Page.verifyOnPage(HomePage)
+      },
+    )
   })
 })
