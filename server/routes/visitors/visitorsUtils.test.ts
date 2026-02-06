@@ -17,6 +17,22 @@ describe('buildVisitorsTableRows', () => {
         banned: true,
         banExpiryDate: '2025-09-01',
       }),
+      // Not approved
+      TestData.visitor({
+        firstName: 'Visitor',
+        lastName: 'Four',
+        dateOfBirth: '2000-08-04',
+        banned: false,
+        approved: false,
+      }),
+      // Ban with an expiry date and not approved - ban priority
+      TestData.visitor({
+        firstName: 'Visitor',
+        lastName: 'Five',
+        dateOfBirth: '2000-08-05',
+        banned: true,
+        banExpiryDate: '2025-09-02',
+      }),
     ]
 
     const expectedTableRows: GOVUKTableRow[] = [
@@ -37,6 +53,24 @@ describe('buildVisitorsTableRows', () => {
           text: 'No, banned until 1 September 2025',
           classes: 'warning',
           attributes: { 'data-test': 'visitor-availability-2' },
+        },
+      ],
+      [
+        { text: 'Visitor Four', attributes: { 'data-test': 'visitor-name-3' } },
+        { text: '4 August 2000', attributes: { 'data-test': 'visitor-dob-3' } },
+        {
+          text: 'No, visitor not approved',
+          classes: 'warning',
+          attributes: { 'data-test': 'visitor-availability-3' },
+        },
+      ],
+      [
+        { text: 'Visitor Five', attributes: { 'data-test': 'visitor-name-4' } },
+        { text: '5 August 2000', attributes: { 'data-test': 'visitor-dob-4' } },
+        {
+          text: 'No, banned until 2 September 2025',
+          classes: 'warning',
+          attributes: { 'data-test': 'visitor-availability-4' },
         },
       ],
     ]
