@@ -8,8 +8,9 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
     let canBookText = 'Yes'
     if (visitor.banned) {
       canBookText = `No, banned${visitor.banExpiryDate ? ` until ${formatDate(visitor.banExpiryDate)}` : ''}`
+    } else if (!visitor.approved) {
+      canBookText = `No, visitor not approved`
     }
-
     return [
       // Visitor name
       {
@@ -24,7 +25,7 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
       // Can you book for visitor?
       {
         text: canBookText,
-        classes: visitor.banned ? 'warning' : '',
+        classes: visitor.banned || !visitor.approved ? 'warning' : '',
         attributes: { 'data-test': `visitor-availability-${index}` },
       },
     ]

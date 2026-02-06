@@ -327,6 +327,12 @@ describe('Booker service', () => {
           dateOfBirth: '2000-01-01',
           visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
         }),
+        // an adult, not approved
+        TestData.visitorInfoDto({
+          visitorId: 5,
+          dateOfBirth: '2000-01-01',
+          approved: false,
+        }),
       ]
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
 
@@ -336,12 +342,14 @@ describe('Booker service', () => {
           visitorDisplayId: 'uuidv4-1',
           adult: true,
           banned: false,
+          approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[1]),
           visitorDisplayId: 'uuidv4-2',
           adult: false,
           banned: false,
+          approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[2]),
@@ -349,12 +357,21 @@ describe('Booker service', () => {
           adult: true,
           banned: true,
           banExpiryDate: '2025-07-01',
+          approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[3]),
           visitorDisplayId: 'uuidv4-4',
           adult: true,
           banned: true,
+          approved: true,
+        },
+        {
+          ...TestData.visitor(visitorInfoDtos[4]),
+          visitorDisplayId: 'uuidv4-5',
+          adult: true,
+          banned: false,
+          approved: false,
         },
       ]
 

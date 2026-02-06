@@ -41,6 +41,7 @@ export type Visitor = {
   adult: boolean
   banned: boolean
   banExpiryDate?: string
+  approved: boolean
 }
 
 export type VisitorsByEligibility = {
@@ -199,6 +200,7 @@ export default class BookerService {
         banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
         banExpiryDate: visitor.visitorRestrictions.find(restriction => restriction.restrictionType === 'BAN')
           ?.expiryDate,
+        approved: visitor.approved,
       }
     })
   }

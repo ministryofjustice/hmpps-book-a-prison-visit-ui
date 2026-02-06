@@ -332,12 +332,14 @@ export default class TestData {
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
     visitorRestrictions = [],
+    approved = true,
   }: Partial<VisitorInfoDto> = {}): VisitorInfoDto => ({
     visitorId,
     firstName,
     lastName,
     dateOfBirth,
     visitorRestrictions,
+    approved,
   })
 
   static visitor = ({
@@ -349,6 +351,7 @@ export default class TestData {
     adult = true,
     banned = false,
     banExpiryDate,
+    approved = true,
   }: Partial<Visitor> = {}): Visitor => ({
     visitorDisplayId,
     visitorId,
@@ -358,6 +361,7 @@ export default class TestData {
     adult,
     banned,
     banExpiryDate,
+    approved,
   })
 
   static visitorRequest = ({
