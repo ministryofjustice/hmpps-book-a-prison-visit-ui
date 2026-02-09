@@ -24,11 +24,9 @@ export default class SelectVisitorsPage extends Page {
   }
 
   // Unavailable visitors
-  bannedVisitor = (index: number): PageElement => cy.get(`[data-test="banned-visitor-${index}"]`)
+  unavailableVisitor = (index: number): PageElement => cy.get(`[data-test="unavailable-visitor-${index}"]`)
 
   bannedVisitorExpiryDate = (index: number): PageElement => cy.get(`[data-test="ban-expiry-${index}"]`)
-
-  notApprovedVisitor = (index: number): PageElement => cy.get(`[data-test="not-approved-visitor-${index}"]`)
 
   // Visitor requests
   visitorRequest = (index: number): PageElement => cy.get(`[data-test=visitor-request-${index}]`)

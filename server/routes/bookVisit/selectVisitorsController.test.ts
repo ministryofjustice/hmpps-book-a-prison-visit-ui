@@ -221,10 +221,13 @@ describe('Select visitors', () => {
           )
 
           // Unavailable visitors
-          expect($('[data-test="banned-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('Banned')
           expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 2 May 2025.')
-          expect($('[data-test="not-approved-visitor-2"]').text().trim()).toContain('FirstName LastName (20 years old)')
-          expect($('[data-test="banned-visitor-3"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('Not approved')
+          expect($('[data-test="unavailable-visitor-3"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-3"]').text().trim()).toContain('Banned')
 
           // Visitor requests
           expect($('[data-test=visitor-request-1]').length).toBe(0)

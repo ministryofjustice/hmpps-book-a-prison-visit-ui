@@ -111,20 +111,12 @@
             <h2 class="govuk-heading-s">Unavailable visitors</h2>
             {% for visitor in ineligibleVisitors %}
 
-              {% if visitor.banned %} 
-
-                <p class="govuk-!-margin-bottom-2" data-test="banned-visitor-{{ loop.index }}">
-                  {{- visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}) {{ bannedTagHtml -}}
-                </p>
-                {% if visitor.banExpiryDate %}
-                  <p data-test="ban-expiry-{{ loop.index }}" class="secondary-text govuk-!-margin-bottom-0">
-                    {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
-                  </p>
-                {% endif %}
-
-              {% else %}
-                <p class="govuk-!-margin-bottom-2" data-test="not-approved-visitor-{{ loop.index }}">
-                  {{- visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}) {{ notApprovedTagHtml -}}
+              <p class="govuk-!-margin-bottom-2" data-test="unavailable-visitor-{{ loop.index }}">
+                {{- visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }}) {{ bannedTagHtml if visitor.banned else notApprovedTagHtml -}}
+              </p>
+              {% if visitor.banExpiryDate %}
+                <p data-test="ban-expiry-{{ loop.index }}" class="secondary-text govuk-!-margin-bottom-0">
+                  {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
                 </p>
               {% endif %}
 

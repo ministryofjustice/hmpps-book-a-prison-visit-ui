@@ -132,9 +132,9 @@ context('Book visit journey', () => {
     selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
-    selectVisitorsPage.bannedVisitor(1).contains('Adult Banned (25 years old)')
+    selectVisitorsPage.unavailableVisitor(1).contains('Adult Banned (25 years old)')
     selectVisitorsPage.bannedVisitorExpiryDate(1).contains(`Adult is banned until ${formatDate(banExpiryDate)}`)
-    selectVisitorsPage.notApprovedVisitor(2).contains('Adult NotApproved (25 years old)')
+    selectVisitorsPage.unavailableVisitor(2).contains('Adult NotApproved (25 years old)')
     selectVisitorsPage.visitorRequest(1).contains('Joan Phillips')
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
