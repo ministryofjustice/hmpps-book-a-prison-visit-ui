@@ -221,7 +221,7 @@ export default class BookerService {
 
     const today = new Date()
     visitors.forEach(visitor => {
-      let eligible = !visitor.banned
+      let eligible = !visitor.banned && visitor.approved
 
       if (visitor.banned && visitor.banExpiryDate) {
         const daysUntilBanExpires = differenceInDays(visitor.banExpiryDate, today)
