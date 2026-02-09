@@ -394,7 +394,7 @@ describe('Booker service', () => {
       jest.useRealTimers()
     })
 
-    it('should return visitors split by eligibility for booking (determined by BAN dates and booking window)', async () => {
+    it('should return visitors split by eligibility for booking (determined by BAN dates,  booking window and approved status)', async () => {
       const bookerReference = TestData.bookerReference().value
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
 
