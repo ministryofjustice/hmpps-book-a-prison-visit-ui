@@ -41,52 +41,38 @@
         }) }}
       {% endif %}
 
-      {% if features.addVisitor %}
+      {% if visitorRequestsTableRows | length %}
+        <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
 
-        {% if visitorRequestsTableRows | length %}
-          <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
+        <p>Requests to link visitors are reviewed by the prison.</p>
 
-          <p>Requests to link visitors are reviewed by the prison.</p>
-
-          {{ govukTable({
-            classes: "govuk-!-width-two-thirds",
-            head: [
-              {
-                text: "Name"
-              },
-              {
-                text: "Date of birth"
-              }
-            ],
-            rows: visitorRequestsTableRows
-          }) }}
-        {% endif %}
-
-        <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
-
-        <p>You can only book visits for people linked to your account.</p>
-        <p>Visitors must be on the prisoner’s visitor list.</p>
-        <p>We will respond to your request within 5 working days.</p>
-
-        {{ govukButton({
-          text: "Link a new visitor",
-          href: paths.ADD_VISITOR.START,
-          attributes: { "data-test": "link-a-visitor" },
-          preventDoubleClick: true
-        }) }} 
-      {% else %}
-        <h2 class="govuk-heading-m">Waiting for approval</h2>
-        <p>If you have already submitted a request to add visitors, we will contact you when your request has been approved or rejected.</p>
-        <p>We will respond within 5 working days.</p>
-
-        <h2 class="govuk-heading-m">Add a new visitor</h2>
-        <p>The person you want to book a visit for must be on the prisoner’s visitor list.</p>
-        <p>
-          To make a request to book a visit for someone new,
-          <a data-test="add-visitor-form" href="https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/">complete the form</a>.
-          We will respond within 5 working days.
-        </p>
+        {{ govukTable({
+          classes: "govuk-!-width-two-thirds",
+          head: [
+            {
+              text: "Name"
+            },
+            {
+              text: "Date of birth"
+            }
+          ],
+          rows: visitorRequestsTableRows
+        }) }}
       {% endif %}
+
+      <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
+
+      <p>You can only book visits for people linked to your account.</p>
+      <p>Visitors must be on the prisoner’s visitor list.</p>
+      <p>We will respond to your request within 5 working days.</p>
+
+      {{ govukButton({
+        text: "Link a new visitor",
+        href: paths.ADD_VISITOR.START,
+        attributes: { "data-test": "link-a-visitor" },
+        preventDoubleClick: true
+      }) }} 
+
 
     </div>
   </div>

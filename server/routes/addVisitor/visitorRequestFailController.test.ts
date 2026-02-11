@@ -4,14 +4,11 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 let sessionData: SessionData
 
 beforeEach(() => {
-  enableFeatureForTest('addVisitor')
-
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
@@ -33,13 +30,6 @@ afterEach(() => {
 
 describe('Add visitor request failure pages', () => {
   describe(`GET ${paths.ADD_VISITOR.SUCCESS}`, () => {
-    it('should return a 404 if FEATURE_ADD_VISITOR is not enabled', () => {
-      disableFeatureForTest('addVisitor')
-      app = appWithAllRoutes({})
-
-      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(404)
-    })
-
     it('should render add visitor journey request failure page - visitor already requested', () => {
       sessionData.addVisitorJourney.result = 'REQUEST_ALREADY_EXISTS'
 

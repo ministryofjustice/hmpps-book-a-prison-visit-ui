@@ -11,7 +11,6 @@ import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { FlashFormValues } from '../../@types/bapv'
 import { VisitorsByEligibility } from '../../services/bookerService'
-import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 jest.mock('../../../logger')
 
@@ -233,8 +232,7 @@ describe('Select visitors', () => {
           expect($('[data-test=visitor-request-1]').length).toBe(0)
 
           // Link new visitor
-          expect($('[data-test=link-a-visitor]').length).toBe(0)
-          expect($('[data-test=add-visitor-form]').length).toBe(1)
+          expect($('[data-test=link-a-visitor]').length).toBe(1)
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
@@ -244,7 +242,10 @@ describe('Select visitors', () => {
             policyNoticeDaysMax: prison.policyNoticeDaysMax,
           })
 
-          expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
+          expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
+            bookerReference,
+            prisonerNumber: prisoner.prisonerNumber,
+          })
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
@@ -255,8 +256,7 @@ describe('Select visitors', () => {
         })
     })
 
-    it('should render visitor requests and add a visitor request journey start link if FEATURE_ADD_VISITOR enabled', () => {
-      enableFeatureForTest('addVisitor')
+    it('should render visitor requests and add a visitor request journey start link', () => {
       const visitorRequest = TestData.visitorRequest()
       bookerService.getVisitorRequests.mockResolvedValue([visitorRequest])
 
@@ -273,7 +273,6 @@ describe('Select visitors', () => {
 
           // Link new visitor
           expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
-          expect($('[data-test=add-visitor-form]').length).toBe(0)
 
           expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
             bookerReference,

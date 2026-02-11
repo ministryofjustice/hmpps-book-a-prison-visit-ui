@@ -6,7 +6,6 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -62,11 +61,13 @@ describe('Visitors page', () => {
         expect($('[data-test="visitor-availability-0"]').text()).toBe('Yes')
         expect($('[data-test=no-visitors]').length).toBe(0)
         expect($('[data-test=visitor-requests]').length).toBe(0)
-        expect($('[data-test=link-a-visitor]').length).toBe(0)
-        expect($('[data-test=add-visitor-form]').length).toBe(1)
+        expect($('[data-test=link-a-visitor]').length).toBe(1)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-        expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
+        expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
+          bookerReference,
+          prisonerNumber: prisoner.prisonerNumber,
+        })
       })
   })
 
@@ -84,20 +85,21 @@ describe('Visitors page', () => {
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
         expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are currently approved')
-        expect($('[data-test=link-a-visitor]').length).toBe(0)
-        expect($('[data-test=add-visitor-form]').length).toBe(1)
+        expect($('[data-test=link-a-visitor]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-        expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
+        expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
+          bookerReference,
+          prisonerNumber: prisoner.prisonerNumber,
+        })
       })
   })
 
-  it('should render visitor requests section and link new visitor button if FEATURE_ADD_VISITOR enabled', () => {
+  it('should render visitor requests section and link new visitor button', () => {
     bookerService.getVisitors.mockResolvedValue([])
 
     const visitorRequests = [TestData.visitorRequest()]
     bookerService.getVisitorRequests.mockResolvedValue(visitorRequests)
 
-    enableFeatureForTest('addVisitor')
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
@@ -110,7 +112,6 @@ describe('Visitors page', () => {
         expect($('[data-test=visitor-request-dob-0]').text()).toBe('21 February 1980')
 
         expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
-        expect($('[data-test=add-visitor-form]').length).toBe(0)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({

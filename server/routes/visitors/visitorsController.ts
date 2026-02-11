@@ -2,7 +2,6 @@ import type { RequestHandler } from 'express'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
-import config from '../../config'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -19,13 +18,10 @@ export default class VisitorsController {
 
       const [visitors, visitorRequests] = await Promise.all([
         this.bookerService.getVisitors(booker.reference, prisoner.prisonerNumber),
-
-        config.features.addVisitor
-          ? this.bookerService.getVisitorRequests({
-              bookerReference: booker.reference,
-              prisonerNumber: prisoner.prisonerNumber,
-            })
-          : [],
+        this.bookerService.getVisitorRequests({
+          bookerReference: booker.reference,
+          prisonerNumber: prisoner.prisonerNumber,
+        }),
       ])
 
       const visitorsTableRows = buildVisitorsTableRows(visitors)
