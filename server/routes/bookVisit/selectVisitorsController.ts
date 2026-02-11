@@ -4,8 +4,6 @@ import { differenceInYears } from 'date-fns'
 import { BookerService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
-import config from '../../config'
-import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 
 export default class SelectVisitorsController {
   public constructor(
@@ -29,12 +27,10 @@ export default class SelectVisitorsController {
         bookVisitJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
       }
 
-      const visitorRequests = config.features.addVisitor
-        ? await this.bookerService.getVisitorRequests({
-            bookerReference: booker.reference,
-            prisonerNumber: prisoner.prisonerNumber,
-          })
-        : ([] as BookerPrisonerVisitorRequestDto[])
+      const visitorRequests = await this.bookerService.getVisitorRequests({
+        bookerReference: booker.reference,
+        prisonerNumber: prisoner.prisonerNumber,
+      })
 
       const isAtLeastOneAdultVisitor = bookVisitJourney.eligibleVisitors.some(visitor => visitor.adult)
       if (bookVisitJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {

@@ -6,15 +6,12 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import paths from '../../constants/paths'
 import { AddVisitorJourney, FlashFormValues } from '../../@types/bapv'
-import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
 let sessionData: SessionData
 
 beforeEach(() => {
-  enableFeatureForTest('addVisitor')
-
   sessionData = {} as SessionData
 
   app = appWithAllRoutes({ sessionData })
@@ -31,13 +28,6 @@ describe('Visitor details', () => {
     beforeEach(() => {
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
-    })
-
-    it('should return a 404 if FEATURE_ADD_VISITOR is not enabled', () => {
-      disableFeatureForTest('addVisitor')
-      app = appWithAllRoutes({})
-
-      return request(app).get(paths.ADD_VISITOR.DETAILS).expect(404)
     })
 
     it('should render visitor information page', () => {

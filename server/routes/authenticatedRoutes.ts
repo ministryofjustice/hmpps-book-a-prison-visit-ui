@@ -7,7 +7,6 @@ import addVisitorRoutes from './addVisitor'
 import bookVisitRoutes from './bookVisit'
 import bookingsRoutes from './visits'
 import visitorsRoutes from './visitors'
-import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -19,9 +18,7 @@ export default function routes(services: Services): Router {
 
   router.use(addPrisonerRoutes(services))
 
-  if (config.features.addVisitor) {
-    router.use(addVisitorRoutes(services))
-  }
+  router.use(addVisitorRoutes(services))
 
   router.use(bookVisitRoutes(services))
   router.use(bookingsRoutes(services))

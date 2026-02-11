@@ -10,9 +10,9 @@
 
 {% set backLinkHref = paths.HOME %}
 
-{% set linkHref = paths.ADD_VISITOR.START if features.addVisitor else "https://visit-someone-in-prison-add-visitor.form.service.justice.gov.uk/" %}
+{% set linkHref = paths.ADD_VISITOR.START %}
 
-{% set linkDataTest = "link-a-visitor" if features.addVisitor else "add-visitor-form" %}
+{% set linkDataTest = "link-a-visitor" %}
 
 {% set detailsHtml %}
   <p class="govuk-body">You can only book visits for people linked to your account.</p>

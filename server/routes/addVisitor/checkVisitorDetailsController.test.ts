@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import { BookerService } from '../../services'
 
@@ -14,8 +13,6 @@ const bookerService = createMockBookerService()
 let sessionData: SessionData
 
 beforeEach(() => {
-  enableFeatureForTest('addVisitor')
-
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
@@ -38,13 +35,6 @@ afterEach(() => {
 
 describe('Check visitor request details', () => {
   describe(`GET ${paths.ADD_VISITOR.CHECK}`, () => {
-    it('should return a 404 if FEATURE_ADD_VISITOR is not enabled', () => {
-      disableFeatureForTest('addVisitor')
-      app = appWithAllRoutes({})
-
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(404)
-    })
-
     it('should render check visitor request page', () => {
       return request(app)
         .get(paths.ADD_VISITOR.CHECK)
