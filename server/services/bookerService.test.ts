@@ -394,19 +394,20 @@ describe('Booker service', () => {
       jest.useRealTimers()
     })
 
-    it('should return visitors split by eligibility for booking (determined by BAN dates and booking window)', async () => {
+    it('should return visitors split by eligibility for booking (determined by BAN dates,  booking window and approved status)', async () => {
       const bookerReference = TestData.bookerReference().value
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
 
       const visitorInfoDtos = [
         // No ban (eligible)
-        TestData.visitorInfoDto({ firstName: 'Visitor', lastName: 'One', dateOfBirth: '2000-08-01' }),
+        TestData.visitorInfoDto({ firstName: 'Visitor', lastName: 'One', dateOfBirth: '2000-08-01', approved: true }),
         // Indefinite ban (ineligible)
         TestData.visitorInfoDto({
           firstName: 'Visitor',
           lastName: 'Two',
           dateOfBirth: '2000-08-02',
           visitorRestrictions: [{ restrictionType: 'BAN' }],
+          approved: true,
         }),
         // Ban with an expiry date WITHIN booking window (eligible)
         TestData.visitorInfoDto({
@@ -414,6 +415,7 @@ describe('Booker service', () => {
           lastName: 'Three',
           dateOfBirth: '2000-08-03',
           visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-01-29' }], // expires on last day of booking window
+          approved: true,
         }),
         // Ban with an expiry date BEYOND booking window (ineligible)
         TestData.visitorInfoDto({
@@ -421,6 +423,14 @@ describe('Booker service', () => {
           lastName: 'Four',
           dateOfBirth: '2000-08-04',
           visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-01-30' }], // expires day after booking window
+          approved: true,
+        }),
+        // Not approved visitor (ineligible)
+        TestData.visitorInfoDto({
+          firstName: 'Visitor',
+          lastName: 'Five',
+          dateOfBirth: '2000-08-05',
+          approved: false,
         }),
       ]
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
@@ -432,12 +442,13 @@ describe('Booker service', () => {
       })
 
       expect(results.eligibleVisitors.length).toBe(2)
-      expect(results.ineligibleVisitors.length).toBe(2)
+      expect(results.ineligibleVisitors.length).toBe(3)
 
       expect(results.eligibleVisitors[0].lastName).toBe('One')
       expect(results.eligibleVisitors[1].lastName).toBe('Three')
       expect(results.ineligibleVisitors[0].lastName).toBe('Two')
       expect(results.ineligibleVisitors[1].lastName).toBe('Four')
+      expect(results.ineligibleVisitors[2].lastName).toBe('Five')
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference, prisonerNumber)
     })

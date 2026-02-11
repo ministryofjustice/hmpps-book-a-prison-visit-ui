@@ -96,10 +96,40 @@ const visitor9 = TestData.visitor({
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
   adult: false,
+  banned: true,
+  banExpiryDate: '2024-05-16', // 14 days after currently faked date
+})
+const visitor10 = TestData.visitor({
+  visitorDisplayId: randomUUID(),
+  visitorId: 10000,
+  firstName: 'FirstName',
+  lastName: 'LastName',
+  dateOfBirth: '2004-04-01',
+  adult: false,
+  banned: true,
   banExpiryDate: '2025-05-02', // 1 year after currently faked date
 })
-const eligibleVisitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8]
-const ineligibleVisitors = [visitor9]
+const visitor11 = TestData.visitor({
+  visitorDisplayId: randomUUID(),
+  visitorId: 11000,
+  firstName: 'FirstName',
+  lastName: 'LastName',
+  dateOfBirth: '2004-05-01',
+  adult: true,
+  approved: false,
+})
+const visitor12 = TestData.visitor({
+  visitorDisplayId: randomUUID(),
+  visitorId: 12000,
+  firstName: 'FirstName',
+  lastName: 'LastName',
+  dateOfBirth: '2004-05-01',
+  adult: true,
+  banned: true,
+  approved: false,
+})
+const eligibleVisitors = [visitor1, visitor2, visitor3, visitor4, visitor5, visitor6, visitor7, visitor8, visitor9]
+const ineligibleVisitors = [visitor10, visitor11, visitor12]
 
 let visitors: VisitorsByEligibility
 beforeEach(() => {
@@ -160,7 +190,7 @@ describe('Select visitors', () => {
 
           // Select visitors form
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
-          expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]').length).toBe(9)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(0)
           expect($(`input[name=visitorDisplayIds][value=${visitor1.visitorDisplayId}]+label`).text().trim()).toBe(
             'Visitor Age 20y (20 years old)',
@@ -191,8 +221,13 @@ describe('Select visitors', () => {
           )
 
           // Unavailable visitors
-          expect($('[data-test="banned-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('Banned')
           expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 2 May 2025.')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('Not approved')
+          expect($('[data-test="unavailable-visitor-3"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-3"]').text().trim()).toContain('Banned')
 
           // Visitor requests
           expect($('[data-test=visitor-request-1]').length).toBe(0)
@@ -255,7 +290,7 @@ describe('Select visitors', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]').length).toBe(9)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(3)
           expect($(`input[name=visitorDisplayIds][value=${visitor1.visitorDisplayId}]:checked + label`).length).toBe(1)
           expect($(`input[name=visitorDisplayIds][value=${visitor4.visitorDisplayId}]:checked + label`).length).toBe(1)
@@ -273,7 +308,7 @@ describe('Select visitors', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('input[name=visitorDisplayIds]').length).toBe(8)
+          expect($('input[name=visitorDisplayIds]').length).toBe(9)
           expect($('input[name=visitorDisplayIds]:checked').length).toBe(2)
           expect($(`input[name=visitorDisplayIds][value=${visitor7.visitorDisplayId}]:checked + label`).length).toBe(1)
           expect($(`input[name=visitorDisplayIds][value=${visitor2.visitorDisplayId}]:checked + label`).length).toBe(1)
