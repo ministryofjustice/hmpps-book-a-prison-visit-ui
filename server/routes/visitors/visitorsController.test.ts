@@ -84,7 +84,7 @@ describe('Visitors page', () => {
         expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
-        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are currently approved')
+        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are currently linked to your account')
         expect($('[data-test=link-a-visitor]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
