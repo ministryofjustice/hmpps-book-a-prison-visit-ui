@@ -4,6 +4,7 @@ import { differenceInYears } from 'date-fns'
 import { BookerService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
+import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 
 export default class SelectVisitorsController {
   public constructor(
@@ -27,11 +28,6 @@ export default class SelectVisitorsController {
         bookVisitJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
       }
 
-      const visitorRequests = await this.bookerService.getVisitorRequests({
-        bookerReference: booker.reference,
-        prisonerNumber: prisoner.prisonerNumber,
-      })
-
       const isAtLeastOneAdultVisitor = bookVisitJourney.eligibleVisitors.some(visitor => visitor.adult)
       if (bookVisitJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
         req.session.bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
@@ -46,13 +42,22 @@ export default class SelectVisitorsController {
         ...req.flash('formValues')?.[0],
       }
 
+      let visitorRequestsTableRows
+      if (bookVisitJourney.eligibleVisitors.length === 0) {
+        const visitorRequests = await this.bookerService.getVisitorRequests({
+          bookerReference: booker.reference,
+          prisonerNumber: prisoner.prisonerNumber,
+        })
+        visitorRequestsTableRows = buildVisitorRequestsTableRows(visitorRequests)
+      }
+
       return res.render('pages/bookVisit/selectVisitors', {
         errors: req.flash('errors'),
         formValues,
         prison,
         eligibleVisitors: bookVisitJourney.eligibleVisitors,
         ineligibleVisitors: bookVisitJourney.ineligibleVisitors,
-        visitorRequests,
+        visitorRequestsTableRows,
       })
     }
   }

@@ -29,7 +29,7 @@ export default class SelectVisitorsPage extends Page {
   bannedVisitorExpiryDate = (index: number): PageElement => cy.get(`[data-test="ban-expiry-${index}"]`)
 
   // Visitor requests
-  visitorRequest = (index: number): PageElement => cy.get(`[data-test=visitor-request-${index}]`)
+  visitorRequest = (index: number): PageElement => cy.get(`[data-test=visitor-request-name-${index}]`)
 
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()

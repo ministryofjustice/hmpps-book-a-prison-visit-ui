@@ -5,6 +5,7 @@
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set pageTitle = "Who is going on the visit?" %}
 
@@ -14,11 +15,8 @@
   <p class="govuk-body">You can only book visits for people linked to your account.</p>
   <p class="govuk-body">Visitors must be on the prisoner's visitor list.</p>
   <p class="govuk-body">To make a request to book a visit for someone new
-  <a class="govuk-link" data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">
-  complete the form
-  </a>.
+    <a class="govuk-link" data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">link new visitors</a>
   </p>
-  <p class="govuk-body">We will respond to your request within 5 working days.</p>
 {% endset %}
 
 {% 
@@ -120,24 +118,6 @@
             {% endfor %}
           {% endif %}
 
-
-          {# Visitor requests #}
-          {% if visitorRequests | length %}
-            <h2 class="govuk-heading-s">Visitors awaiting review</h2>
-
-            <p class="govuk-hint">
-              You cannot book for these visitors until your request is approved by the prison.
-            </p>
-
-            <ul class="govuk-list">
-              {% for visitorRequest in visitorRequests %}
-                <li data-test="visitor-request-{{ loop.index }}">
-                  {{ visitorRequest.firstName }} {{ visitorRequest.lastName }} ({{ visitorRequest.dateOfBirth | displayAge }})
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-
           {{ govukDetails({
             summaryText: "Want to book for someone else?",
             classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-8",
@@ -151,16 +131,45 @@
           }) }}
         </form>
 
+        
+
       {% else %}
         {{ govukWarningText({
-          text: "No visitors are currently linked to your account.",
+          text: "No visitors are linked to your account.",
           iconFallbackText: "Warning"
         }) }}
 
-        <p>
-          To book a visit for this prisoner, you need to
-          <a href="{{ paths.VISITORS }}">add visitors</a>.
-        </p>
+        {% if visitorRequestsTableRows | length %}
+          <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
+
+          <p>Requests to link visitors are reviewed by the prison.</p>
+
+          {{ govukTable({
+            classes: "govuk-!-width-two-thirds",
+            head: [
+              {
+                text: "Name"
+              },
+              {
+                text: "Date of birth"
+              }
+            ],
+            rows: visitorRequestsTableRows
+          }) }}
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
+
+        <p>You can only book visits for people linked to your account.</p>
+        <p>Visitors must be on the prisoner’s visitor list.</p>
+        <p>We will respond to your request within 5 working days.</p>
+
+        {{ govukButton({
+          text: "Link a new visitor",
+          href: paths.ADD_VISITOR.START,
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }} 
       {% endif %}
 
     </div>
