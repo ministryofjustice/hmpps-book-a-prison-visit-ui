@@ -5,8 +5,7 @@ import createError from 'http-errors'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 
-import setupGovukOneLogin from './middleware/setUpGovukOneLogin'
-import govukOneLogin from './authentication/govukOneLogin'
+import { setUpAuthentication, authenticationMiddleware } from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
@@ -38,13 +37,13 @@ export default function createApp(services: Services): express.Application {
 
   app.use(maintenancePageRoute())
 
-  app.use(setupGovukOneLogin())
+  app.use(setUpAuthentication())
   app.use(analyticsConsent())
   app.use(setUpCsrf())
 
   app.use(unauthenticatedRoutes(services))
 
-  app.use(govukOneLogin.authenticationMiddleware())
+  app.use(authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
 
   app.use(authenticatedRoutes(services))

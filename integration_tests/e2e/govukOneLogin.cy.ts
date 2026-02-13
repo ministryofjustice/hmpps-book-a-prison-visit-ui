@@ -5,8 +5,9 @@ import paths from '../../server/constants/paths'
 import { AuthoriseError, IdTokenError } from '../mockApis/govukOneLoginSimulator'
 
 context('GOV.UK One Login', () => {
-  const serviceSignInUrl = new RegExp(`${Cypress.config('baseUrl')}${paths.SIGN_IN}`)
-  const oneLoginAuthorizeUrl = /^http:\/\/localhost:9090\/authorize/
+  const authErrorUrl = `${Cypress.config('baseUrl')}${paths.AUTH_ERROR}`
+  const serviceSignInUrl = `${Cypress.config('baseUrl')}${paths.SIGN_IN}`
+  const oneLoginAuthorizeUrl = 'http://localhost:9090/authorize'
 
   beforeEach(() => {
     cy.task('reset')
@@ -66,7 +67,7 @@ context('GOV.UK One Login', () => {
         description: 'callback URL with unrecognised/expired parameters',
         url: `${paths.AUTH_CALLBACK}?code=INVALID_AUTHORIZATION_CODE&state=INVALID-STATE`,
         expectedStatus: 302,
-        expectedRedirect: serviceSignInUrl,
+        expectedRedirect: authErrorUrl,
       },
       {
         description: 'non-existent route',
@@ -80,7 +81,7 @@ context('GOV.UK One Login', () => {
       it(`Unauthenticated user accessing ${description} is redirected`, () => {
         cy.request({ url, followRedirect: false }).then(response => {
           expect(response.status).to.eq(expectedStatus)
-          expect(response.redirectedToUrl).to.match(expectedRedirect)
+          expect(response.redirectedToUrl.startsWith(expectedRedirect)).to.eq(true)
         })
       })
     })
@@ -92,8 +93,10 @@ context('GOV.UK One Login', () => {
     authoriseErrorTestCases.forEach(error => {
       it(`User sent to auth error page if GOV.UK One Login returns authorisation error ${error}`, () => {
         cy.task('setAuthoriseError', error)
+
         cy.signIn({ options: { failOnStatusCode: false } })
         cy.get('h1').contains('Sorry, there is a problem with the service')
+        cy.location('pathname').should('equal', paths.AUTH_ERROR)
       })
     })
   })
@@ -105,27 +108,27 @@ context('GOV.UK One Login', () => {
       'INVALID_ALG_HEADER',
       'INVALID_SIGNATURE',
       'TOKEN_EXPIRED',
-      // FIXME 'TOKEN_NOT_VALID_YET', handle this scenario as part of updating openid-client (VB-4781)
+      'TOKEN_NOT_VALID_YET',
       'NONCE_NOT_MATCHING',
-      // FIXME 'INCORRECT_VOT', handle this scenario as part of updating openid-client (VB-4781)
+      'INCORRECT_VOT',
     ]
 
     idTokenErrorTestCases.forEach(error => {
       it(`User sent to auth error page if GOV.UK One Login returns ID token error ${error}`, () => {
         cy.task('setIdTokenError', error)
+
         cy.signIn({ options: { failOnStatusCode: false } })
         cy.get('h1').contains('Sorry, there is a problem with the service')
+        cy.location('pathname').should('equal', paths.AUTH_ERROR)
       })
     })
   })
 
   describe('ID Token signing key rotation', () => {
-    // openid-client (v5) will re-request keys as necessary from /.well-known/jwks.json
-    // but not more than once per minute. So, this test retries up to 6 times with a 10 second delay
-    // after the first attempt.
+    // 'oauth4webapi' (openid-client v6 dependency) will re-request keys as necessary from /.well-known/jwks.json,
+    // but not more than once per minute. This test retries up to 6 times with a 10 second delays.
     // Most likely NO wait here as any previous tests will have 'used up' the key refresh delay since app startup.
-    // See implementation https://github.com/panva/openid-client/blob/45c96f67ce0644bd829f61e82fba3dd8c051c89e/lib/helpers/issuer.js#L81
-    // TODO check behaviour same when openid-client upgraded to v6 (VB-4781)
+    // See implementation https://github.com/panva/oauth4webapi/blob/0fc74562ed9d42604fcf9ce060ac2fddce146af5/src/index.ts#L3156-L3160
     it(
       'Sign in, sign out then rotate keys and sign in again',
       { retries: { openMode: 6, runMode: 6 }, screenshotOnRunFailure: false },

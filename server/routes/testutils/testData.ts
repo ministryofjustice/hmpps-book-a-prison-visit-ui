@@ -61,9 +61,10 @@ export default class TestData {
     }) as ApplicationDto
 
   static authDetailDto = ({
-    oneLoginSub = 'sub_user1',
+    // Default values from GOV.UK One Login Simulator
+    oneLoginSub = 'urn:fdc:gov.uk:2022:56P4CMsGh_02YOlWpd8PAOI-2sVlB2nsNU7mcLZYhYw=',
     email = 'test@example.com',
-    phoneNumber = undefined,
+    phoneNumber = '07123456789',
   }: Partial<AuthDetailDto> = {}): AuthDetailDto => ({ oneLoginSub, email, phoneNumber })
 
   static availableVisitSessionDto = ({

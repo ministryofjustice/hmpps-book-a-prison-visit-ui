@@ -141,7 +141,7 @@ context('Add a prisoner', () => {
     it('should limit the number of attempts to add a prisoner by different bookers (and persist limits across sign-in/sign-out)', () => {
       const addAPrisoner = (booker: string) => {
         const bookerReference = TestData.bookerReference({ value: booker })
-        cy.task('stubGetBookerReference', bookerReference)
+        cy.task('stubGetBookerReference', { bookerReference })
         cy.task('stubGetPrisoners', { bookerReference })
         cy.signIn()
 

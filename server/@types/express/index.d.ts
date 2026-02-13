@@ -42,11 +42,15 @@ declare module 'express-session' {
 export declare global {
   namespace Express {
     interface User {
+      // Data returned from GOV.UK One Login /userinfo
       sub: string
       email: string
-      email_verified?: boolean
-      phone_number?: string
-      phone_number_verified?: boolean
+      email_verified: boolean
+      phone_number: string
+      phone_number_verified: boolean
+
+      // User's ID token (required during sign-out)
+      idToken: string
     }
 
     interface Request {

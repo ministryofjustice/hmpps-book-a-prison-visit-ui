@@ -15,6 +15,7 @@ import {
   AddVisitorToBookerPrisonerRequestDto,
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
+  AuthDetailDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -223,11 +224,19 @@ export default {
 
   // public-booker-controller
 
-  stubGetBookerReference: (bookerReference = TestData.bookerReference()): SuperAgentRequest =>
+  stubGetBookerReference: ({
+    authDetailDto = TestData.authDetailDto(),
+    bookerReference = TestData.bookerReference(),
+  }: { authDetailDto?: AuthDetailDto; bookerReference?: BookerReference } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
         url: '/orchestration/public/booker/register/auth',
+        bodyPatterns: [
+          {
+            equalToJson: authDetailDto,
+          },
+        ],
       },
       response: {
         status: 200,
