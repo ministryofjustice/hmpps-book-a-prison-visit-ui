@@ -135,7 +135,7 @@ context('Book visit journey', () => {
     selectVisitorsPage.unavailableVisitor(1).contains('Adult Banned (25 years old)')
     selectVisitorsPage.bannedVisitorExpiryDate(1).contains(`Adult is banned until ${formatDate(banExpiryDate)}`)
     selectVisitorsPage.unavailableVisitor(2).contains('Adult NotApproved (25 years old)')
-    selectVisitorsPage.visitorRequest(1).contains('Joan Phillips')
+    selectVisitorsPage.visitorRequest(0).should('not.exist')
     cy.task('stubGetSessionRestriction', {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],

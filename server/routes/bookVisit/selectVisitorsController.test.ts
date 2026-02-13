@@ -147,6 +147,7 @@ describe('Select visitors', () => {
 
     beforeEach(() => {
       bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
+      bookerService.getVisitorRequests.mockResolvedValue([])
 
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
@@ -229,7 +230,7 @@ describe('Select visitors', () => {
           expect($('[data-test="unavailable-visitor-3"]').text().trim()).toContain('Banned')
 
           // Visitor requests
-          expect($('[data-test=visitor-request-1]').length).toBe(0)
+          expect($('[data-test=visitor-request-name-1]').length).toBe(0)
 
           // Link new visitor
           expect($('[data-test=link-a-visitor]').length).toBe(1)
@@ -242,10 +243,7 @@ describe('Select visitors', () => {
             policyNoticeDaysMax: prison.policyNoticeDaysMax,
           })
 
-          expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
-            bookerReference,
-            prisonerNumber: prisoner.prisonerNumber,
-          })
+          expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
@@ -257,6 +255,7 @@ describe('Select visitors', () => {
     })
 
     it('should render visitor requests and add a visitor request journey start link', () => {
+      bookerService.getVisitorsByEligibility.mockResolvedValue({ eligibleVisitors: [], ineligibleVisitors: [] })
       const visitorRequest = TestData.visitorRequest()
       bookerService.getVisitorRequests.mockResolvedValue([visitorRequest])
 
@@ -267,9 +266,9 @@ describe('Select visitors', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-
           // Visitor requests
-          expect($('[data-test=visitor-request-1]').text().trim()).toBe('Joan Phillips (44 years old)')
+          expect($('[data-test=visitor-request-name-0]').text().trim()).toBe('Joan Phillips')
+          expect($('[data-test=visitor-request-dob-0]').text().trim()).toBe('21 February 1980')
 
           // Link new visitor
           expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
@@ -375,9 +374,7 @@ describe('Select visitors', () => {
     })
 
     it('should handle booker having no eligible adult visitors for this prisoner and redirect to cannot book page with reason', () => {
-      bookerService.getVisitorsByEligibility.mockResolvedValue(
-        (visitors = { eligibleVisitors: [visitor6], ineligibleVisitors: [] }),
-      ) // only a child visitor
+      bookerService.getVisitorsByEligibility.mockResolvedValue({ eligibleVisitors: [visitor6], ineligibleVisitors: [] }) // only a child visitor
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
