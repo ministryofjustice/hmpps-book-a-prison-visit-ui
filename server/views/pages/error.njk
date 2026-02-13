@@ -5,8 +5,6 @@
 {% block content %}
 
   <h1 class="govuk-heading-l">{{ message }}</h1>
-  <h2 class="govuk-heading-m">{{ status }}</h2>
-  <pre>{{ stack }}</pre>
 
   {% if production %}
     <p>The error has been logged.</p>
@@ -17,6 +15,9 @@
       <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">
         Or you can contact the prison directly</a>.
     </p>
+  {% else %}
+    <h2 class="govuk-heading-m">{{ status }}</h2>
+    <pre>{{ stack }}</pre>
   {% endif %}
 
 {% endblock %}
