@@ -13,7 +13,7 @@ export default class VisitsPage extends Page {
 
   visitReference = (index: number): PageElement => cy.get(`[data-test=visit-reference-${index}]`)
 
-  visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-booking-${index}]`)
+  visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-${index}]`)
 
   pastVisitsLink = (): PageElement => cy.get('[data-test="past-visits-link"]')
 

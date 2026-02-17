@@ -81,7 +81,7 @@ export default abstract class Page {
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
     cy.get(`[data-test=${dataTestName}]`).within(bookButton => {
       // set a one-off event listener for window unload to check
-      // submit booking button is disabled after it is clicked
+      // a submit button is disabled after it is clicked
       cy.once('window:before:unload', () => {
         expect(bookButton.attr('disabled')).to.eq('disabled')
       })

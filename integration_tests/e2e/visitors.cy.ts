@@ -67,9 +67,9 @@ context('Visitors page', () => {
     visitorsPage.visitorRequestDateOfBirth(0).contains('15 January 1990')
   })
 
-  it('should not show a banned visitor on booking journey Select visitors page', () => {
+  it('should not show a banned visitor on book visit journey Select visitors page', () => {
     const homePage = Page.verifyOnPage(HomePage)
-    homePage.startBooking()
+    homePage.start()
 
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')

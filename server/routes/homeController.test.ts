@@ -42,7 +42,7 @@ describe('Home page', () => {
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
-          expect($('[data-test="start-booking"]').text().trim()).toBe('Start')
+          expect($('[data-test="start"]').text().trim()).toBe('Start')
 
           expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
           expect(sessionData).toStrictEqual({
@@ -77,7 +77,7 @@ describe('Home page', () => {
           expect($('h1').text()).toBe('Book a visit')
           expect($('[data-test="prisoner-name"]').length).toBe(0)
           expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
-          expect($('[data-test="start-booking"]').length).toBe(0)
+          expect($('[data-test="start"]').length).toBe(0)
           expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 
           expect(sessionData).toStrictEqual({

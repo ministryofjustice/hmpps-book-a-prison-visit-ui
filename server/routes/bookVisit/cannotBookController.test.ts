@@ -90,7 +90,7 @@ describe('A visit cannot be booked', () => {
         })
     })
 
-    it('should render cannot book page and clear bookingJourney data - UNSUPPORTED_PRISON', () => {
+    it('should render cannot book page and clear bookVisitJourney data - UNSUPPORTED_PRISON', () => {
       sessionData.bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
 
       return request(app)

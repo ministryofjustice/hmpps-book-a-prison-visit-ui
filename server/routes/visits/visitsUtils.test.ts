@@ -7,7 +7,7 @@ describe('Visits utils', () => {
   const { prisonName } = TestData.prisonDto()
 
   describe('getVisitMessages - build messages (MoJ Alerts) to show on visit details page', () => {
-    describe('Booking cancelled', () => {
+    describe('Visit cancelled', () => {
       it.each([
         ['BOOKER_CANCELLED', 'You cancelled this visit.'],
         ['PRISONER_CANCELLED', 'This visit was cancelled by the prisoner.'],

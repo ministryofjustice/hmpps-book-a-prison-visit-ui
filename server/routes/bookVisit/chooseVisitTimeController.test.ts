@@ -221,7 +221,7 @@ describe('Choose visit time', () => {
         })
     })
 
-    it('should save visit session data to booking journey session', () => {
+    it('should save visit session data to book visit journey session', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect('Content-Type', /html/)

@@ -124,7 +124,7 @@ describe('pluralise', () => {
   })
 
   describe('Clear session data', () => {
-    it('should clear booking and add prisoner journey data from the session', () => {
+    it('should clear book visit and add prisoner journey data from the session', () => {
       const sessionData: Partial<Record<keyof SessionData, string>> = {
         booker: 'BOOKER DATA',
         addPrisonerJourney: 'ADD PRISONER JOURNEY DATA',

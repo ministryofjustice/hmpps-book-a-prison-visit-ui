@@ -301,7 +301,7 @@ describe('bookVisitSessionValidator', () => {
       })
     })
 
-    describe('bookingJourney data - cannotBook', () => {
+    describe('bookVisitJourney data - cannotBook', () => {
       describe('cannotBookReason set', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'next' },

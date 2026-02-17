@@ -35,7 +35,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
+describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
   describe(`GET ${paths.BOOK_VISIT.BOOKED}`, () => {
     it('should render visit booked page (email and text message confirmation)', () => {
       return request(app)
@@ -86,7 +86,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
         })
     })
 
-    describe('Booking confirmation message variations', () => {
+    describe('Visit confirmation message variations', () => {
       it('email only', () => {
         sessionData.bookVisitConfirmed.hasMobile = undefined
 
@@ -130,7 +130,7 @@ describe('Booking confirmed (BOOKED - AUTO_APPROVED)', () => {
   })
 })
 
-describe('Booking confirmed (BOOKED - REQUESTED)', () => {
+describe('Visit confirmed (BOOKED - REQUESTED)', () => {
   beforeEach(() => {
     sessionData.bookVisitConfirmed.isARequest = true
   })

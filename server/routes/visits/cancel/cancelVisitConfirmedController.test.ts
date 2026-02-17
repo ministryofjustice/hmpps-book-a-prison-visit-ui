@@ -19,8 +19,8 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Cancel a booking - Booking cancelled', () => {
-  describe('GET - Display Booking cancelled page', () => {
+describe('Cancel a visit - Visit cancelled', () => {
+  describe('GET - Display Visit cancelled page', () => {
     it('should render the page confirming the visit has been cancelled (email and text message)', () => {
       sessionData.visitCancelled = { hasEmail: true, hasMobile: true }
 
@@ -77,7 +77,7 @@ describe('Cancel a booking - Booking cancelled', () => {
       })
     })
 
-    it('should redirect to bookings page if bookingCancelled data not set', () => {
+    it('should redirect to visits page if visitCancelled data not set', () => {
       sessionData.visitCancelled = undefined
 
       return request(app).get(`${paths.VISITS.CANCEL_CONFIRMATION}`).expect(302).expect('location', paths.VISITS.HOME)

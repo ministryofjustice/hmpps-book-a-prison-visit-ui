@@ -23,7 +23,7 @@
               <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
             </li>
             <li>
-              <a href="{{ paths.VISITS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-booking-{{ loop.index }}">
+              <a href="{{ paths.VISITS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
                 View details
                 <span class="govuk-visually-hidden">
                   of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}

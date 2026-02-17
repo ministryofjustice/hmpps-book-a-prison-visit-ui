@@ -27,7 +27,7 @@ afterEach(() => {
 describe('Visits homepage (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
 
-  it('should render the bookings home page - with a future visit', () => {
+  it('should render the visits home page - with a future visit', () => {
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
@@ -45,7 +45,7 @@ describe('Visits homepage (future visits list)', () => {
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
-        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
@@ -54,7 +54,7 @@ describe('Visits homepage (future visits list)', () => {
 
         expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
 
-        expect($('[data-test=change-booking-heading]').length).toBeFalsy()
+        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
 
@@ -67,7 +67,7 @@ describe('Visits homepage (future visits list)', () => {
       })
   })
 
-  it('should render the bookings home page - with no future visits', () => {
+  it('should render the visits home page - with no future visits', () => {
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
@@ -77,7 +77,7 @@ describe('Visits homepage (future visits list)', () => {
         const $ = cheerio.load(res.text)
         expect($('h1').text()).toBe('Visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
-        expect($('[data-test=change-booking-heading]').length).toBeFalsy()
+        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
@@ -108,7 +108,7 @@ describe('Past visits list page', () => {
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
-        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
@@ -164,7 +164,7 @@ describe('Cancelled visits list page', () => {
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
         expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
-        expect($('[data-test="visit-link-booking-1"]').attr('href')).toBe(
+        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,
         )
         expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(undefined)
