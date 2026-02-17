@@ -10,16 +10,16 @@ export default class CancelVisitController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookedVisits: bookings } = req.session
+      const { bookedVisits } = req.session
 
       const errors = validationResult(req)
-      if (!errors.isEmpty() || bookings.type !== 'future') {
+      if (!errors.isEmpty() || bookedVisits.type !== 'future') {
         return res.redirect(paths.VISITS.HOME)
       }
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
-      const { visits } = bookings
+      const { visits } = bookedVisits
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       return res.render('pages/visits/cancel/cancel', {
@@ -53,8 +53,8 @@ export default class CancelVisitController {
         return res.redirect(`${paths.VISITS.DETAILS}/${visitDisplayId}`)
       }
 
-      const { booker, bookedVisits: bookings } = req.session
-      const { visits } = bookings
+      const { booker, bookedVisits } = req.session
+      const { visits } = bookedVisits
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       // Redirect to 'Past Visits' page, if visit start time has already passed

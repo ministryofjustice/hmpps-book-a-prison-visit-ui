@@ -5,7 +5,7 @@ import paths from '../constants/paths'
 import addPrisonerRoutes from './addPrisoner'
 import addVisitorRoutes from './addVisitor'
 import bookVisitRoutes from './bookVisit'
-import bookingsRoutes from './visits'
+import visitsRoutes from './visits'
 import visitorsRoutes from './visitors'
 
 export default function routes(services: Services): Router {
@@ -21,7 +21,7 @@ export default function routes(services: Services): Router {
   router.use(addVisitorRoutes(services))
 
   router.use(bookVisitRoutes(services))
-  router.use(bookingsRoutes(services))
+  router.use(visitsRoutes(services))
   router.use(visitorsRoutes(services))
 
   return router

@@ -140,7 +140,7 @@ describe('Check visit details', () => {
         visitService.bookVisit.mockResolvedValue(visitBooked)
       })
 
-      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (with contact details)', () => {
+      it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (with contact details)', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
           prison,
@@ -166,7 +166,7 @@ describe('Check visit details', () => {
           })
       })
 
-      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit booked page (no contact details)', () => {
+      it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (no contact details)', () => {
         sessionData.bookVisitJourney.mainContactEmail = undefined
         sessionData.bookVisitJourney.mainContactPhone = undefined
 
@@ -206,7 +206,7 @@ describe('Check visit details', () => {
         visitService.bookVisit.mockResolvedValue(visitRequested)
       })
 
-      it('should book visit, clear booking journey data, store booking confirmation and redirect to the visit requested page', () => {
+      it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit requested page', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: true,
           prison,

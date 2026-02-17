@@ -26,7 +26,7 @@ export default class VisitsController {
           break
 
         default:
-          return next(createError(500, `Invalid bookings type: ${type}`))
+          return next(createError(500, `Invalid visits type: ${type}`))
       }
 
       req.session.bookedVisits = { type, visits }

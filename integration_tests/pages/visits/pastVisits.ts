@@ -11,5 +11,5 @@ export default class PastVisitsPage extends Page {
 
   visitEndTime = (index: number): PageElement => cy.get(`[data-test=visit-end-time-${index}]`)
 
-  visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-booking-${index}]`)
+  visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-${index}]`)
 }

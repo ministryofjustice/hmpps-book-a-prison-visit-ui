@@ -35,8 +35,8 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('View a single booking', () => {
-  describe('Future booking', () => {
+describe('View a single visit', () => {
+  describe('Future visit', () => {
     const fakeDate = new Date('2024-05-28')
 
     beforeEach(() => {
@@ -119,7 +119,7 @@ describe('View a single booking', () => {
           expect($('.moj-alert').text()).toContain(
             'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
           )
-          expect($('[data-test="change-booking-heading"]').text()).toBe('How to update your request')
+          expect($('[data-test="change-visit-heading"]').text()).toBe('How to update your request')
         })
     })
 
@@ -139,7 +139,7 @@ describe('View a single booking', () => {
     })
   })
 
-  describe('Past booking', () => {
+  describe('Past visit', () => {
     it('should render the visit details page', () => {
       bookedVisits.type = 'past'
 
@@ -171,7 +171,7 @@ describe('View a single booking', () => {
     })
   })
 
-  describe('Cancelled booking', () => {
+  describe('Cancelled visit', () => {
     it('should render the visit details page with "Visit cancelled" message', () => {
       bookedVisits.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
@@ -209,12 +209,12 @@ describe('View a single booking', () => {
   })
 
   describe('Validation', () => {
-    it('should redirect to bookings home page if an invalid visitDisplayId is passed', () => {
+    it('should redirect to visits home page if an invalid visitDisplayId is passed', () => {
       bookedVisits.type = 'future'
       return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
-    it('should redirect to bookings home page if an unrecognised (not in session) visitDisplayId is passed', () => {
+    it('should redirect to visits home page if an unrecognised (not in session) visitDisplayId is passed', () => {
       bookedVisits.type = 'future'
       const unrecognisedUUID = randomUUID()
       return request(app)

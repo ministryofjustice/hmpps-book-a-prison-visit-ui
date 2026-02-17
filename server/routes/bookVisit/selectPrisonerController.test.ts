@@ -48,7 +48,7 @@ describe('Select prisoner', () => {
       })
   })
 
-  it('should clear any exiting bookingJourney session data, populate new data and redirect to select visitors page', () => {
+  it('should clear any exiting bookVisitJourney session data, populate new data and redirect to select visitors page', () => {
     bookerService.validatePrisoner.mockResolvedValue(true)
 
     sessionData = {

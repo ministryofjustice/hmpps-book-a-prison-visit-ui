@@ -9,8 +9,8 @@ export default class HomePage extends Page {
 
   noPrisoner = (): PageElement => cy.get('[data-test="no-prisoner"]')
 
-  startBooking = (): void => {
-    cy.get('[data-test="start-booking"]').click()
+  start = (): void => {
+    cy.get('[data-test="start"]').click()
   }
 
   addPrisoner = (): void => {

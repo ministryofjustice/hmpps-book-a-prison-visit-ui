@@ -8,7 +8,7 @@ import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
 
 export default class VisitDetailsController {
-  // label visits with these statuses as a 'request' rather than a 'booking'
+  // label visits with these statuses as a 'request' rather than a 'visit'
   private readonly REQUEST_STATUSES: VisitDetails['visitSubStatus'][] = [
     'AUTO_REJECTED',
     'REJECTED',
@@ -20,16 +20,16 @@ export default class VisitDetailsController {
 
   public view(type: SessionData['bookedVisits']['type']): RequestHandler {
     return async (req, res) => {
-      const { bookedVisits: bookings } = req.session
+      const { bookedVisits } = req.session
 
       const errors = validationResult(req)
-      if (!errors.isEmpty() || bookings.type !== type) {
+      if (!errors.isEmpty() || bookedVisits.type !== type) {
         return res.redirect(paths.VISITS.HOME)
       }
 
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
-      const { visits } = bookings
+      const { visits } = bookedVisits
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
 
       const prison = await this.prisonService.getPrison(visit.prisonId)

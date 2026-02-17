@@ -61,7 +61,7 @@ describe('Visit service', () => {
     })
 
     describe('createVisitApplication', () => {
-      it('should create and return a visit application from booking journey data', async () => {
+      it('should create and return a visit application from book visit journey data', async () => {
         orchestrationApiClient.createVisitApplication.mockResolvedValue(application)
 
         const results = await visitService.createVisitApplication({ bookVisitJourney, bookerReference })
@@ -79,7 +79,7 @@ describe('Visit service', () => {
     })
 
     describe('changeVisitApplication', () => {
-      it('should change an existing visit application to update it with booking journey data', async () => {
+      it('should change an existing visit application to update it with book visit journey data', async () => {
         const visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'user@example.com' }
         const visitors = [
           { nomisPersonId: 100, visitContact: true },
@@ -218,7 +218,7 @@ describe('Visit service', () => {
     })
   })
 
-  describe('Booking listings', () => {
+  describe('Visit listings', () => {
     const bookerReference = TestData.bookerReference().value
 
     describe('getFuturePublicVisits', () => {

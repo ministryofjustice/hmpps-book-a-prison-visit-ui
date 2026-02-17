@@ -20,19 +20,19 @@ const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookings: SessionData['bookedVisits']
+let visits: SessionData['bookedVisits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
   visitDetails = TestData.visitDetails({ visitDisplayId })
-  bookings = { type: 'future', visits: [visitDetails] }
+  visits = { type: 'future', visits: [visitDetails] }
 
   sessionData = {
     booker: {
       reference: bookerReference,
       prisoners: [prisoner],
     },
-    bookedVisits: bookings,
+    bookedVisits: visits,
   } as SessionData
 
   app = appWithAllRoutes({ services: { visitService }, sessionData })
@@ -42,7 +42,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Cancel a booking - Are you sure page', () => {
+describe('Cancel a visit - Are you sure page', () => {
   describe('GET - Display visit information on cancellation page', () => {
     it('should render the cancel confirmation page', () => {
       return request(app)
@@ -68,7 +68,7 @@ describe('Cancel a booking - Are you sure page', () => {
     })
   })
 
-  describe('POST - cancel booking', () => {
+  describe('POST - cancel visit', () => {
     let fakeDate = new Date('2024-01-01')
 
     beforeEach(() => {
@@ -179,7 +179,7 @@ describe('Cancel a booking - Are you sure page', () => {
     it('should NOT cancel the visit if invalid visit ID is posted', () => {
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/test`)
-        .send('cancelBooking=yes')
+        .send('cancelVisit=yes')
         .expect(302)
         .expect('location', paths.VISITS.HOME)
         .expect(() => {

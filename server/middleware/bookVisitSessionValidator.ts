@@ -35,7 +35,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
       return logAndRedirect(res, method, requestPath, booker.reference)
     }
 
-    // Booking confirmed (check first because bookingJourney cleared just before this stage)
+    // Visit confirmed (check first because bookVisitJourney cleared just before this stage)
     if (requestPath === paths.BOOK_VISIT.BOOKED || requestPath === paths.BOOK_VISIT.REQUESTED) {
       return bookVisitConfirmed && !bookVisitJourney
         ? next()
