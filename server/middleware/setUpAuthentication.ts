@@ -58,8 +58,8 @@ export function setUpAuthentication(): Router {
     return isReady ? next() : next(new ServiceUnavailable())
   })
 
-  // Actual authentication routes and Passport setup done after discovering the GOV.UK One Login configuration
   discoverClientConfiguration()
+    // Passport setup and adding authentication routes done after discovering the GOV.UK One Login configuration
     .then((clientConfiguration: openidClient.Configuration) => {
       const strategyOptions: StrategyOptionsWithRequest = {
         config: clientConfiguration,
@@ -73,11 +73,12 @@ export function setUpAuthentication(): Router {
           const { iat, sub, vot } = tokens.claims()
 
           // GOV.UK One Login required ID token validations that openid-client does not do by default
-          // Check token issue date not in the future (plus default 30s clock tolerance)
+          // Check token issue date not in the future (plus openid-client's default 30s clock tolerance)
           const nowInSeconds = Math.floor(Date.now() / 1000)
           if (iat > nowInSeconds + 30) {
             throw new Error('Token validation failed: JWT iat claim value failed validation')
           }
+
           // Check vector of trust (vot) matches that requested with /authorize
           if (`["${vot}"]` !== config.apis.govukOneLogin.vtr) {
             throw new Error('Token validation failed: JWT vot claim value failed validation')
@@ -114,6 +115,7 @@ export function setUpAuthentication(): Router {
       router.get(paths.SIGN_IN, passport.authenticate('oidc'))
 
       router.get(paths.AUTH_CALLBACK, (req, res, next): void => {
+        // Custom passport auth callback required to consistently handle /authorize and /userinfo errors
         const authCallback: passport.AuthenticateCallback = (err, user?, info?) => {
           // Handle errors
           if (err) {
@@ -161,6 +163,8 @@ export function setUpAuthentication(): Router {
         } else res.redirect(openidClient.buildEndSessionUrl(clientConfiguration).href)
       })
 
+      // Middleware here (rather than in authenticationMiddleware) so user, if present,
+      // is populated even on unauthenticated routes
       router.use((req, res, next) => {
         if (req.user) {
           res.locals.user = req.user
@@ -190,7 +194,7 @@ export function authenticationMiddleware(): RequestHandler {
   }
 }
 
-// Call the GOV.UK One Login discovery endpoint to get client configuration
+// Call the GOV.UK One Login discovery endpoint to get configuration
 async function discoverClientConfiguration(): Promise<openidClient.Configuration> {
   const server = new URL(config.apis.govukOneLogin.url)
   const { clientId } = config.apis.govukOneLogin
