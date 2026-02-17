@@ -34,6 +34,10 @@ generic-service:
       SecRuleUpdateTargetById 942440 "!ARGS:_csrf"
       SecRuleUpdateTargetById 942100 "!ARGS:state"
       SecRuleUpdateTargetById 942440 "!ARGS:state"
+      SecRuleUpdateTargetById 942100 "!ARGS:code_challenge"
+      SecRuleUpdateTargetById 942440 "!ARGS:code_challenge"
+      SecRuleUpdateTargetById 942100 "!ARGS:nonce"
+      SecRuleUpdateTargetById 942440 "!ARGS:nonce"
       SecAction \
         "id:900000,\
         phase:1,\

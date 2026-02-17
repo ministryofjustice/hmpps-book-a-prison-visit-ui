@@ -27,7 +27,7 @@ describe('populateCurrentBooker', () => {
     res = {
       locals: {
         user: {
-          sub: 'user1',
+          sub: 'urn:fdc:gov.uk:2022:56P4CMsGh_02YOlWpd8PAOI-2sVlB2nsNU7mcLZYhYw=',
           email: 'test@example.com',
           phone_number: '07123456789',
         },

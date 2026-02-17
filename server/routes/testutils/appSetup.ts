@@ -31,11 +31,14 @@ import analyticsConsent from '../../middleware/analyticsConsent'
 import { FlashFormValues, MoJAlert } from '../../@types/bapv'
 
 export const user: Express.User = {
-  sub: 'user1',
+  // Default values from GOV.UK One Login Simulator
+  sub: 'urn:fdc:gov.uk:2022:56P4CMsGh_02YOlWpd8PAOI-2sVlB2nsNU7mcLZYhYw=',
   phone_number_verified: true,
   phone_number: '07123456789',
   email_verified: true,
   email: 'test@example.com',
+
+  idToken: 'idToken',
 }
 
 const bookerReference = TestData.bookerReference().value
