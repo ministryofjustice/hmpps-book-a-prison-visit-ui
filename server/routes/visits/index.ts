@@ -14,6 +14,12 @@ export default function routes(services: Services): Router {
   const cancelVisitController = new CancelVisitController(services.visitService)
   const cancelVisitConfirmedController = new CancelVisitConfirmedController()
 
+  // Short term redirect from old bookings URL to new visits URL (because old URL in confirmation emails)
+  // Added 17/02/2026 - can be removed when /bookings requests no longer showing in logs
+  router.get('/bookings', (req, res) => {
+    res.redirect(paths.VISITS.HOME)
+  })
+
   router.get(paths.VISITS.HOME, visitsController.view('future'))
   router.get(paths.VISITS.PAST, visitsController.view('past'))
   router.get(paths.VISITS.CANCELLED, visitsController.view('cancelled'))

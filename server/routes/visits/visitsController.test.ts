@@ -24,7 +24,14 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('Visits homepage (future visits list)', () => {
+// Short term redirect from old bookings URL to new visits URL (because old URL in confirmation emails)
+describe('/bookings => /visits redirect', () => {
+  it('should redirect /bookings to the visits home page', () => {
+    return request(app).get('/bookings').expect(302).expect('Location', paths.VISITS.HOME)
+  })
+})
+
+describe('Visits home page (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
 
   it('should render the visits home page - with a future visit', () => {
