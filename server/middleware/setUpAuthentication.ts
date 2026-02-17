@@ -203,8 +203,8 @@ async function discoverClientConfiguration(): Promise<openidClient.Configuration
   const privateKeyPem = config.apis.govukOneLogin.privateKey
   const privateKey = await getPrivateKey(privateKeyPem)
 
-  // Modify the audience claim and remove nbf in the private_key_jwt
-  const substituteAudience: openidClient.ModifyAssertionOptions = {
+  // Modify assertion to override aud claim and remove nbf for private_key_jwt
+  const modifyAssertion: openidClient.ModifyAssertionOptions = {
     [openidClient.modifyAssertion]: (_header, payload) => {
       // eslint-disable-next-line no-param-reassign
       payload.aud = `${config.apis.govukOneLogin.url}/token`
@@ -212,9 +212,9 @@ async function discoverClientConfiguration(): Promise<openidClient.Configuration
       payload.nbf = undefined
     },
   }
-  const clientAuthentication: openidClient.ClientAuth = openidClient.PrivateKeyJwt(privateKey, substituteAudience)
+  const clientAuthentication: openidClient.ClientAuth = openidClient.PrivateKeyJwt(privateKey, modifyAssertion)
 
-  const options: openidClient.DiscoveryRequestOptions = {
+  const discoveryOptions: openidClient.DiscoveryRequestOptions = {
     execute: [
       // Allow discovery over http on localhost (i.e. when using the Simulator)
       ...(server.hostname === 'localhost' ? [openidClient.allowInsecureRequests] : []),
@@ -226,7 +226,7 @@ async function discoverClientConfiguration(): Promise<openidClient.Configuration
 
   logger.info(`Attempting GOV.UK One Login metadata discovery for issuer: ${server.href}`)
 
-  return openidClient.discovery(server, clientId, clientMetadata, clientAuthentication, options)
+  return openidClient.discovery(server, clientId, clientMetadata, clientAuthentication, discoveryOptions)
 }
 
 async function getPrivateKey(privateKeyPem: string): Promise<openidClient.CryptoKey> {
