@@ -61,6 +61,39 @@ View templates use two custom filters for errors:
 
 See [server/utils/nunjucksSetup.ts](server/utils/nunjucksSetup.ts) for filter implementation.
 
+## Services Layer
+
+**BookerService** ([server/services/bookerService.ts](server/services/bookerService.ts))
+- `getBookerReference()` - Retrieves or creates booker ID from auth details
+- `registerPrisoner()` - Registers a prisoner for a booker (enforces rate limits on both booker and prisoner)
+- `getPrisoners()` - Lists all prisoners registered to a booker with eligibility info
+- `getVisitorRequests()` - Retrieves pending visitor requests for a specific prisoner
+- `addVisitorRequest()` - Creates a visitor request (enforces rate limit per booker)
+- `getVisitors()` - Retrieves all approved and banned visitors for a prisoner
+- Manages 3 separate rate limits: booker, prisoner, and visitor request limits
+
+**PrisonService** ([server/services/prisonService.ts](server/services/prisonService.ts))
+- `getAllPrisonNames()` - Cached list of UK prisons (24-hour TTL)
+- `getSupportedPrisons()` - Prisons accepting visits via this service
+- `getPrison()` - Prison details including visit eligibility config (5-minute cache, per-prison)
+- `isSupportedPrison()` - Quick check if prison accepts visits
+- Implements 3-tier caching: all prisons, supported prisons list, individual prison details
+- Uses both Redis (if enabled) and in-memory fallback
+
+**VisitService** ([server/services/visitService.ts](server/services/visitService.ts))
+- `createVisitApplication()` - Creates initial visit application from journey session
+- `changeVisitApplication()` - Updates visit details (contact info, visitor support needs)
+- `bookVisit()` - Finalizes booking via API
+- `cancelVisit()` - Cancels booked visit
+- `getVisitDetails()` - Retrieves full visit information
+- Orchestrates data transformation from session objects to API payloads
+
+**VisitSessionsService** ([server/services/visitSessionsService.ts](server/services/visitSessionsService.ts))
+- `getVisitSessionsCalendar()` - Builds calendar structure from available sessions for UI rendering
+- `getSessionRestriction()` - Checks if visitors have restrictions affecting session availability
+- `getVisitSessions()` - Fetches available sessions for a prisoner/visitor combination
+- Returns nested calendar object keyed by month/date for Nunjucks template iteration
+
 ## Rate Limiting
 
 Three separate rate limits protect against abuse:
