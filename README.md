@@ -72,7 +72,7 @@ If these are not desired in the cloned project, remove references to `check_outd
 ## GOV.UK One Login integration
 The [GOV.UK One Login](https://www.sign-in.service.gov.uk) service is used to authenticate users. Refer to the [technical documentation](https://docs.sign-in.service.gov.uk) for more details.
 
-When running this application locally or in development environments, the GOV.UK One Login integration environment is used. This is additionally secured by HTTP Basic Auth. Ask a team member for these credentials.
+When running this application locally or in development environments, the GOV.UK One Login integration environment is used. For integration tests the [GOV.UK One Login Simulator](https://github.com/govuk-one-login/simulator) is used.
 
 This application has several changes to core files inherited from the HMPPS TypeScript Template app in order to support GOV.UK One Login. These are:
 
