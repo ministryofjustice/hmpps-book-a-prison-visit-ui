@@ -160,7 +160,7 @@ describe('Select visitors', () => {
     })
 
     it('should use the session validation middleware', () => {
-      ;(sessionData.bookVisitJourney!.prisoner as unknown) = undefined
+      sessionData.bookVisitJourney = undefined
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)

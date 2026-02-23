@@ -174,7 +174,7 @@ export default class BookerService {
       return true
     } catch (error) {
       const sanitisedError = error as SanitisedError<BookerPrisonerValidationErrorResponse>
-      if (sanitisedError.status === 422 && typeof sanitisedError?.data?.validationError === 'string') {
+      if (sanitisedError.status === 422 && sanitisedError.data?.validationError) {
         return sanitisedError.data.validationError
       }
       throw error

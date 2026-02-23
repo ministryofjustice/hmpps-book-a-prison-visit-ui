@@ -150,7 +150,7 @@ export function setUpAuthentication(): Router {
       })
 
       router.get(paths.SIGN_OUT, async (req, res, next) => {
-        if (req?.user?.idToken) {
+        if (req.user?.idToken) {
           const { idToken } = req.user
 
           req.logout(err => {
