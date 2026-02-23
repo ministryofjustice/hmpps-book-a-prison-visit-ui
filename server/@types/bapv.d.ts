@@ -48,7 +48,6 @@ export type BookVisitJourney = {
 
   // prison for this visit
   prison?: PrisonDto
-  // in 'cannot book' journey, prison can't be populated, so should be optional
 
   // may be set during journey to flag why a visit cannot be booked
   cannotBookReason?: CannotBookReason
