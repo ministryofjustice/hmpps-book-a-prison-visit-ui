@@ -8,7 +8,7 @@ export default class VisitorsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker } = req.session
+      const booker = req.session.booker!
 
       if (!booker.prisoners?.length) {
         return res.redirect(paths.HOME)

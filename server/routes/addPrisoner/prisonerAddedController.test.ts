@@ -29,7 +29,7 @@ describe('Prisoner added', () => {
     })
 
     it('should clear add prisoner journey session data and render the success page', () => {
-      sessionData.addPrisonerJourney.result = true
+      sessionData.addPrisonerJourney!.result = true
 
       return request(app)
         .get(paths.ADD_PRISONER.SUCCESS)

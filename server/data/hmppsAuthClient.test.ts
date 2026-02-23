@@ -3,10 +3,11 @@ import nock from 'nock'
 import config from '../config'
 import HmppsAuthClient from './hmppsAuthClient'
 import TokenStore from './tokenStore/redisTokenStore'
+import { RedisClient } from './redisClient'
 
 jest.mock('./tokenStore/redisTokenStore')
 
-const tokenStore = new TokenStore(null, 'systemToken') as jest.Mocked<TokenStore>
+const tokenStore = new TokenStore({} as RedisClient, 'systemToken') as jest.Mocked<TokenStore>
 
 const token = { access_token: 'token-1', expires_in: 300 }
 

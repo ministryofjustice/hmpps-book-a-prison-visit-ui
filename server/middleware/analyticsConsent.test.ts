@@ -44,7 +44,7 @@ describe('analyticsConsent', () => {
   })
 
   it('should set res.locals.analyticsEnabled to undefined if consent cookie is not set', async () => {
-    req.cookies = undefined
+    req.cookies = {}
 
     await analyticsConsent()(req, res, next)
 

@@ -51,7 +51,7 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should render cannot book page and clear bookVisitJourney data - NO_VO_BALANCE', () => {
-      sessionData.bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
+      sessionData.bookVisitJourney!.cannotBookReason = 'NO_VO_BALANCE'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -71,7 +71,7 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should render cannot book page and clear bookVisitJourney data - TRANSFER_OR_RELEASE', () => {
-      sessionData.bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+      sessionData.bookVisitJourney!.cannotBookReason = 'TRANSFER_OR_RELEASE'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -91,7 +91,7 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should render cannot book page and clear bookVisitJourney data - UNSUPPORTED_PRISON', () => {
-      sessionData.bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+      sessionData.bookVisitJourney!.cannotBookReason = 'UNSUPPORTED_PRISON'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
@@ -111,7 +111,7 @@ describe('A visit cannot be booked', () => {
     })
 
     it('should render cannot book page and clear bookVisitJourney data - NO_ELIGIBLE_ADULT_VISITOR', () => {
-      sessionData.bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+      sessionData.bookVisitJourney!.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
 
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)

@@ -15,12 +15,15 @@ export default class SelectPrisonerController {
     return async (req, res) => {
       clearSession(req)
 
-      const { booker } = req.session
+      const booker = req.session.booker!
       const prisoner = booker.prisoners[0]
       const bookVisitJourney: BookVisitJourney = { prisoner }
 
       if (req.body?.prisonerDisplayId !== prisoner.prisonerDisplayId) {
         throw new NotFound('Prisoner not found')
+      }
+      if (!prisoner.prisonId) {
+        throw new NotFound('Prisoner does not have a prisonId')
       }
 
       req.session.bookVisitJourney = bookVisitJourney

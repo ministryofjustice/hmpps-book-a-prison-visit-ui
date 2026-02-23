@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { differenceInYears } from 'date-fns'
+import { UUID } from 'crypto'
 import { BookerService, VisitSessionsService } from '../../services'
 import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
@@ -14,8 +15,10 @@ export default class SelectVisitorsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { booker, bookVisitJourney } = req.session
-      const { prison, prisoner } = bookVisitJourney
+      const booker = req.session.booker!
+      const bookVisitJourney = req.session.bookVisitJourney!
+      const prison = bookVisitJourney.prison!
+      const { prisoner } = bookVisitJourney
 
       // only request visitors once per journey so random visitor UUIDs don't change
       if (!bookVisitJourney.eligibleVisitors) {
@@ -30,7 +33,7 @@ export default class SelectVisitorsController {
 
       const isAtLeastOneAdultVisitor = bookVisitJourney.eligibleVisitors.some(visitor => visitor.adult)
       if (bookVisitJourney.eligibleVisitors.length && !isAtLeastOneAdultVisitor) {
-        req.session.bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
+        bookVisitJourney.cannotBookReason = 'NO_ELIGIBLE_ADULT_VISITOR'
         return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
       }
 
@@ -72,10 +75,10 @@ export default class SelectVisitorsController {
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 
-      const { bookVisitJourney } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
       const { visitorDisplayIds } = matchedData<{ visitorDisplayIds: string[] }>(req)
 
-      const selectedVisitors = bookVisitJourney.eligibleVisitors.filter(visitor =>
+      const selectedVisitors = bookVisitJourney.eligibleVisitors!.filter(visitor =>
         visitorDisplayIds.includes(visitor.visitorDisplayId),
       )
 
@@ -97,8 +100,8 @@ export default class SelectVisitorsController {
         .toArray()
         .isUUID()
         // filter out any invalid or duplicate visitorDisplayId values
-        .customSanitizer((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
-          const allVisitorDisplaysIds = req.session.bookVisitJourney.eligibleVisitors.map(
+        .customSanitizer((visitorDisplayIds: UUID[], { req }) => {
+          const allVisitorDisplaysIds = (req as Express.Request).session.bookVisitJourney!.eligibleVisitors!.map(
             visitor => visitor.visitorDisplayId,
           )
 
@@ -113,9 +116,10 @@ export default class SelectVisitorsController {
         .withMessage('No visitors selected')
         .bail()
         // validate visitor totals
-        .custom((visitorDisplayIds: string[], { req }: Meta & { req: Express.Request }) => {
-          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
-            req.session.bookVisitJourney.prison
+        .custom((visitorDisplayIds: string[], { req }) => {
+          const bookVisitJourney = (req as Express.Request).session.bookVisitJourney!
+
+          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } = bookVisitJourney.prison!
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {
@@ -123,11 +127,11 @@ export default class SelectVisitorsController {
           }
 
           // calculate selected visitor ages
-          const { eligibleVisitors } = req.session.bookVisitJourney
+          const eligibleVisitors = bookVisitJourney.eligibleVisitors!
           const today = new Date()
           const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
-            const { dateOfBirth } = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
-            return differenceInYears(today, dateOfBirth)
+            const visitor = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
+            return visitor?.dateOfBirth ? differenceInYears(today, visitor.dateOfBirth) : 0
           })
 
           // max 'adult age' visitors

@@ -43,9 +43,9 @@ describe('populateCurrentBooker', () => {
     await populateCurrentBooker(bookerService)(req, res, next)
 
     expect(bookerService.getBookerReference).toHaveBeenCalledWith({
-      oneLoginSub: res.locals.user.sub,
-      email: res.locals.user.email,
-      phoneNumber: res.locals.user.phone_number,
+      oneLoginSub: res.locals.user!.sub,
+      email: res.locals.user!.email,
+      phoneNumber: res.locals.user!.phone_number,
     })
     expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
     expect(req.session).toStrictEqual(<SessionData>{ booker: { reference: bookerReference, prisoners } })
@@ -61,7 +61,7 @@ describe('populateCurrentBooker', () => {
 
     expect(bookerService.getBookerReference).toHaveBeenCalled()
     expect(bookerService.getPrisoners).not.toHaveBeenCalled()
-    expect(req.session).toStrictEqual(<SessionData>{ booker: { reference: bookerReference, prisoners: [] } })
+    expect(req.session).toStrictEqual(<Partial<SessionData>>{ booker: { reference: bookerReference, prisoners: [] } })
     expect(res.redirect).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
   })
@@ -94,9 +94,9 @@ describe('populateCurrentBooker', () => {
     await populateCurrentBooker(bookerService)(req, res, next)
 
     expect(bookerService.getBookerReference).toHaveBeenCalledWith({
-      oneLoginSub: res.locals.user.sub,
-      email: res.locals.user.email,
-      phoneNumber: res.locals.user.phone_number,
+      oneLoginSub: res.locals.user!.sub,
+      email: res.locals.user!.email,
+      phoneNumber: res.locals.user!.phone_number,
     })
     expect(res.redirect).not.toHaveBeenCalled()
     expect(logger.info).not.toHaveBeenCalled()

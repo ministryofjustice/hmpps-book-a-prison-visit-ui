@@ -7,7 +7,7 @@
     "sourceMap": true,
     "noEmit": false,
     "allowJs": false,
-    "strict": false,
+    "strict": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,

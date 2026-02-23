@@ -68,7 +68,7 @@ describe('Check visit details', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
@@ -107,9 +107,9 @@ describe('Check visit details', () => {
     })
 
     it('should show alternative text when no additional support or contact details provided', () => {
-      sessionData.bookVisitJourney.visitorSupport = ''
-      sessionData.bookVisitJourney.mainContactEmail = undefined
-      sessionData.bookVisitJourney.mainContactPhone = undefined
+      sessionData.bookVisitJourney!.visitorSupport = ''
+      sessionData.bookVisitJourney!.mainContactEmail = undefined
+      sessionData.bookVisitJourney!.mainContactPhone = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
@@ -167,8 +167,8 @@ describe('Check visit details', () => {
       })
 
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (no contact details)', () => {
-        sessionData.bookVisitJourney.mainContactEmail = undefined
-        sessionData.bookVisitJourney.mainContactPhone = undefined
+        sessionData.bookVisitJourney!.mainContactEmail = undefined
+        sessionData.bookVisitJourney!.mainContactPhone = undefined
 
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
@@ -200,7 +200,7 @@ describe('Check visit details', () => {
       const visitRequested = TestData.visitDto({ visitSubStatus: 'REQUESTED' })
 
       beforeEach(() => {
-        sessionData.bookVisitJourney.selectedVisitSession = TestData.availableVisitSessionDto({
+        sessionData.bookVisitJourney!.selectedVisitSession = TestData.availableVisitSessionDto({
           sessionForReview: true,
         })
         visitService.bookVisit.mockResolvedValue(visitRequested)
@@ -259,7 +259,7 @@ describe('Check visit details', () => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookVisitJourney).not.toBe(undefined)
               expect(sessionData.bookVisitConfirmed).toBe(undefined)
-              expect(sessionData.bookVisitJourney.selectedVisitSession).toStrictEqual(visitSession)
+              expect(sessionData.bookVisitJourney!.selectedVisitSession).toStrictEqual(visitSession)
             })
         })
 
@@ -280,7 +280,7 @@ describe('Check visit details', () => {
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookVisitJourney).not.toBe(undefined)
-              expect(sessionData.bookVisitJourney.cannotBookReason).toBe('TRANSFER_OR_RELEASE')
+              expect(sessionData.bookVisitJourney!.cannotBookReason).toBe('TRANSFER_OR_RELEASE')
               expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
@@ -308,7 +308,7 @@ describe('Check visit details', () => {
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookVisitJourney).not.toBe(undefined)
-              expect(sessionData.bookVisitJourney.cannotBookReason).toBe('NO_VO_BALANCE')
+              expect(sessionData.bookVisitJourney!.cannotBookReason).toBe('NO_VO_BALANCE')
               expect(sessionData.bookVisitConfirmed).toBe(undefined)
               expect(visitService.bookVisit).toHaveBeenCalledWith({
                 applicationReference: application.reference,
@@ -343,7 +343,7 @@ describe('Check visit details', () => {
                 isRequestBooking: false,
                 visitors: [visitor],
               })
-              expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
+              expect(sessionData.bookVisitJourney!.selectedVisitSession).toBe(undefined)
             })
         })
 
@@ -377,7 +377,7 @@ describe('Check visit details', () => {
                 isRequestBooking: false,
                 visitors: [visitor],
               })
-              expect(sessionData.bookVisitJourney.selectedVisitSession).toBe(undefined)
+              expect(sessionData.bookVisitJourney!.selectedVisitSession).toBe(undefined)
             })
         })
       })
@@ -392,7 +392,7 @@ describe('Check visit details', () => {
             expect(flashProvider).not.toHaveBeenCalled()
             expect(sessionData.bookVisitJourney).not.toBe(undefined)
             expect(sessionData.bookVisitConfirmed).toBe(undefined)
-            expect(sessionData.bookVisitJourney.selectedVisitSession).toStrictEqual(visitSession)
+            expect(sessionData.bookVisitJourney!.selectedVisitSession).toStrictEqual(visitSession)
           })
       })
     })

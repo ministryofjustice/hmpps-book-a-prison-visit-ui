@@ -1,10 +1,11 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { VisitService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
 import { MoJAlert } from '../../@types/bapv'
 import { Visitor } from '../../services/bookerService'
+import { SanitisedError } from '../../sanitisedError'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -14,20 +15,21 @@ export default class ChooseVisitTimeController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookVisitJourney, booker } = req.session
-      const { prisoner, prison, selectedVisitors, applicationReference } = bookVisitJourney
+      const booker = req.session.booker!
+      const bookVisitJourney = req.session.bookVisitJourney!
+      const { prison, prisoner, selectedVisitors, applicationReference } = bookVisitJourney
 
-      const selectedVisitorIds = selectedVisitors.map(visitor => visitor.visitorId)
-      const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors)
+      const selectedVisitorIds = selectedVisitors!.map(visitor => visitor.visitorId)
+      const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors!)
 
       const { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions } =
         await this.visitSessionsService.getVisitSessionsCalendar({
-          prisonId: prisoner.prisonId,
+          prisonId: prisoner.prisonId ?? '',
           prisonerId: prisoner.prisonerNumber,
           visitorIds: selectedVisitorIds,
           bookerReference: booker.reference,
           excludedApplicationReference: applicationReference,
-          daysAhead: prison.policyNoticeDaysMax,
+          daysAhead: prison!.policyNoticeDaysMax,
         })
 
       if (allVisitSessionIds.length === 0) {
@@ -55,10 +57,10 @@ export default class ChooseVisitTimeController {
       }
 
       const formValues = isSelectedSessionStillAvailable
-        ? { visitSession: `${selectedVisitSession.sessionDate}_${selectedVisitSession.sessionTemplateReference}` }
+        ? { visitSession: `${selectedVisitSession!.sessionDate}_${selectedVisitSession!.sessionTemplateReference}` }
         : {}
 
-      const selectedDate = isSelectedSessionStillAvailable ? selectedVisitSession.sessionDate : firstSessionDate
+      const selectedDate = isSelectedSessionStillAvailable ? selectedVisitSession!.sessionDate : firstSessionDate
 
       const backLinkHref =
         bookVisitJourney.sessionRestriction === 'OPEN'
@@ -81,7 +83,8 @@ export default class ChooseVisitTimeController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { booker, bookVisitJourney } = req.session
+      const booker = req.session.booker!
+      const bookVisitJourney = req.session.bookVisitJourney!
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
@@ -89,7 +92,7 @@ export default class ChooseVisitTimeController {
         // so ErrorSummary link works correctly
         const errorsArray = errors.array()
         if (errorsArray[0].type === 'field') {
-          errorsArray[0].path = `date-${bookVisitJourney.allVisitSessions[0]?.sessionDate}`
+          errorsArray[0].path = `date-${bookVisitJourney.allVisitSessions![0]?.sessionDate}`
         }
 
         req.flash('errors', errorsArray)
@@ -100,7 +103,7 @@ export default class ChooseVisitTimeController {
       const selectedSessionDate = visitSessionSplit[0]
       const selectedSessionTemplateReference = visitSessionSplit[1]
 
-      const selectedVisitSession = bookVisitJourney.allVisitSessions.find(
+      const selectedVisitSession = bookVisitJourney.allVisitSessions!.find(
         session =>
           session.sessionTemplateReference === selectedSessionTemplateReference &&
           session.sessionDate === selectedSessionDate,
@@ -123,7 +126,7 @@ export default class ChooseVisitTimeController {
         }
       } catch (error) {
         // HTTP 400 Bad Request is the response when a session is no longer available
-        if (error.status === 400) {
+        if ((error as SanitisedError).status === 400) {
           req.flash('messages', {
             variant: 'error',
             title: 'Your visit time is no longer available',
@@ -144,9 +147,9 @@ export default class ChooseVisitTimeController {
   public validate(): ValidationChain[] {
     return [
       body('visitSession')
-        .customSanitizer((visitSession: string, { req }: Meta & { req: Express.Request }) => {
-          const { allVisitSessionIds } = req.session.bookVisitJourney
-          return allVisitSessionIds.includes(visitSession) ? visitSession : undefined
+        .customSanitizer((visitSession: string, { req }) => {
+          const { allVisitSessionIds } = (req as Express.Request).session.bookVisitJourney!
+          return allVisitSessionIds!.includes(visitSession) ? visitSession : undefined
         })
         .notEmpty()
         .withMessage('No visit time selected'),
@@ -157,7 +160,7 @@ export default class ChooseVisitTimeController {
     selectedVisitSession,
     allVisitSessions,
   }: {
-    selectedVisitSession: AvailableVisitSessionDto
+    selectedVisitSession: AvailableVisitSessionDto | undefined
     allVisitSessions: AvailableVisitSessionDto[]
   }): boolean {
     if (!selectedVisitSession) {
@@ -177,7 +180,7 @@ export default class ChooseVisitTimeController {
         // banned visitors
         .filter(visitor => visitor.banned)
         // sort by descending ban expiry date
-        .sort((a, b) => b.banExpiryDate.localeCompare(a.banExpiryDate))
+        .sort((a, b) => b.banExpiryDate?.localeCompare(a.banExpiryDate ?? '') ?? 0)
         // filter to just visitor(s) with the furthest expiry date
         .filter(
           (visitor, _index, visitorsSortedByBanExpiry) =>

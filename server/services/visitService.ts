@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
-import { BookVisitJourney } from '../@types/bapv'
+import { type BookVisitJourney } from '../@types/bapv'
 import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
 import {
   ApplicationDto,
@@ -31,13 +31,13 @@ export default class VisitService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
-    const visitorIds = bookVisitJourney.selectedVisitors.map(visitor => visitor.visitorId)
+    const visitorIds = bookVisitJourney.selectedVisitors!.map(visitor => visitor.visitorId)
 
     const application = await orchestrationApiClient.createVisitApplication({
       prisonerId: bookVisitJourney.prisoner.prisonerNumber,
-      sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-      sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
-      applicationRestriction: bookVisitJourney.selectedVisitSession.sessionRestriction,
+      sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+      sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
+      applicationRestriction: bookVisitJourney.selectedVisitSession!.sessionRestriction,
       visitorIds,
       bookerReference,
     })
@@ -55,13 +55,13 @@ export default class VisitService {
 
     const visitContact = mainContact
       ? {
-          ...(mainContact && { name: getMainContactName(mainContact) }),
+          name: getMainContactName(mainContact),
           ...(mainContactPhone && { telephone: mainContactPhone }),
           ...(mainContactEmail && { email: mainContactEmail }),
         }
       : undefined
 
-    const visitors = bookVisitJourney.selectedVisitors.map(visitor => {
+    const visitors = bookVisitJourney.selectedVisitors!.map(visitor => {
       return {
         nomisPersonId: visitor.visitorId,
         visitContact: typeof mainContact === 'object' ? mainContact.visitorId === visitor.visitorId : false,
@@ -73,10 +73,10 @@ export default class VisitService {
       : undefined
 
     const application = await orchestrationApiClient.changeVisitApplication({
-      applicationReference: bookVisitJourney.applicationReference,
-      applicationRestriction: bookVisitJourney.selectedVisitSession.sessionRestriction,
-      sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-      sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+      applicationReference: bookVisitJourney.applicationReference!,
+      applicationRestriction: bookVisitJourney.selectedVisitSession!.sessionRestriction,
+      sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+      sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
       visitContact,
       visitors,
       visitorSupport,
@@ -165,9 +165,9 @@ export default class VisitService {
     return visitors.map(visitor => {
       const { visitorId } = visitor
 
-      let visitorAge: number
+      let visitorAge: number | null
       try {
-        const visitorDoB = parseISO(visitor.dateOfBirth)
+        const visitorDoB = parseISO(visitor.dateOfBirth ?? '')
 
         if (isValid(visitorDoB)) {
           const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
