@@ -208,11 +208,9 @@ async function discoverClientConfiguration(): Promise<openidClient.Configuration
   const privateKeyPem = config.apis.govukOneLogin.privateKey
   const privateKey = await getPrivateKey(privateKeyPem)
 
-  // Modify assertion to override aud claim and remove nbf for private_key_jwt
+  // Modify assertion to remove nbf for private_key_jwt
   const modifyAssertion: openidClient.ModifyAssertionOptions = {
     [openidClient.modifyAssertion]: (_header, payload) => {
-      // eslint-disable-next-line no-param-reassign
-      payload.aud = `${config.apis.govukOneLogin.url}/token`
       // eslint-disable-next-line no-param-reassign
       payload.nbf = undefined
     },
