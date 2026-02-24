@@ -72,7 +72,7 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
     })
 
     it('should show alternative content if prison has no phone number', () => {
-      sessionData.bookVisitConfirmed.prison.phoneNumber = null
+      sessionData.bookVisitConfirmed!.prison.phoneNumber = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.BOOKED)
@@ -88,7 +88,7 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
 
     describe('Visit confirmation message variations', () => {
       it('email only', () => {
-        sessionData.bookVisitConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed!.hasMobile = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -101,7 +101,7 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
       })
 
       it('mobile phone only', () => {
-        sessionData.bookVisitConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed!.hasEmail = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -114,8 +114,8 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
       })
 
       it('no email or mobile phone', () => {
-        sessionData.bookVisitConfirmed.hasEmail = undefined
-        sessionData.bookVisitConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed!.hasEmail = false
+        sessionData.bookVisitConfirmed!.hasMobile = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -132,7 +132,7 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
 
 describe('Visit confirmed (BOOKED - REQUESTED)', () => {
   beforeEach(() => {
-    sessionData.bookVisitConfirmed.isARequest = true
+    sessionData.bookVisitConfirmed!.isARequest = true
   })
 
   describe(`GET ${paths.BOOK_VISIT.BOOKED}`, () => {
@@ -159,7 +159,7 @@ describe('Visit confirmed (BOOKED - REQUESTED)', () => {
 
     describe('Request confirmation message variations', () => {
       it('email only', () => {
-        sessionData.bookVisitConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed!.hasMobile = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -173,7 +173,7 @@ describe('Visit confirmed (BOOKED - REQUESTED)', () => {
       })
 
       it('mobile phone only', () => {
-        sessionData.bookVisitConfirmed.hasEmail = undefined
+        sessionData.bookVisitConfirmed!.hasEmail = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)
@@ -187,8 +187,8 @@ describe('Visit confirmed (BOOKED - REQUESTED)', () => {
       })
 
       it('no email or mobile phone', () => {
-        sessionData.bookVisitConfirmed.hasEmail = undefined
-        sessionData.bookVisitConfirmed.hasMobile = undefined
+        sessionData.bookVisitConfirmed!.hasEmail = false
+        sessionData.bookVisitConfirmed!.hasMobile = false
 
         return request(app)
           .get(paths.BOOK_VISIT.BOOKED)

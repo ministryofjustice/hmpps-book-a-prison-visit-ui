@@ -12,18 +12,21 @@ describe('Visits utils', () => {
         ['BOOKER_CANCELLED', 'You cancelled this visit.'],
         ['PRISONER_CANCELLED', 'This visit was cancelled by the prisoner.'],
         ['VISITOR_CANCELLED', 'This visit was cancelled by a visitor.'],
-        ['fallback-any-other-status', 'This visit was cancelled by the prison.'],
-      ])('CANCELLED visit with outcome status %s', (outcomeStatus: VisitDetails['outcomeStatus'], text: string) => {
-        const visit = TestData.visitDetails({ visitStatus: 'CANCELLED', visitSubStatus: 'CANCELLED', outcomeStatus })
-        const expectedMessage: MoJAlert = {
-          variant: 'information',
-          title: 'Visit cancelled',
-          showTitleAsHeading: true,
-          text,
-        }
+        [null, 'This visit was cancelled by the prison.'], // i.e. any other outcomeStatus
+      ] as const)(
+        'CANCELLED visit with outcome status %s',
+        (outcomeStatus: VisitDetails['outcomeStatus'], text: string) => {
+          const visit = TestData.visitDetails({ visitStatus: 'CANCELLED', visitSubStatus: 'CANCELLED', outcomeStatus })
+          const expectedMessage: MoJAlert = {
+            variant: 'information',
+            title: 'Visit cancelled',
+            showTitleAsHeading: true,
+            text,
+          }
 
-        expect(getVisitMessages({ visit, prisonName })).toStrictEqual([expectedMessage])
-      })
+          expect(getVisitMessages({ visit, prisonName })).toStrictEqual([expectedMessage])
+        },
+      )
     })
 
     it('visit request', () => {

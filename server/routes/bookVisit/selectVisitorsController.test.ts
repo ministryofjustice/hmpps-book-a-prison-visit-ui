@@ -160,7 +160,7 @@ describe('Select visitors', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
@@ -281,7 +281,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney!.selectedVisitors = [visitor1, visitor4, visitor8]
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -297,7 +297,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney!.selectedVisitors = [visitor1, visitor4, visitor8]
       const formValues = { visitorDisplayIds: [visitor2.visitorDisplayId, visitor7.visitorDisplayId] }
       flashData = { formValues: [formValues] }
 
@@ -500,7 +500,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -515,7 +515,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -539,7 +539,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -557,7 +557,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -580,7 +580,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -598,7 +598,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
     })

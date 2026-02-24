@@ -15,7 +15,7 @@ export default class SelectPrisonerController {
     return async (req, res) => {
       clearSession(req)
 
-      const { booker } = req.session
+      const booker = req.session.booker!
       const prisoner = booker.prisoners[0]
       const bookVisitJourney: BookVisitJourney = { prisoner }
 
@@ -29,24 +29,29 @@ export default class SelectPrisonerController {
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
 
       if (validationResult === true && prisonerHasVOsOrRemand) {
-        bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId)
+        bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId!)
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 
-      if (
-        validationResult === 'PRISONER_RELEASED' ||
-        validationResult === 'PRISONER_TRANSFERRED_SUPPORTED_PRISON' ||
-        validationResult === 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON'
-      ) {
-        bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
-      }
+      switch (validationResult) {
+        case 'PRISONER_RELEASED':
+        case 'PRISONER_TRANSFERRED_SUPPORTED_PRISON':
+        case 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON':
+          bookVisitJourney.cannotBookReason = 'TRANSFER_OR_RELEASE'
+          break
 
-      if (validationResult === 'REGISTERED_PRISON_NOT_SUPPORTED') {
-        bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
-      }
+        case 'REGISTERED_PRISON_NOT_SUPPORTED':
+          bookVisitJourney.cannotBookReason = 'UNSUPPORTED_PRISON'
+          break
 
-      if (validationResult === true) {
-        bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
+        case true:
+          bookVisitJourney.cannotBookReason = 'NO_VO_BALANCE'
+          break
+
+        default: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const unhandledCase: never = validationResult
+        }
       }
 
       return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)

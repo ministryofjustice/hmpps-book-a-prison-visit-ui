@@ -9,7 +9,7 @@ export default class ContactDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookVisitJourney
+      const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookVisitJourney!
 
       const formValues = {
         mainContactEmail,
@@ -35,9 +35,9 @@ export default class ContactDetailsController {
         return res.redirect(paths.BOOK_VISIT.CONTACT_DETAILS)
       }
 
-      const { bookVisitJourney } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
       const { getUpdatesBy, mainContactEmail, mainContactPhone } = matchedData<{
-        getUpdatesBy?: string[]
+        getUpdatesBy: string[]
         mainContactEmail?: string
         mainContactPhone?: string
       }>(req)

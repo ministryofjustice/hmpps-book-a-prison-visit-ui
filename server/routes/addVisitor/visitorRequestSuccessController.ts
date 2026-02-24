@@ -21,7 +21,7 @@ export default class VisitorRequestSuccessController {
       }
 
       const visitorName = `${req.session.addVisitorJourney.visitorDetails.firstName} ${req.session.addVisitorJourney.visitorDetails.lastName}`
-      const prisoner = req.session.booker.prisoners[0]
+      const prisoner = req.session.booker!.prisoners[0]
 
       delete req.session.addVisitorJourney
 

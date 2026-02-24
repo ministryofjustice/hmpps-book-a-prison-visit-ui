@@ -54,7 +54,7 @@ export const flashProvider = jest.fn()
 function appSetup(
   services: Services,
   production: boolean,
-  userSupplier: () => Express.User,
+  userSupplier: () => Express.User | undefined,
   sessionData: SessionData,
   cookies: Request['cookies'],
 ): Express {
@@ -72,9 +72,7 @@ function appSetup(
     req.user = userSupplier()
     req.flash = flashProvider
     req.cookies = cookies
-    res.locals = {
-      user: { ...req.user },
-    }
+    res.locals = req.user ? { user: { ...req.user } } : {}
     next()
   })
   app.use(express.json())
@@ -98,7 +96,7 @@ export function appWithAllRoutes({
 }: {
   production?: boolean
   services?: Partial<Services>
-  userSupplier?: () => Express.User
+  userSupplier?: () => Express.User | undefined
   sessionData?: SessionData
   cookies?: Request['cookies']
 }): Express {

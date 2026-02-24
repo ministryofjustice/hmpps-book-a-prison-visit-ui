@@ -11,15 +11,15 @@ export default class CheckVisitDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookVisitJourney } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookVisitJourney.visitorSupport,
         mainContactName: getMainContactName(bookVisitJourney.mainContact),
         mainContactPhone: bookVisitJourney.mainContactPhone,
         mainContactEmail: bookVisitJourney.mainContactEmail,
-        sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
-        sessionTimeSlot: bookVisitJourney.selectedVisitSession.sessionTimeSlot,
+        sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
+        sessionTimeSlot: bookVisitJourney.selectedVisitSession!.sessionTimeSlot,
         visitors: bookVisitJourney.selectedVisitors,
         prisoner: bookVisitJourney.prisoner,
       })
@@ -28,19 +28,20 @@ export default class CheckVisitDetailsController {
 
   public submit(): RequestHandler {
     return async (req, res, next) => {
-      const { bookVisitJourney, booker } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
+      const booker = req.session.booker!
 
       try {
         const visit = await this.visitService.bookVisit({
-          applicationReference: bookVisitJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference!,
           actionedBy: booker.reference,
-          isRequestBooking: bookVisitJourney.selectedVisitSession.sessionForReview,
-          visitors: bookVisitJourney.selectedVisitors,
+          isRequestBooking: bookVisitJourney.selectedVisitSession!.sessionForReview,
+          visitors: bookVisitJourney.selectedVisitors!,
         })
 
         const bookVisitConfirmed: BookVisitConfirmed = {
           isARequest: visit.visitSubStatus === 'REQUESTED',
-          prison: bookVisitJourney.prison,
+          prison: bookVisitJourney.prison!,
           visitReference: visit.reference,
           hasEmail: !!bookVisitJourney.mainContactEmail,
           hasMobile: isMobilePhoneNumber(bookVisitJourney.mainContactPhone),
@@ -51,9 +52,9 @@ export default class CheckVisitDetailsController {
 
         return res.redirect(bookVisitConfirmed.isARequest ? paths.BOOK_VISIT.REQUESTED : paths.BOOK_VISIT.BOOKED)
       } catch (error) {
-        if (error.status === 422) {
-          const validationErrors =
-            (error as SanitisedError<ApplicationValidationErrorResponse>)?.data?.validationErrors ?? []
+        const sanitisedError = error as SanitisedError<ApplicationValidationErrorResponse>
+        if (sanitisedError.status === 422) {
+          const validationErrors = sanitisedError?.data?.validationErrors ?? []
 
           if (validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND')) {
             return next(error)

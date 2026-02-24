@@ -71,7 +71,7 @@ describe('Add visitor request success page', () => {
     })
 
     it('should redirect to visitors page if add visitor request result not in session', () => {
-      delete sessionData.addVisitorJourney.result
+      delete sessionData.addVisitorJourney!.result
 
       return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
     })

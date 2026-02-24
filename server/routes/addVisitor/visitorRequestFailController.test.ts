@@ -31,7 +31,7 @@ afterEach(() => {
 describe('Add visitor request failure pages', () => {
   describe(`GET ${paths.ADD_VISITOR.SUCCESS}`, () => {
     it('should render add visitor journey request failure page - visitor already requested', () => {
-      sessionData.addVisitorJourney.result = 'REQUEST_ALREADY_EXISTS'
+      sessionData.addVisitorJourney!.result = 'REQUEST_ALREADY_EXISTS'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
@@ -53,7 +53,7 @@ describe('Add visitor request failure pages', () => {
     })
 
     it('should render add visitor journey request failure page - visitor already linked', () => {
-      sessionData.addVisitorJourney.result = 'VISITOR_ALREADY_EXISTS'
+      sessionData.addVisitorJourney!.result = 'VISITOR_ALREADY_EXISTS'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_ALREADY_LINKED)
@@ -75,7 +75,7 @@ describe('Add visitor request failure pages', () => {
     })
 
     it('should render add visitor journey request failure page - too many requests', () => {
-      sessionData.addVisitorJourney.result = 'MAX_IN_PROGRESS_REQUESTS_REACHED'
+      sessionData.addVisitorJourney!.result = 'MAX_IN_PROGRESS_REQUESTS_REACHED'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS)
