@@ -24,7 +24,7 @@ export default class CheckVisitorDetailsController {
     return async (req, res) => {
       const { addVisitorJourney, booker } = req.session
 
-      if (!addVisitorJourney || !booker.prisoners?.length) {
+      if (!addVisitorJourney || !booker?.prisoners?.length) {
         return res.redirect(paths.VISITORS)
       }
 

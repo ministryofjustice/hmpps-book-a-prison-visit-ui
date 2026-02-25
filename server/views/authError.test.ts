@@ -1,10 +1,11 @@
 import * as cheerio from 'cheerio'
 import express from 'express'
 import nunjucksSetup from '../utils/nunjucksSetup'
+import { ApplicationInfo } from '../applicationInfo'
 
 describe('Authorisation error page', () => {
   const app = express()
-  nunjucksSetup(app, null)
+  nunjucksSetup(app, {} as ApplicationInfo)
 
   it('should render a default GOVUK Header on the authorisation error page', () => {
     app.render('authError', (err: Error, html: string) => {

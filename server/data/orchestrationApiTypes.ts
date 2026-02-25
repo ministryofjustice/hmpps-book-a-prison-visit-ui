@@ -2,7 +2,12 @@ import { components } from '../@types/orchestration-api'
 
 export type AddVisitorToBookerPrisonerRequestDto = components['schemas']['AddVisitorToBookerPrisonerRequestDto']
 
-export type ApplicationDto = components['schemas']['ApplicationDto']
+// visitContact and visitorSupport can be 'null'
+// FIXME can API annotations be updated?
+export type ApplicationDto = Omit<components['schemas']['ApplicationDto'], 'visitContact' | 'visitorSupport'> & {
+  visitContact: components['schemas']['ApplicationDto']['visitContact'] | null
+  visitorSupport: components['schemas']['ApplicationDto']['visitorSupport'] | null
+}
 
 export type ApplicationValidationErrorResponse = components['schemas']['ApplicationValidationErrorResponse']
 
@@ -14,7 +19,14 @@ export type AvailableVisitSessionRestrictionDto = components['schemas']['Availab
 
 export type BookingOrchestrationRequestDto = components['schemas']['BookingOrchestrationRequestDto']
 
-export type BookingRequestVisitorDetailsDto = components['schemas']['BookingRequestVisitorDetailsDto']
+// visitorAge can be 'null'
+// FIXME can API annotations be updated?
+export type BookingRequestVisitorDetailsDto = Omit<
+  components['schemas']['BookingRequestVisitorDetailsDto'],
+  'visitorAge'
+> & {
+  visitorAge: components['schemas']['BookingRequestVisitorDetailsDto']['visitorAge'] | null
+}
 
 export type BookerPrisonerInfoDto = components['schemas']['BookerPrisonerInfoDto']
 
@@ -37,7 +49,11 @@ export type CreateApplicationDto = components['schemas']['CreateApplicationDto']
 
 export type CreateVisitorRequestResponseDto = components['schemas']['CreateVisitorRequestResponseDto']
 
-export type OrchestrationVisitDto = components['schemas']['OrchestrationVisitDto']
+// outcomeStatus can be 'null'
+// FIXME can API annotations be updated?
+export type OrchestrationVisitDto = Omit<components['schemas']['OrchestrationVisitDto'], 'outcomeStatus'> & {
+  outcomeStatus: components['schemas']['OrchestrationVisitDto']['outcomeStatus'] | null
+}
 
 export type RegisterPrisonerForBookerDto = components['schemas']['RegisterPrisonerForBookerDto']
 

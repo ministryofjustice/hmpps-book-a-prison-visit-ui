@@ -80,7 +80,7 @@ describe('Check visitor request details', () => {
           .expect(302)
           .expect('Location', redirectPath)
           .expect(() => {
-            expect(sessionData.addVisitorJourney.result).toBe(apiResponse)
+            expect(sessionData.addVisitorJourney!.result).toBe(apiResponse)
             expect(bookerService.addVisitorRequest).toHaveBeenCalledWith({
               bookerReference: 'aaaa-bbbb-cccc',
               prisonerId: 'A1234BC',

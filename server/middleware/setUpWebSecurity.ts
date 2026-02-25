@@ -1,5 +1,6 @@
 import crypto from 'crypto'
 import express, { Router, Request, Response, NextFunction } from 'express'
+import { IncomingMessage, ServerResponse } from 'http'
 import helmet from 'helmet'
 import config from '../config'
 
@@ -26,10 +27,13 @@ export default function setUpWebSecurity(): Router {
           // page by an attacker.
           scriptSrc: [
             "'self'",
-            (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
+            (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
             'https://*.googletagmanager.com',
           ],
-          styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
+          styleSrc: [
+            "'self'",
+            (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as Response).locals.cspNonce}'`,
+          ],
           fontSrc: ["'self'"],
           imgSrc: ["'self'", 'data:', 'https://*.google-analytics.com', 'https://*.googletagmanager.com'],
           connectSrc: [

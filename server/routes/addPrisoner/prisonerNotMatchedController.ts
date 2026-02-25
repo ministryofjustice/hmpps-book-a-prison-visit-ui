@@ -12,7 +12,7 @@ export default class PrisonerNotMatchedController {
       }
       return res.render('pages/addPrisoner/prisonerNotMatched', {
         showOLServiceNav: true,
-        prisonName: addPrisonerJourney.selectedPrison.prisonName,
+        prisonName: addPrisonerJourney.selectedPrison!.prisonName,
       })
     }
   }

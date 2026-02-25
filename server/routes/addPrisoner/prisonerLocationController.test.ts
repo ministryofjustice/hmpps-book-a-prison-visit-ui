@@ -54,7 +54,7 @@ describe('Prisoner location', () => {
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(sessionData.addPrisonerJourney.supportedPrisons).toStrictEqual<PrisonRegisterPrisonDto[]>(
+          expect(sessionData.addPrisonerJourney!.supportedPrisons).toStrictEqual<PrisonRegisterPrisonDto[]>(
             supportedPrisons,
           )
         })
@@ -64,7 +64,7 @@ describe('Prisoner location', () => {
       const selectedPrison = TestData.prisonRegisterPrisonDto()
       const prisonerDetails = { firstName: 'name' } as AddPrisonerJourney['prisonerDetails']
       sessionData.addPrisonerJourney = {
-        supportedPrisons: undefined,
+        supportedPrisons,
         selectedPrison,
         prisonerDetails,
       }
@@ -120,7 +120,7 @@ describe('Prisoner location', () => {
         .expect('Location', paths.ADD_PRISONER.DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney.selectedPrison).toStrictEqual(selectedPrison)
+          expect(sessionData.addPrisonerJourney!.selectedPrison).toStrictEqual(selectedPrison)
         })
     })
 
@@ -142,7 +142,7 @@ describe('Prisoner location', () => {
           .expect('Location', paths.ADD_PRISONER.LOCATION)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.addPrisonerJourney.selectedPrison).toBeUndefined()
+            expect(sessionData.addPrisonerJourney!.selectedPrison).toBeUndefined()
           })
       })
 
@@ -170,7 +170,7 @@ describe('Prisoner location', () => {
           .expect('Location', paths.ADD_PRISONER.LOCATION)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.addPrisonerJourney.selectedPrison).toBeUndefined()
+            expect(sessionData.addPrisonerJourney!.selectedPrison).toBeUndefined()
           })
       })
     })

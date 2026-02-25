@@ -53,7 +53,7 @@ export default class PrisonerDetailsController {
         }
       >matchedData(req)
 
-      const { reference } = req.session.booker
+      const { reference } = req.session.booker!
       const result = await this.bookerService.registerPrisoner(reference, {
         prisonerId: data.prisonNumber,
         prisonerFirstName: data.firstName,

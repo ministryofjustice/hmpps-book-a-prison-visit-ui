@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { Meta, ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import paths from '../../constants/paths'
 
 export default class MainContactController {
@@ -7,7 +7,8 @@ export default class MainContactController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { selectedVisitors, mainContact } = req.session.bookVisitJourney
+      const selectedVisitors = req.session.bookVisitJourney!.selectedVisitors!
+      const mainContact = req.session.bookVisitJourney!.mainContact!
 
       const adultVisitors = selectedVisitors.filter(visitor => visitor.adult)
 
@@ -41,7 +42,7 @@ export default class MainContactController {
         return res.redirect(paths.BOOK_VISIT.MAIN_CONTACT)
       }
 
-      const { bookVisitJourney } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
       const { contact, someoneElseName } = matchedData<{
         contact?: string
         someoneElseName?: string
@@ -50,7 +51,7 @@ export default class MainContactController {
       if (contact === 'someoneElse') {
         bookVisitJourney.mainContact = someoneElseName
       } else {
-        const contactVisitor = bookVisitJourney.selectedVisitors.find(
+        const contactVisitor = bookVisitJourney.selectedVisitors!.find(
           visitor => visitor.visitorDisplayId.toString() === contact,
         )
         bookVisitJourney.mainContact = contactVisitor
@@ -64,13 +65,13 @@ export default class MainContactController {
     return [
       body('contact', 'No main contact selected')
         // filter invalid values - it should be a selected adult visitor or 'someoneElse'
-        .customSanitizer((contact: string, { req }: Meta & { req: Express.Request }) => {
+        .customSanitizer((contact: string, { req }) => {
           if (contact === 'someoneElse') {
             return contact
           }
 
-          const selectedAdultVisitorIds = req.session.bookVisitJourney.selectedVisitors
-            .filter(visitor => visitor.adult)
+          const selectedAdultVisitorIds = (req as Express.Request).session
+            .bookVisitJourney!.selectedVisitors!.filter(visitor => visitor.adult)
             .map(visitor => visitor.visitorDisplayId.toString())
 
           return selectedAdultVisitorIds.includes(contact) ? contact : undefined

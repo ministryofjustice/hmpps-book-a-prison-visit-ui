@@ -15,7 +15,7 @@ import OrchestrationApiClient from './orchestrationApiClient'
 import tokenStoreFactory from './tokenStore/tokenStoreFactory'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import config from '../config'
-import { createRedisClient, RedisClient } from './redisClient'
+import { createRedisClient } from './redisClient'
 import { DataCache } from './dataCache/dataCache'
 import InMemoryDataCache from './dataCache/inMemoryDataCache'
 import RedisDataCache from './dataCache/redisDataCache'
@@ -23,11 +23,7 @@ import RedisDataCache from './dataCache/redisDataCache'
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => {
-  let redisClient: RedisClient
-  if (config.redis.enabled) {
-    redisClient = createRedisClient()
-  }
-  const dataCache = config.redis.enabled ? new RedisDataCache(redisClient) : new InMemoryDataCache()
+  const dataCache = config.redis.enabled ? new RedisDataCache(createRedisClient()) : new InMemoryDataCache()
 
   return {
     applicationInfo,

@@ -92,7 +92,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getFuturePublicVisits', () => {
     it('should retrieve all future visits associated with a booker', async () => {
-      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
+      const visits = [TestData.orchestrationVisitDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/visits/booked/future`)
@@ -107,7 +107,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getCancelledPublicVisits', () => {
     it('should retrieve all cancelled visits associated with a booker', async () => {
-      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
+      const visits = [TestData.orchestrationVisitDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/visits/cancelled`)
@@ -122,7 +122,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getPastPublicVisits', () => {
     it('should retrieve all past visits associated with a booker', async () => {
-      const visits = [TestData.orchestrationVisitDto({ outcomeStatus: null })]
+      const visits = [TestData.orchestrationVisitDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/visits/booked/past`)
@@ -422,7 +422,7 @@ describe('orchestrationApiClient', () => {
         .reply(200, visitSessions)
 
       const result = await orchestrationApiClient.getVisitSessions({
-        prisonId: prisoner.prisonId,
+        prisonId: prisoner.prisonId!,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference: bookerReference.value,

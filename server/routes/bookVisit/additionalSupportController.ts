@@ -7,7 +7,7 @@ export default class AdditionalSupportController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { applicationReference, visitorSupport } = req.session.bookVisitJourney
+      const { applicationReference, prison, visitorSupport } = req.session.bookVisitJourney!
 
       const selectedAdditionalSupport =
         visitorSupport !== undefined
@@ -25,7 +25,7 @@ export default class AdditionalSupportController {
       res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues,
-        prisonName: req.session.bookVisitJourney.prison.prisonName,
+        prisonName: prison!.prisonName,
         applicationReference,
       })
     }
@@ -40,7 +40,7 @@ export default class AdditionalSupportController {
         return res.redirect(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
       }
 
-      const { bookVisitJourney } = req.session
+      const bookVisitJourney = req.session.bookVisitJourney!
       const { additionalSupport, additionalSupportRequired } = matchedData<{
         additionalSupport?: string
         additionalSupportRequired?: 'yes' | 'no'

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import { body, matchedData, Meta, ValidationChain, validationResult } from 'express-validator'
+import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 
@@ -39,7 +39,7 @@ export default class PrisonerLocationController {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
       }
 
-      const { addPrisonerJourney } = req.session
+      const addPrisonerJourney = req.session.addPrisonerJourney!
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       addPrisonerJourney.selectedPrison = addPrisonerJourney.supportedPrisons.find(
         prison => prison.prisonId === prisonId,
@@ -51,8 +51,8 @@ export default class PrisonerLocationController {
 
   public validate(): ValidationChain[] {
     return [
-      body('prisonId', 'Select a prison').custom((prisonId: string, { req }: Meta & { req: Express.Request }) => {
-        const supportedPrisons = req.session.addPrisonerJourney?.supportedPrisons ?? []
+      body('prisonId', 'Select a prison').custom((prisonId: string, { req }) => {
+        const supportedPrisons = (req as Express.Request).session.addPrisonerJourney?.supportedPrisons ?? []
         return supportedPrisons.some(prison => prison.prisonId === prisonId)
       }),
     ]

@@ -5,7 +5,6 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
 
 let app: Express
-let userSupplier: () => Express.User
 
 const authenticatedUserPages = [
   [paths.ACCESSIBILITY, 'Accessibility statement for Visit someone in prison'],
@@ -45,8 +44,7 @@ describe('Static content pages - authenticated users', () => {
 
 describe('Static content pages - unauthenticated users', () => {
   it.each(unauthenticatedUserPages)('%s - with GOVUK One Login header', (path, pageTitle) => {
-    userSupplier = () => undefined
-    app = appWithAllRoutes({ userSupplier })
+    app = appWithAllRoutes({ userSupplier: () => undefined })
 
     return request(app)
       .get(path)

@@ -1,15 +1,15 @@
 import type { RequestHandler } from 'express'
-import { SessionData } from 'express-session'
 import createError from 'http-errors'
 import { VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
+import { BookedVisits } from '../../@types/bapv'
 
 export default class VisitsController {
   public constructor(private readonly visitService: VisitService) {}
 
-  public view(type: SessionData['bookedVisits']['type']): RequestHandler {
+  public view(type: BookedVisits['type']): RequestHandler {
     return async (req, res, next) => {
-      const { booker } = req.session
+      const booker = req.session.booker!
 
       let visits: VisitDetails[]
       switch (type) {
