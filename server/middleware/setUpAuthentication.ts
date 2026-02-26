@@ -70,7 +70,12 @@ export function setUpAuthentication(): Router {
 
       const verify: VerifyFunctionWithRequest = async (req, tokens, verified) => {
         try {
-          const { iat, sub, vot } = tokens.claims()
+          const claims = tokens.claims()
+          if (claims === undefined) {
+            throw new Error('Token validation failed: No claims found in ID token')
+          }
+
+          const { iat, sub, vot } = claims
 
           // GOV.UK One Login required ID token validations that openid-client does not do by default
           // Check token issue date not in the future (plus openid-client's default 30s clock tolerance)
@@ -145,7 +150,7 @@ export function setUpAuthentication(): Router {
       })
 
       router.get(paths.SIGN_OUT, async (req, res, next) => {
-        if (req.user) {
+        if (req.user?.idToken) {
           const { idToken } = req.user
 
           req.logout(err => {
@@ -198,16 +203,14 @@ export function authenticationMiddleware(): RequestHandler {
 async function discoverClientConfiguration(): Promise<openidClient.Configuration> {
   const server = new URL(config.apis.govukOneLogin.url)
   const { clientId } = config.apis.govukOneLogin
-  const clientMetadata: openidClient.ClientMetadata = undefined // no custom metadata required
+  const clientMetadata = undefined // no custom metadata required
 
   const privateKeyPem = config.apis.govukOneLogin.privateKey
   const privateKey = await getPrivateKey(privateKeyPem)
 
-  // Modify assertion to override aud claim and remove nbf for private_key_jwt
+  // Modify assertion to remove nbf for private_key_jwt
   const modifyAssertion: openidClient.ModifyAssertionOptions = {
     [openidClient.modifyAssertion]: (_header, payload) => {
-      // eslint-disable-next-line no-param-reassign
-      payload.aud = `${config.apis.govukOneLogin.url}/token`
       // eslint-disable-next-line no-param-reassign
       payload.nbf = undefined
     },

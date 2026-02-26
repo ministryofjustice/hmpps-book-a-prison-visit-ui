@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, validationResult } from 'express-validator'
-import { SessionData } from 'express-session'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { getVisitMessages } from './visitsUtils'
 import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
+import { BookedVisits } from '../../@types/bapv'
 
 export default class VisitDetailsController {
   // label visits with these statuses as a 'request' rather than a 'visit'
@@ -18,9 +18,9 @@ export default class VisitDetailsController {
 
   public constructor(private readonly prisonService: PrisonService) {}
 
-  public view(type: SessionData['bookedVisits']['type']): RequestHandler {
+  public view(type: BookedVisits['type']): RequestHandler {
     return async (req, res) => {
-      const { bookedVisits } = req.session
+      const bookedVisits = req.session.bookedVisits!
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || bookedVisits.type !== type) {
@@ -30,7 +30,7 @@ export default class VisitDetailsController {
       const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
 
       const { visits } = bookedVisits
-      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)
+      const visit = visits.find(v => v.visitDisplayId === visitDisplayId)!
 
       const prison = await this.prisonService.getPrison(visit.prisonId)
 

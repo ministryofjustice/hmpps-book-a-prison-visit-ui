@@ -29,7 +29,7 @@ describe('Prisoner not matched', () => {
     })
 
     it('should render prisoner details do not match page', () => {
-      sessionData.addPrisonerJourney.result = false
+      sessionData.addPrisonerJourney!.result = false
 
       return request(app)
         .get(paths.ADD_PRISONER.FAIL)

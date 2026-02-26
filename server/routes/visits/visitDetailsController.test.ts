@@ -17,14 +17,11 @@ const prison = TestData.prisonDto()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
-let bookedVisits: SessionData['bookedVisits']
 let visitDetails: VisitDetails
 
 beforeEach(() => {
   visitDetails = TestData.visitDetails({ visitDisplayId })
-  bookedVisits = { type: undefined, visits: [visitDetails] }
-
-  sessionData = { bookedVisits } as SessionData
+  sessionData = {} as SessionData
 
   prisonService.getPrison.mockResolvedValue(prison)
 
@@ -49,7 +46,7 @@ describe('View a single visit', () => {
     })
 
     it('should render the visit details page', () => {
-      bookedVisits.type = 'future'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -90,9 +87,9 @@ describe('View a single visit', () => {
     })
 
     it('should render the visit details page - no main contact details', () => {
-      bookedVisits.type = 'future'
-      bookedVisits.visits[0].visitContact.email = undefined
-      bookedVisits.visits[0].visitContact.telephone = undefined
+      visitDetails.visitContact.email = undefined
+      visitDetails.visitContact.telephone = undefined
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -106,8 +103,8 @@ describe('View a single visit', () => {
     })
 
     it('should render the visit details page - requested visit', () => {
-      bookedVisits.type = 'future'
-      bookedVisits.visits[0].visitSubStatus = 'REQUESTED'
+      visitDetails.visitSubStatus = 'REQUESTED'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -124,8 +121,8 @@ describe('View a single visit', () => {
     })
 
     it('should show alternative content if prison has no phone number', () => {
-      bookedVisits.type = 'future'
-      prisonService.getPrison.mockResolvedValue(TestData.prisonDto({ phoneNumber: null }))
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
+      prisonService.getPrison.mockResolvedValue({ ...TestData.prisonDto(), phoneNumber: undefined })
 
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
@@ -141,7 +138,7 @@ describe('View a single visit', () => {
 
   describe('Past visit', () => {
     it('should render the visit details page', () => {
-      bookedVisits.type = 'past'
+      sessionData.bookedVisits = { type: 'past', visits: [visitDetails] }
 
       return request(app)
         .get(`${paths.VISITS.VISIT_PAST}/${visitDetails.visitDisplayId}`)
@@ -173,10 +170,10 @@ describe('View a single visit', () => {
 
   describe('Cancelled visit', () => {
     it('should render the visit details page with "Visit cancelled" message', () => {
-      bookedVisits.type = 'cancelled'
       visitDetails.visitStatus = 'CANCELLED'
       visitDetails.visitSubStatus = 'CANCELLED'
       visitDetails.outcomeStatus = 'ESTABLISHMENT_CANCELLED'
+      sessionData.bookedVisits = { type: 'cancelled', visits: [visitDetails] }
 
       return request(app)
         .get(`${paths.VISITS.VISIT_CANCELLED}/${visitDetails.visitDisplayId}`)
@@ -210,12 +207,12 @@ describe('View a single visit', () => {
 
   describe('Validation', () => {
     it('should redirect to visits home page if an invalid visitDisplayId is passed', () => {
-      bookedVisits.type = 'future'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
       return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should redirect to visits home page if an unrecognised (not in session) visitDisplayId is passed', () => {
-      bookedVisits.type = 'future'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
       const unrecognisedUUID = randomUUID()
       return request(app)
         .get(`${paths.VISITS.DETAILS}/${unrecognisedUUID}`)

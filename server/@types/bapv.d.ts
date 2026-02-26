@@ -7,6 +7,7 @@ import {
   PrisonRegisterPrisonDto,
 } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
+import { type VisitDetails } from '../services/visitService'
 
 export type Booker = {
   reference: string
@@ -89,6 +90,11 @@ export type BookVisitConfirmed = {
   visitReference: string
   hasEmail: boolean
   hasMobile: boolean
+}
+
+export type BookedVisits = {
+  type: 'future' | 'past' | 'cancelled'
+  visits: VisitDetails[]
 }
 
 export type VisitCancelled = {

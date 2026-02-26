@@ -38,7 +38,7 @@ describe('Prisoner details', () => {
     })
 
     it('should redirect to prisoner location page if selectedPrison not set in session', () => {
-      sessionData.addPrisonerJourney.selectedPrison = undefined
+      sessionData.addPrisonerJourney!.selectedPrison = undefined
       return request(app).get(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
@@ -65,7 +65,7 @@ describe('Prisoner details', () => {
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.addPrisonerJourney.prisonerDetails = {
+      sessionData.addPrisonerJourney!.prisonerDetails = {
         firstName: 'first',
         lastName: 'last',
         'prisonerDob-day': '1',
@@ -89,7 +89,7 @@ describe('Prisoner details', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.addPrisonerJourney.prisonerDetails = {
+      sessionData.addPrisonerJourney!.prisonerDetails = {
         firstName: 'first-session',
       } as AddPrisonerJourney['prisonerDetails']
 
@@ -142,7 +142,7 @@ describe('Prisoner details', () => {
     const registerPrisonerDto = TestData.registerPrisonerForBookerDto()
 
     it('should redirect to prisoner location page if selectedPrison not set in session', () => {
-      sessionData.addPrisonerJourney.selectedPrison = undefined
+      sessionData.addPrisonerJourney!.selectedPrison = undefined
       return request(app).post(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
@@ -156,8 +156,8 @@ describe('Prisoner details', () => {
         .expect('Location', paths.ADD_PRISONER.SUCCESS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
-          expect(sessionData.addPrisonerJourney.result).toBe(true)
+          expect(sessionData.addPrisonerJourney!.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney!.result).toBe(true)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -172,8 +172,8 @@ describe('Prisoner details', () => {
         .expect('Location', paths.ADD_PRISONER.FAIL)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney.prisonerDetails).toStrictEqual(prisonerDetails)
-          expect(sessionData.addPrisonerJourney.result).toBe(false)
+          expect(sessionData.addPrisonerJourney!.prisonerDetails).toStrictEqual(prisonerDetails)
+          expect(sessionData.addPrisonerJourney!.result).toBe(false)
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -187,8 +187,8 @@ describe('Prisoner details', () => {
         .expect(400)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney.prisonerDetails).toBeUndefined()
-          expect(sessionData.addPrisonerJourney.result).toBeUndefined()
+          expect(sessionData.addPrisonerJourney!.prisonerDetails).toBeUndefined()
+          expect(sessionData.addPrisonerJourney!.result).toBeUndefined()
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })

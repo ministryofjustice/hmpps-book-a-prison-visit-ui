@@ -104,7 +104,7 @@ export default class TestData {
     nextAvailableVoDate: string
     convictedStatus: ConvictedStatus
   }> = {}): BookerPrisonerInfoDto => ({
-    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: undefined, prisonId, prisonName, convictedStatus },
+    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: '1980-02-01', prisonId, prisonName, convictedStatus },
     availableVos,
     nextAvailableVoDate,
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
@@ -160,7 +160,7 @@ export default class TestData {
     prisonId = 'HEI',
     visitStatus = 'BOOKED',
     visitSubStatus = 'AUTO_APPROVED',
-    outcomeStatus = undefined,
+    outcomeStatus = null,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'visitor@example.com' },
@@ -221,7 +221,7 @@ export default class TestData {
     ({ prisonId, prisonName }) as PrisonRegisterPrisonDto
 
   static prisoner = ({
-    prisonerDisplayId = 'uuidv4-1',
+    prisonerDisplayId = 'uuidv4-1-1-1-1',
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
@@ -344,14 +344,14 @@ export default class TestData {
   })
 
   static visitor = ({
-    visitorDisplayId = 'uuidv4-1',
+    visitorDisplayId = 'uuidv4-1-1-1-1',
     visitorId = 1234,
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
     adult = true,
     banned = false,
-    banExpiryDate,
+    banExpiryDate = null,
     approved = true,
   }: Partial<Visitor> = {}): Visitor => ({
     visitorDisplayId,

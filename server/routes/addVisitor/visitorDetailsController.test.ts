@@ -137,7 +137,7 @@ describe('Visitor details', () => {
         .expect('Location', paths.ADD_VISITOR.CHECK)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addVisitorJourney.visitorDetails).toStrictEqual(visitorDetails)
+          expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(visitorDetails)
         })
     })
 

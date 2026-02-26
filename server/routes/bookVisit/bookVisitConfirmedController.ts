@@ -5,7 +5,7 @@ export default class BookVisitConfirmedController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { bookVisitConfirmed } = req.session
+      const bookVisitConfirmed = req.session.bookVisitConfirmed!
 
       res.render(bookVisitConfirmed.isARequest ? 'pages/bookVisit/visitRequested' : 'pages/bookVisit/visitBooked', {
         bookVisitConfirmed,

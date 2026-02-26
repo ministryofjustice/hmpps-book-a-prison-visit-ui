@@ -8,8 +8,8 @@ import {
   BookVisitJourney,
   FlashFormValues,
   MoJAlert,
+  BookedVisits,
 } from '../bapv'
-import { VisitDetails } from '../../services/visitService'
 
 export default {}
 
@@ -19,7 +19,7 @@ declare module 'express-session' {
     returnTo: string
     nowInMinutes: number
 
-    booker: Booker
+    booker?: Booker
 
     addPrisonerJourney?: AddPrisonerJourney
 
@@ -28,10 +28,7 @@ declare module 'express-session' {
     bookVisitJourney?: BookVisitJourney
     bookVisitConfirmed?: BookVisitConfirmed
 
-    bookedVisits?: {
-      type: 'future' | 'past' | 'cancelled'
-      visits: VisitDetails[]
-    }
+    bookedVisits?: BookedVisits
 
     visitCancelled?: VisitCancelled
 
@@ -50,7 +47,7 @@ export declare global {
       phone_number_verified: boolean
 
       // User's ID token (required during sign-out)
-      idToken: string
+      idToken?: string
     }
 
     interface Request {
@@ -68,7 +65,7 @@ export declare global {
     }
 
     interface Locals {
-      user: Express.User
+      user?: Express.User
       analyticsEnabled?: boolean
     }
   }

@@ -1,6 +1,5 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
-import { SessionData } from 'express-session'
 // eslint-disable-next-line import/no-named-as-default
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 import type { Visitor } from '../services/bookerService'
@@ -49,7 +48,7 @@ export const formatTime = (time: string): string => {
 
 export const formatTimeFromDateTime = (dateTime: string): string => {
   try {
-    return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : null
+    return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : ''
   } catch {
     return ''
   }
@@ -73,24 +72,22 @@ export const pluralise = (word: string, count: string | number, plural = `${word
   return parseInt(count.toString(), 10) === 1 ? word : plural
 }
 
-export const isAdult = (dateOfBirth: string, referenceDate: Date = new Date()): boolean => {
+export const isAdult = (dateOfBirth: string | undefined, referenceDate: Date = new Date()): boolean => {
+  if (!dateOfBirth) return false
   const dobDate = parseISO(dateOfBirth)
   return differenceInYears(referenceDate, dobDate) >= 18
 }
 
 export const clearSession = (req: Request): void => {
-  ;['addPrisonerJourney', 'bookVisitJourney', 'bookVisitConfirmed'].forEach((sessionItem: keyof SessionData) => {
+  ;(['addPrisonerJourney', 'bookVisitJourney', 'bookVisitConfirmed'] as const).forEach(sessionItem => {
     delete req.session[sessionItem]
   })
 }
 
-export const getMainContactName = (mainContact: Visitor | string): string => {
-  if (mainContact) {
-    return typeof mainContact === 'string' ? mainContact : `${mainContact.firstName} ${mainContact.lastName}`
-  }
-  return undefined
+export const getMainContactName = (mainContact: Visitor | string = ''): string => {
+  return typeof mainContact === 'string' ? mainContact : `${mainContact.firstName} ${mainContact.lastName}`
 }
 
-export const isMobilePhoneNumber = (phoneNumber: string): boolean => {
+export const isMobilePhoneNumber = (phoneNumber: string | undefined): boolean => {
   return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
 }

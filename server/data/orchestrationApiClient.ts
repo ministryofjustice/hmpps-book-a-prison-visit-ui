@@ -192,8 +192,9 @@ export default class OrchestrationApiClient {
       })
       return result.status
     } catch (error) {
-      if ((<SanitisedError>error)?.status === 422) {
-        return error?.data?.validationError
+      const sanitisedError = error as SanitisedError<BookerVisitorRequestValidationErrorResponse>
+      if (sanitisedError?.status === 422 && sanitisedError.data?.validationError) {
+        return sanitisedError.data.validationError
       }
       throw error
     }

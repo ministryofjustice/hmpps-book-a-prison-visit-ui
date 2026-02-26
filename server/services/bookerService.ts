@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID, UUID } from 'crypto'
 import { TooManyRequests } from 'http-errors'
 import { differenceInDays } from 'date-fns'
 import logger from '../../logger'
@@ -19,12 +19,12 @@ import RateLimitService from './rateLimitService'
 import { isAdult } from '../utils/utils'
 
 export type Prisoner = {
-  prisonerDisplayId: string
+  prisonerDisplayId: UUID
   prisonerNumber: string
   firstName: string
   lastName: string
-  prisonId: string
-  prisonName: string
+  prisonId?: string
+  prisonName?: string
   registeredPrisonId: string
   registeredPrisonName: string
   availableVos: number
@@ -33,20 +33,20 @@ export type Prisoner = {
 }
 
 export type Visitor = {
-  visitorDisplayId: string
+  visitorDisplayId: UUID
   visitorId: number
   firstName: string
   lastName: string
-  dateOfBirth: string
+  dateOfBirth?: string
   adult: boolean
   banned: boolean
-  banExpiryDate?: string
+  banExpiryDate: string | null
   approved: boolean
 }
 
 export type VisitorsByEligibility = {
-  eligibleVisitors?: Visitor[]
-  ineligibleVisitors?: Visitor[]
+  eligibleVisitors: Visitor[]
+  ineligibleVisitors: Visitor[]
 }
 
 export default class BookerService {
@@ -173,11 +173,9 @@ export default class BookerService {
       await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
       return true
     } catch (error) {
-      if (
-        error.status === 422 &&
-        typeof (error as SanitisedError<BookerPrisonerValidationErrorResponse>)?.data?.validationError === 'string'
-      ) {
-        return error.data.validationError
+      const sanitisedError = error as SanitisedError<BookerPrisonerValidationErrorResponse>
+      if (sanitisedError.status === 422 && sanitisedError.data?.validationError) {
+        return sanitisedError.data.validationError
       }
       throw error
     }
@@ -198,8 +196,8 @@ export default class BookerService {
         adult: isAdult(visitor.dateOfBirth),
         // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs
         banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
-        banExpiryDate: visitor.visitorRestrictions.find(restriction => restriction.restrictionType === 'BAN')
-          ?.expiryDate,
+        banExpiryDate:
+          visitor.visitorRestrictions.find(restriction => restriction.restrictionType === 'BAN')?.expiryDate ?? null,
         approved: visitor.approved,
       }
     })
