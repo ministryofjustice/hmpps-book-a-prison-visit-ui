@@ -39,7 +39,7 @@ describe('Select prisoner', () => {
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
       .expect(302)
-      .expect('Location', paths.HOME)
+      .expect('Location', paths.VISITS.HOME)
       .expect(() => {
         expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
       })

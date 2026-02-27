@@ -1,3 +1,5 @@
+import paths from "./constants/paths"
+
 const production = process.env.NODE_ENV === 'production'
 
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
@@ -126,7 +128,7 @@ export default {
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),
-  rootPathRedirect: get('ROOT_PATH_REDIRECT', '/home'), // Where to redirect unauthenticated users to for requests to '/'
+  rootPathRedirect: get('ROOT_PATH_REDIRECT', paths.VISITS.HOME), // Where to redirect unauthenticated users to for requests to '/'
   maintenance: {
     enabled: get('MAINTENANCE_MODE', 'false') === 'true',
     endDateTime: get('MAINTENANCE_MODE_END_DATE_TIME', ''), // ISO format e.g. YYYY-MM-DDTHH:MM

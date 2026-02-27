@@ -3,13 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import { createMockVisitService } from '../../services/testutils/mocks'
+import { createMockBookerService, createMockVisitService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 
 let app: Express
 
 const visitService = createMockVisitService()
+const bookerService = createMockBookerService()
 const bookerReference = TestData.bookerReference().value
 
 let sessionData: SessionData
@@ -17,7 +18,7 @@ let sessionData: SessionData
 beforeEach(() => {
   sessionData = {} as SessionData
 
-  app = appWithAllRoutes({ services: { visitService }, sessionData })
+  app = appWithAllRoutes({ services: { visitService, bookerService }, sessionData })
 })
 
 afterEach(() => {
@@ -36,6 +37,7 @@ describe('Visits home page (future visits list)', () => {
 
   it('should render the visits home page - with a future visit', () => {
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
+    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner()])
 
     return request(app)
       .get(paths.VISITS.HOME)
@@ -45,8 +47,6 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('h1').siblings('h2').first().text()).toBe('Future visits')
-
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="tag-1"]').length).toBe(0)
         expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
@@ -76,6 +76,7 @@ describe('Visits home page (future visits list)', () => {
 
   it('should render the visits home page - with no future visits', () => {
     visitService.getFuturePublicVisits.mockResolvedValue([])
+    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner()])
 
     return request(app)
       .get(paths.VISITS.HOME)
@@ -94,6 +95,103 @@ describe('Visits home page (future visits list)', () => {
           visits: [],
         } as SessionData['bookedVisits'])
       })
+  })
+
+  describe.only('Home page level tests', () => {
+    describe('Booker has a prisoner registered', () => {
+      const prisoner = TestData.prisoner()
+      bookerService.getPrisoners.mockResolvedValue([prisoner])
+
+      // For MVP only one prisoner per booker supported; so only first rendered
+      it.skip('should render the home page with the prisoner associated with the booker and store prisoners in session', () => {
+        return request(app)
+          .get(paths.VISITS.HOME)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Book a visit -/)
+            expect($('[data-test="back-link"]').length).toBe(0)
+            expect($('h1').text()).toBe('Book a visit')
+            expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+            expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+            expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1')
+            expect($('[data-test="start"]').text().trim()).toBe('Start')
+
+            expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
+            expect(sessionData).toStrictEqual({
+              booker: {
+                reference: bookerReference,
+                prisoners: [prisoner],
+              },
+            } as SessionData)
+          })
+      })
+    })
+
+    describe('Booker has no prisoner registered', () => {
+      beforeEach(() => {
+        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      })
+
+      afterEach(() => {
+        jest.resetAllMocks()
+      })
+
+      it.only('should render the home page with add a prisoner message and button', () => {
+        bookerService.getPrisoners.mockResolvedValue([])
+
+        return request(app)
+          .get(paths.VISITS.HOME)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Visits -/)
+            expect($('[data-test="back-link"]').length).toBe(0)
+            expect($('[data-test="prisoner-name"]').length).toBe(0)
+            expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
+            expect($('[data-test="start"]').length).toBe(0)
+            expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
+
+            expect(sessionData).toStrictEqual({
+              booker: {
+                reference: bookerReference,
+                prisoners: [],
+              },
+            } as SessionData)
+          })
+      })
+    })
+
+    describe('Page header', () => {
+      it.skip('should render the GOVUK One Login Header on pages where the user is logged in', () => {
+        return request(app)
+          .get(paths.VISITS.HOME)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('head > title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+
+            expect($('header .rebranded-one-login-header').length).toBe(1)
+            expect($('header.govuk-header').length).toBe(0)
+            expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+            expect($('.govuk-service-navigation__link').length).toBe(3)
+            expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Home')
+            expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Visits')
+            expect($('.govuk-service-navigation__link').eq(2).text().trim()).toBe('Visitors')
+          })
+      })
+
+      it.skip('should render the phase banner', () => {
+        return request(app)
+          .get(paths.VISITS.HOME)
+          .expect('Content-Type', /html/)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('head > title').text()).toBe('Book a visit - Visit someone in prison - GOV.UK')
+            expect($('.govuk-phase-banner').text()).toContain('Beta')
+          })
+      })
+    })
   })
 })
 

@@ -9,7 +9,7 @@ import CancelVisitConfirmedController from './cancel/cancelVisitConfirmedControl
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const visitsController = new VisitsController(services.visitService)
+  const visitsController = new VisitsController(services.visitService, services.bookerService)
   const visitDetailsController = new VisitDetailsController(services.prisonService)
   const cancelVisitController = new CancelVisitController(services.visitService)
   const cancelVisitConfirmedController = new CancelVisitConfirmedController()
@@ -20,7 +20,7 @@ export default function routes(services: Services): Router {
     res.redirect(paths.VISITS.HOME)
   })
 
-  router.get(paths.VISITS.HOME, visitsController.view('future'))
+  router.get(paths.VISITS.HOME, visitsController.home())
   router.get(paths.VISITS.PAST, visitsController.view('past'))
   router.get(paths.VISITS.CANCELLED, visitsController.view('cancelled'))
 

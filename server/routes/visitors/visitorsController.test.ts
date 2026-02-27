@@ -38,7 +38,7 @@ describe('Visitors page', () => {
     return request(app)
       .get(paths.VISITORS)
       .expect(302)
-      .expect('location', paths.HOME)
+      .expect('location', paths.VISITS.HOME)
       .expect(res => {
         expect(bookerService.getVisitors).not.toHaveBeenCalled()
       })

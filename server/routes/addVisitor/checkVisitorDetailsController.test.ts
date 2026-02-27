@@ -69,7 +69,7 @@ describe('Check visitor request details', () => {
         ['too many requests', 'MAX_IN_PROGRESS_REQUESTS_REACHED', paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS],
         ['request already exists', 'REQUEST_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED],
         ['visitor already linked', 'VISITOR_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_LINKED],
-        ['prisoner not found', 'PRISONER_NOT_FOUND_FOR_BOOKER', paths.HOME],
+        ['prisoner not found', 'PRISONER_NOT_FOUND_FOR_BOOKER', paths.VISITS.HOME],
       ])('%s', (_: string, apiResponse: unknown, redirectPath: string) => {
         bookerService.addVisitorRequest.mockResolvedValue(
           apiResponse as unknown as ReturnType<BookerService['addVisitorRequest']>,

@@ -68,7 +68,7 @@ describe('bookVisitSessionValidator', () => {
         expect(next).toHaveBeenCalledWith()
       } else {
         expect(logger.info).toHaveBeenCalled()
-        expect(res.redirect).toHaveBeenCalledWith(paths.HOME)
+        expect(res.redirect).toHaveBeenCalledWith(paths.VISITS.HOME)
       }
     }
 

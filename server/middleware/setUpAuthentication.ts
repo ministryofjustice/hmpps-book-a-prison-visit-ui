@@ -130,7 +130,7 @@ export function setUpAuthentication(): Router {
           }
 
           // Successful authentication
-          const returnTo = req.session.returnTo || paths.HOME
+          const returnTo = req.session.returnTo || paths.VISITS.HOME
           return req.logIn(user, loginErr => {
             if (loginErr) {
               logger.warn('Login error:', loginErr)

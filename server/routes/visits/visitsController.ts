@@ -1,11 +1,28 @@
 import type { RequestHandler } from 'express'
 import { SessionData } from 'express-session'
 import createError from 'http-errors'
-import { VisitService } from '../../services'
+import { BookerService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 
 export default class VisitsController {
-  public constructor(private readonly visitService: VisitService) {}
+  public constructor(
+    private readonly visitService: VisitService,
+    private readonly bookerService: BookerService,
+  ) {}
+
+  public home(): RequestHandler {
+    return async (req, res, next) => {
+      const { booker } = req.session
+      booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
+
+      // if no prisoners, do not look for future
+      const visits = booker.prisoners.length ? await this.visitService.getFuturePublicVisits(booker.reference) : [] 
+
+      req.session.bookedVisits = { type: 'future', visits }
+
+      return res.render(`pages/visits/future`, { prisoner: booker.prisoners[0], visits, showOLServiceNav: true })
+    }
+  }
 
   public view(type: SessionData['bookedVisits']['type']): RequestHandler {
     return async (req, res, next) => {
@@ -13,10 +30,6 @@ export default class VisitsController {
 
       let visits: VisitDetails[]
       switch (type) {
-        case 'future':
-          visits = await this.visitService.getFuturePublicVisits(booker.reference)
-          break
-
         case 'past':
           visits = await this.visitService.getPastPublicVisits(booker.reference)
           break

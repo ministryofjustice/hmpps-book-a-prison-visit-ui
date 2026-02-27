@@ -164,7 +164,7 @@ describe('Select visitors', () => {
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
-        .expect('Location', paths.HOME)
+        .expect('Location', paths.VISITS.HOME)
         .expect(res => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
@@ -178,7 +178,7 @@ describe('Select visitors', () => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
           expect($('#navigation').length).toBe(0)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').text()).toBe('4 people')
@@ -346,7 +346,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)

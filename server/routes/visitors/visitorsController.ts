@@ -11,7 +11,7 @@ export default class VisitorsController {
       const { booker } = req.session
 
       if (!booker.prisoners?.length) {
-        return res.redirect(paths.HOME)
+        return res.redirect(paths.VISITS.HOME)
       }
 
       const prisoner = booker.prisoners[0]

@@ -59,7 +59,7 @@ export default class CheckVisitorDetailsController {
 
         case 'PRISONER_NOT_FOUND_FOR_BOOKER':
         default:
-          return res.redirect(paths.HOME)
+          return res.redirect(paths.VISITS.HOME)
       }
     }
   }

@@ -44,7 +44,7 @@ describe('A visit cannot be booked', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(302)
-        .expect('Location', paths.HOME)
+        .expect('Location', paths.VISITS.HOME)
         .expect(res => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
@@ -59,7 +59,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
@@ -79,7 +79,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
@@ -99,7 +99,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
@@ -119,7 +119,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('main p').eq(0).text()).toContain('One person on a visit must be 18 years old or older')
