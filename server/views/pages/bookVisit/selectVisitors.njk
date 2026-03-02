@@ -20,7 +20,6 @@
 %}
 
 {% set ineligibleVisitorsHtml %}
-<h2 class="govuk-heading-s">Unavailable visitors</h2>
   {% for visitor in ineligibleVisitors %}
 
     <p class="govuk-!-margin-bottom-2" data-test="unavailable-visitor-{{ loop.index }}">
@@ -121,6 +120,7 @@
 
           {# Unavailable visitors #}
           {% if ineligibleVisitors | length %}
+            <h2 class="govuk-heading-s">Unavailable visitors</h2>
             {{ ineligibleVisitorsHtml | safe }}
           {% endif %}
 
@@ -166,6 +166,7 @@
 
         {# Unavailable visitors #}
         {% if ineligibleVisitors | length %}
+            <h2 class="govuk-heading-m">Unavailable visitors</h2>
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
