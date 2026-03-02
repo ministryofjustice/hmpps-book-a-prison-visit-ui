@@ -10,6 +10,15 @@
 {% set pageTitle = "Who is going on the visit?" %}
 
 {% set backLinkHref = paths.HOME %}
+
+{% 
+  set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
+%}
+
+{%
+  set notApprovedTagHtml = govukTag({ text: "Not approved", classes: "govuk-tag--red" })
+%}
+
 {% set ineligibleVisitorsHtml %}
 <h2 class="govuk-heading-s">Unavailable visitors</h2>
   {% for visitor in ineligibleVisitors %}
@@ -35,13 +44,6 @@
   </p>
   <p class="govuk-body">We will respond to your request within 5 working days.</p>
 {% endset %}
-
-{% 
-  set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
-%}
-{%
-  set notApprovedTagHtml = govukTag({ text: "Not approved", classes: "govuk-tag--red" })
-%}
 
 {% block content %}
   <div class="govuk-grid-row">

@@ -390,6 +390,51 @@ describe('Select visitors', () => {
           } as SessionData['bookVisitJourney'])
         })
     })
+
+    it('should handle booker having no eligible visitors, but having ineligible visitors', () => {
+      bookerService.getVisitorsByEligibility.mockResolvedValue(
+        (visitors = { eligibleVisitors: [], ineligibleVisitors: [visitor9, visitor10] }),
+      )
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('Who is going on the visit?')
+
+          expect($('[data-test=visitors-max-total]').length).toBe(0)
+          expect($('[data-test=visitors-max-adults]').length).toBe(0)
+          expect($('[data-test=visitors-max-children]').length).toBe(0)
+
+          expect($('form[method=POST]').length).toBe(0)
+          expect($('input[name=visitorDisplayIds]').length).toBe(0)
+
+          expect($('[data-test="continue-button"]').length).toBe(0)
+
+          // Unavailable visitors
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('Banned')
+          expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 16 May 2024.')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('Banned')
+
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
+            bookerReference,
+            prisonerNumber: prisoner.prisonerNumber,
+            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          })
+
+          expect(sessionData.bookVisitJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: [],
+            ineligibleVisitors: visitors.ineligibleVisitors,
+          } as SessionData['bookVisitJourney'])
+        })
+    })
   })
 
   describe(`POST ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
