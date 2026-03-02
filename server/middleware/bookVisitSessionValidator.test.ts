@@ -77,7 +77,7 @@ describe('bookVisitSessionValidator', () => {
         req = createMockReq({
           method: 'POST',
           path: paths.BOOK_VISIT.SELECT_PRISONER,
-          booker: { reference: bookerReference, prisoners: undefined },
+          booker: { reference: bookerReference, prisoners: [] },
         })
         bookVisitSessionValidator()(req, res, next)
         runAssertions('redirect')

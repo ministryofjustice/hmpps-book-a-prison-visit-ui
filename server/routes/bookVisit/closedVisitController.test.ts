@@ -42,7 +42,7 @@ describe('Closed visit', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CLOSED_VISIT)

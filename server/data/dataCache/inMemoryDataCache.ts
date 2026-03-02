@@ -9,10 +9,10 @@ export default class InMemoryDataCache implements DataCache {
   }
 
   public async get<DataType>(key: string): Promise<DataType | null> {
-    if (!this.map.has(key) || this.map.get(key).expiry.getTime() < Date.now()) {
+    if (!this.map.has(key) || this.map.get(key)!.expiry.getTime() < Date.now()) {
       return Promise.resolve(null)
     }
-    const parsedData: DataType = JSON.parse(this.map.get(key).data)
+    const parsedData: DataType = JSON.parse(this.map.get(key)!.data)
     return Promise.resolve(parsedData)
   }
 }

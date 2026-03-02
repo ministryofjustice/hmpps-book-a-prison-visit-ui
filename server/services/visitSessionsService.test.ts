@@ -87,7 +87,7 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonId,
+        prisonId: prisoner.prisonId!,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
@@ -119,7 +119,7 @@ describe('Visit sessions service', () => {
       const expectedAllVisitSessionIds: string[] = []
 
       const results = await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonId,
+        prisonId: prisoner.prisonId!,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
@@ -148,7 +148,7 @@ describe('Visit sessions service', () => {
       orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
 
       await visitSessionsService.getVisitSessionsCalendar({
-        prisonId: prisoner.prisonId,
+        prisonId: prisoner.prisonId!,
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,

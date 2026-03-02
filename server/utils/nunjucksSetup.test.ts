@@ -2,10 +2,11 @@ import express from 'express'
 import { FieldValidationError } from 'express-validator'
 import nunjucksSetup from './nunjucksSetup'
 import config from '../config'
+import { ApplicationInfo } from '../applicationInfo'
 
 describe('Nunjucks Filters', () => {
   const app = express()
-  const njk = nunjucksSetup(app, null)
+  const njk = nunjucksSetup(app, {} as ApplicationInfo)
 
   describe('set show extra test attributes flag in DEV and STAGING', () => {
     it.each([
@@ -19,7 +20,7 @@ describe('Nunjucks Filters', () => {
       (environmentName: string, expected: boolean) => {
         const replacedProp = jest.replaceProperty(config, 'environmentName', environmentName)
         const appWithEnv = express()
-        nunjucksSetup(appWithEnv, null)
+        nunjucksSetup(appWithEnv, {} as ApplicationInfo)
         expect(appWithEnv.locals.showExtraTestAttrs).toBe(expected)
         replacedProp.replaceValue('environmentName')
       },

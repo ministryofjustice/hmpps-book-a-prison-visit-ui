@@ -160,7 +160,7 @@ describe('Select visitors', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
@@ -281,7 +281,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney!.selectedVisitors = [visitor1, visitor4, visitor8]
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -297,7 +297,7 @@ describe('Select visitors', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookVisitJourney.selectedVisitors = [visitor1, visitor4, visitor8]
+      sessionData.bookVisitJourney!.selectedVisitors = [visitor1, visitor4, visitor8]
       const formValues = { visitorDisplayIds: [visitor2.visitorDisplayId, visitor7.visitorDisplayId] }
       flashData = { formValues: [formValues] }
 
@@ -387,6 +387,51 @@ describe('Select visitors', () => {
             eligibleVisitors: [visitor6],
             ineligibleVisitors: [],
             cannotBookReason: 'NO_ELIGIBLE_ADULT_VISITOR',
+          } as SessionData['bookVisitJourney'])
+        })
+    })
+
+    it('should handle booker having no eligible visitors, but having ineligible visitors', () => {
+      bookerService.getVisitorsByEligibility.mockResolvedValue(
+        (visitors = { eligibleVisitors: [], ineligibleVisitors: [visitor9, visitor10] }),
+      )
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('h1').text()).toBe('Who is going on the visit?')
+
+          expect($('[data-test=visitors-max-total]').length).toBe(0)
+          expect($('[data-test=visitors-max-adults]').length).toBe(0)
+          expect($('[data-test=visitors-max-children]').length).toBe(0)
+
+          expect($('form[method=POST]').length).toBe(0)
+          expect($('input[name=visitorDisplayIds]').length).toBe(0)
+
+          expect($('[data-test="continue-button"]').length).toBe(0)
+
+          // Unavailable visitors
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-1"]').text().trim()).toContain('Banned')
+          expect($('[data-test="ban-expiry-1"]').text().trim()).toContain('FirstName is banned until 16 May 2024.')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('FirstName LastName (20 years old)')
+          expect($('[data-test="unavailable-visitor-2"]').text().trim()).toContain('Banned')
+
+          expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
+            bookerReference,
+            prisonerNumber: prisoner.prisonerNumber,
+            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          })
+
+          expect(sessionData.bookVisitJourney).toStrictEqual({
+            prisoner,
+            prison,
+            eligibleVisitors: [],
+            ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookVisitJourney'])
         })
     })
@@ -500,7 +545,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -515,7 +560,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -539,7 +584,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -557,7 +602,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -580,7 +625,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
 
@@ -598,7 +643,7 @@ describe('Select visitors', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.selectedVisitors).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.selectedVisitors).toBe(undefined)
           })
       })
     })

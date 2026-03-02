@@ -1,4 +1,5 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
+import { UUID } from 'crypto'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
@@ -14,9 +15,9 @@ const token = 'some token'
 let uuidCount: number
 jest.mock('crypto', () => {
   return {
-    randomUUID: () => {
+    randomUUID: (): UUID => {
       uuidCount += 1
-      return `uuidv4-${uuidCount}`
+      return `uuidv4-${uuidCount}-${uuidCount}-${uuidCount}-${uuidCount}`
     },
   }
 })
@@ -244,8 +245,8 @@ describe('Booker service', () => {
       ]
 
       const expectedPrisoners: Prisoner[] = [
-        { prisonerDisplayId: 'uuidv4-1', ...prisoner1 },
-        { prisonerDisplayId: 'uuidv4-2', ...prisoner2 },
+        { prisonerDisplayId: 'uuidv4-1-1-1-1', ...prisoner1 },
+        { prisonerDisplayId: 'uuidv4-2-2-2-2', ...prisoner2 },
       ]
 
       orchestrationApiClient.getPrisoners.mockResolvedValue(bookerPrisonerInfoDtos)
@@ -339,21 +340,21 @@ describe('Booker service', () => {
       const expectedVisitors: Visitor[] = [
         {
           ...TestData.visitor(visitorInfoDtos[0]),
-          visitorDisplayId: 'uuidv4-1',
+          visitorDisplayId: 'uuidv4-1-1-1-1',
           adult: true,
           banned: false,
           approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[1]),
-          visitorDisplayId: 'uuidv4-2',
+          visitorDisplayId: 'uuidv4-2-2-2-2',
           adult: false,
           banned: false,
           approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[2]),
-          visitorDisplayId: 'uuidv4-3',
+          visitorDisplayId: 'uuidv4-3-3-3-3',
           adult: true,
           banned: true,
           banExpiryDate: '2025-07-01',
@@ -361,14 +362,14 @@ describe('Booker service', () => {
         },
         {
           ...TestData.visitor(visitorInfoDtos[3]),
-          visitorDisplayId: 'uuidv4-4',
+          visitorDisplayId: 'uuidv4-4-4-4-4',
           adult: true,
           banned: true,
           approved: true,
         },
         {
           ...TestData.visitor(visitorInfoDtos[4]),
-          visitorDisplayId: 'uuidv4-5',
+          visitorDisplayId: 'uuidv4-5-5-5-5',
           adult: true,
           banned: false,
           approved: false,

@@ -22,10 +22,10 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
 const sessionRestriction: SessionRestriction = 'OPEN'
-const adultVisitor1 = TestData.visitor({ visitorDisplayId: 'uuidv4-1', visitorId: 100 })
-const adultVisitor2 = TestData.visitor({ visitorDisplayId: 'uuidv4-2', visitorId: 200 })
+const adultVisitor1 = TestData.visitor({ visitorDisplayId: 'uuidv4-1-1-1-1', visitorId: 100 })
+const adultVisitor2 = TestData.visitor({ visitorDisplayId: 'uuidv4-2-2-2-2', visitorId: 200 })
 const childVisitor = TestData.visitor({
-  visitorDisplayId: 'uuidv4-3',
+  visitorDisplayId: 'uuidv4-3-3-3-3',
   visitorId: 300,
   dateOfBirth: `${new Date().getFullYear() - 2}-01-01`,
   adult: false,
@@ -67,7 +67,7 @@ describe('Contact details', () => {
     })
 
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -99,8 +99,8 @@ describe('Contact details', () => {
     })
 
     it('should pre-populate with data in session', () => {
-      sessionData.bookVisitJourney.mainContactEmail = 'user@example.com'
-      sessionData.bookVisitJourney.mainContactPhone = '07712 000 000'
+      sessionData.bookVisitJourney!.mainContactEmail = 'user@example.com'
+      sessionData.bookVisitJourney!.mainContactPhone = '07712 000 000'
 
       return request(app)
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -115,8 +115,8 @@ describe('Contact details', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookVisitJourney.mainContactEmail = 'user@example.com'
-      sessionData.bookVisitJourney.mainContactPhone = '07712 000 000'
+      sessionData.bookVisitJourney!.mainContactEmail = 'user@example.com'
+      sessionData.bookVisitJourney!.mainContactPhone = '07712 000 000'
       const formValues = { getUpdatesBy: ['email'], mainContactEmail: 'new-email', mainContactPhone: '' }
       flashData = { formValues: [formValues] }
 
@@ -164,8 +164,8 @@ describe('Contact details', () => {
     })
 
     it('should save new email and phone number to session, update application and redirect to check visit details page', () => {
-      sessionData.bookVisitJourney.mainContactEmail = 'existing-email'
-      sessionData.bookVisitJourney.mainContactPhone = 'existing-phone'
+      sessionData.bookVisitJourney!.mainContactEmail = 'existing-email'
+      sessionData.bookVisitJourney!.mainContactPhone = 'existing-phone'
 
       return request(app)
         .post(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -178,8 +178,8 @@ describe('Contact details', () => {
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookVisitJourney.mainContactEmail).toBe('user@example.com')
-          expect(sessionData.bookVisitJourney.mainContactPhone).toBe('07712 000 000')
+          expect(sessionData.bookVisitJourney!.mainContactEmail).toBe('user@example.com')
+          expect(sessionData.bookVisitJourney!.mainContactPhone).toBe('07712 000 000')
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
@@ -188,8 +188,8 @@ describe('Contact details', () => {
     })
 
     it('should clear existing email from session when email not checked, update application and redirect to check visit details page', () => {
-      sessionData.bookVisitJourney.mainContactEmail = 'existing-email'
-      sessionData.bookVisitJourney.mainContactPhone = 'existing-phone'
+      sessionData.bookVisitJourney!.mainContactEmail = 'existing-email'
+      sessionData.bookVisitJourney!.mainContactPhone = 'existing-phone'
 
       return request(app)
         .post(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -202,8 +202,8 @@ describe('Contact details', () => {
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookVisitJourney.mainContactEmail).toBeUndefined()
-          expect(sessionData.bookVisitJourney.mainContactPhone).toBe('07712 000 000')
+          expect(sessionData.bookVisitJourney!.mainContactEmail).toBeUndefined()
+          expect(sessionData.bookVisitJourney!.mainContactPhone).toBe('07712 000 000')
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
@@ -212,8 +212,8 @@ describe('Contact details', () => {
     })
 
     it('should clear existing phone number from session when phone not checked, update application and redirect to check visit details page', () => {
-      sessionData.bookVisitJourney.mainContactEmail = 'existing-email'
-      sessionData.bookVisitJourney.mainContactPhone = 'existing-phone'
+      sessionData.bookVisitJourney!.mainContactEmail = 'existing-email'
+      sessionData.bookVisitJourney!.mainContactPhone = 'existing-phone'
 
       return request(app)
         .post(paths.BOOK_VISIT.CONTACT_DETAILS)
@@ -226,8 +226,8 @@ describe('Contact details', () => {
         .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookVisitJourney.mainContactEmail).toBe('user@example.com')
-          expect(sessionData.bookVisitJourney.mainContactPhone).toBeUndefined()
+          expect(sessionData.bookVisitJourney!.mainContactEmail).toBe('user@example.com')
+          expect(sessionData.bookVisitJourney!.mainContactPhone).toBeUndefined()
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
@@ -274,8 +274,8 @@ describe('Contact details', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.mainContactEmail).toBeUndefined()
-            expect(sessionData.bookVisitJourney.mainContactPhone).toBeUndefined()
+            expect(sessionData.bookVisitJourney!.mainContactEmail).toBeUndefined()
+            expect(sessionData.bookVisitJourney!.mainContactPhone).toBeUndefined()
 
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })
@@ -305,8 +305,8 @@ describe('Contact details', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.mainContactEmail).toBeUndefined()
-            expect(sessionData.bookVisitJourney.mainContactPhone).toBeUndefined()
+            expect(sessionData.bookVisitJourney!.mainContactEmail).toBeUndefined()
+            expect(sessionData.bookVisitJourney!.mainContactPhone).toBeUndefined()
 
             expect(visitService.changeVisitApplication).not.toHaveBeenCalled()
           })

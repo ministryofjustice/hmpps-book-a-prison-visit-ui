@@ -69,8 +69,8 @@ describe('Visit service', () => {
         expect(orchestrationApiClient.createVisitApplication).toHaveBeenCalledWith({
           prisonerId: bookVisitJourney.prisoner.prisonerNumber,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
           visitorIds: [100, 200],
           bookerReference,
         })
@@ -94,8 +94,8 @@ describe('Visit service', () => {
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -122,8 +122,8 @@ describe('Visit service', () => {
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
           visitContact,
           visitors,
           visitorSupport,
@@ -149,8 +149,8 @@ describe('Visit service', () => {
         expect(orchestrationApiClient.changeVisitApplication).toHaveBeenCalledWith({
           applicationReference: bookVisitJourney.applicationReference,
           applicationRestriction: 'OPEN',
-          sessionTemplateReference: bookVisitJourney.selectedVisitSession.sessionTemplateReference,
-          sessionDate: bookVisitJourney.selectedVisitSession.sessionDate,
+          sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
+          sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
           visitContact: undefined,
           visitors,
           visitorSupport: undefined,
@@ -176,7 +176,7 @@ describe('Visit service', () => {
         orchestrationApiClient.bookVisit.mockResolvedValue(visit)
 
         const results = await visitService.bookVisit({
-          applicationReference: bookVisitJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference!,
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
           visitors,
@@ -206,7 +206,7 @@ describe('Visit service', () => {
         orchestrationApiClient.cancelVisit.mockResolvedValue()
 
         await visitService.cancelVisit({
-          applicationReference: bookVisitJourney.applicationReference,
+          applicationReference: bookVisitJourney.applicationReference!,
           actionedBy: 'aaaa-bbbb-cccc',
         })
 

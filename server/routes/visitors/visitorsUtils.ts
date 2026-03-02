@@ -19,7 +19,7 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
       },
       // Visitor DoB
       {
-        text: formatDate(visitor.dateOfBirth),
+        text: formatDate(visitor.dateOfBirth ?? ''),
         attributes: { 'data-test': `visitor-dob-${index}` },
       },
       // Can you book for visitor?

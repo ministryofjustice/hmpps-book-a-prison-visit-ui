@@ -7,7 +7,6 @@ import { createMockPrisonService } from '../services/testutils/mocks'
 import config from '../config'
 
 let app: Express
-let userSupplier: () => Express.User
 const prisonService = createMockPrisonService()
 
 afterEach(() => {
@@ -21,8 +20,7 @@ describe('/ - root path redirect', () => {
   })
 
   it('should redirect unauthenticated users to configured ROOT_PATH_REDIRECT', () => {
-    userSupplier = () => undefined
-    app = appWithAllRoutes({ userSupplier })
+    app = appWithAllRoutes({ userSupplier: () => undefined })
     return request(app).get(paths.ROOT).expect(302).expect('location', config.rootPathRedirect)
   })
 })

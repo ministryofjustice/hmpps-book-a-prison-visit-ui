@@ -1,8 +1,8 @@
 import type { RequestHandler } from 'express'
-import { SessionData } from 'express-session'
 import createError from 'http-errors'
 import { BookerService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
+import { BookedVisits } from '../../@types/bapv'
 
 export default class VisitsController {
   public constructor(
@@ -12,7 +12,7 @@ export default class VisitsController {
 
   public home(): RequestHandler {
     return async (req, res, next) => {
-      const { booker } = req.session
+      const booker = req.session.booker!
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
       // if no prisoners, do not look for future
@@ -24,9 +24,9 @@ export default class VisitsController {
     }
   }
 
-  public view(type: SessionData['bookedVisits']['type']): RequestHandler {
+  public view(type: BookedVisits['type']): RequestHandler {
     return async (req, res, next) => {
-      const { booker } = req.session
+      const booker = req.session.booker!
 
       let visits: VisitDetails[]
       switch (type) {

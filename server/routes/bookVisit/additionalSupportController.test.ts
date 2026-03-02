@@ -53,8 +53,9 @@ describe('Additional support needs', () => {
 
       app = appWithAllRoutes({ sessionData })
     })
+
     it('should use the session validation middleware', () => {
-      sessionData.bookVisitJourney.prisoner = undefined
+      sessionData.bookVisitJourney = undefined
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -96,7 +97,7 @@ describe('Additional support needs', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('[data-test-app-ref]').attr('data-test-app-ref')).toBe(
-            sessionData.bookVisitJourney.applicationReference,
+            sessionData.bookVisitJourney!.applicationReference,
           )
           replacedProp.replaceValue('environmentName')
         })
@@ -117,7 +118,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in session (no support)', () => {
-      sessionData.bookVisitJourney.visitorSupport = ''
+      sessionData.bookVisitJourney!.visitorSupport = ''
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -130,7 +131,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in session (support required)', () => {
-      sessionData.bookVisitJourney.visitorSupport = 'Wheelchair access'
+      sessionData.bookVisitJourney!.visitorSupport = 'Wheelchair access'
 
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
@@ -143,7 +144,7 @@ describe('Additional support needs', () => {
     })
 
     it('should pre-populate with data in formValues overriding that in session', () => {
-      sessionData.bookVisitJourney.visitorSupport = 'Wheelchair access'
+      sessionData.bookVisitJourney!.visitorSupport = 'Wheelchair access'
       const formValues = { additionalSupportRequired: 'no', additionalSupport: '' }
       flashData = { formValues: [formValues] }
 
@@ -210,7 +211,7 @@ describe('Additional support needs', () => {
         .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookVisitJourney.visitorSupport).toBe('Wheelchair access')
+          expect(sessionData.bookVisitJourney!.visitorSupport).toBe('Wheelchair access')
         })
     })
 
@@ -222,7 +223,7 @@ describe('Additional support needs', () => {
         .expect('Location', paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.bookVisitJourney.visitorSupport).toBe('')
+          expect(sessionData.bookVisitJourney!.visitorSupport).toBe('')
         })
     })
 
@@ -250,7 +251,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.visitorSupport).toBe(undefined)
           })
       })
 
@@ -273,7 +274,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.visitorSupport).toBe(undefined)
           })
       })
 
@@ -297,7 +298,7 @@ describe('Additional support needs', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
-            expect(sessionData.bookVisitJourney.visitorSupport).toBe(undefined)
+            expect(sessionData.bookVisitJourney!.visitorSupport).toBe(undefined)
           })
       })
     })
