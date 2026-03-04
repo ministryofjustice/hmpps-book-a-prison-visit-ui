@@ -5,9 +5,11 @@ import VisitorApprovedPage from '../pages/addVisitor/visitorApproved'
 import VisitorDetailsPage from '../pages/addVisitor/visitorDetails'
 import VisitorRequestFailAlreadyRequestedPage from '../pages/addVisitor/visitorRequestFailAlreadyRequested'
 import VisitorRequestedPage from '../pages/addVisitor/visitorRequested'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import VisitorsPage from '../pages/visitors/visitors'
+
+const bookerReference = TestData.bookerReference().value
 
 context('Add a visitor', () => {
   beforeEach(() => {
@@ -20,15 +22,19 @@ context('Add a visitor', () => {
     cy.task('stubGetVisitors')
     cy.task('stubGetVisitorRequests', { visitorRequests: [] })
     cy.task('clearRateLimits')
+    cy.task('stubGetFuturePublicVisits', {
+      bookerReference,
+      visits: [],
+    })
   })
 
   it('should complete the add a visitor request journey', () => {
     // Home page
     cy.signIn()
-    const homePage = Page.verifyOnPage(HomePage)
+    const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Navigate to Visitors page
-    homePage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('not.exist')
 
@@ -67,10 +73,10 @@ context('Add a visitor', () => {
   it('should complete the add a visitor request journey - with the auto-approved final step', () => {
     // Home page
     cy.signIn()
-    const homePage = Page.verifyOnPage(HomePage)
+    const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Navigate to Visitors page
-    homePage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('not.exist')
 
@@ -114,10 +120,10 @@ context('Add a visitor', () => {
   it('should complete the add a visitor request journey and fail with the duplicate request warning', () => {
     // Home page
     cy.signIn()
-    const homePage = Page.verifyOnPage(HomePage)
+    const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Navigate to Visitors page
-    homePage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
 
     // Start link a new visitor journey
@@ -150,10 +156,10 @@ context('Add a visitor', () => {
 
         // Home page
         cy.signIn()
-        const homePage = Page.verifyOnPage(HomePage)
+        const visitsPage = Page.verifyOnPage(VisitsPage)
 
         // Navigate to Visitors page
-        homePage.goToServiceHeaderLinkByName('Visitors')
+        visitsPage.goToServiceHeaderLinkByName('Visitors')
         const visitorsPage = Page.verifyOnPage(VisitorsPage)
 
         // Start link a new visitor journey

@@ -1,7 +1,7 @@
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import AccessibilityStatementPage from '../pages/staticPages/accessibilityStatement'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import PrivacyNoticePage from '../pages/staticPages/privacyNotice'
 import TermsAndConditionsPage from '../pages/staticPages/termsAndConditions'
@@ -26,30 +26,35 @@ context('Static content pages', () => {
   })
 
   describe('Authenticated user', () => {
+    const bookerReference = TestData.bookerReference().value
     it('should be able to navigate to static content pages from home page using footer links', () => {
       cy.task('reset')
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
       // Home page
-      const homePage = Page.verifyOnPage(HomePage)
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // should have the GOVUK One Login header
-      homePage.oneLoginHeader().contains('GOV.UK One Login')
+      visitsPage.oneLoginHeader().contains('GOV.UK One Login')
 
       // Select 'Accessibility' in footer
-      homePage.goToFooterLinkByName('Accessibility')
+      visitsPage.goToFooterLinkByName('Accessibility')
       Page.verifyOnPage(AccessibilityStatementPage)
 
       // Select 'Privacy' in footer
-      homePage.goToFooterLinkByName('Privacy')
+      visitsPage.goToFooterLinkByName('Privacy')
       Page.verifyOnPage(PrivacyNoticePage)
 
       // Select 'Terms and conditions' in footer
-      homePage.goToFooterLinkByName('Terms and conditions')
+      visitsPage.goToFooterLinkByName('Terms and conditions')
       Page.verifyOnPage(TermsAndConditionsPage)
     })
   })

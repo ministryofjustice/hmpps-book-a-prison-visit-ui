@@ -16,11 +16,11 @@ export default class VisitsController {
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
       // if no prisoners, do not look for future
-      const visits = booker.prisoners.length ? await this.visitService.getFuturePublicVisits(booker.reference) : [] 
-
+      const visits = booker.prisoners?.length ? await this.visitService.getFuturePublicVisits(booker.reference) : []
+      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
       req.session.bookedVisits = { type: 'future', visits }
 
-      return res.render(`pages/visits/future`, { prisoner: booker.prisoners[0], visits, showOLServiceNav: true })
+      return res.render(`pages/visits/future`, { prisoner, visits, showOLServiceNav: true })
     }
   }
 

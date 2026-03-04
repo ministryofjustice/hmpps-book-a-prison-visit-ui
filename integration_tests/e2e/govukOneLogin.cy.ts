@@ -1,4 +1,4 @@
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SignedOutPage from '../pages/staticPages/signedOut'
 import paths from '../../server/constants/paths'
@@ -20,7 +20,7 @@ context('GOV.UK One Login', () => {
   describe('Sign in / sign out', () => {
     it('User can sign in and view home page', () => {
       cy.signIn()
-      Page.verifyOnPage(HomePage)
+      Page.verifyOnPage(VisitsPage)
     })
 
     it('User can request a specific page and be redirected to this after sign in', () => {
@@ -32,9 +32,9 @@ context('GOV.UK One Login', () => {
 
     it('User can sign out and be redirected to the signed out page', () => {
       cy.signIn()
-      const homePage = Page.verifyOnPage(HomePage)
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
-      homePage.signOut()
+      visitsPage.signOut()
 
       // Being redirected to the signed out page confirms that
       // the 'post_logout_redirect_uri' configuration and idToken store is working
@@ -47,7 +47,7 @@ context('GOV.UK One Login', () => {
     const redirectTestCases = [
       {
         description: 'home page',
-        url: paths.HOME,
+        url: paths.VISITS.HOME,
         expectedStatus: 302,
         expectedRedirect: serviceSignInUrl,
       },
@@ -140,10 +140,10 @@ context('GOV.UK One Login', () => {
 
         // Sign in
         cy.signIn()
-        const homePage = Page.verifyOnPage(HomePage)
+        const visitsPage = Page.verifyOnPage(VisitsPage)
 
         // Sign out
-        homePage.signOut()
+        visitsPage.signOut()
         Page.verifyOnPage(SignedOutPage)
 
         // Rotate keys
@@ -152,7 +152,7 @@ context('GOV.UK One Login', () => {
 
         // Sign in again successfully with new keys
         cy.signIn()
-        Page.verifyOnPage(HomePage)
+        Page.verifyOnPage(VisitsPage)
       },
     )
   })

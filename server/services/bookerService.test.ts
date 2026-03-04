@@ -494,8 +494,6 @@ describe('Booker service', () => {
       expect(results.eligibleVisitors.length).toBe(0)
       expect(results.ineligibleVisitors.length).toBe(3)
 
-      expect(results.eligibleVisitors[0].lastName).toBe('One')
-      expect(results.eligibleVisitors[1].lastName).toBe('Three')
       expect(results.ineligibleVisitors[0].lastName).toBe('Two')
       expect(results.ineligibleVisitors[1].lastName).toBe('Four')
       expect(results.ineligibleVisitors[2].lastName).toBe('Five')

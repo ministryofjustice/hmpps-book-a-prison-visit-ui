@@ -1,6 +1,6 @@
 import TestData from '../../server/routes/testutils/testData'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import VisitorsPage from '../pages/visitors/visitors'
 
@@ -33,12 +33,17 @@ context('Visitors page', () => {
 
   const prison = TestData.prisonDto()
   const prisoner = TestData.bookerPrisonerInfoDto()
+  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+    cy.task('stubGetFuturePublicVisits', {
+      bookerReference,
+      visits: [],
+    })
     cy.signIn()
 
     cy.task('stubGetPrison', prison)
@@ -48,8 +53,8 @@ context('Visitors page', () => {
   })
 
   it('should show Visitors page with two visitors (one having a BAN restriction) and one visitor request', () => {
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Visitors')
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
 
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.prisonerName().contains('John Smith')
@@ -68,8 +73,8 @@ context('Visitors page', () => {
   })
 
   it('should not show a banned visitor on book visit journey Select visitors page', () => {
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.start()
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.bookVisit()
 
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')

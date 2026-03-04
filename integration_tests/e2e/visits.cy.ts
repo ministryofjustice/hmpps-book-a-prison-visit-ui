@@ -4,7 +4,6 @@ import VisitsPage from '../pages/visits/visits'
 import CancelledVisitsPage from '../pages/visits/cancel/cancelledVisits'
 import PastVisitsPage from '../pages/visits/pastVisits'
 import VisitDetailsPage from '../pages/visits/visitDetails'
-import HomePage from '../pages/home'
 import Page from '../pages/page'
 
 context('Visits home page', () => {
@@ -34,17 +33,14 @@ context('Visits home page', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrison')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-  })
-
-  it('should show Visits home page with future visits and navigate to view the visit details', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
     })
+    cy.signIn()
+  })
 
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Visits')
+  it('should show Visits home page with future visits and navigate to view the visit details', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.visitDate(1).contains('Thursday 21 May 2026')
     visitsPage.visitStartTime(1).contains('10am')
@@ -73,8 +69,6 @@ context('Visits home page', () => {
       visits: [orchestrationVisitDto],
     })
 
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Visits')
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetPastPublicVisits', {
@@ -103,8 +97,6 @@ context('Visits home page', () => {
       visits: [orchestrationVisitDto],
     })
 
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Visits')
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetCancelledPublicVisits', {

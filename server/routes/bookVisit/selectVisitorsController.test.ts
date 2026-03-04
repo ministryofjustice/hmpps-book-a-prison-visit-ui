@@ -402,7 +402,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
