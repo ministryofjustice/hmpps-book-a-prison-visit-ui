@@ -18,7 +18,7 @@ export default function populateCurrentBooker(bookerService: BookerService): Req
         }
 
         const reference = await bookerService.getBookerReference(authDetailDto)
-        // Prisoner details loaded on home page to refresh so don't auto-populate here
+        // Prisoner details loaded on Visits home page to refresh so don't auto-populate here
         const prisoners = req.path !== paths.VISITS.HOME ? await bookerService.getPrisoners(reference) : []
         req.session.booker = { reference, prisoners }
       }

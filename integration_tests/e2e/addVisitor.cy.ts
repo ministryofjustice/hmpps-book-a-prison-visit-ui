@@ -29,7 +29,7 @@ context('Add a visitor', () => {
   })
 
   it('should complete the add a visitor request journey', () => {
-    // Home page
+    // Visits home page
     cy.signIn()
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
@@ -71,7 +71,7 @@ context('Add a visitor', () => {
   })
 
   it('should complete the add a visitor request journey - with the auto-approved final step', () => {
-    // Home page
+    // Visits home page
     cy.signIn()
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
@@ -118,7 +118,7 @@ context('Add a visitor', () => {
   })
 
   it('should complete the add a visitor request journey and fail with the duplicate request warning', () => {
-    // Home page
+    // Visits home page
     cy.signIn()
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
@@ -154,7 +154,7 @@ context('Add a visitor', () => {
       const attemptAddVisitorRequestJourney = (count: number) => {
         cy.log(`Add visitor request attempt ${count}`)
 
-        // Home page
+        // Visits home page
         cy.signIn()
         const visitsPage = Page.verifyOnPage(VisitsPage)
 

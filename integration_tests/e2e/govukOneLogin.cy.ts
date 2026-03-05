@@ -18,7 +18,7 @@ context('GOV.UK One Login', () => {
   })
 
   describe('Sign in / sign out', () => {
-    it('User can sign in and view home page', () => {
+    it('User can sign in and view Visits home page', () => {
       cy.signIn()
       Page.verifyOnPage(VisitsPage)
     })
@@ -46,7 +46,7 @@ context('GOV.UK One Login', () => {
   describe('Unauthenticated user access', () => {
     const redirectTestCases = [
       {
-        description: 'home page',
+        description: 'Visits home page',
         url: paths.VISITS.HOME,
         expectedStatus: 302,
         expectedRedirect: serviceSignInUrl,

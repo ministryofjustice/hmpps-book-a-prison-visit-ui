@@ -27,7 +27,7 @@ context('Static content pages', () => {
 
   describe('Authenticated user', () => {
     const bookerReference = TestData.bookerReference().value
-    it('should be able to navigate to static content pages from home page using footer links', () => {
+    it('should be able to navigate to static content pages from Visits home page using footer links', () => {
       cy.task('reset')
       cy.task('stubHmppsAuthToken')
 
@@ -39,7 +39,7 @@ context('Static content pages', () => {
       })
       cy.signIn()
 
-      // Home page
+      // Visits home page
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // should have the GOVUK One Login header

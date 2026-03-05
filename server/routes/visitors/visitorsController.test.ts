@@ -33,7 +33,7 @@ afterEach(() => {
 })
 
 describe('Visitors page', () => {
-  it('should redirect to home page if no prisoner details in session', () => {
+  it('should redirect to Visits home page if no prisoner details in session', () => {
     sessionData.booker!.prisoners = []
     return request(app)
       .get(paths.VISITORS)

@@ -22,7 +22,7 @@ context('Add a prisoner', () => {
   it('should complete the add prisoner journey, with failed and then successful attempt', () => {
     cy.signIn()
 
-    // Home page - booker with no prisoner
+    // Visits home page - booker with no prisoner
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.noPrisoner().should('exist')
 

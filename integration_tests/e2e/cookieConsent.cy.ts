@@ -20,7 +20,7 @@ context('Cookie consent and analytics', () => {
 
   describe('Cookie banner', () => {
     it('should show cookie banner, set cookie when analytics accepted and load analytics', () => {
-      // Home page - analytics script should not be present initially
+      // Visits home page - analytics script should not be present initially
       const visitsPage = Page.verifyOnPage(VisitsPage)
       visitsPage.googleAnalytics().should('not.exist')
 
@@ -40,7 +40,7 @@ context('Cookie consent and analytics', () => {
     })
 
     it('should show cookie banner, set cookie when analytics rejected and not load analytics', () => {
-      // Home page - analytics script should not be present initially
+      // Visits home page - analytics script should not be present initially
       const visitsPage = Page.verifyOnPage(VisitsPage)
       visitsPage.googleAnalytics().should('not.exist')
 
@@ -60,7 +60,7 @@ context('Cookie consent and analytics', () => {
     })
 
     it('should remove previously set analytics cookies when rejecting (via cookies page form)', () => {
-      // Home page - accept analytics via banner
+      // Visits home page - accept analytics via banner
       const visitsPage = Page.verifyOnPage(VisitsPage)
       visitsPage.acceptAnalytics()
       visitsPage.hideAnalyticsAcceptedMessage()
@@ -85,7 +85,7 @@ context('Cookie consent and analytics', () => {
     })
 
     it('should remove previously set analytics cookies when rejecting (via cookie banner)', () => {
-      // Home page
+      // Visits home page
       const visitsPage = Page.verifyOnPage(VisitsPage)
       visitsPage.cookieBanner().should('be.visible')
 
@@ -99,7 +99,7 @@ context('Cookie consent and analytics', () => {
       cy.getCookie('_ga').should('exist')
       cookiesPage.getAnalyticsCookieName().then(cookie => cy.getCookie(cookie.text()).should('exist'))
 
-      // Remove 'cookie_policy' cookie (to trigger banner) and go to home page
+      // Remove 'cookie_policy' cookie (to trigger banner) and go to Visits home page
       cy.clearCookie('cookie_policy')
       cookiesPage.goToServiceHeaderLinkByName('Visits')
       visitsPage.checkOnPage()

@@ -29,7 +29,7 @@ afterEach(() => {
 
 // Short term redirect from old bookings URL to new visits URL (because old URL in confirmation emails)
 describe('/bookings => /visits redirect', () => {
-  it('should redirect /bookings to the visits home page', () => {
+  it('should redirect /bookings to the Visits home page', () => {
     return request(app).get('/bookings').expect(302).expect('Location', paths.VISITS.HOME)
   })
 })
@@ -38,7 +38,7 @@ describe('Visits home page (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
   const prisoner = TestData.prisoner()
 
-  it('should render the visits home page - with a future visit', () => {
+  it('should render the Visits home page - with a future visit', () => {
     bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
@@ -78,7 +78,7 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
-  it('should render the visits home page - with no future visits', () => {
+  it('should render the Visits home page - with no future visits', () => {
     bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
@@ -102,7 +102,7 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
-  it('should render the visits home page with the prisoner associated with the booker and store prisoners in session', () => {
+  it('should render the Visits home page with the prisoner associated with the booker and store prisoners in session', () => {
     bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
     return request(app)
@@ -132,7 +132,7 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
-  it('should render the visits home page with add a prisoner message and button', () => {
+  it('should render the Visits home page with add a prisoner message and button', () => {
     bookerService.getPrisoners.mockResolvedValue([])
 
     return request(app)

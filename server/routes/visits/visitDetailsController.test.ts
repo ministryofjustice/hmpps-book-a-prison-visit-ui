@@ -206,12 +206,12 @@ describe('View a single visit', () => {
   })
 
   describe('Validation', () => {
-    it('should redirect to visits home page if an invalid visitDisplayId is passed', () => {
+    it('should redirect to Visits home page if an invalid visitDisplayId is passed', () => {
       sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
       return request(app).get(`${paths.VISITS.DETAILS}/NOT-A-UUID`).expect(302).expect('location', paths.VISITS.HOME)
     })
 
-    it('should redirect to visits home page if an unrecognised (not in session) visitDisplayId is passed', () => {
+    it('should redirect to Visits home page if an unrecognised (not in session) visitDisplayId is passed', () => {
       sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
       const unrecognisedUUID = randomUUID()
       return request(app)

@@ -15,7 +15,7 @@ export default function routes({ prisonService }: Services): Router {
 
   // Root path '/' redirect
   router.get(paths.ROOT, async (req, res) => {
-    // home page for authenticated users
+    // Visits home page for authenticated users
     if (req.user) {
       return res.redirect(paths.VISITS.HOME)
     }

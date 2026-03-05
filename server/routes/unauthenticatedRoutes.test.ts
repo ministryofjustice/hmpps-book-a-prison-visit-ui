@@ -14,7 +14,7 @@ afterEach(() => {
 })
 
 describe('/ - root path redirect', () => {
-  it('should redirect authenticated users to service home page', () => {
+  it('should redirect authenticated users to Visits home page', () => {
     app = appWithAllRoutes({})
     return request(app).get(paths.ROOT).expect(302).expect('location', paths.VISITS.HOME)
   })

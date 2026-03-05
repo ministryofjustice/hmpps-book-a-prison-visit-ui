@@ -55,7 +55,7 @@ context('Book visit journey - drop-out points', () => {
       })
       cy.signIn()
 
-      // Home page - prisoner shown
+      // Visits home page - prisoner shown
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
@@ -97,7 +97,7 @@ context('Book visit journey - drop-out points', () => {
       })
       cy.signIn()
 
-      // Home page - prisoner shown
+      // Visits home page - prisoner shown
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
@@ -153,7 +153,7 @@ context('Book visit journey - drop-out points', () => {
       })
       cy.signIn()
 
-      // Home page - prisoner shown
+      // Visits home page - prisoner shown
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
@@ -169,7 +169,7 @@ context('Book visit journey - drop-out points', () => {
       cy.contains('has used their allowance of visits')
       cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
       Page.verifyOnPage(VisitsPage)
     })
@@ -185,7 +185,7 @@ context('Book visit journey - drop-out points', () => {
       })
       cy.signIn()
 
-      // Home page - prisoner shown
+      // Visits home page - prisoner shown
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
@@ -200,7 +200,7 @@ context('Book visit journey - drop-out points', () => {
       cannotBookPage.getRegisteredPrisonName().contains(prison.prisonName)
       cy.contains('have moved to another prison or been released')
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
       Page.verifyOnPage(VisitsPage)
     })
@@ -214,7 +214,7 @@ context('Book visit journey - drop-out points', () => {
       })
       cy.signIn()
 
-      // Home page - prisoner shown
+      // Visits home page - prisoner shown
       const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
@@ -228,7 +228,7 @@ context('Book visit journey - drop-out points', () => {
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cy.contains('One person on a visit must be 18 years old or older')
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
       Page.verifyOnPage(VisitsPage)
     })
