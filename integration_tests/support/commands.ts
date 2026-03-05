@@ -2,7 +2,7 @@ import paths from '../../server/constants/paths'
 
 Cypress.Commands.add(
   'signIn',
-  ({ options = { failOnStatusCode: true }, initialRequestUrl = paths.HOME, hideCookieBanner = true } = {}) => {
+  ({ options = { failOnStatusCode: true }, initialRequestUrl = paths.VISITS.HOME, hideCookieBanner = true } = {}) => {
     cy.clearAllCookies()
     if (hideCookieBanner) {
       cy.hideCookieBanner()

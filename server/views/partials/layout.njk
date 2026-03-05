@@ -8,12 +8,6 @@
 
 {% set navigationItems = [
   {
-    href: paths.HOME,
-    text: "Home",
-    id: "home-link",
-    active: true if activeLink == "home-link"
-  },
-  {
     href: paths.VISITS.HOME,
     text: "Visits",
     id: "visits-link",
@@ -71,7 +65,8 @@
     oneLoginLink: oneLoginLink,
     serviceNavigationParams: {
       serviceName: serviceName,
-      navigation: navigationItems
+      navigation: navigationItems,
+      collapseNavigationOnMobile: false
     }
   }) }}
 {% else %}

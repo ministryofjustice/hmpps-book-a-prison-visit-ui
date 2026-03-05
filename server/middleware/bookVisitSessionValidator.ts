@@ -114,7 +114,7 @@ export default function bookVisitSessionValidator(): RequestHandler {
 
 function logAndRedirect(res: Response, method: string, requestPath: string, bookerReference: string | undefined) {
   logger.info(
-    `Session validation failed at ${method} ${requestPath} for booker ${bookerReference}. Redirecting to '${paths.HOME}'`,
+    `Session validation failed at ${method} ${requestPath} for booker ${bookerReference}. Redirecting to '${paths.VISITS.HOME}'`,
   )
-  return res.redirect(paths.HOME)
+  return res.redirect(paths.VISITS.HOME)
 }

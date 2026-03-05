@@ -1,11 +1,28 @@
 import type { RequestHandler } from 'express'
 import createError from 'http-errors'
-import { VisitService } from '../../services'
+import { BookerService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 import { BookedVisits } from '../../@types/bapv'
 
 export default class VisitsController {
-  public constructor(private readonly visitService: VisitService) {}
+  public constructor(
+    private readonly visitService: VisitService,
+    private readonly bookerService: BookerService,
+  ) {}
+
+  public home(): RequestHandler {
+    return async (req, res, next) => {
+      const booker = req.session.booker!
+      booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
+
+      // if no prisoners, do not look for future
+      const visits = booker.prisoners?.length ? await this.visitService.getFuturePublicVisits(booker.reference) : []
+      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
+      req.session.bookedVisits = { type: 'future', visits }
+
+      return res.render(`pages/visits/future`, { prisoner, visits, showOLServiceNav: true })
+    }
+  }
 
   public view(type: BookedVisits['type']): RequestHandler {
     return async (req, res, next) => {
@@ -13,10 +30,6 @@ export default class VisitsController {
 
       let visits: VisitDetails[]
       switch (type) {
-        case 'future':
-          visits = await this.visitService.getFuturePublicVisits(booker.reference)
-          break
-
         case 'past':
           visits = await this.visitService.getPastPublicVisits(booker.reference)
           break

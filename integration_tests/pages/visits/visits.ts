@@ -18,4 +18,16 @@ export default class VisitsPage extends Page {
   pastVisitsLink = (): PageElement => cy.get('[data-test="past-visits-link"]')
 
   cancelledVisitsLink = (): PageElement => cy.get('[data-test="cancelled-visits-link"]')
+
+  bookVisit = (): void => {
+    cy.get('[data-test=book-a-visit]').click()
+  }
+
+  addPrisoner = (): void => {
+    cy.get('[data-test="add-prisoner"]').click()
+  }
+
+  noPrisoner = (): PageElement => cy.get('[data-test="no-prisoner"]')
+
+  prisonerName = (): PageElement => cy.get('h2')
 }

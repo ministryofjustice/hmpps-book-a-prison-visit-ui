@@ -90,10 +90,10 @@ export default {
   },
 
   stubGetFuturePublicVisits: ({
-    bookerReference = TestData.bookerReference(),
+    bookerReference = TestData.bookerReference().value,
     visits = [],
   }: {
-    bookerReference: BookerReference
+    bookerReference: string
     visits: VisitDto[]
   }): SuperAgentRequest =>
     stubFor({

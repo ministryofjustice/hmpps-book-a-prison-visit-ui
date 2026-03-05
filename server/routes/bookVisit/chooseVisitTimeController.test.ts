@@ -102,7 +102,7 @@ describe('Choose visit time', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(302)
-        .expect('Location', paths.HOME)
+        .expect('Location', paths.VISITS.HOME)
         .expect(res => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })

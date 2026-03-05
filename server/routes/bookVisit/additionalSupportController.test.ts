@@ -60,7 +60,7 @@ describe('Additional support needs', () => {
       return request(app)
         .get(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
         .expect(302)
-        .expect('Location', paths.HOME)
+        .expect('Location', paths.VISITS.HOME)
         .expect(res => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })

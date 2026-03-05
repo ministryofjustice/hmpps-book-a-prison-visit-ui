@@ -1,5 +1,5 @@
 import paths from '../../server/constants/paths'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SelectedPrisonPage from '../pages/selectPrison/selectedPrison'
 import SelectPrisonPage from '../pages/selectPrison/selectPrison'
@@ -11,7 +11,7 @@ context('Select a prison', () => {
     cy.task('stubPrisonNames')
   })
 
-  it('should select a supported prison and be redirected to home page (via GOVUK One Login)', () => {
+  it('should select a supported prison and be redirected to Visits home page (via GOVUK One Login)', () => {
     cy.hideCookieBanner()
 
     // Start at select prison page and type into autocomplete input
@@ -33,8 +33,8 @@ context('Select a prison', () => {
     cy.task('stubGetPrisoners')
     selectedPrisonPage.continue()
 
-    // Home page (via GOVUK One Login)
-    Page.verifyOnPage(HomePage)
+    // Visits home page (via GOVUK One Login)
+    Page.verifyOnPage(VisitsPage)
   })
 
   it('should select an unsupported prison be redirected to PVB', () => {

@@ -4,7 +4,7 @@ import { DateFormats } from '../../server/constants/dateFormats'
 import TestData from '../../server/routes/testutils/testData'
 import ChooseVisitTimePage from '../pages/bookVisit/chooseVisitTime'
 import ChooseVisitTimeNoSessionsPage from '../pages/bookVisit/chooseVisitTimeNoSessions'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import CannotBookPage from '../pages/bookVisit/cannotBook'
@@ -38,6 +38,8 @@ context('Book visit journey - drop-out points', () => {
     }),
   ]
 
+  const bookerReference = TestData.bookerReference().value
+
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
@@ -47,17 +49,21 @@ context('Book visit journey - drop-out points', () => {
     it('should show drop-out page when no available visit sessions', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
+      // Visits home page - prisoner shown
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
-      homePage.start()
+      visitsPage.bookVisit()
 
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -85,17 +91,21 @@ context('Book visit journey - drop-out points', () => {
     it('should return to choose time page with message when selected session no longer available', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
+      // Visits home page - prisoner shown
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
-      homePage.start()
+      visitsPage.bookVisit()
 
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -137,17 +147,21 @@ context('Book visit journey - drop-out points', () => {
 
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisonerWithoutVOs] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
+      // Visits home page - prisoner shown
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
-      homePage.start()
+      visitsPage.bookVisit()
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
@@ -155,9 +169,9 @@ context('Book visit journey - drop-out points', () => {
       cy.contains('has used their allowance of visits')
       cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(HomePage)
+      Page.verifyOnPage(VisitsPage)
     })
 
     it('should show drop-out page when prisoner has been released', () => {
@@ -165,16 +179,20 @@ context('Book visit journey - drop-out points', () => {
 
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisonerWithoutVOs] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
+      // Visits home page - prisoner shown
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [adultVisitor] })
       cy.task('stubValidatePrisonerFail')
-      homePage.start()
+      visitsPage.bookVisit()
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
@@ -182,33 +200,37 @@ context('Book visit journey - drop-out points', () => {
       cannotBookPage.getRegisteredPrisonName().contains(prison.prisonName)
       cy.contains('have moved to another prison or been released')
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(HomePage)
+      Page.verifyOnPage(VisitsPage)
     })
 
     it('should show drop-out page when no eligible visitors over 18', () => {
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+      cy.task('stubGetFuturePublicVisits', {
+        bookerReference,
+        visits: [],
+      })
       cy.signIn()
 
-      // Home page - prisoner shown
-      const homePage = Page.verifyOnPage(HomePage)
+      // Visits home page - prisoner shown
+      const visitsPage = Page.verifyOnPage(VisitsPage)
 
       // Start book visit journey
       cy.task('stubGetPrison', prison)
       cy.task('stubGetVisitors', { visitors: [childVisitor] })
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
-      homePage.start()
+      visitsPage.bookVisit()
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cy.contains('One person on a visit must be 18 years old or older')
 
-      // Back link back to Home page
+      // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(HomePage)
+      Page.verifyOnPage(VisitsPage)
     })
   })
 })

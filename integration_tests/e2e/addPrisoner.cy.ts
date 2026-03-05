@@ -3,7 +3,7 @@ import PrisonerAddedPage from '../pages/addPrisoner/prisonerAdded'
 import PrisonerDetailsPage from '../pages/addPrisoner/prisonerDetails'
 import PrisonerLocationPage from '../pages/addPrisoner/prisonerLocation'
 import PrisonerNotMatchedPage from '../pages/addPrisoner/prisonerNotMatched'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SignedOutPage from '../pages/staticPages/signedOut'
 
@@ -22,12 +22,12 @@ context('Add a prisoner', () => {
   it('should complete the add prisoner journey, with failed and then successful attempt', () => {
     cy.signIn()
 
-    // Home page - booker with no prisoner
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.noPrisoner().should('exist')
+    // Visits home page - booker with no prisoner
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.noPrisoner().should('exist')
 
     // Start Add a prisoner journey
-    homePage.addPrisoner()
+    visitsPage.addPrisoner()
 
     // Prisoner location page - select prison and continue
     const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
@@ -72,8 +72,8 @@ context('Add a prisoner', () => {
       cy.signIn()
 
       // Start Add a prisoner journey
-      const homePage = Page.verifyOnPage(HomePage)
-      homePage.addPrisoner()
+      const visitsPage = Page.verifyOnPage(VisitsPage)
+      visitsPage.addPrisoner()
 
       // Prisoner location page - select prison and continue
       const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
@@ -146,8 +146,8 @@ context('Add a prisoner', () => {
         cy.signIn()
 
         // Start Add a prisoner journey
-        const homePage = Page.verifyOnPage(HomePage)
-        homePage.addPrisoner()
+        const visitsPage = Page.verifyOnPage(VisitsPage)
+        visitsPage.addPrisoner()
 
         // Prisoner location page - select prison and continue
         const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
