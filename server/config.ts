@@ -1,4 +1,4 @@
-import paths from "./constants/paths"
+import paths from './constants/paths'
 
 const production = process.env.NODE_ENV === 'production'
 
