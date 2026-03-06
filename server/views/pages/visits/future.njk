@@ -61,7 +61,7 @@
           {% endfor %}
 
         {% else %}
-          <p data-test="no-visits">You do not have any future visits.</p>
+          <p data-test="no-visits">There are no future visits or requests.</p>
         {% endif %}
 
         <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
