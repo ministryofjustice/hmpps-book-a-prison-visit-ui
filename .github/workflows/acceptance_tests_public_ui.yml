@@ -31,7 +31,7 @@ jobs:
           npm run test:ci
       - name: Upload the artifacts
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: acceptance-tests-results-${{ inputs.environment }}
           path: |
