@@ -6,13 +6,10 @@ $path: "/assets/images/";
 
 // MoJ components
 @import 'moj/all';
-// @import "moj/components/banner/banner";
-// @import "moj/components/interruption-card/interruption-card";
-
-// GOV.UK One Login components
-@import './components/service-header-no-imports';
 
 @import 'dist/accessible-autocomplete.min';
+
+@import 'service-header/dist/styles/service-header-no-imports.scss';
 
 @import './components/visits-spacing';
 @import './components/visitsCalendar';

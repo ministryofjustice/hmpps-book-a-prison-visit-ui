@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "copy-views": "cp -R server/views dist/server/",
-    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=node_modules/accessible-autocomplete --load-path=. assets/scss/application.scss:./assets/stylesheets/application.css --style compressed",
+    "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=node_modules/accessible-autocomplete --load-path=node_modules/@govuk-one-login --load-path=. assets/scss/application.scss:./assets/stylesheets/application.css --style compressed",
     "watch-ts": "tsc -w",
     "watch-views": "nodemon --watch server/views -e html,njk -x npm run copy-views",
     "watch-node": "DEBUG=gov-starter-server* nodemon -r dotenv/config --watch dist/ dist/server.js | bunyan -o short",
@@ -33,6 +33,7 @@
     "npm": "^11"
   },
   "dependencies": {
+    "@govuk-one-login/service-header": "5.0.0",
     "@ministryofjustice/frontend": "^8.0.1",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "accessible-autocomplete": "^3.0.1",
