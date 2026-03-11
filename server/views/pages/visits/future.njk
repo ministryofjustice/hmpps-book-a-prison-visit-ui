@@ -16,7 +16,7 @@
 
         <p>Only visits made using GOV.UK One Login are shown.</p>
 
-        <h2 class="govuk-heading-m">{{ prisoner | prisonerNameFirstLast }} at {{ prisoner.registeredPrisonName }}</h2>
+        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">{{ prisoner | prisonerNameFirstLast }} at {{ prisoner.registeredPrisonName }}</h2>
 
         {% if visits | length %}
           {% for visit in visits %}
