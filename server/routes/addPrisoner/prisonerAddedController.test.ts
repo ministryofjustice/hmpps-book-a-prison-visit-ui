@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe('Prisoner added', () => {
   describe(`GET ${paths.ADD_PRISONER.SUCCESS}`, () => {
-    it('should redirect to home page if add prisoner success not set in session', () => {
+    it('should redirect to Visits home page if add prisoner success not set in session', () => {
       return request(app).get(paths.ADD_PRISONER.SUCCESS).expect(302).expect('Location', paths.RETURN_HOME)
     })
 

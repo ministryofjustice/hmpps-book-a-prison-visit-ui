@@ -4,7 +4,6 @@ import VisitsPage from '../pages/visits/visits'
 import CancelConfirmedPage from '../pages/visits/cancel/cancelConfirmed'
 import CancelVisitPage from '../pages/visits/cancel/cancelVisit'
 import VisitDetailsPage from '../pages/visits/visitDetails'
-import HomePage from '../pages/home'
 import Page from '../pages/page'
 
 context('Cancel visit journey', () => {
@@ -22,17 +21,14 @@ context('Cancel visit journey', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrison')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.signIn()
-  })
-
-  it('should navigate to Future visits page, then view visit details and cancel it', () => {
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
       visits: [orchestrationVisitDto],
     })
+    cy.signIn()
+  })
 
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.goToServiceHeaderLinkByName('Visits')
+  it('should navigate to Future visits page, then view visit details and cancel it', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.visitDate(1).contains('Thursday 21 May 2026')
     visitsPage.visitStartTime(1).contains('10am')

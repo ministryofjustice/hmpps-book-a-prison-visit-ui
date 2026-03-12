@@ -53,9 +53,9 @@ describe('populateCurrentBooker', () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it('should get booker reference and NOT prisoners and add to session if it is not already set - HOME page only', async () => {
+  it('should get booker reference and NOT prisoners and add to session if it is not already set - VISITS home page only', async () => {
     bookerService.getBookerReference.mockResolvedValue(bookerReference)
-    req = { path: paths.HOME, session: {} } as unknown as Request
+    req = { path: paths.VISITS.HOME, session: {} } as unknown as Request
 
     await populateCurrentBooker(bookerService)(req, res, next)
 

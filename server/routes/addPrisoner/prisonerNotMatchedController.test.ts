@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe('Prisoner not matched', () => {
   describe(`GET ${paths.ADD_PRISONER.FAIL}`, () => {
-    it('should redirect to home page if add prisoner failure not set in session', () => {
+    it('should redirect to Visits home page if add prisoner failure not set in session', () => {
       return request(app).get(paths.ADD_PRISONER.FAIL).expect(302).expect('Location', paths.RETURN_HOME)
     })
 

@@ -1,5 +1,6 @@
 {% extends "partials/layout.njk" %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set activeLink = 'visits-link' %}
 {% set pageTitle = "Visits" %}
@@ -8,65 +9,93 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Only requests and visits booked using GOV.UK One Login are shown.</p>
+      {% if prisoner %}
 
-      <h2 class="govuk-heading-m">Future visits</h2>
+        <p>Only visits made using GOV.UK One Login are shown.</p>
 
-      {% if visits | length %}
-        {% for visit in visits %}
-          {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
+        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">{{ prisoner | prisonerNameFirstLast }} at {{ prisoner.registeredPrisonName }}</h2>
 
-          <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+        {% if visits | length %}
+          {% for visit in visits %}
+            {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
 
-          <ul class="govuk-list">
-            {% if isRequest %}
+            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+
+            <ul class="govuk-list">
+              {% if isRequest %}
+                <li>
+                  {{ govukTag({
+                  text: "Awaiting review",
+                  classes: "govuk-tag--orange govuk-!-margin-bottom-2",
+                  attributes: { "data-test": "tag-" + loop.index  }
+                }) }}
+                </li>
+              {% endif %}
               <li>
-                {{ govukTag({
-                text: "Awaiting review",
-                classes: "govuk-tag--orange govuk-!-margin-bottom-2",
-                attributes: { "data-test": "tag-" + loop.index  }
-              }) }}
+                <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
+                to
+                <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
               </li>
-            {% endif %}
-            <li>
-              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-              to
-              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
-            </li>
-            <li>
-              Visit reference:
-              <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
-            </li>
-            <li>
-              <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                View details
-                <span class="govuk-visually-hidden">
-                  of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
-                </span>
-              </a>
-              <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-                Cancel <span class="govuk-visually-hidden">your</span> visit
-                <span class="govuk-visually-hidden">
-                  for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
-                </span>
-              </a>
-            </li>
-          </ul>
-        {% endfor %}
+              <li>
+                Visit reference:
+                <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
+              </li>
+              <li>
+                <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
+                  View details
+                  <span class="govuk-visually-hidden">
+                    of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                  </span>
+                </a>
+                <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
+                  Cancel <span class="govuk-visually-hidden">your</span> visit
+                  <span class="govuk-visually-hidden">
+                    for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          {% endfor %}
+
+        {% else %}
+          <p data-test="no-visits">There are no future visits or requests.</p>
+        {% endif %}
+
+        <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
+
+          {{ govukButton({
+            text: "Book a visit",
+            classes: "govuk-!-margin-top-3",
+            preventDoubleClick: true,
+            attributes: { "data-test": "book-a-visit" }
+          }) }}
+        </form>
+
+        <p>
+          <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
+        </p>
+        <p>
+          <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
+        </p>
 
       {% else %}
-        <p data-test="no-visits">You do not have any future visits.</p>
-      {% endif %}
+        <p data-test="no-prisoner">You need to add a prisoner to book a visit.</p>
 
-      <h2 class="govuk-heading-m">Other visits</h2>
-      <p>
-        <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
-      </p>
-      <p>
-        <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
-      </p>
+        {{ govukButton({
+          text: "Add a prisoner",
+          href: paths.ADD_PRISONER.LOCATION,
+          classes: "govuk-!-margin-top-3",
+          preventDoubleClick: true,
+          attributes: { "data-test": "add-prisoner" }
+        }) }}
+
+      {% endif %}
       
     </div>
   </div>

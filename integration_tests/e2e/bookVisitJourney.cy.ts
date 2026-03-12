@@ -4,7 +4,7 @@ import { DateFormats } from '../../server/constants/dateFormats'
 import TestData from '../../server/routes/testutils/testData'
 import AdditionalSupportPage from '../pages/bookVisit/additionalSupport'
 import ChooseVisitTimePage from '../pages/bookVisit/chooseVisitTime'
-import HomePage from '../pages/home'
+import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import MainContactPage from '../pages/bookVisit/mainContact'
@@ -104,20 +104,24 @@ context('Book visit journey', () => {
 
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+    cy.task('stubGetFuturePublicVisits', {
+      bookerReference,
+      visits: [],
+    })
     cy.signIn()
   })
 
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
-    // Home page - prisoner shown
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.prisonerName().contains('John Smith')
+    // Visits home page - prisoner shown
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
     cy.task('stubGetVisitorRequests')
-    homePage.start()
+    visitsPage.bookVisit()
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -218,16 +222,16 @@ context('Book visit journey', () => {
   })
 
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (REQUESTED)', () => {
-    // Home page - prisoner shown
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.prisonerName().contains('John Smith')
+    // Visits home page - prisoner shown
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
     cy.task('stubGetVisitorRequests')
-    homePage.start()
+    visitsPage.bookVisit()
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -313,32 +317,32 @@ context('Book visit journey', () => {
     cy.task('stubGetPrisoners', { prisoners: [remandPrisoner] })
     cy.signIn()
 
-    // Home page - prisoner shown
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.prisonerName().contains('John Smith')
+    // Visits home page - prisoner shown
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
     cy.task('stubGetVisitorRequests')
-    homePage.start()
+    visitsPage.bookVisit()
 
     // Select visitors page - choose visitors
     Page.verifyOnPage(SelectVisitorsPage)
   })
 
   it('should show closed visit interruption card (CLOSED visit)', () => {
-    // Home page - prisoner shown
-    const homePage = Page.verifyOnPage(HomePage)
-    homePage.prisonerName().contains('John Smith')
+    // Visits home page - prisoner shown
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
     cy.task('stubGetVisitors', { visitors })
     cy.task('stubValidatePrisonerPass')
     cy.task('stubGetVisitorRequests')
-    homePage.start()
+    visitsPage.bookVisit()
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
