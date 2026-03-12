@@ -65,10 +65,10 @@
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
+    serviceName: serviceName,
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink,
     serviceNavigationParams: {
-      serviceName: serviceName,
       navigation: navigationItems
     }
   }) }}
