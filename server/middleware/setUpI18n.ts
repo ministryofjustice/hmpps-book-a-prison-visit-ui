@@ -20,8 +20,11 @@ export default function setUpI18n(): Router {
       preload: SUPPORTED_LOCALES,
       showSupportNotice: false,
 
+      ns: ['common', 'errors', 'validation', 'addPrisoner', 'staticPages'],
+      defaultNS: 'common',
+
       backend: {
-        loadPath: 'server/locales/{{lng}}.json',
+        loadPath: 'server/locales/{{lng}}/{{ns}}.json',
       },
 
       detection: {
