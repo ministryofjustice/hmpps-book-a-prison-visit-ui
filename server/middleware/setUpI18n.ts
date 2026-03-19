@@ -10,36 +10,38 @@ import config from '../config'
 export default function setUpI18n(): Router {
   const router = express.Router()
 
-  i18next
-    .use(FsBackend)
-    .use(i18nextMiddleware.LanguageDetector)
+  if (!i18next.isInitialized) {
+    i18next
+      .use(FsBackend)
+      .use(i18nextMiddleware.LanguageDetector)
 
-    .init<FsBackendOptions>({
-      initAsync: false,
-      fallbackLng: LOCALE.EN,
-      supportedLngs: SUPPORTED_LOCALES,
-      preload: SUPPORTED_LOCALES,
-      showSupportNotice: false,
+      .init<FsBackendOptions>({
+        initAsync: false,
+        fallbackLng: LOCALE.EN,
+        supportedLngs: SUPPORTED_LOCALES,
+        preload: SUPPORTED_LOCALES,
+        showSupportNotice: false,
 
-      ns: ['common', 'errors', 'validation', 'addPrisoner', 'staticPages'],
-      defaultNS: 'common',
+        ns: ['common', 'errors', 'validation', 'addPrisoner', 'staticPages'],
+        defaultNS: 'common',
 
-      backend: {
-        loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
-      },
+        backend: {
+          loadPath: path.join(__dirname, '../locales/{{lng}}/{{ns}}.json'),
+        },
 
-      detection: {
-        order: ['querystring', 'cookie'],
-        lookupQuerystring: 'lng',
-        lookupCookie: 'lng',
-        caches: ['cookie'],
-        ignoreCase: true,
-        cookieSecure: config.https,
-        cookieDomain: new URL(config.domain).hostname,
-        cookieSameSite: 'lax',
-        cookieHttpOnly: true,
-      },
-    })
+        detection: {
+          order: ['querystring', 'cookie'],
+          lookupQuerystring: 'lng',
+          lookupCookie: 'lng',
+          caches: ['cookie'],
+          ignoreCase: true,
+          cookieSecure: config.https,
+          cookieDomain: new URL(config.domain).hostname,
+          cookieSameSite: 'lax',
+          cookieHttpOnly: true,
+        },
+      })
+  }
 
   router.use(i18nextMiddleware.handle(i18next))
 
