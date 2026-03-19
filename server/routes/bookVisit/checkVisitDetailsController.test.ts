@@ -162,6 +162,7 @@ describe('Check visit details', () => {
               actionedBy: bookerReference,
               isRequestBooking: false,
               visitors: [visitor],
+              language: 'en',
             })
           })
       })
@@ -191,6 +192,7 @@ describe('Check visit details', () => {
               actionedBy: bookerReference,
               isRequestBooking: false,
               visitors: [visitor],
+              language: 'en',
             })
           })
       })
@@ -228,6 +230,7 @@ describe('Check visit details', () => {
               actionedBy: bookerReference,
               isRequestBooking: true,
               visitors: [visitor],
+              language: 'en',
             })
           })
       })
@@ -287,6 +290,7 @@ describe('Check visit details', () => {
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
+                language: 'en',
               })
             })
         })
@@ -315,6 +319,7 @@ describe('Check visit details', () => {
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
+                language: 'en',
               })
             })
         })
@@ -342,6 +347,7 @@ describe('Check visit details', () => {
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
+                language: 'en',
               })
               expect(sessionData.bookVisitJourney!.selectedVisitSession).toBe(undefined)
             })
@@ -376,6 +382,7 @@ describe('Check visit details', () => {
                 actionedBy: bookerReference,
                 isRequestBooking: false,
                 visitors: [visitor],
+                language: 'en',
               })
               expect(sessionData.bookVisitJourney!.selectedVisitSession).toBe(undefined)
             })

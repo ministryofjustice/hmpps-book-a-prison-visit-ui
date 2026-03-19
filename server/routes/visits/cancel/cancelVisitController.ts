@@ -66,6 +66,7 @@ export default class CancelVisitController {
       await this.visitService.cancelVisit({
         applicationReference: visit.reference,
         actionedBy: booker!.reference,
+        language: req.language,
       })
 
       req.session.visitCancelled = {

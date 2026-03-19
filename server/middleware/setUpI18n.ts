@@ -30,7 +30,7 @@ export default function setUpI18n(): Router {
         lookupCookie: 'lng',
         caches: ['cookie'],
         ignoreCase: true,
-        cookieSecure: true,
+        cookieSecure: config.https,
         cookieDomain: new URL(config.domain).hostname,
         cookieSameSite: 'lax',
         cookieHttpOnly: true,
