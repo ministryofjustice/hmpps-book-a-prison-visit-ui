@@ -128,7 +128,11 @@ describe('Cookies page', () => {
         .send({ acceptAnalytics: 'yes' })
         .expect(302)
         .expect('Location', paths.COOKIES)
-        .expect('Set-Cookie', `cookie_policy=${analyticsYesValue}; Path=/; Expires=${expectedCookieExpiry}`)
+        .expect(res => {
+          expect(res.get('Set-Cookie')).toContain(
+            `cookie_policy=${analyticsYesValue}; Path=/; Expires=${expectedCookieExpiry}`,
+          )
+        })
     })
 
     it('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (localhost)', () => {
@@ -141,7 +145,12 @@ describe('Cookies page', () => {
         .send({ acceptAnalytics: 'no' })
         .expect(302)
         .expect('Location', paths.COOKIES)
-        .expect('Set-Cookie', `${acceptAnalyticsNoCookie},${clearGACookie},${clearGAIDCookie}`)
+        .expect(res => {
+          const cookies = res.get('Set-Cookie')
+          expect(cookies).toContain(acceptAnalyticsNoCookie)
+          expect(cookies).toContain(clearGACookie)
+          expect(cookies).toContain(clearGAIDCookie)
+        })
     })
 
     it('should set cookie with correct parameters when analytics rejected and clear existing analytics cookies (justice domain)', () => {
@@ -156,9 +165,14 @@ describe('Cookies page', () => {
         .send({ acceptAnalytics: 'no' })
         .expect(302)
         .expect('Location', paths.COOKIES)
-        .expect('Set-Cookie', `${acceptAnalyticsNoCookie},${clearGACookie},${clearGAIDCookie}`)
+        .expect(res => {
+          const cookies = res.get('Set-Cookie')
+          expect(cookies).toContain(acceptAnalyticsNoCookie)
+          expect(cookies).toContain(clearGACookie)
+          expect(cookies).toContain(clearGAIDCookie)
+        })
         .expect(() => {
-          replacedProp.replaceValue('domain')
+          replacedProp.restore()
         })
     })
 
@@ -173,7 +187,9 @@ describe('Cookies page', () => {
           .expect(302)
           .expect('Location', paths.COOKIES)
           .expect(res => {
-            expect(res.headers).not.toHaveProperty('set-cookie')
+            const cookies = res.get('Set-Cookie')!
+            expect(cookies.some(cookie => cookie.startsWith('cookie_policy='))).toBe(false)
+            expect(cookies.some(cookie => /^_ga(?:_|=)/.test(cookie))).toBe(false)
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
           })
       })
@@ -189,7 +205,9 @@ describe('Cookies page', () => {
           .expect(302)
           .expect('Location', paths.COOKIES)
           .expect(res => {
-            expect(res.headers).not.toHaveProperty('set-cookie')
+            const cookies = res.get('Set-Cookie')!
+            expect(cookies.some(cookie => cookie.startsWith('cookie_policy='))).toBe(false)
+            expect(cookies.some(cookie => /^_ga(?:_|=)/.test(cookie))).toBe(false)
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
           })
       })

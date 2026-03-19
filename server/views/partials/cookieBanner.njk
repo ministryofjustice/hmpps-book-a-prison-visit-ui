@@ -14,14 +14,14 @@
 {% endset %}
 
 {{ govukCookieBanner({
-  ariaLabel: "Cookies on " + applicationName,
+  ariaLabel: "Cookies on " + t("applicationName"),
   attributes: {
     id: "cookie-banner"
   },
   hidden: true,
   messages: [
     {
-      headingText: "Cookies on " + applicationName,
+      headingText: "Cookies on " + t("applicationName"),
       attributes: {
         id: "cookie-banner-main"
       },

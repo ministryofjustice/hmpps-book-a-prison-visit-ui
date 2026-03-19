@@ -26,13 +26,13 @@ interface GOVUKOneLoginUserInfoResponse extends openidClient.UserInfoResponse {
 class GOVUKOneLoginStrategy extends Strategy {
   // Add /authorize request parameters required by GOV.UK One Login
   authorizationRequestParams<TOptions extends AuthenticateOptions>(
-    _req: Request,
+    req: Request,
     _options: TOptions,
   ): Record<string, string> {
     return {
       nonce: openidClient.randomNonce(),
       state: openidClient.randomState(),
-      ui_locales: 'en',
+      ui_locales: req.language,
       vtr: config.apis.govukOneLogin.vtr,
     }
   }
