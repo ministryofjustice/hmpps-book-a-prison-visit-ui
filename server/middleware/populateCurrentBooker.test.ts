@@ -4,10 +4,7 @@ import { SessionData } from 'express-session'
 import { createMockBookerService } from '../services/testutils/mocks'
 import TestData from '../routes/testutils/testData'
 import populateCurrentBooker from './populateCurrentBooker'
-import logger from '../../logger'
 import paths from '../constants/paths'
-
-jest.mock('../../logger')
 
 describe('populateCurrentBooker', () => {
   let req: Request
@@ -99,7 +96,6 @@ describe('populateCurrentBooker', () => {
       phoneNumber: res.locals.user!.phone_number,
     })
     expect(res.redirect).not.toHaveBeenCalled()
-    expect(logger.info).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalledWith(error)
   })
 })

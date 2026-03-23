@@ -122,7 +122,9 @@ export default {
   analytics: {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },
-  features: {},
+  features: {
+    welshLanguageEnabled: get('FEATURE_WELSH_LANGUAGE', 'false') === 'true',
+  },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
   pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),

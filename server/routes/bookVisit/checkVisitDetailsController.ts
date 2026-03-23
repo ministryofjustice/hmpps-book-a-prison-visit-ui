@@ -37,6 +37,7 @@ export default class CheckVisitDetailsController {
           actionedBy: booker.reference,
           isRequestBooking: bookVisitJourney.selectedVisitSession!.sessionForReview,
           visitors: bookVisitJourney.selectedVisitors!,
+          language: req.language,
         })
 
         const bookVisitConfirmed: BookVisitConfirmed = {

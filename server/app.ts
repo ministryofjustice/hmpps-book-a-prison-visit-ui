@@ -5,6 +5,7 @@ import createError from 'http-errors'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 
+import setUpI18n from './middleware/setUpI18n'
 import { setUpAuthentication, authenticationMiddleware } from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
@@ -27,6 +28,8 @@ export default function createApp(services: Services): express.Application {
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+
+  app.use(setUpI18n())
 
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())

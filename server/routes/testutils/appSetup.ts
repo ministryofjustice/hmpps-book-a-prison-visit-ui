@@ -20,6 +20,7 @@ import { NotFound } from 'http-errors'
 import type { Session, SessionData } from 'express-session'
 import { ValidationError } from 'express-validator'
 
+import setUpI18n from '../../middleware/setUpI18n'
 import maintenancePageRoute from '../maintenancePageRoute'
 import authenticatedRoutes from '../authenticatedRoutes'
 import unauthenticatedRoutes from '../unauthenticatedRoutes'
@@ -60,6 +61,8 @@ function appSetup(
 ): Express {
   const app = express()
 
+  app.use(setUpI18n())
+
   app.set('view engine', 'njk')
 
   nunjucksSetup(app, testAppInfo)
@@ -72,7 +75,10 @@ function appSetup(
     req.user = userSupplier()
     req.flash = flashProvider
     req.cookies = cookies
-    res.locals = req.user ? { user: { ...req.user } } : {}
+    res.locals = {
+      ...res.locals,
+      ...(req.user && { user: { ...req.user } }),
+    }
     next()
   })
   app.use(express.json())

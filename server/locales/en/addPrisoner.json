@@ -1,0 +1,10 @@
+{
+  "prisonerLocation": {
+    "title": "Where is the prisoner you want to visit?",
+    "heading": "Where is the prisoner you want to visit?"
+  },
+  "prisonerDetails": {
+    "title": "Prisoner details",
+    "heading": "Prisoner details"
+  }
+}

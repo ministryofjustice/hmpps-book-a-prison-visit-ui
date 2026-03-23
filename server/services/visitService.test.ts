@@ -180,6 +180,7 @@ describe('Visit service', () => {
           actionedBy: 'aaaa-bbbb-cccc',
           isRequestBooking: false,
           visitors,
+          language: 'en',
         })
 
         expect(orchestrationApiClient.bookVisit).toHaveBeenCalledWith({
@@ -208,6 +209,7 @@ describe('Visit service', () => {
         await visitService.cancelVisit({
           applicationReference: bookVisitJourney.applicationReference!,
           actionedBy: 'aaaa-bbbb-cccc',
+          language: 'en',
         })
 
         expect(orchestrationApiClient.cancelVisit).toHaveBeenCalledWith({

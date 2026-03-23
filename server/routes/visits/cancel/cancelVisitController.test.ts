@@ -91,6 +91,7 @@ describe('Cancel a visit - Are you sure page', () => {
           expect(visitService.cancelVisit).toHaveBeenCalledWith({
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
+            language: 'en',
           })
           expect(sessionData.visitCancelled).toStrictEqual(<VisitCancelled>{ hasEmail: true, hasMobile: true })
         })
@@ -110,6 +111,7 @@ describe('Cancel a visit - Are you sure page', () => {
           expect(visitService.cancelVisit).toHaveBeenCalledWith({
             actionedBy: 'aaaa-bbbb-cccc',
             applicationReference: 'ab-cd-ef-gh',
+            language: 'en',
           })
           expect(sessionData.visitCancelled).toStrictEqual(<VisitCancelled>{ hasEmail: false, hasMobile: false })
         })

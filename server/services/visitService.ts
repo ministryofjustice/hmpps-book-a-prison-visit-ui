@@ -90,11 +90,13 @@ export default class VisitService {
     actionedBy,
     isRequestBooking,
     visitors,
+    language,
   }: {
     applicationReference: string
     actionedBy: string
     isRequestBooking: boolean
     visitors: Visitor[]
+    language: string
   }): Promise<VisitDto> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
@@ -109,7 +111,7 @@ export default class VisitService {
     })
 
     logger.info(
-      `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus})`,
+      `Visit application '${applicationReference}' booked as visit '${visit.reference}' (${visit.visitSubStatus}) (lng: ${language})`,
     )
     return visit
   }
@@ -117,16 +119,18 @@ export default class VisitService {
   async cancelVisit({
     applicationReference,
     actionedBy,
+    language,
   }: {
     applicationReference: string
     actionedBy: string
+    language: string
   }): Promise<void> {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     await orchestrationApiClient.cancelVisit({ applicationReference, actionedBy })
 
-    logger.info(`Visit '${applicationReference}' has been cancelled by booker '${actionedBy}`)
+    logger.info(`Visit '${applicationReference}' has been cancelled by booker '${actionedBy}' (lng: ${language})`)
   }
 
   async getFuturePublicVisits(bookerReference: string): Promise<VisitDetails[]> {
