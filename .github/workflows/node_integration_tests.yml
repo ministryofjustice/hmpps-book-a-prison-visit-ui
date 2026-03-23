@@ -102,7 +102,7 @@ jobs:
             ctrf/
       - name: publish test report
         if: ${{ !cancelled() && github.event.repository.visibility == 'public' }}
-        uses: dorny/test-reporter@v2
+        uses: dorny/test-reporter@v3
         with:
           artifact: ${{ inputs.test_results_artifact_name }}
           name: Test Report
