@@ -5,9 +5,7 @@ export default class CheckVisitDetailsPage extends Page {
     super('Check the visit details')
   }
 
-  prisonerName = (): PageElement => cy.get('[data-test="prisoner-name"]')
-
-  prisonName = (): PageElement => cy.get('[data-test="prison-name"]')
+  prisonerDetails = (): PageElement => cy.get('[data-test="prisoner-details"]')
 
   visitorName = (index: number): PageElement => cy.get(`[data-test="visitor-name-${index}"]`)
 

@@ -1,20 +1,21 @@
-<h2 class="govuk-heading-m" data-test="change-visit-heading">How to update your request</h2>
+<h2 class="govuk-heading-m" data-test="change-request-heading">
+  {{- t("shared:howToUpdateRequest.title") -}}
+</h2>
 
-{% if prison.phoneNumber %}
-  <p>
-    To update your request, call
-    <span data-test="prison-name">{{ prison.prisonName }}</span>
-    on <span data-test="prison-phone-number">{{ prison.phoneNumber }}</span>
-    between 9am and 5pm, Monday to Friday.
-  </p>
-{% else %}
-  <p data-test="no-prison-phone-number">
-    To update your request,
-    <a href="{{ prison.webAddress }}">contact {{ prison.prisonName }} directly</a>.
-  </p>
-{% endif %}
+<p data-test="contact-prison">
+  {%- if prison.phoneNumber %}
+    {{- t("shared:howToUpdateRequest.contactPrisonPhone", {
+      prisonName: prison.prisonName,
+      phoneNumber: prison.phoneNumber
+    }) -}}
+  {% else %}
+    {{- t("shared:howToUpdateRequest.contactPrisonWebsite", {
+      prisonName: prison.prisonName,
+      url: prison.webAddress
+    }) | safe -}}
+  {% endif -%}
+</p>
 
-<p>
-  You will need the visit reference to make changes.
-  Your request reference is <span data-test="visit-reference-changes">{{ visit.reference }}</span>.
+<p data-test="change-request">
+   {{- t("shared:howToUpdateRequest.visitReference", { visitReference: visit.reference }) -}}
 </p>

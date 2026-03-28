@@ -1,19 +1,18 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = "Visit booked" %}
+{% set pageTitle = t("bookVisit:visitBooked.title") %}
 
 {% if not bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
-  {% set confirmationMessage =
-    "A text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
+  {% set confirmationMessage = t("bookVisit:visitBooked.confirmByText") %}
 {% endif %}
-{% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
-  {% set confirmationMessage =
-    "An email and a text message confirming the visit will be sent to the main contact. This will include the visit reference." %}
-{% endif %}
+
 {% if bookVisitConfirmed.hasEmail and not bookVisitConfirmed.hasMobile %}
-  {% set confirmationMessage =
-    "An email confirming the visit will be sent to the main contact. This will include the visit reference." %}
+  {% set confirmationMessage = t("bookVisit:visitBooked.confirmByEmail") %}
+{% endif %}
+
+{% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
+  {% set confirmationMessage = t("bookVisit:visitBooked.confirmByEmailAndText") %}
 {% endif %}
 
 {% block content %}
@@ -21,16 +20,25 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        html: 'Your visit reference is<br><strong data-test="visit-reference-title">' + bookVisitConfirmed.visitReference + "</strong>"
+        html: t("bookVisit:visitBooked.yourReference") +
+          '<br><strong data-test="visit-reference-title">' + bookVisitConfirmed.visitReference + "</strong>"
       }) }}
 
       {% if confirmationMessage %}
-        <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
+        <p data-test="confirmation-notification-message">
+          {{- confirmationMessage }} {{ t("bookVisit:visitBooked.withReference") -}}
+        </p>
       {% endif %}
 
-      <p>When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.VISITS.HOME }}">check the details of your visits</a>.</p>
+      <p class="no-visited-state">
+        {{- t("bookVisit:visitBooked.checkVisitDetails", { url: paths.VISITS.HOME }) | safe -}}
+      </p>
 
-      <p>You can help us to improve this service by giving <a href="https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/">feedback</a>.</p>
+      <p>
+        {{- t("bookVisit:visitBooked.feedback", {
+          url: "https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/"
+        }) | safe -}}
+      </p>
 
       <div data-test="prison-specific-content">
         {% include "partials/howToChangeVisit.njk" %}

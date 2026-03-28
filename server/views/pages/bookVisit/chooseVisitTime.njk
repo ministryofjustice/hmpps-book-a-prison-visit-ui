@@ -5,7 +5,7 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
-{% set pageTitle = "Choose the visit time" %}
+{% set pageTitle = t("bookVisit:chooseVisitTime.title") %}
 
 {% block content %}
 
@@ -26,11 +26,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <p>Select one visit time. It will be reserved for 10 minutes.</p>
-      <p>
-        Only times that
-          <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>
-        can attend are shown.
+      <p>{{ t("bookVisit:chooseVisitTime.reservationTime") }}</p>
+      <p data-test="prisoner-visit-times">
+        {{- t("bookVisit:chooseVisitTime.prisonerVisitTimes", { name: prisoner | prisonerNameFirstLast }) -}}
       </p>
 
       {# Banned visitor details #}
@@ -39,26 +37,26 @@
           attributes: { "data-test": "banned-visitors-details" }
         }) -%}
           {% for visitor in bannedVisitors %}
-            <span data-test="banned-visitor-name-{{ loop.index }}">
-              {{- visitor.firstName }} {{ visitor.lastName -}}
+            <span data-test="banned-visitor-{{ loop.index }}">
+              {{- t("common:visitors.bannedUntil", {
+                name: visitor.firstName + " " + visitor.lastName,
+                date: visitor.banExpiryDate | formatDate
+              }) -}}
             </span>
-            is banned until
-            <span data-test="banned-visitor-expiry-date-{{ loop.index }}">
-              {{- visitor.banExpiryDate | formatDate -}}
-            </span>.
             <br>
           {% endfor -%}
-          Only visit times on or after this date are shown.
+          {{ t("bookVisit:chooseVisitTime.onlyAfterDate") }}
         {%- endcall %}
       {% endif %}
 
-      <nav class="visits-calendar" aria-label="Visit date selection calendar" role="navigation">
+      <nav class="visits-calendar" aria-label="{{ t('bookVisit:chooseVisitTime.calendarAriaLabel') }}" role="navigation">
         {# Loop over months #}
         {% for monthName, monthData in calendar %}
           <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy') }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}
+            {# TODO i18n: weekday heading abbreviations #}
             <ul class="govuk-list visits-calendar__day-headings" aria-hidden="true">
               <li>M<span>on</span></li>
               <li>T<span>ue</span></li>
@@ -83,11 +81,21 @@
                 {%- if numberOfSessions %}
                   <a id="day-link-{{ date }}" href="#day-group-{{ date }}">
                     {{ date | formatDate("d") }}
-                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - {{ numberOfSessions }} visit {{ "time" | pluralise(numberOfSessions )}} available</span>
+                    <span class="govuk-visually-hidden">
+                      {{- t("bookVisit:chooseVisitTime.availableTimesForDate", {
+                        date: date | formatDate("MMMM - eeee"),
+                        count: numberOfSessions
+                      }) -}}
+                    </span>
                   </a>
                 {% else %}
                     <span>{{ date | formatDate("d") }}</span>
-                    <span class="govuk-visually-hidden">{{ date | formatDate("MMMM - eeee") }} - no visit times available</span>
+                    <span class="govuk-visually-hidden">
+                      {{- t("bookVisit:chooseVisitTime.availableTimesForDate", {
+                        date: date | formatDate("MMMM - eeee"),
+                        count: 0
+                      }) -}}
+                    </span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -107,7 +115,7 @@
                 {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
                   value: radioValue,
-                  html: (session.startTime | formatTime) + " to " + (session.endTime | formatTime) +
+                  html: t("common:dateTime.timeRange", { startTime: session.startTime | formatTime, endTime: session.endTime | formatTime }) +
                    ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>',
                   checked: formValues.visitSession == radioValue
                 }), visitSessionItems) %}
@@ -121,7 +129,7 @@
                   attributes: { "data-date": date },
                   afterInputs: {
                     html: '<p><a class="govuk-visually-hidden-focusable govuk-!-display-inline-block govuk-!-margin-top-5" href="#day-link-' +
-                      date + '">Choose a different date above</a></p>'
+                      date + '">' + t("bookVisit:chooseVisitTime.chooseDifferentDate") + '</a></p>'
                   }
                 },
                 fieldset: {
@@ -132,7 +140,7 @@
                   }
                 },
                 hint: {
-                  text: "You can only choose one option",
+                  text: t("bookVisit:chooseVisitTime.chooseOneOption"),
                   classes: "govuk-visually-hidden"
                 },
                 items: visitSessionItems,
@@ -143,7 +151,7 @@
         {% endfor %}
 
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }}

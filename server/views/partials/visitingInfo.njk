@@ -1,31 +1,31 @@
-<h2 class="govuk-heading-m">Prepare for visiting {{ prison.prisonName }}</h2>
+<h2 class="govuk-heading-m">
+  {{- t("shared:visitingInfo.title", { prisonName: prison.prisonName }) -}}
+</h2>
 
 <p>
-  All visitors over 16 years old must show
-  <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a">
-    acceptable forms of ID to enter the prison</a>.
+  {{- t("shared:visitingInfo.acceptableId", {
+    url: "https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a"
+  }) | safe -}}
 </p> 
 
-<p>Visitors should arrive <span data-test="minutes-before-visit">45</span> minutes before the visit starts.</p>
+<p>{{ t("shared:visitingInfo.arriveEarly") }}</p>
 
-<p>
-  You can read more about
-  <a href="{{ prison.webAddress }}" data-test="prison-website">visits at {{ prison.prisonName }}</a>.
-  This includes information on getting to the prison and visiting facilities.
+<p data-test="more-visits-info">
+  {{- t("shared:visitingInfo.moreVisitsInfo", {
+    url: prison.webAddress,
+    prisonName: prison.prisonName
+  }) | safe -}}
 </p>
 
-<h3 class="govuk-heading-s">What to expect when visiting a prison</h3>
+<h3 class="govuk-heading-s">{{ t("shared:visitingInfo.expectationsHeading") }}</h3>
 
-<p>Visitors will be searched before entering the prison visiting room.</p>
+<p>{{ t("shared:visitingInfo.search1") }}</p>
+<p>{{ t("shared:visitingInfo.search2") }}</p>
+
+<h2 class="govuk-heading-m">{{ t("shared:visitingInfo.helpWithCostHeading") }}</h2>
 
 <p>
-  Prison staff may check visitors’ pockets, pat them down and ask them to go through a metal detector.
-  Dogs may also be used to detect illegal substances.
-</p>
-
-<h2 class="govuk-heading-m">Help with the cost of prison visits</h2>
-
-<p>You may be able to 
-  <a href="https://www.gov.uk/help-with-prison-visits">get help with the cost of prison visits</a>
-  if you’re getting certain benefits or have a health certificate.
+  {{- t("shared:visitingInfo.helpWithCostDetails", {
+    url: "https://www.gov.uk/help-with-prison-visits"
+  }) | safe -}}
 </p>

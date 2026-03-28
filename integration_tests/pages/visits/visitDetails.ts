@@ -25,9 +25,7 @@ export default class VisitDetailsPage extends Page {
 
   mainContactNumber = (): PageElement => cy.get('[data-test="main-contact-number"]')
 
-  prisonName = (): PageElement => cy.get('[data-test="prison-name"]')
-
-  prisonPhoneNumber = (): PageElement => cy.get('[data-test="prison-phone-number"]')
+  contactPrison = (): PageElement => cy.get('[data-test="contact-prison"]')
 
   cancelVisitButton = (): PageElement => cy.get(`[data-test=cancel-visit]`)
 }

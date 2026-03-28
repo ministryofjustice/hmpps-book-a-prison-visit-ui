@@ -6,15 +6,11 @@ export default class SelectVisitorsPage extends Page {
   }
 
   // Visitor totals / age
-  visitorsMaxTotal = (): PageElement => cy.get('[data-test=visitors-max-total]')
+  maxVisitors = (): PageElement => cy.get('[data-test=max-visitors]')
 
-  prisonName = (): PageElement => cy.get('[data-test=prison-name]')
+  maxAdults = (): PageElement => cy.get('[data-test=max-adults]')
 
-  visitorsMaxAdults = (): PageElement => cy.get('[data-test=visitors-max-adults]')
-
-  visitorsMaxChildren = (): PageElement => cy.get('[data-test=visitors-max-children]')
-
-  visitorsAdultAge = (): PageElement => cy.get('[data-test=visitors-adult-age]')
+  maxChildren = (): PageElement => cy.get('[data-test=max-children]')
 
   // Visitor list
   getVisitorByNameLabel = (name: string): PageElement => cy.get('input[name=visitorDisplayIds] + label').contains(name)

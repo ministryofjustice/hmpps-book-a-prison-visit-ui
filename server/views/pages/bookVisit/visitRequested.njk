@@ -1,23 +1,21 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = "Visit requested" %}
+{% set pageTitle = t("bookVisit:visitRequested.title") %}
 
-{# Build messages for email and/or mobile notifications #}
-{% if bookVisitConfirmed.hasEmail or bookVisitConfirmed.hasMobile %}
+{% if not bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
+  {% set requestConfirmationMessage = t("bookVisit:visitRequested.detailsByText") %}
+  {% set responseMessage = t("bookVisit:visitRequested.responseByText") %}
+{% endif %}
 
-  {% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
-    {% set notificationMethods = "An email and a text message" %}
-  {% elseif bookVisitConfirmed.hasEmail %}
-    {% set notificationMethods = "An email" %}
-  {% else %}
-    {% set notificationMethods = "A text message" %}
-  {% endif %}
+{% if bookVisitConfirmed.hasEmail and not bookVisitConfirmed.hasMobile %}
+  {% set requestConfirmationMessage = t("bookVisit:visitRequested.detailsByEmail") %}
+  {% set responseMessage = t("bookVisit:visitRequested.responseByEmail") %}
+{% endif %}
 
-  {% set requestConfirmationMessage = "We have sent " + (notificationMethods | lower)+ " with the details of your request to the main contact." %}
-
-  {% set responseMessage = notificationMethods + " with the prison’s decision will be sent to the main contact." %}
-
+{% if bookVisitConfirmed.hasEmail and bookVisitConfirmed.hasMobile %}
+  {% set requestConfirmationMessage = t("bookVisit:visitRequested.detailsByEmailAndText") %}
+  {% set responseMessage = t("bookVisit:visitRequested.responseByEmailAndText") %}
 {% endif %}
 
 {% block content %}
@@ -26,35 +24,34 @@
       {{ govukPanel({
         titleText: pageTitle,
         classes: "visits-request-confirmation",
-        html:
-          'It will now be reviewed by <span data-test="prison-name-panel">' +
-            (bookVisitConfirmed.prison.prisonName | escape) +
-          "</span>"
+        text: t("bookVisit:visitRequested.requestReviewBy", { prisonName: bookVisitConfirmed.prison.prisonName }),
+        attributes: { "data-test": "visit-requested-panel" }
       }) }}
 
       {% if requestConfirmationMessage %}
         <p data-test="request-confirmation-message">{{ requestConfirmationMessage }}</p>
       {% endif %}
 
-      <p>Visit reference: <span data-test="request-reference">{{ bookVisitConfirmed.visitReference }}</span></p>
-
-
-      <h2 class="govuk-heading-m">What happens next</h2>
-
-      <p>Your visit is not booked yet. It needs to be checked.</p>
-
       <p>
-        <span data-test="prison-name">{{ bookVisitConfirmed.prison.prisonName }}</span>
-        will confirm or reject your request.
+        {{- t("bookVisit:visitRequested.visitReference") }}
+        <span data-test="request-reference">{{ bookVisitConfirmed.visitReference }}</span>
+      </p>
+
+
+      <h2 class="govuk-heading-m">{{ t("bookVisit:visitRequested.whatNextHeading") }}</h2>
+
+      <p>{{ t("bookVisit:visitRequested.notBookedYet") }}</p>
+
+      <p data-test="confirm-or-reject">
+        {{- t("bookVisit:visitRequested.confirmOrReject", { prisonName: bookVisitConfirmed.prison.prisonName }) -}}
       </p>
 
       {% if responseMessage %}
         <p data-test="response-message">{{ responseMessage }}</p>
       {% endif %}
       
-      <p>
-        <a class="govuk-link--no-visited-state" href="{{ paths.VISITS.HOME }}">Your visits page</a>
-        also shows the status of upcoming visits.
+      <p class="no-visited-state">
+        {{- t("bookVisit:visitRequested.upcomingVisitsStatus", { url: paths.VISITS.HOME }) | safe -}}
       </p>
 
     </div>

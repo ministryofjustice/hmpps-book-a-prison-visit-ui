@@ -7,7 +7,7 @@ import path from 'path'
 import { LOCALE, SUPPORTED_LOCALES } from '../constants/locales'
 import config from '../config'
 
-export default function setUpI18n(): Router {
+export default function setUpI18n(production: boolean): Router {
   const router = express.Router()
 
   if (!i18next.isInitialized) {
@@ -22,7 +22,7 @@ export default function setUpI18n(): Router {
         preload: SUPPORTED_LOCALES,
         showSupportNotice: false,
 
-        ns: ['common', 'errors', 'validation', 'addPrisoner', 'staticPages'],
+        ns: ['common', 'errors', 'validation', 'bookVisit', 'shared'],
         defaultNS: 'common',
 
         backend: {
@@ -39,6 +39,12 @@ export default function setUpI18n(): Router {
           cookieDomain: new URL(config.domain).hostname,
           cookieSameSite: 'lax',
           cookieHttpOnly: true,
+        },
+
+        // Throw error on missing translation key (only non-production)
+        saveMissing: !production,
+        missingKeyHandler: (lngs, ns, key) => {
+          throw new Error(`Missing translation for key '${key}' in namespace '${ns}' and language '${lngs}'`)
         },
       })
   }

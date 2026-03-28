@@ -1,21 +1,21 @@
 {% extends "partials/layout.njk" %}
 {%- from "moj/components/interruption-card/macro.njk" import interruptionCard -%}
 
-{% set pageTitle = "This will be a closed visit" %}
+{% set pageTitle = t("bookVisit:closedVisit.title") %}
 
 {% block content %}
   {% call interruptionCard({
     heading: pageTitle,
     primaryAction: {
-        text: "Continue to book",
+        text: t("bookVisit:closedVisit.continueToBook"),
         href: paths.BOOK_VISIT.CHOOSE_TIME,
         attributes: { "data-test": "closed-visit-continue" }
     },
     secondaryAction: {
-        text: "Cancel and return to the homepage",
+        text: t("bookVisit:closedVisit.cancelAndReturnHome"),
         href: paths.RETURN_HOME
     }
     }) -%}
-    <p>On a closed visit, the prisoner and visitors cannot have physical contact or pass any items.</p>
+    <p>{{ t("bookVisit:closedVisit.description") }}</p>
   {%- endcall %}
 {% endblock %}

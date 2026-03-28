@@ -7,17 +7,13 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% set pageTitle = "Who is going on the visit?" %}
+{% set pageTitle = t("bookVisit:selectVisitors.title") %}
 
 {% set backLinkHref = paths.VISITS.HOME %}
 
-{% 
-  set bannedTagHtml = govukTag({ text: "Banned", classes: "govuk-tag--red" })
-%}
+{% set bannedTagHtml = govukTag({ text: t("common:visitors.banned"), classes: "govuk-tag--red" }) %}
 
-{%
-  set notApprovedTagHtml = govukTag({ text: "Not approved", classes: "govuk-tag--red" })
-%}
+{% set notApprovedTagHtml = govukTag({ text: t("common:visitors.notApproved"), classes: "govuk-tag--red" }) %}
 
 {% set ineligibleVisitorsHtml %}
   {% for visitor in ineligibleVisitors %}
@@ -27,21 +23,21 @@
     </p>
     {% if visitor.banExpiryDate %}
       <p data-test="ban-expiry-{{ loop.index }}" class="secondary-text govuk-!-margin-bottom-0">
-        {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
+        {{- t("common:visitors.bannedUntil", { name: visitor.firstName, date: visitor.banExpiryDate | formatDate }) -}}
       </p>
     {% endif %}
 
-    <p class="secondary-text">You cannot currently book a visit for this visitor.</p>
+    <p class="secondary-text">{{ t("bookVisit:selectVisitors.cannotBookForVisitor") }}</p>
   {% endfor %}
 {% endset %}
 
 {% set detailsHtml %}
-  <p class="govuk-body">You can only book visits for people linked to your account.</p>
-  <p class="govuk-body">Visitors must be on the prisoner's visitor list.</p>
-  <p class="govuk-body">
-    <a class="govuk-link" data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">Make a request to link a visitor</a>.
+  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkedVisitorsOnly") }}</p>
+  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.mustBeOnVisitorList") }}</p>
+  <p>
+    <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
   </p>
-  <p class="govuk-body">We will respond to your request within 5 working days.</p>
+  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
 {% endset %}
 
 {% block content %}
@@ -54,21 +50,27 @@
 
       {% if eligibleVisitors | length %}
 
-        <p>
-          Up to <span data-test="visitors-max-total">{{ prison.maxTotalVisitors }} {{ "person" | pluralise(prison.maxTotalVisitors, "people") }}</span>
-          can visit someone at <span data-test="prison-name">{{ prison.prisonName }}</span>. This includes:
+        <p data-test="max-visitors">
+          {{- t("bookVisit:selectVisitors.visitorLimits.maxVisitors", {
+            maxVisitors: prison.maxTotalVisitors,
+            prisonName: prison.prisonName
+          }) -}}
         </p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>
-            <span data-test="visitors-max-adults">{{ prison.maxAdultVisitors }} {{ "person" | pluralise(prison.maxAdultVisitors, "people") }}</span>
-            <span data-test="visitors-adult-age">{{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }}</span> old or older
+          <li data-test="max-adults">
+            {{- t("bookVisit:selectVisitors.visitorLimits.maxAdults", {
+              maxAdultVisitors: prison.maxAdultVisitors,
+              adultAgeYears: prison.adultAgeYears
+            }) -}}
           </li>
-          <li>
-            <span data-test="visitors-max-children">{{ prison.maxChildVisitors }} {{ "person" | pluralise(prison.maxChildVisitors, "people") }}</span> under
-            <span data-test="visitors-adult-age">{{ prison.adultAgeYears }} {{ "year" | pluralise(prison.adultAgeYears) }}</span> old
+          <li data-test="max-children">
+            {{- t("bookVisit:selectVisitors.visitorLimits.maxChildren", {
+              maxChildVisitors: prison.maxChildVisitors,
+              adultAgeYears: prison.adultAgeYears
+            }) -}}
           </li>
         </ul>
-        <p>At least one visitor must be 18 years or older.</p>
+        <p>{{ t("bookVisit:selectVisitors.visitorLimits.atLeastOneAdult") }}</p>
 
         {% set visitorList = [] %}
         {% for visitor in eligibleVisitors %}
@@ -80,9 +82,12 @@
 
             {% set visitorHintHtml -%}
               <p class="secondary-text govuk-!-margin-bottom-0">
-                {{- visitor.firstName }} is banned until {{ visitor.banExpiryDate | formatDate }}.
+                {{- t("common:visitors.bannedUntil", {
+                  name: visitor.firstName,
+                  date: visitor.banExpiryDate | formatDate
+                }) -}}
               </p>
-              <p class="secondary-text">If they are selected as a visitor, the visit must be on or after this date.</p>
+              <p class="secondary-text">{{ t("bookVisit:selectVisitors.banDateHint") }}</p>
             {%- endset %}
 
             {% set visitorList = (visitorList.push({
@@ -108,7 +113,7 @@
             name: "visitorDisplayIds",
             fieldset: {
               legend: {
-                text: "Select visitors",
+                text: t("bookVisit:selectVisitors.selectVisitorsHeading"),
                 classes: "govuk-fieldset__legend--m"
               }
             },
@@ -120,44 +125,44 @@
 
           {# Unavailable visitors #}
           {% if ineligibleVisitors | length %}
-            <h2 class="govuk-heading-s">Unavailable visitors</h2>
+            <h2 class="govuk-heading-s">{{ t("bookVisit:selectVisitors.unavailableVisitorsHeading") }}</h2>
             {{ ineligibleVisitorsHtml | safe }}
           {% endif %}
 
           {{ govukDetails({
-            summaryText: "Want to book for someone else?",
+            summaryText: t("bookVisit:selectVisitors.bookForSomeoneElse.detailsHeading"),
             classes: "govuk-!-margin-top-7 govuk-!-margin-bottom-8",
             html: detailsHtml
           }) }}
 
           {{ govukButton({
-            text: "Continue",
+            text: t("common:buttons.continue"),
             preventDoubleClick: true,
             attributes: { "data-test": "continue-button" }
           }) }}
         </form>
 
-        
-
       {% else %}
         {{ govukWarningText({
-          text: "No visitors are linked to your account.",
-          iconFallbackText: "Warning"
+          text: t("bookVisit:selectVisitors.noVisitorsLinked"),
+          iconFallbackText: t("common:labels.warning")
         }) }}
 
         {% if visitorRequestsTableRows | length %}
-          <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
+          <h2 class="govuk-heading-m" data-test="visitor-requests">
+            {{- t("bookVisit:selectVisitors.visitorRequestsHeading") -}}
+          </h2>
 
-          <p>Requests to link visitors are reviewed by the prison.</p>
+          <p>{{ t("bookVisit:selectVisitors.reviewedByPrison") }}</p>
 
           {{ govukTable({
             classes: "govuk-!-width-two-thirds",
             head: [
               {
-                text: "Name"
+                text: t("common:labels.name")
               },
               {
-                text: "Date of birth"
+                text: t("common:labels.dateOfBirth")
               }
             ],
             rows: visitorRequestsTableRows
@@ -166,18 +171,18 @@
 
         {# Unavailable visitors #}
         {% if ineligibleVisitors | length %}
-            <h2 class="govuk-heading-m">Unavailable visitors</h2>
+            <h2 class="govuk-heading-m">{{ t("bookVisit:selectVisitors.unavailableVisitorsHeading") }}</h2>
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
-        <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
+        <h2 class="govuk-heading-m">{{ t("bookVisit:selectVisitors.linkingNewVisitorsTitle") }}</h2>
 
-        <p>You can only book visits for people linked to your account.</p>
-        <p>Visitors must be on the prisoner’s visitor list.</p>
-        <p>We will respond to your request within 5 working days.</p>
+        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkedVisitorsOnly") }}</p>
+        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.mustBeOnVisitorList") }}</p>
+        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
 
         {{ govukButton({
-          text: "Link a new visitor",
+          text: t("common:buttons.linkNewVisitor"),
           href: paths.ADD_VISITOR.START,
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true

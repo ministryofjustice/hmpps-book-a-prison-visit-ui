@@ -62,9 +62,10 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
-          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('main p').eq(0).text()).toContain('has used their allowance of visits')
-          expect($('[data-test=book-from-date]').text().trim()).toBe('Monday 1 July 2024')
+          expect($('[data-test=cannot-book-reason]').text()).toBe(
+            'John Smith has used their allowance of visits for this month.',
+          )
+          expect($('[data-test=book-from-date]').text()).toContain('Monday 1 July 2024')
 
           expect(sessionData.bookVisitJourney).toBe(undefined)
         })
@@ -82,9 +83,9 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
-          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
-          expect($('main p').eq(0).text()).toContain('moved to another prison or been released')
+          expect($('[data-test=cannot-book-reason]').text()).toBe(
+            'John Smith is no longer at Bristol (HMP). They may have moved to another prison or been released.',
+          )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)
         })
@@ -102,9 +103,9 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
-          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('[data-test=registered-prison-name]').text()).toBe('Bristol (HMP)')
-          expect($('main p').eq(0).text()).toContain('not currently supported')
+          expect($('[data-test=cannot-book-reason]').text()).toBe(
+            'John Smith is at Bristol (HMP). This prison is not currently supported by this service.',
+          )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)
         })
@@ -122,7 +123,9 @@ describe('A visit cannot be booked', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
-          expect($('main p').eq(0).text()).toContain('One person on a visit must be 18 years old or older')
+          expect($('[data-test="cannot-book-reason"]').text()).toContain(
+            'One person on a visit must be 18 years old or older',
+          )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)
         })

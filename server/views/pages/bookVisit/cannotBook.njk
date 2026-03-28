@@ -1,12 +1,8 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "A visit cannot be booked" %}
+{% set pageTitle = t("bookVisit:cannotBook.title") %}
 
 {% set backLinkHref = paths.VISITS.HOME %}
-
-{% set prisonerName -%}
-  <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>
-{%- endset %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -15,57 +11,57 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       {% if cannotBookReason == 'NO_VO_BALANCE' %}
-        <p>
-          {{ prisonerName | safe }} has used their allowance of visits for this month.
+        <p data-test="cannot-book-reason">
+          {{- t("bookVisit:cannotBook.noVoBalance", { name: prisoner | prisonerNameFirstLast }) -}}
         </p>
 
-        <p>
-          You can book a visit from
-          <span data-test="book-from-date">{{ prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }}</span>.
+        <p data-test="book-from-date">
+          {{- t("bookVisit:cannotBook.bookFromDate", { date: prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }) -}}
         </p>
       {% endif %}
 
       {% if cannotBookReason == 'TRANSFER_OR_RELEASE' %}
-        <p>
-          {{ prisonerName | safe }} is no longer at <span data-test="registered-prison-name">{{ prisoner.registeredPrisonName }}</span>.
-          They may have moved to another prison or been released.
+        <p data-test="cannot-book-reason">
+          {{- t("bookVisit:cannotBook.transferOrRelease", {
+            name: prisoner | prisonerNameFirstLast,
+            prisonName: prisoner.registeredPrisonName
+          }) -}}
         </p>
 
         <p>
-          If they have moved to another prison,
-          <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">find out how to book a visit at their new prison</a>.
+          {{- t("bookVisit:cannotBook.findHowToBook", {
+            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
+          }) | safe -}}
         </p>
       
         <p>
-          For help contacting them, you can <a href="https://www.gov.uk/find-prisoner">apply to find a prisoner’s location</a>.
+          {{- t("bookVisit:cannotBook.findPrisoner", { url: "https://www.gov.uk/find-prisoner" }) | safe -}}
         </p>
       {% endif %}
 
       {% if cannotBookReason == 'UNSUPPORTED_PRISON' %}
-        <p>
-          {{ prisonerName | safe }} is at <span data-test="registered-prison-name">{{ prisoner.registeredPrisonName }}</span>.
-          This prison is not currently supported by this service.
+        <p data-test="cannot-book-reason">
+          {{- t("bookVisit:cannotBook.unsupportedPrison", {
+            name: prisoner | prisonerNameFirstLast,
+            prisonName: prisoner.registeredPrisonName
+          }) -}}
         </p>
 
         <p>
-          Find out
-          <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">how to book a visit at this prison</a>.
+          {{- t("bookVisit:cannotBook.bookAtThisPrison", {
+            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
+          }) | safe -}}
         </p>
       {% endif %}
 
       {% if cannotBookReason == 'NO_ELIGIBLE_ADULT_VISITOR' %}
-        <p>
-          One person on a visit must be 18 years old or older. None of your adult visitors can be selected.
-          This may be because of a new restriction or a ban.
-        </p>
+        <p data-test="cannot-book-reason">{{ t("bookVisit:cannotBook.noEligibleAdultVisitor") }}</p>
 
-        <h2 class="govuk-heading-m">Add a new visitor</h2>
-        <p>The person you want to book a visit for must be on the prisoner’s visitor list.</p>
+        <h2 class="govuk-heading-m">{{ t("bookVisit:cannotBook.addNewVisitorHeading") }}</h2>
+        <p>{{ t("bookVisit:cannotBook.addNewVisitorDescription") }}</p>
 
         <p>
-          To make a request to book a visit for someone new,
-          <a href="{{ paths.ADD_VISITOR.START }}">complete the form</a>.
-          We will respond within 5 working days.
+          {{- t("bookVisit:cannotBook.addNewVisitorRequest", { url: paths.ADD_VISITOR.START }) | safe -}}
         </p>
       {% endif %}
     </div>

@@ -44,6 +44,10 @@
   color: govuk-colour("red");
 }
 
+.no-visited-state a {
+  @extend .govuk-link--no-visited-state;
+}
+
 .secondary-text {
   color: $govuk-secondary-text-colour
 }

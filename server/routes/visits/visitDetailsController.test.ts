@@ -69,12 +69,11 @@ describe('View a single visit', () => {
           expect($('[data-test="main-contact-number"]').text()).toBe('07712 000 000')
           expect($('[data-test="main-contact-no-details"]').length).toBe(0)
 
-          expect($('[data-test="prison-name"]').text()).toBe(prison.prisonName)
-          expect($('[data-test="prison-phone-number"]').text()).toBe(prison.phoneNumber)
-          expect($('[data-test="minutes-before-visit"]').text()).toBe('45')
-          expect($('[data-test="prison-website"]').attr('href')).toBe(prison.webAddress)
-          expect($('[data-test=no-prison-phone-number]').length).toBeFalsy()
-          expect($('[data-test="visit-reference-changes"]').text()).toBe('ab-cd-ef-gh')
+          expect($('[data-test="contact-prison"]').text()).toContain(prison.prisonName)
+          expect($('[data-test="contact-prison"]').text()).toContain(prison.phoneNumber)
+          expect($('[data-test="more-visits-info"] a').text()).toBe(`visits at ${prison.prisonName}`)
+          expect($('[data-test="more-visits-info"] a').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test="change-visit"]').text()).toContain('ab-cd-ef-gh')
 
           // don't display this line when on the visit details page
           expect($('[data-test=cancel-visit-content]').length).toBeFalsy()
@@ -116,7 +115,7 @@ describe('View a single visit', () => {
           expect($('.moj-alert').text()).toContain(
             'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
           )
-          expect($('[data-test="change-visit-heading"]').text()).toBe('How to update your request')
+          expect($('[data-test="change-request-heading"]').text()).toBe('How to update your request')
         })
     })
 
@@ -129,9 +128,8 @@ describe('View a single visit', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test=no-prison-phone-number]').text()).toContain(prison.prisonName)
-          expect($('[data-test=no-prison-phone-number] a').attr('href')).toBe(prison.webAddress)
-          expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
+          expect($('[data-test=contact-prison]').text()).toContain(prison.prisonName)
+          expect($('[data-test=contact-prison] a').attr('href')).toBe(prison.webAddress)
         })
     })
   })
@@ -154,14 +152,8 @@ describe('View a single visit', () => {
           expect($('[data-test="visit-start-time"]').text()).toBe('10am')
           expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
 
-          expect($('[data-test="prison-name"]').length).toBeFalsy()
-          expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
-          expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
-          expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
-
-          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
-          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
+          expect($('[data-test="change-visit-heading"]').length).toBeFalsy()
+          expect($('[data-test="change-request-heading"]').length).toBeFalsy()
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })
@@ -191,14 +183,8 @@ describe('View a single visit', () => {
           expect($('.moj-alert').eq(0).text()).toContain('Visit cancelled')
           expect($('.moj-alert').eq(0).text()).toContain('This visit was cancelled by the prison')
 
-          expect($('[data-test="prison-name"]').length).toBeFalsy()
-          expect($('[data-test="prison-phone-number"]').length).toBeFalsy()
-          expect($('[data-test="minutes-before-visit"]').length).toBeFalsy()
-          expect($('[data-test="prison-website"]').length).toBeFalsy()
-          expect($('[data-test="visit-reference-changes"]').length).toBeFalsy()
-
-          expect($('[data-test="cancel-visit"]').text()).toBeFalsy()
-          expect($('[data-test="cancel-visit"]').attr('href')).toBeFalsy()
+          expect($('[data-test="change-visit-heading"]').length).toBeFalsy()
+          expect($('[data-test="change-request-heading"]').length).toBeFalsy()
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
         })

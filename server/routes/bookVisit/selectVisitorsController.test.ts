@@ -181,12 +181,9 @@ describe('Select visitors', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
-          expect($('[data-test=visitors-max-total]').text()).toBe('4 people')
-          expect($('[data-test=prison-name]').text()).toBe('Hewell (HMP)')
-          expect($('[data-test=visitors-max-adults]').text()).toBe('2 people')
-          expect($('[data-test=visitors-max-children]').text()).toBe('3 people')
-          expect($('[data-test=visitors-adult-age]').eq(0).text()).toBe('16 years')
-          expect($('[data-test=visitors-adult-age]').eq(1).text()).toBe('16 years')
+          expect($('[data-test=max-visitors]').text()).toContain('Up to 4 people can visit someone at Hewell (HMP)')
+          expect($('[data-test=max-adults]').text()).toContain('2 people 16 years old or older')
+          expect($('[data-test=max-children]').text()).toContain('3 people under 16 years old')
 
           // Select visitors form
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
