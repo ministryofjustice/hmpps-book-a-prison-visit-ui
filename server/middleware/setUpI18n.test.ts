@@ -2,10 +2,6 @@ import i18next from 'i18next'
 import setUpI18n from './setUpI18n'
 
 describe('i18next setup', () => {
-  beforeEach(() => {
-    i18next.isInitialized = false
-  })
-
   it('should throw an error when a translation key is missing in non-production mode', () => {
     setUpI18n(false)
 

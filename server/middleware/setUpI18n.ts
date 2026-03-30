@@ -40,13 +40,13 @@ export default function setUpI18n(production: boolean): Router {
           cookieSameSite: 'lax',
           cookieHttpOnly: true,
         },
-
-        // Throw error on missing translation key (only non-production)
-        saveMissing: !production,
-        missingKeyHandler: (lngs, ns, key) => {
-          throw new Error(`Missing translation for key '${key}' in namespace '${ns}' and language '${lngs}'`)
-        },
       })
+  }
+
+  // Throw error on missing translation key (only non-production)
+  i18next.options.saveMissing = !production
+  i18next.options.missingKeyHandler = (lngs, ns, key) => {
+    throw new Error(`Missing translation for key '${key}' in namespace '${ns}' and language '${lngs}'`)
   }
 
   router.use(i18nextMiddleware.handle(i18next))
