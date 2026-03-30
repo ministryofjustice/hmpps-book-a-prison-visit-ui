@@ -181,7 +181,9 @@ describe('Select visitors', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
-          expect($('[data-test=max-visitors]').text()).toContain('Up to 4 people can visit someone at Hewell (HMP)')
+          expect($('[data-test=max-visitors]').text()).toContain(
+            'Up to 4 people can visit someone at Hewell (HMP & YOI)',
+          )
           expect($('[data-test=max-adults]').text()).toContain('2 people 16 years old or older')
           expect($('[data-test=max-children]').text()).toContain('3 people under 16 years old')
 

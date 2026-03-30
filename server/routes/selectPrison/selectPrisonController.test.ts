@@ -50,7 +50,7 @@ describe('Select a prison', () => {
 
           expect($('form[method=POST]').attr('action')).toBe(paths.SELECT_PRISON)
           expect($('select#prisonId option').length).toBe(prisonNames.length + 1) // all prisons and default empty option
-          expect($('select#prisonId option[value="HEI"]').text()).toBe('Hewell (HMP)')
+          expect($('select#prisonId option[value="HEI"]').text()).toBe('Hewell (HMP & YOI)')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
           expect(sessionData.selectedPrisonId).toBeUndefined()

@@ -125,7 +125,7 @@ context('Book visit journey', () => {
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-    selectVisitorsPage.maxVisitors().contains('Up to 4 people can visit someone at Hewell (HMP)')
+    selectVisitorsPage.maxVisitors().contains('Up to 4 people can visit someone at Hewell (HMP & YOI)')
     selectVisitorsPage.maxAdults().contains('2 people 16 years old or older')
     selectVisitorsPage.maxChildren().contains('3 people under 16 years old')
     selectVisitorsPage.getVisitorByNameLabel('Adult One').contains('Adult One (25 years old)')
@@ -188,7 +188,7 @@ context('Book visit journey', () => {
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
-    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP)')
+    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
@@ -281,7 +281,7 @@ context('Book visit journey', () => {
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
-    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP)')
+    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
