@@ -34,10 +34,10 @@ describe('Visiting selected prison page', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Visiting Hewell \(HMP\) -/)
+          expect($('title').text()).toMatch(/^Visiting Hewell \(HMP & YOI\) -/)
           expect($('#navigation').length).toBe(0)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.SELECT_PRISON)
-          expect($('h1').text().trim()).toBe('Visiting Hewell (HMP)')
+          expect($('h1').text().trim()).toBe('Visiting Hewell (HMP & YOI)')
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
           expect($('[data-test="continue-button"]').attr('href')).toBe(paths.SIGN_IN)

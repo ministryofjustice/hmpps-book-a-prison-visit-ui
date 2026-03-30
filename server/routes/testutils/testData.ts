@@ -86,9 +86,9 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP)',
+    prisonName = 'Hewell (HMP & YOI)',
     registeredPrisonId = 'HEI',
-    registeredPrisonName = 'Hewell (HMP)',
+    registeredPrisonName = 'Hewell (HMP & YOI)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
     convictedStatus = 'Convicted',
@@ -185,7 +185,7 @@ export default class TestData {
 
   static prisonDto = ({
     code = 'HEI',
-    prisonName = 'Hewell (HMP)',
+    prisonName = 'Hewell (HMP & YOI)',
     active = true,
     policyNoticeDaysMax = 28,
     policyNoticeDaysMin = 2,
@@ -216,7 +216,7 @@ export default class TestData {
 
   static prisonRegisterPrisonDto = ({
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP)',
+    prisonName = 'Hewell (HMP & YOI)',
   }: Partial<PrisonRegisterPrisonDto> = {}): PrisonRegisterPrisonDto =>
     ({ prisonId, prisonName }) as PrisonRegisterPrisonDto
 
@@ -226,9 +226,9 @@ export default class TestData {
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP)',
+    prisonName = 'Hewell (HMP & YOI)',
     registeredPrisonId = 'HEI',
-    registeredPrisonName = 'Hewell (HMP)',
+    registeredPrisonName = 'Hewell (HMP & YOI)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
     convictedStatus = 'Convicted',
@@ -252,7 +252,7 @@ export default class TestData {
     prisons = [
       { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
       { prisonId: 'FHI', prisonName: 'Foston Hall (HMP & YOI)' },
-      { prisonId: 'HEI', prisonName: 'Hewell (HMP)' },
+      { prisonId: 'HEI', prisonName: 'Hewell (HMP & YOI)' },
     ] as PrisonNameDto[],
   } = {}): PrisonNameDto[] => prisons
 

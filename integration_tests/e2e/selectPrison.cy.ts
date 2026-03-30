@@ -17,7 +17,7 @@ context('Select a prison', () => {
     // Start at select prison page and type into autocomplete input
     cy.visit(paths.SELECT_PRISON)
     const selectPrisonPage = Page.verifyOnPage(SelectPrisonPage)
-    selectPrisonPage.autoCompletePrisonName('Hew', 'Hewell (HMP)')
+    selectPrisonPage.autoCompletePrisonName('Hew', 'Hewell (HMP & YOI)')
 
     // Submit selected prison
     cy.task('stubGetSupportedPrisonIds')
@@ -25,7 +25,7 @@ context('Select a prison', () => {
     selectPrisonPage.continue()
 
     // Visiting selected prison page
-    const selectedPrisonPage = Page.verifyOnPage(SelectedPrisonPage, 'Hewell (HMP)')
+    const selectedPrisonPage = Page.verifyOnPage(SelectedPrisonPage, 'Hewell (HMP & YOI)')
 
     // Continue
     cy.task('stubHmppsAuthToken')
@@ -43,7 +43,7 @@ context('Select a prison', () => {
     // Start at select prison page and type into autocomplete input
     cy.visit(paths.SELECT_PRISON)
     const selectPrisonPage = Page.verifyOnPage(SelectPrisonPage)
-    selectPrisonPage.autoCompletePrisonName('Hew', 'Hewell (HMP)')
+    selectPrisonPage.autoCompletePrisonName('Hew', 'Hewell (HMP & YOI)')
 
     // Submit selected prison
     cy.task('stubGetSupportedPrisonIds', []) // none supported

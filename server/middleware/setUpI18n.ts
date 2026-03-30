@@ -40,6 +40,11 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           cookieSameSite: 'lax',
           cookieHttpOnly: true,
         },
+
+        interpolation: {
+          // Nunjucks already auto-escapes so don't want to double-escape
+          escapeValue: false,
+        },
       })
   }
 

@@ -77,7 +77,7 @@ describe('Additional support needs', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
           expect($('h1').text()).toBe('Is additional support needed for any of the visitors?')
 
-          expect($('[data-test=prison-name-support]').text().trim()).toContain('Hewell (HMP)')
+          expect($('[data-test=prison-name-support]').text().trim()).toContain('Hewell (HMP & YOI)')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.ADDITIONAL_SUPPORT)
           expect($('input[name=additionalSupportRequired]:checked').length).toBe(0)

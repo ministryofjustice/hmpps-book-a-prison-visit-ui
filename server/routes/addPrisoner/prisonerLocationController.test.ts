@@ -50,7 +50,7 @@ describe('Prisoner location', () => {
           expect($('form[method=POST]').attr('action')).toBe(paths.ADD_PRISONER.LOCATION)
           expect($('input[name=prisonId]').length).toBe(1)
           expect($('input[name=prisonId]:checked').length).toBe(0)
-          expect($('label[for=prisonId]').eq(0).text().trim()).toBe('Hewell (HMP)')
+          expect($('label[for=prisonId]').eq(0).text().trim()).toBe('Hewell (HMP & YOI)')
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 

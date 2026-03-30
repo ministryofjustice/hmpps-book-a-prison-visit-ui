@@ -113,7 +113,7 @@ describe('View a single visit', () => {
           expect($('h1').text()).toBe('Visit details')
           expect($('.moj-alert').text()).toContain('Your request needs to be reviewed')
           expect($('.moj-alert').text()).toContain(
-            'This visit is not booked yet. It needs to be checked by Hewell (HMP).',
+            'This visit is not booked yet. It needs to be checked by Hewell (HMP & YOI).',
           )
           expect($('[data-test="change-request-heading"]').text()).toBe('How to update your request')
         })
