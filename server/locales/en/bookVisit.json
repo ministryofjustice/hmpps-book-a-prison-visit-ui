@@ -1,0 +1,166 @@
+{
+  "cannotBook": {
+    "title": "A visit cannot be booked",
+
+    "noVoBalance": "{{name}} has used their allowance of visits for this month.",
+    "bookFromDate": "You can book a visit from {{date}}.",
+
+    "transferOrRelease": "{{name}} is no longer at {{prisonName}}. They may have moved to another prison or been released.",
+    "findHowToBook": "If they have moved to another prison, <a href=\"{{url}}\">find out how to book a visit at their new prison</a>.",
+    "findPrisoner": "For help contacting them, you can <a href=\"{{url}}\">apply to find a prisoner’s location</a>.",
+
+    "unsupportedPrison": "{{name}} is at {{prisonName}}. This prison is not currently supported by this service.",
+    "bookAtThisPrison": "Find out <a href=\"{{url}}\">how to book a visit at this prison</a>.",
+
+    "noEligibleAdultVisitor": "One person on a visit must be 18 years old or older. None of your adult visitors can be selected. This may be because of a new restriction or a ban.",
+    "addNewVisitorHeading": "Add a new visitor",
+    "addNewVisitorDescription": "The person you want to book a visit for must be on the prisoner’s visitor list.",
+    "addNewVisitorRequest": "To make a request to book a visit for someone new, <a href=\"{{url}}\">complete the form</a>. We will respond within 5 working days."
+  },
+
+  "selectVisitors": {
+    "title": "Who is going on the visit?",
+
+    "noVisitorsLinked": "No visitors are linked to your account.",
+
+    "visitorLimits": {
+      "maxVisitors": "Up to $t(common:plurals.person, {\"count\": {{maxVisitors}} }) can visit someone at {{prisonName}}. This includes:",
+      "maxAdults": "$t(common:plurals.person, {\"count\": {{maxAdultVisitors}} }) $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} }) or older",
+      "maxChildren": "$t(common:plurals.person, {\"count\": {{maxChildVisitors}} }) under $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} })",
+      "atLeastOneAdult": "At least one visitor must be 18 years or older."
+    },
+
+    "selectVisitorsHeading": "Select visitors",
+    "banDateHint": "If they are selected as a visitor, the visit must be on or after this date.",
+
+    "unavailableVisitorsHeading": "Unavailable visitors",
+    "cannotBookForVisitor": "You cannot currently book a visit for this visitor.",
+
+    "visitorRequestsHeading": "Visitors awaiting review",
+    "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
+
+    "bookForSomeoneElse": {
+      "detailsHeading": "Want to book for someone else?",
+      "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
+      "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
+      "linkVisitorAction": "Make a request to link a visitor",
+      "responseTime": "We will respond to your request within 5 working days."
+    },
+
+    "linkingNewVisitorsTitle": "Linking new visitors to your account"
+  },
+
+  "closedVisit": {
+    "title": "This will be a closed visit",
+
+    "description": "On a closed visit, the prisoner and visitors cannot have physical contact or pass any items.",
+
+    "continueToBook": "Continue to book",
+    "cancelAndReturnHome": "Cancel and return to the homepage"
+  },
+
+  "chooseVisitTime": {
+    "title": "Choose the visit time",
+
+    "reservationTime": "Select one visit time. It will be reserved for 10 minutes.",
+    "prisonerVisitTimes": "Only times that {{name}} can attend are shown.",
+
+    "availableTimesForDate": "{{date}} - $t(common:plurals.visitTime, {\"count\": {{count}} }) available",
+
+    "onlyAfterDate": "Only visit times on or after this date are shown.",
+
+    "calendarAriaLabel": "Visit date selection calendar",
+    "chooseOneOption": "You can only choose one option",
+    "chooseDifferentDate": "Choose a different date above"
+  },
+
+  "chooseVisitTimeNoSessions": {
+    "title": "A visit cannot be booked",
+
+    "noAvailableTimes": "There are currently no available visit times for {{name}}.",
+    "tryLater": "Try again later to see if new visit times have become available.",
+    "contactPrison": "If you believe the prisoner should have available visit times, you can <a href=\"{{ url }}\">contact the prison directly</a>."
+  },
+
+  "additionalSupport": {
+    "title": "Is additional support needed for any of the visitors?",
+
+    "description": "Tell us about any support that visitors will need because of a health condition or disability. For example, wheelchair access.",
+    "prisonSupport": "{{prisonName}} will make reasonable adjustments for the visit, but may not be able to fulfil your request.",
+
+    "provideDetails": "Provide details of the request"
+  },
+
+  "mainContact": {
+    "title": "Who is the main contact for this visit?"
+  },
+
+  "contactDetails": {
+    "title": "Contact details",
+    "titleForContact": "Contact details for {{name}}",
+
+    "description1": "We use contact details to send updates about the visit.",
+    "description2": "The main contact can get both emails and text messages.",
+
+    "getUpdatesByEmail": "Get updates by email",
+    "getUpdatesByText": "Get updates by text message",
+    "ukMobileHint": "If this is a UK mobile phone number, we will send a text message to confirm the visit"
+  },
+
+  "checkVisitDetails": {
+    "title": "Check the visit details",
+
+    "prisoner": "Prisoner",
+    "prisonerAtPrison": "{{name}} at {{prisonName}}",
+
+    "visitors": "Visitors",
+    "changeVisitors": "visitors",
+
+    "dateAndTime": "Date and time",
+    "changeDateAndTime": "date and time",
+
+    "additionalSupport": "Additional support requests",
+    "changeAdditionalSupport": "additional support requests",
+
+    "mainContact": "Main contact",
+    "changeMainContact": "main contact",
+
+    "contactDetails": "Contact details",
+    "noContactDetails": "No contact details provided",
+    "changeContactDetails": "contact details"
+  },
+
+  "visitBooked": {
+    "title": "Visit booked",
+
+    "yourReference": "Your visit reference is",
+
+    "confirmByText": "A text message confirming the visit will be sent to the main contact.",
+    "confirmByEmail": "An email confirming the visit will be sent to the main contact.",
+    "confirmByEmailAndText": "An email and a text message confirming the visit will be sent to the main contact.",
+    "withReference": "This will include the visit reference.",
+
+    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
+
+    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+  },
+
+  "visitRequested": {
+    "title": "Visit requested",
+
+    "requestReviewBy": "It will now be reviewed by {{prisonName}}.",
+
+    "detailsByText": "We have sent a text message with the details of your request to the main contact.",
+    "detailsByEmail": "We have sent an email with the details of your request to the main contact.",
+    "detailsByEmailAndText": "We have sent an email and a text message with the details of your request to the main contact.",
+    "visitReference": "Visit reference:",
+
+    "whatNextHeading": "What happens next",
+    "notBookedYet": "Your visit is not booked yet. It needs to be checked.",
+    "confirmOrReject": "{{prisonName}} will confirm or reject your request.",
+    "responseByText": "A text message with the prison’s decision will be sent to the main contact.",
+    "responseByEmail": "An email with the prison’s decision will be sent to the main contact.",
+    "responseByEmailAndText": "An email and a text message with the prison’s decision will be sent to the main contact.",
+    "upcomingVisitsStatus": "<a href=\"{{url}}\">Your visits page</a> also shows the status of upcoming visits."
+  }
+}

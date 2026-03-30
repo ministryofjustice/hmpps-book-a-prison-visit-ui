@@ -3,7 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
-{% set pageTitle = "Is additional support needed for any of the visitors?" %}
+{% set pageTitle = t("bookVisit:additionalSupport.title") %}
 
 {% set backLinkHref = paths.BOOK_VISIT.CHOOSE_TIME %}
 
@@ -15,9 +15,11 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Tell us about any support that visitors will need because of a health condition or disability. For example, wheelchair access.</p>
+      <p>{{ t("bookVisit:additionalSupport.description") }}</p>
 
-      <p data-test="prison-name">{{ prisonName }} will make reasonable adjustments for the visit, but may not be able to fulfil your request.</p>
+      <p data-test="prison-name-support">
+        {{- t("bookVisit:additionalSupport.prisonSupport", { prisonName: prisonName }) -}}
+      </p>
 
       <form action="{{ paths.BOOK_VISIT.ADDITIONAL_SUPPORT }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -29,11 +31,11 @@
             threshold: '75',
             type: "text",
             label: {
-              text: "Provide details of the request",
+              text: t("bookVisit:additionalSupport.provideDetails"),
               classes: "govuk-visually-hidden"
             },
             hint: {
-              text: "Provide details of the request"
+              text: t("bookVisit:additionalSupport.provideDetails")
             },
             value: formValues.additionalSupport,
             autocomplete: "off",
@@ -53,7 +55,7 @@
           items: [
             {
               value: "yes",
-              html: 'Yes <span class="govuk-visually-hidden">If yes, provide details</span>',
+              html: t("common:labels.yes") + ' <span class="govuk-visually-hidden">' + t("common:labels.yesDetails") + '</span>',
               attributes: {
                 'data-test': 'support-required-yes'
               },
@@ -64,7 +66,7 @@
             },
             {
               value: "no",
-              text: "No",
+              text: t("common:labels.no"),
               attributes: {
                 'data-test': 'support-required-no'
               },
@@ -75,7 +77,7 @@
         }) }}
           
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: {
             "data-test": "continue-button",
             "data-test-app-ref": applicationReference if showExtraTestAttrs

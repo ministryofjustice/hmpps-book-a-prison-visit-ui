@@ -61,7 +61,7 @@ function appSetup(
 ): Express {
   const app = express()
 
-  app.use(setUpI18n())
+  app.use(setUpI18n({ production }))
 
   app.set('view engine', 'njk')
 

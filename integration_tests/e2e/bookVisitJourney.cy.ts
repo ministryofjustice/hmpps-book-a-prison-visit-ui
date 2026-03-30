@@ -125,12 +125,9 @@ context('Book visit journey', () => {
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-    selectVisitorsPage.visitorsMaxTotal().contains(prison.maxTotalVisitors)
-    selectVisitorsPage.prisonName().contains(prison.prisonName)
-    selectVisitorsPage.visitorsMaxAdults().contains(prison.maxAdultVisitors)
-    selectVisitorsPage.visitorsMaxChildren().contains(prison.maxChildVisitors)
-    selectVisitorsPage.visitorsAdultAge().eq(0).contains(prison.adultAgeYears)
-    selectVisitorsPage.visitorsAdultAge().eq(1).contains(prison.adultAgeYears)
+    selectVisitorsPage.maxVisitors().contains('Up to 4 people can visit someone at Hewell (HMP)')
+    selectVisitorsPage.maxAdults().contains('2 people 16 years old or older')
+    selectVisitorsPage.maxChildren().contains('3 people under 16 years old')
     selectVisitorsPage.getVisitorByNameLabel('Adult One').contains('Adult One (25 years old)')
     selectVisitorsPage.getVisitorByNameLabel('Child One').contains('Child One (12 years old)')
     selectVisitorsPage.getVisitorByNameLabel('Child Two').contains('Child Two (5 years old)')
@@ -191,8 +188,7 @@ context('Book visit journey', () => {
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
-    checkVisitDetailsPage.prisonerName().contains('John Smith')
-    checkVisitDetailsPage.prisonName().contains('Hewell (HMP)')
+    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
@@ -285,8 +281,7 @@ context('Book visit journey', () => {
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
-    checkVisitDetailsPage.prisonerName().contains('John Smith')
-    checkVisitDetailsPage.prisonName().contains('Hewell (HMP)')
+    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))

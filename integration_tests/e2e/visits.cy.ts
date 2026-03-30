@@ -59,8 +59,8 @@ context('Visits home page', () => {
     visitDetailsPage.mainContactName().contains('Joan Phillips')
     visitDetailsPage.mainContactEmail().contains('visitor@example.com')
     visitDetailsPage.mainContactNumber().contains('07712 000 000')
-    visitDetailsPage.prisonName().contains(prison.prisonName)
-    visitDetailsPage.prisonPhoneNumber().contains(prison.phoneNumber)
+    visitDetailsPage.contactPrison().contains(prison.prisonName)
+    visitDetailsPage.contactPrison().contains(prison.phoneNumber)
   })
 
   it('should show Past visits page with visits and navigate to view the visit details', () => {

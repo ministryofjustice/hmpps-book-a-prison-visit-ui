@@ -7,7 +7,7 @@ export default class ChooseVisitTimeNoSessionsPage extends Page {
     cy.contains('no available visit times')
   }
 
-  prisonerName = (): PageElement => cy.get('[data-test=prisoner-name]')
+  noSessionsPrisonerName = (): PageElement => cy.get('[data-test=no-sessions-for-prisoner]')
 
-  prisonWebsite = (): PageElement => cy.get('[data-test=prison-website]')
+  prisonWebsite = (): PageElement => cy.get('[data-test=contact-prison] a')
 }

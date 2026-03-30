@@ -84,7 +84,7 @@ context('Book visit journey - drop-out points', () => {
 
       // No sessions so arrive on drop-out page
       const chooseVisitTimeNoSessionsPage = Page.verifyOnPage(ChooseVisitTimeNoSessionsPage)
-      chooseVisitTimeNoSessionsPage.prisonerName().contains('John Smith')
+      chooseVisitTimeNoSessionsPage.noSessionsPrisonerName().contains('John Smith')
       chooseVisitTimeNoSessionsPage.prisonWebsite().should('have.attr', 'href', prison.webAddress)
     })
 
@@ -165,7 +165,7 @@ context('Book visit journey - drop-out points', () => {
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
-      cannotBookPage.getPrisonerName().contains('John Smith')
+      cannotBookPage.getCannotBookReason().contains('John Smith')
       cy.contains('has used their allowance of visits')
       cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
 
@@ -196,9 +196,9 @@ context('Book visit journey - drop-out points', () => {
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
-      cannotBookPage.getPrisonerName().contains('John Smith')
-      cannotBookPage.getRegisteredPrisonName().contains(prison.prisonName)
-      cy.contains('have moved to another prison or been released')
+      cannotBookPage.getCannotBookReason().contains('John Smith')
+      cannotBookPage.getCannotBookReason().contains(prison.prisonName)
+      cannotBookPage.getCannotBookReason().contains('have moved to another prison or been released')
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()
@@ -226,7 +226,7 @@ context('Book visit journey - drop-out points', () => {
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
-      cy.contains('One person on a visit must be 18 years old or older')
+      cannotBookPage.getCannotBookReason().contains('One person on a visit must be 18 years old or older')
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()

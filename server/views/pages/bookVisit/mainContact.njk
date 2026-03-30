@@ -3,7 +3,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% set pageTitle = "Who is the main contact for this visit?" %}
+{% set pageTitle = t("bookVisit:mainContact.title") %}
 
 {% set backLinkHref = paths.BOOK_VISIT.ADDITIONAL_SUPPORT %}
 
@@ -35,7 +35,7 @@
             type: "text",
             classes: "govuk-!-width-one-half",
             label: {
-              text: "Name"
+              text: t("common:labels.name")
             },
             value: formValues.someoneElseName,
             autocomplete: "off",
@@ -47,7 +47,7 @@
         {% set visitors = (visitors.push(
           {
             value: "someoneElse",
-            text: "Someone else",
+            text: t("common:labels.someoneElse"),
             checked: formValues.contact == "someoneElse",
             conditional: {
               html: someoneElseHtml
@@ -70,7 +70,7 @@
         }) }}
 
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }} 

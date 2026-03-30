@@ -5,11 +5,7 @@ export default class CannotBookPage extends Page {
     super('A visit cannot be booked')
   }
 
-  getPrisonerName = (): PageElement => cy.get('[data-test="prisoner-name"]')
+  getCannotBookReason = (): PageElement => cy.get('[data-test="cannot-book-reason"]')
 
-  // NO_VO_BALANCE
   getBookFromDate = (): PageElement => cy.get('[data-test="book-from-date"]')
-
-  // TRANSFER_OR_RELEASE / UNSUPPORTED PRISON
-  getRegisteredPrisonName = (): PageElement => cy.get('[data-test="registered-prison-name"]')
 }

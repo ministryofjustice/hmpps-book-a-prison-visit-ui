@@ -22,6 +22,8 @@ import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
 import analyticsConsent from './middleware/analyticsConsent'
 
+const production = process.env.NODE_ENV === 'production'
+
 export default function createApp(services: Services): express.Application {
   const app = express()
 
@@ -29,7 +31,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
-  app.use(setUpI18n())
+  app.use(setUpI18n({ production }))
 
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
@@ -52,7 +54,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authenticatedRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
-  app.use(errorHandler(process.env.NODE_ENV === 'production'))
+  app.use(errorHandler(production))
 
   return app
 }

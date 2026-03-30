@@ -120,7 +120,7 @@ describe('Choose visit time', () => {
           expect($('h1').text()).toBe('Choose the visit time')
 
           expect($('.moj-alert').length).toBe(0)
-          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
+          expect($('[data-test=prisoner-visit-times]').text()).toBe('Only times that John Smith can attend are shown.')
 
           expect($('[data-test=banned-visitors-details]').length).toBe(0)
 
@@ -141,6 +141,11 @@ describe('Choose visit time', () => {
               .children('.visits-calendar__day')
               .hasClass('visits-calendar__day--start-col-6'),
           ).toBe(true)
+
+          // unavailable visit session days
+          expect($('.visits-calendar__day').eq(0).text().trim().replace(/\s+/g, ' ')).toBe(
+            '28 May - Tuesday - no visit times available',
+          )
 
           // available visit session day links
           expect($('.visits-calendar__day a').length).toBe(3)
@@ -211,13 +216,11 @@ describe('Choose visit time', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('[data-test=banned-visitors-details]').length).toBe(1)
-          expect($('[data-test^=banned-visitor-name]').length).toBe(2)
+          expect($('[data-test^=banned-visitor-]').length).toBe(2)
 
-          expect($('[data-test=banned-visitor-name-1]').text()).toBe('V 2')
-          expect($('[data-test=banned-visitor-expiry-date-1]').text()).toBe('2 August 2025')
+          expect($('[data-test=banned-visitor-1]').text()).toBe('V 2 is banned until 2 August 2025.')
 
-          expect($('[data-test=banned-visitor-name-2]').text()).toBe('V 3')
-          expect($('[data-test=banned-visitor-expiry-date-2]').text()).toBe('2 August 2025')
+          expect($('[data-test=banned-visitor-2]').text()).toBe('V 3 is banned until 2 August 2025.')
         })
     })
 
@@ -321,9 +324,11 @@ describe('Choose visit time', () => {
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_VISITORS)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
-          expect($('main p').eq(0).text()).toContain('no available visit times')
-          expect($('[data-test=prisoner-name]').text()).toBe('John Smith')
-          expect($('[data-test=prison-website]').attr('href')).toBe(prison.webAddress)
+          expect($('[data-test=no-sessions-for-prisoner]').text()).toBe(
+            'There are currently no available visit times for John Smith.',
+          )
+          expect($('[data-test=contact-prison]').text()).toContain('you can contact the prison directly')
+          expect($('[data-test=contact-prison] a').attr('href')).toBe(prison.webAddress)
 
           expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
             prisonId: prison.code,

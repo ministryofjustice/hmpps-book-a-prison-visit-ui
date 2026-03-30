@@ -2,6 +2,44 @@
   "applicationName": "Visit someone in prison",
 
   "buttons": {
-    "continue": "Continue"
+    "change": "Change",
+    "confirmAndSend": "Confirm and send",
+    "continue": "Continue",
+    "linkNewVisitor": "Link a new visitor"
+  },
+
+  "dateTime": {
+    "timeRange": "{{startTime}} to {{endTime}}"
+  },
+
+  "labels": {
+    "dateOfBirth": "Date of birth",
+    "emailAddress": "Email address",
+    "name": "Name",
+    "no": "No",
+    "none": "None",
+    "phoneNumber": "Phone number",
+    "someoneElse": "Someone else",
+    "warning": "Warning",
+    "yes": "Yes",
+    "yesDetails": "If yes, provide details"
+  },
+
+  "plurals": {
+    "ageYears_one": "{{count}} year old",
+    "ageYears_other": "{{count}} years old",
+
+    "person_one": "{{count}} person",
+    "person_other": "{{count}} people",
+
+    "visitTime_zero": "no visit times",
+    "visitTime_one": "{{count}} visit time",
+    "visitTime_other": "{{count}} visit times"
+  },
+
+  "visitors": {
+    "banned": "Banned",
+    "bannedUntil": "{{name}} is banned until {{date}}.",
+    "notApproved": "Not approved"
   }
 }

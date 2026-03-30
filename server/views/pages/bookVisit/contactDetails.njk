@@ -3,7 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Contact details" %}
+{% set pageTitle = t("bookVisit:contactDetails.title") %}
 
 {% set backLinkHref = paths.BOOK_VISIT.MAIN_CONTACT %}
 
@@ -13,10 +13,12 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">{{ pageTitle }} for {{ mainContactName }}</h1>
+      <h1 class="govuk-heading-l">
+        {{- t("bookVisit:contactDetails.titleForContact", { name: mainContactName }) -}}
+      </h1>
 
-      <p>We use contact details to send updates about the visit.</p>
-      <p>The main contact can get both emails and text messages.</p>
+      <p>{{ t("bookVisit:contactDetails.description1") }}</p>
+      <p>{{ t("bookVisit:contactDetails.description2") }}</p>
 
       <form action="{{ paths.BOOK_VISIT.CONTACT_DETAILS }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -29,7 +31,7 @@
           autocomplete: "email",
           spellcheck: false,
           label: {
-            text: "Email address"
+            text: t("common:labels.emailAddress")
           },
           value: formValues.mainContactEmail,
           errorMessage: errors | findError('mainContactEmail')
@@ -38,7 +40,7 @@
   
         {% set phoneHtml %}
         <p class="govuk-hint">
-          If this is a UK mobile phone number, we will send a text message to confirm the visit
+          {{ t("bookVisit:contactDetails.ukMobileHint") }}
         </p>
         {# <p class="govuk-hint">For international numbers include the country code</p> #}
 
@@ -49,7 +51,7 @@
           autocomplete: "tel",
           classes: "govuk-!-width-one-half",
           label: {
-            text: "Phone number"
+            text: t("common:labels.phoneNumber")
           },
           value: formValues.mainContactPhone,
           errorMessage: errors | findError('mainContactPhone')
@@ -67,15 +69,14 @@
           items: [
             {
               value: "email",
-              text: "Get updates by email",
+              text: t("bookVisit:contactDetails.getUpdatesByEmail"),
               conditional: {
                 html: emailHtml
               }
             },
             {
               value: "phone",
-              text: "Get updates by text message",
-              classes: 'TEST',
+              text: t("bookVisit:contactDetails.getUpdatesByText"),
               conditional: {
                 html: phoneHtml
               }
@@ -87,7 +88,7 @@
         }) }}
 
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }} 
