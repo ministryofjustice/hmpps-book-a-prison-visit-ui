@@ -31,7 +31,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
-  app.use(setUpI18n(production))
+  app.use(setUpI18n({ production }))
 
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())

@@ -7,7 +7,7 @@ import path from 'path'
 import { LOCALE, SUPPORTED_LOCALES } from '../constants/locales'
 import config from '../config'
 
-export default function setUpI18n(production: boolean): Router {
+export default function setUpI18n({ production }: { production: boolean }): Router {
   const router = express.Router()
 
   if (!i18next.isInitialized) {
