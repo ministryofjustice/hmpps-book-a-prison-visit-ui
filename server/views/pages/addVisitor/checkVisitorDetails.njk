@@ -2,7 +2,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Check your request" %}
+{% set pageTitle = t("addVisitor:checkVisitorDetails.title") %}
 
 {% set backLinkHref = paths.ADD_VISITOR.DETAILS %}
 
@@ -12,18 +12,19 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p class="govuk-body-l">
-        Your answers need to match the information on the prisoner’s visitor list.
-      </p>
+      <p class="govuk-body-l">{{ t("addVisitor:checkVisitorDetails.description") }}</p>
 
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-m">Visitor information</h2>
+          <h2 class="govuk-heading-m">{{ t("addVisitor:checkVisitorDetails.visitorInformationHeading") }}</h2>
         </div>
         <div class="govuk-grid-column-one-third">
           <p class="govuk-!-text-align-right">
-            <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS }}">Change
-              <span class="govuk-visually-hidden"> visitor information</span>
+            <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS }}">
+              {{- t("common:buttons.change") -}}
+              <span class="govuk-visually-hidden">
+                {{ t("addVisitor:checkVisitorDetails.changeVisitorInformation") }}
+              </span>
             </a>
           </p>
         </div>
@@ -33,7 +34,7 @@
         rows: [
           {
             key: {
-              text: "First name"
+              text: t("common:labels.firstName")
             },
             value: {
               html:
@@ -42,7 +43,7 @@
           },
           {
             key: {
-              text: "Last name"
+              text: t("common:labels.lastName")
             },
             value: {
               html:
@@ -51,7 +52,7 @@
           },
           {
             key: {
-              text: "Date of birth"
+              text: t("common:labels.dateOfBirth")
             },
             value: {
               html:
@@ -61,22 +62,19 @@
         ]
       }) }}
 
-      <p>
-        By submitting this request you confirm that, to the best of your knowledge,
-        the details you are providing are correct. Visitors must be on the prisoner’s visitor list.
-      </p>
+      <p>{{ t("addVisitor:checkVisitorDetails.confirmInformation") }}</p>
 
       <p>
-        Make sure the visitor information you provide matches the
-        <a href="https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a">acceptable forms of ID</a>
-        that the visitor will use when they visit someone in prison.
+        {{- t("addVisitor:checkVisitorDetails.acceptableId", {
+          url: "https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a"
+        }) | safe -}}
       </p>
 
       <form action="{{ paths.ADD_VISITOR.CHECK }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
-          text: "Accept and send",
+          text: t("common:buttons.acceptAndSend"),
           attributes: { "data-test": "submit" },
           preventDoubleClick: true
         }) }} 

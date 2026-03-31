@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "components/dateOfBirthInput.njk" import dateOfBirthInput %}
+{% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
@@ -55,7 +55,7 @@
             text: t("common:labels.prisonNumber")
           },
           hint: {
-            text: t("common:labels.prisonNumberHint")
+            text: t("common:hints.prisonNumber")
           },
           value: formValues.prisonNumber,
           autocomplete: "off",
