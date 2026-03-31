@@ -2,11 +2,11 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Which prison are you visiting?" %}
+{% set pageTitle = t("selectPrison:selectPrison.title") %}
 
 {% set backLinkHref = paths.GOVUK_START_PAGE  %}
 
-{% set prisonSelectItems = [{ value: "", text: "Select a prison" }] %}
+{% set prisonSelectItems = [{ value: "", text: t("selectPrison:selectPrison.selectLabel") }] %}
 {% for prison in prisons %}
   {% set prisonSelectItems = (prisonSelectItems.push({
     value: prison.prisonId,
@@ -30,27 +30,29 @@
           name: "prisonId",
           formGroup: { classes: "govuk-!-width-two-thirds" },
           label: {
-            text: "Select a prison",
+            text: t("selectPrison:selectPrison.selectLabel"),
             classes: "govuk-visually-hidden"
           },
           hint: {
-            text: "For example, Cardiff (HMP)"
+            text: t("selectPrison:selectPrison.selectHint")
           },
           items: prisonSelectItems,
           errorMessage: errors | findError('prisonId')
         }) }}
 
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }} 
 
       </form>
 
-      <h2 class="govuk-heading-m">What if I don’t know the prisoner’s location?</h2>
+      <h2 class="govuk-heading-m">{{ t("selectPrison:selectPrison.unknownLocationHeading") }}</h2>
       <p>
-        You can <a href="https://www.gov.uk/find-prisoner">apply to find the prisoner’s location</a>.
+        {{- t("selectPrison:selectPrison.findPrisonerLink", {
+          url: "https://www.gov.uk/find-prisoner"
+        }) | safe -}}
       </p>
     </div>
   </div>

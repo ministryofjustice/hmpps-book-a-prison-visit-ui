@@ -2,15 +2,15 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visiting " + prisonName %}
+{% set pageTitle = t("selectPrison:selectedPrison.title", { prisonName: prisonName }) %}
 
 {% set backLinkHref = paths.SELECT_PRISON %}
 
 {% set insetText -%}
-  You can only book visits for one prisoner at
-  <span data-test="prison-name">{{ prisonName }}</span>
-  using this service. If you need to visit another prisoner,
-  <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">contact the prison directly</a>.
+  {{- t("selectPrison:selectedPrison.onlyOnePrisoner", {
+    prisonName: prisonName,
+    url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
+  }) | safe -}}
 {%- endset %}
 
 {% block content %}
@@ -20,16 +20,16 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>How you book visits at this prison has changed.</p>
+      <p>{{ t("selectPrison:selectedPrison.howBookingChanged") }}</p>
 
-      <p>You need to sign in or create a GOV.UK One Login to book a visit online.</p>
+      <p>{{ t("selectPrison:selectedPrison.signInPrompt") }}</p>
 
       {{ govukInsetText({
         html: insetText
       }) }}
 
       {{ govukButton({
-        text: "Continue",
+        text: t("common:buttons.continue"),
         href: paths.SIGN_IN,
         attributes: { "data-test": "continue-button" },
         preventDoubleClick: true
