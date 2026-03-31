@@ -1,0 +1,16 @@
+{
+  "selectPrison": {
+    "title": "Which prison are you visiting?",
+    "selectLabel": "Select a prison",
+    "selectHint": "For example, Cardiff (HMP)",
+    "unknownLocationHeading": "What if I don’t know the prisoner’s location?",
+    "findPrisonerLink": "You can <a href=\"{{url}}\">apply to find the prisoner’s location</a>."
+  },
+
+  "selectedPrison": {
+    "title": "Visiting {{prisonName}}",
+    "howBookingChanged": "How you book visits at this prison has changed.",
+    "signInPrompt": "You need to sign in or create a GOV.UK One Login to book a visit online.",
+    "onlyOnePrisoner": "You can only book visits for one prisoner at {{prisonName}} using this service. If you need to visit another prisoner, <a href=\"{{url}}\">contact the prison directly</a>."
+  }
+}
