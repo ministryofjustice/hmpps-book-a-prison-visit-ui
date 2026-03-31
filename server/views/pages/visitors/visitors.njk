@@ -4,7 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set activeLink = 'visitors-link' %}
-{% set pageTitle = "Visitors" %}
+{% set pageTitle = t("visitors:visitors.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -12,62 +12,68 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m">
-        <span data-test="prisoner-name">{{ prisoner | prisonerNameFirstLast }}</span>’s visitors
+      <h2 class="govuk-heading-m" data-test="prisoner-visitors">
+        {{- t("visitors:visitors.visitorsOf", {
+          name: prisoner | prisonerNameFirstLast
+        }) | safe -}}
       </h2>
 
       {% if visitorsTableRows | length %}
-        <h3 class="govuk-heading-s govuk-!-margin-top-5">Visitors linked to your account</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-top-5">
+          {{- t("visitors:visitors.linkedVisitorsHeading") -}}
+        </h3>
 
         {{ govukTable({
           head: [
             {
-              text: "Name"
+              text: t("common:labels.name")
             },
             {
-              text: "Date of birth"
+              text: t("common:labels.dateOfBirth")
             },
             {
-              text: "Can you book a visit for them?"
+              text: t("visitors:visitors.bookVisitForThem")
             }
           ],
           rows: visitorsTableRows
         }) }}
       {% else %}
         {{ govukWarningText({
-          text: "No visitors are linked to your account.",
-          iconFallbackText: "Warning",
+          text: t("visitors:visitors.noVisitorsLinked"),
+          iconFallbackText: t("common:labels.warning"),
           attributes: { "data-test": "no-visitors" }
         }) }}
       {% endif %}
 
       {% if visitorRequestsTableRows | length %}
-        <h2 class="govuk-heading-m" data-test="visitor-requests">Visitors awaiting review</h2>
+        <h2 class="govuk-heading-m" data-test="visitor-requests">
+          {{- t("visitors:visitors.visitorRequestsHeading") -}}
+        </h2>
 
-        <p>Requests to link visitors are reviewed by the prison.</p>
+        <p>{{ t("visitors:visitors.reviewedByPrison") }}</p>
 
         {{ govukTable({
           classes: "govuk-!-width-two-thirds",
           head: [
             {
-              text: "Name"
+              text: t("common:labels.name")
             },
             {
-              text: "Date of birth"
+              text: t("common:labels.dateOfBirth")
             }
           ],
           rows: visitorRequestsTableRows
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m">Linking new visitors to your account</h2>
+      <h2 class="govuk-heading-m">{{ t("visitors:visitors.linkingNewVisitorsHeading") }}</h2>
 
-      <p>You can only book visits for people linked to your account.</p>
-      <p>Visitors must be on the prisoner’s visitor list.</p>
-      <p>We will respond to your request within 5 working days.</p>
+      <p>{{ t("visitors:visitors.linkedVisitorsOnly") }}</p>
+      <p>{{ t("visitors:visitors.mustBeOnVisitorList") }}</p>
+      <p>{{ t("visitors:visitors.responseTime") }}</p>
 
       {{ govukButton({
-        text: "Link a new visitor",
+        text: t("common:buttons.linkNewVisitor"),
         href: paths.ADD_VISITOR.START,
         attributes: { "data-test": "link-a-visitor" },
         preventDoubleClick: true
