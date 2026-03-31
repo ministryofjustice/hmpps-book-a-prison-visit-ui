@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
-{% set pageTitle = "Cancel your visit" %}
+{% set pageTitle = t("visits:cancel.title") %}
 
 {% set backLinkHref = paths.VISITS.DETAILS + '/' + visit.visitDisplayId %}
 
@@ -12,9 +12,9 @@
 
       {% include "partials/errorSummary.njk" %}
 
-      <h1 class="govuk-heading-l">Are you sure you want to cancel your visit?</h1>
+      <h1 class="govuk-heading-l">{{ t("visits:cancel.heading") }}</h1>
 
-      <h2 class="govuk-heading-m">Date and time</h2>
+      <h2 class="govuk-heading-m">{{ t("visits:cancel.dateTimeHeading") }}</h2>
       <ul class="govuk-list">
         <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
         <li>
@@ -24,13 +24,13 @@
         </li>
       </ul>
 
-      <h2 class="govuk-heading-m">Prisoner</h2>
+      <h2 class="govuk-heading-m">{{ t("visits:cancel.prisonerHeading") }}</h2>
       <ul class="govuk-list">
         <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
       </ul>
 
 
-      <h2 class="govuk-heading-m">Visitors</h2>
+      <h2 class="govuk-heading-m">{{ t("visits:cancel.visitorsHeading") }}</h2>
       <ul class="govuk-list">
         {% for visitor in visit.visitors %}
           <li data-test="visitor-name-{{ loop.index }}">
@@ -47,14 +47,14 @@
           items: [
             {
               value: "yes",
-              text: "Yes, cancel this visit",
+              text: t("visits:cancel.yesCancelOption"),
               attributes: {
                 'data-test': 'cancel-visit-yes'
               }
             },
             {
               value: "no",
-              text: "No, keep this visit",
+              text: t("visits:cancel.noCancelOption"),
               attributes: {
                 'data-test': 'cancel-visit-no'
               }
@@ -64,7 +64,7 @@
         }) }}
           
         {{ govukButton({
-          text: "Confirm",
+          text: t("visits:cancel.confirmButton"),
           attributes: {
             "data-test": "confirm-button"
           },
