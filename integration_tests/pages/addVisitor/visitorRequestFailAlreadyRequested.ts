@@ -5,5 +5,5 @@ export default class VisitorRequestFailAlreadyRequestedPage extends Page {
     super('Visitor already requested')
   }
 
-  getVisitorName = (): PageElement => cy.get('[data-test=visitor-name]')
+  getVisitorName = (): PageElement => cy.get('[data-test=visitor-already-requested]')
 }

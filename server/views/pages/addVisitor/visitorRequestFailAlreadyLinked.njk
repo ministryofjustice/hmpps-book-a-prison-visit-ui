@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visitor already linked" %}
+{% set pageTitle = t("addVisitor:visitorRequestFailAlreadyLinked.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -9,24 +9,26 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>
-        You have previously linked
-        <span data-test="visitor-name">{{ visitorDetails.firstName }} {{ visitorDetails.lastName }}</span>
-        to your account.
+      <p data-test="visitor-already-linked">
+        {{- t("addVisitor:visitorRequestFailAlreadyLinked.visitorAlreadyLinked", {
+          visitorName: visitorDetails.firstName + " " + visitorDetails.lastName
+        }) | safe -}}
       </p>
 
-      <p>You do not need to submit a new request for this visitor.</p>
+      <p>{{ t("addVisitor:visitorRequestFailAlreadyLinked.noNeedToSubmit") }}</p>
 
       <div class="govuk-button-group">
         {{ govukButton({
-          text: "Link another visitor",
+          text: t("common:buttons.linkAnotherVisitor"),
           href: paths.ADD_VISITOR.DETAILS,
           classes: "govuk-button--secondary",
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
         }) }}
 
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">View linked and requested visitors</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">
+          {{- t("addVisitor:visitorRequestFailAlreadyLinked.viewLinkedAndRequestedVisitors") -}}
+        </a>
       </div>
 
     </div>

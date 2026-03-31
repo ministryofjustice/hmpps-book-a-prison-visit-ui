@@ -1,9 +1,9 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "components/dateOfBirthInput.njk" import dateOfBirthInput %}
+{% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visitor information" %}
+{% set pageTitle = t("addVisitor:visitorDetails.title") %}
 
 {% set backLinkHref = paths.ADD_VISITOR.START %}
 
@@ -23,7 +23,7 @@
           type: "text",
           classes: "govuk-!-width-two-thirds",
           label: {
-            text: "First name"
+            text: t("common:labels.firstName")
           },
           value: formValues.firstName,
           autocomplete: "off",
@@ -36,7 +36,7 @@
           type: "text",
           classes: "govuk-!-width-two-thirds",
           label: {
-            text: "Last name"
+            text: t("common:labels.lastName")
           },
           value: formValues.lastName,
           autocomplete: "off",
@@ -47,7 +47,7 @@
         {{ dateOfBirthInput('visitorDob', formValues, errors) }}
 
         {{ govukButton({
-          text: "Continue",
+          text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
         }) }} 

@@ -1,0 +1,57 @@
+{
+  "addVisitorStart": {
+    "title": "Providing visitor information",
+    "identityRequirement": "All visitors to prisons in England and Wales, other than accompanied children under the age of 16, are required to prove their identity before entry.",
+    "acceptableId": "The visitor information you provide must match the <a href=\"{{url}}\">acceptable forms of ID</a> that the visitor will show when they visit someone in prison.",
+    "visitorList": "Visitors must also be on the prisoner’s visitor list. It can take several weeks for new visitors to get added to the prisoner’s visitor list.",
+    "incorrectInfoRejected": "Requests with incorrect visitor information will be rejected."
+  },
+
+  "visitorDetails": {
+    "title": "Visitor information"
+  },
+
+  "checkVisitorDetails": {
+    "title": "Check your request",
+    "description": "Your answers need to match the information on the prisoner’s visitor list.",
+    "visitorInformationHeading": "Visitor information",
+    "changeVisitorInformation": "visitor information",
+    "confirmInformation": "By submitting this request you confirm that, to the best of your knowledge, the details you are providing are correct. Visitors must be on the prisoner’s visitor list.",
+    "acceptableId": "Make sure the visitor information you provide matches the <a href=\"{{url}}\">acceptable forms of ID</a> that the visitor will use when they visit someone in prison."
+  },
+
+  "visitorApproved": {
+    "title": "Visitor linked",
+    "visitorLinked": "{{visitorName}} has been linked to your account",
+    "approvedMessage": "{{visitorName}} will appear as a visitor when you book visits for {{prisonerName}}."
+  },
+
+  "visitorRequested": {
+    "title": "Request submitted",
+    "requestReview": "We will review your request and reply within 5 working days",
+    "approvedOrRejected": "You will get an email to say if your request has been approved or rejected.",
+    "statusOnVisitorsPage": "You can also view the status of your requests on <a href=\"{{url}}\">the visitors page</a>."
+  },
+
+  "visitorRequestFailAlreadyLinked": {
+    "title": "Visitor already linked",
+    "visitorAlreadyLinked": "You have previously linked {{visitorName}} to your account.",
+    "noNeedToSubmit": "You do not need to submit a new request for this visitor.",
+    "viewLinkedAndRequestedVisitors": "View linked and requested visitors"
+  },
+
+  "visitorRequestFailAlreadyRequested": {
+    "title": "Visitor already requested",
+    "visitorAlreadyRequested": "You have previously submitted a request for {{visitorName}}.",
+    "waitingToBeReviewed": "It is waiting to be reviewed by the prison.",
+    "respondWithinFiveDays": "We will respond to your request within 5 working days.",
+    "viewLinkedAndRequestedVisitors": "View linked and requested visitors"
+  },
+
+  "visitorRequestFailTooManyRequests": {
+    "title": "Visitor request cannot be submitted",
+    "limitReached": "You have reached the limit for visitor requests.",
+    "cannotMakeAnotherRequest": "You cannot make another request until one of your requests is reviewed. You will get an email to say if your request has been approved or rejected.",
+    "viewLinkedAndRequestedVisitors": "You can <a href=\"{{url}}\">view your linked and requested visitors</a>."
+  }
+}

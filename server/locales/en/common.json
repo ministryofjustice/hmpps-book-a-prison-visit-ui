@@ -3,9 +3,12 @@
 
   "buttons": {
     "addVisitors": "Add visitors",
+    "acceptAndSend": "Accept and send",
+    "bookAVisit": "Book a visit",
     "change": "Change",
     "confirmAndSend": "Confirm and send",
     "continue": "Continue",
+    "linkAnotherVisitor": "Link another visitor",
     "linkNewVisitor": "Link a new visitor"
   },
 
@@ -23,11 +26,15 @@
     "none": "None",
     "phoneNumber": "Phone number",
     "prisonNumber": "Prison number",
-    "prisonNumberHint": "For example, A1234BC",
     "someoneElse": "Someone else",
     "warning": "Warning",
     "yes": "Yes",
     "yesDetails": "If yes, provide details"
+  },
+
+  "hints": {
+    "dateOfBirth": "For example, 27 3 1977",
+    "prisonNumber": "For example, A1234BC"
   },
 
   "plurals": {

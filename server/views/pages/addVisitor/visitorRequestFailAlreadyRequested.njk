@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visitor already requested" %}
+{% set pageTitle = t("addVisitor:visitorRequestFailAlreadyRequested.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -9,25 +9,28 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>
-        You have previously submitted a request for
-        <span data-test="visitor-name">{{ visitorDetails.firstName }} {{ visitorDetails.lastName }}</span>.
+      <p data-test="visitor-already-requested">
+        {{- t("addVisitor:visitorRequestFailAlreadyRequested.visitorAlreadyRequested", {
+          visitorName: visitorDetails.firstName + " " + visitorDetails.lastName
+        }) | safe -}}
       </p>
 
-      <p>It is waiting to be reviewed by the prison.</p>
+      <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.waitingToBeReviewed") }}</p>
 
-      <p>We will respond to your request within 5 working days.</p>
+      <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.respondWithinFiveDays") }}</p>
 
       <div class="govuk-button-group">
         {{ govukButton({
-          text: "Link another visitor",
+          text: t("common:buttons.linkAnotherVisitor"),
           href: paths.ADD_VISITOR.DETAILS,
           classes: "govuk-button--secondary",
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
         }) }}
 
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">View linked and requested visitors</a>
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">
+          {{- t("addVisitor:visitorRequestFailAlreadyRequested.viewLinkedAndRequestedVisitors") -}}
+        </a>
       </div>
 
     </div>

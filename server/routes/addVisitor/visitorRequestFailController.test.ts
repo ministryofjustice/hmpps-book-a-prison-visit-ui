@@ -43,7 +43,7 @@ describe('Add visitor request failure pages', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visitor already requested')
 
-          expect($('[data-test="visitor-name"]').text()).toBe('first last')
+          expect($('[data-test="visitor-already-requested"]').text()).toContain('first last')
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
@@ -65,7 +65,7 @@ describe('Add visitor request failure pages', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visitor already linked')
 
-          expect($('[data-test="visitor-name"]').text()).toBe('first last')
+          expect($('[data-test="visitor-already-linked"]').text()).toContain('first last')
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
