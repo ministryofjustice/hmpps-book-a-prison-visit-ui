@@ -2,6 +2,7 @@
   "applicationName": "Visit someone in prison",
 
   "buttons": {
+    "addVisitors": "Add visitors",
     "change": "Change",
     "confirmAndSend": "Confirm and send",
     "continue": "Continue",
@@ -14,11 +15,15 @@
 
   "labels": {
     "dateOfBirth": "Date of birth",
+    "firstName": "First name",
     "emailAddress": "Email address",
+    "lastName": "Last name",
     "name": "Name",
     "no": "No",
     "none": "None",
     "phoneNumber": "Phone number",
+    "prisonNumber": "Prison number",
+    "prisonNumberHint": "For example, A1234BC",
     "someoneElse": "Someone else",
     "warning": "Warning",
     "yes": "Yes",

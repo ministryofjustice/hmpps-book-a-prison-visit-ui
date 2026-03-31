@@ -1,0 +1,30 @@
+{
+  "prisonerLocation": {
+    "title": "Where is the prisoner you want to visit?",
+    "findPrisonerLink": "If you do not know, you can <a href=\"{{url}}\">apply to find the prisoner’s location</a>."
+  },
+
+  "prisonerDetails": {
+    "title": "Prisoner details",
+    "prisonNumberHelpSummary": "Help with the prison number",
+    "prisonNumberHelpText1": "This is the number given to people when they enter prison.",
+    "prisonNumberHelpText2": "Their prison number stays the same if they move to another prison.",
+    "prisonNumberHelpText3": "You need to ask the prisoner for this information before you can book."
+  },
+
+  "prisonerAdded": {
+    "title": "Prisoner added",
+    "matchedMessage": "The prisoner details you submitted were successfully matched.",
+    "nextStep": "To book a visit for this prisoner, you need to add visitors."
+  },
+
+  "prisonerNotMatched": {
+    "title": "Prisoner details do not match",
+    "noMatch": "The prisoner details you submitted do not match anyone at {{prisonName}}.",
+    "reason": "This could be because:",
+    "reasonIncorrect": "the prisoner details are incorrect",
+    "reasonNotAtPrison": "they are not located at this prison",
+    "checkDetails": "You can <a href=\"{{url}}\">check the details you submitted by going back to the previous page</a>.",
+    "contact": "If the prisoner details cannot be matched, you will need contact the prisoner to get the correct information before you book a visit."
+  }
+}
