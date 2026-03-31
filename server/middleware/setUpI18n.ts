@@ -22,7 +22,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
         preload: SUPPORTED_LOCALES,
         showSupportNotice: false,
 
-        ns: ['common', 'errors', 'validation', 'bookVisit', 'shared'],
+        ns: ['common', 'errors', 'validation', 'addPrisoner', 'bookVisit', 'shared'],
         defaultNS: 'common',
 
         backend: {

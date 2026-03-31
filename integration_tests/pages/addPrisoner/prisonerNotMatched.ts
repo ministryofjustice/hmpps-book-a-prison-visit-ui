@@ -6,6 +6,6 @@ export default class PrisonerNotMatchedPage extends Page {
   }
 
   goBackCheckDetails = (): void => {
-    cy.get('[data-test="check-details"]').click()
+    cy.get('[data-test="check-details"] a').click()
   }
 }

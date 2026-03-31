@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Prisoner details do not match" %}
+{% set pageTitle = t("addPrisoner:prisonerNotMatched.title") %}
 
 {% set backLinkHref = paths.ADD_PRISONER.DETAILS %}
 
@@ -9,19 +9,21 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>The prisoner details you submitted do not match anyone at <span data-test="prison-name">{{ prisonName}}</span>.</p>
-
-      <p>This could be because:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>the prisoner details are incorrect</li>
-        <li>they are not located at this prison</li>
-      </ul>
-
-      <p>
-        You can <a data-test="check-details" href="{{ paths.ADD_PRISONER.DETAILS }}">check the details you submitted by going back to the previous page</a>.
+      <p data-test="no-match-at-prison">
+        {{- t("addPrisoner:prisonerNotMatched.noMatch", { prisonName: prisonName }) -}}
       </p>
 
-      <p>If the prisoner details cannot be matched, you will need contact the prisoner to get the correct information before you book a visit.</p>
+      <p>{{ t("addPrisoner:prisonerNotMatched.reason") }}</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{{ t("addPrisoner:prisonerNotMatched.reasonIncorrect") }}</li>
+        <li>{{ t("addPrisoner:prisonerNotMatched.reasonNotAtPrison") }}</li>
+      </ul>
+
+      <p data-test="check-details">
+        {{- t("addPrisoner:prisonerNotMatched.checkDetails", { url: paths.ADD_PRISONER.DETAILS }) | safe -}}
+      </p>
+
+      <p>{{ t("addPrisoner:prisonerNotMatched.contact") }}</p>
     </div>
   </div>
 {% endblock %}

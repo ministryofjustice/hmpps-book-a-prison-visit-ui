@@ -4,7 +4,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Prisoner details" %}
+{% set pageTitle = t("addPrisoner:prisonerDetails.title") %}
 
 {% set backLinkHref = paths.ADD_PRISONER.LOCATION %}
 
@@ -24,7 +24,7 @@
           type: "text",
           classes: "govuk-!-width-two-thirds",
           label: {
-            text: "First name"
+            text: t("common:labels.firstName")
           },
           value: formValues.firstName,
           autocomplete: "off",
@@ -37,7 +37,7 @@
           type: "text",
           classes: "govuk-!-width-two-thirds",
           label: {
-            text: "Last name"
+            text: t("common:labels.lastName")
           },
           value: formValues.lastName,
           autocomplete: "off",
@@ -52,10 +52,10 @@
           type: "text",
           classes: "govuk-!-width-one-third",
           label: {
-            text: "Prison number"
+            text: t("common:labels.prisonNumber")
           },
           hint: {
-            text: "For example, A1234BC"
+            text: t("common:labels.prisonNumberHint")
           },
           value: formValues.prisonNumber,
           autocomplete: "off",
@@ -64,15 +64,15 @@
         }) }}
 
         {% call govukDetails({
-            summaryText: "Help with the prison number"
+            summaryText: t("addPrisoner:prisonerDetails.prisonNumberHelpSummary")
           }) %}
-          <p>This is the number given to people when they enter prison.</p>
-          <p>Their prison number stays the same if they move to another prison. </p>
-          <p>You need to ask the prisoner for this information before you can book.</p>
+          <p>{{ t("addPrisoner:prisonerDetails.prisonNumberHelpText1") }}</p>
+          <p>{{ t("addPrisoner:prisonerDetails.prisonNumberHelpText2") }}</p>
+          <p>{{ t("addPrisoner:prisonerDetails.prisonNumberHelpText3") }}</p>
         {% endcall %}
 
         {{ govukButton({
-          text: "Confirm and send",
+          text: t("common:buttons.confirmAndSend"),
           attributes: { "data-test": "confirm-button" },
           preventDoubleClick: true
         }) }} 

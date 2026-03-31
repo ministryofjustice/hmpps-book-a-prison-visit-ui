@@ -2,7 +2,7 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Prisoner added" %}
+{% set pageTitle = t("addPrisoner:prisonerAdded.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,14 +11,12 @@
         titleText: pageTitle
       }) }}
 
-      <p>The prisoner details you submitted were successfully matched.</p>
+      <p>{{ t("addPrisoner:prisonerAdded.matchedMessage") }}</p>
 
-      <p>
-        To book a visit for this prisoner, you need to add visitors.
-      </p>
+      <p>{{ t("addPrisoner:prisonerAdded.nextStep") }}</p>
 
       {{ govukButton({
-        text: "Add visitors",
+        text: t("common:buttons.addVisitors"),
         href: paths.ADD_VISITOR.START,
         attributes: { "data-test": "add-visitors-button" },
         preventDoubleClick: true
