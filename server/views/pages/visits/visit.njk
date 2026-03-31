@@ -3,7 +3,7 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = "Visit details" %}
+{% set pageTitle = t("visits:visit.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -15,11 +15,14 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <h2 class="govuk-heading-m govuk-!-padding-top-5">Visit reference:
+      <h2 class="govuk-heading-m govuk-!-padding-top-5">
+        {{- t("visits:visit.referenceHeading") }}
         <span data-test="visit-reference">{{ visit.reference }}</span>
       </h2>
 
-      <h3 class="govuk-heading-s govuk-!-padding-top-4">Date and time</h3>
+      <h3 class="govuk-heading-s govuk-!-padding-top-4">
+        {{- t("visits:visit.dateTimeHeading") -}}
+      </h3>
       <ul class="govuk-list">
         <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
         <li>
@@ -29,12 +32,12 @@
         </li>
       </ul>
 
-      <h3 class="govuk-heading-s">Prisoner</h3>
+      <h3 class="govuk-heading-s">{{ t("visits:visit.prisonerHeading") }}</h3>
       <ul class="govuk-list">
         <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
       </ul>
 
-      <h3 class="govuk-heading-s">Visitors</h3>
+      <h3 class="govuk-heading-s">{{ t("visits:visit.visitorsHeading") }}</h3>
       <ul class="govuk-list">
         {% for visitor in visit.visitors %}
           <li data-test="visitor-name-{{ loop.index }}">
@@ -43,12 +46,14 @@
         {% endfor %}
       </ul>
 
-      <h3 class="govuk-heading-s">Additional support requests</h3>
+      <h3 class="govuk-heading-s">{{ t("visits:visit.supportHeading") }}</h3>
       <ul class="govuk-list">
-        <li data-test="additional-support">{{ visit.visitorSupport.description | d("None", true) }}</li>
+        <li data-test="additional-support">
+          {{- visit.visitorSupport.description | d(t("visits:visit.noSupport"), true) -}}
+        </li>
       </ul>
 
-      <h3 class="govuk-heading-s">Main contact</h3>
+      <h3 class="govuk-heading-s">{{ t("visits:visit.contactHeading") }}</h3>
       <ul class="govuk-list">
         <li data-test="main-contact-name">{{ visit.visitContact.name }}</li>
         {% if visit.visitContact.email %}
@@ -58,13 +63,15 @@
           <li data-test="main-contact-number">{{ visit.visitContact.telephone }}</li>
         {% endif %}
         {% if not visit.visitContact.email and not visit.visitContact.telephone %}
-          <li data-test="main-contact-no-details">No contact details provided</li>
+          <li data-test="main-contact-no-details">
+            {{- t("visits:visit.noContactDetails") -}}
+          </li>
         {% endif %}
       </ul>
 
       {% if showCancelButton %}
         {{ govukButton({
-          text: "Cancel visit",
+          text: t("visits:visit.cancelButton"),
           classes: "govuk-button--secondary",
           href: paths.VISITS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },

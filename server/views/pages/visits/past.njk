@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 
 {% set activeLink = 'visits-link' %}
-{% set pageTitle = "Past visits" %}
+{% set pageTitle = t("visits:past.title") %}
 
 {% set backLinkHref = paths.VISITS.HOME %}
 
@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>Only requests and visits booked using GOV.UK One Login are shown.</p>
+      <p>{{ t("visits:past.onlyGovukBookings") }}</p>
 
       {% if visits | length %}
         {% for visit in visits %}
@@ -24,9 +24,12 @@
             </li>
             <li>
               <a href="{{ paths.VISITS.VISIT_PAST }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                View details
+                {{- t("visits:past.viewDetailsLink") }}
                 <span class="govuk-visually-hidden">
-                  of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                  {{ t("visits:past.viewDetailsLinkHidden", {
+                    startTime: visit.startTimestamp | formatTimeFromDateTime,
+                    date: visit.startTimestamp | formatDate('d MMMM')
+                  }) }}
                 </span>
               </a>
             </li>
@@ -34,7 +37,7 @@
         {% endfor %}
 
       {% else %}
-        <p data-test="no-visits">You do not have any past visits.</p>
+        <p data-test="no-visits">{{ t("visits:past.noPastVisits") }}</p>
       {% endif %}
       
     </div>

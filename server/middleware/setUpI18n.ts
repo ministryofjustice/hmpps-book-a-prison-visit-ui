@@ -32,6 +32,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           'selectPrison',
           'shared',
           'visitors',
+          'visits',
         ],
         defaultNS: 'common',
 

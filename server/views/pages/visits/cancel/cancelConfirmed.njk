@@ -1,19 +1,19 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = "Visit cancelled" %}
+{% set pageTitle = t("visits:cancelConfirmed.title") %}
 
 {% if not visitCancelled.hasEmail and visitCancelled.hasMobile %}
   {% set confirmationMessage =
-    "A text message will be sent to the main contact to confirm the visit has been cancelled." %}
+    t("visits:cancelConfirmed.textMessageConfirmation") %}
 {% endif %}
 {% if visitCancelled.hasEmail and visitCancelled.hasMobile %}
   {% set confirmationMessage =
-    "An email and a text message will be sent to the main contact to confirm the visit has been cancelled." %}
+    t("visits:cancelConfirmed.emailAndTextConfirmation") %}
 {% endif %}
 {% if visitCancelled.hasEmail and not visitCancelled.hasMobile %}
   {% set confirmationMessage =
-    "An email will be sent to the main contact to confirm the visit has been cancelled." %}
+    t("visits:cancelConfirmed.emailConfirmation") %}
 {% endif %}
 
 {% block content %}
@@ -24,18 +24,20 @@
         titleText: pageTitle
       }) }}
 
-      <h2 class="govuk-heading-m">What happens next</h1>
+      <h2 class="govuk-heading-m">{{ t("visits:cancelConfirmed.whatHappensNextHeading") }}</h1>
 
       {% if confirmationMessage %}
         <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
       {% endif %}
 
-      <p>
-        When signed in to GOV.UK One Login, you can <a class="govuk-link--no-visited-state" href="{{ paths.VISITS.HOME }}">check the details of your visits</a>.
+      <p class="no-visited-state">
+        {{- t("visits:cancelConfirmed.viewVisits", { url: paths.VISITS.HOME }) | safe -}}
       </p>
 
       <p>
-        You can help us to improve this service by giving <a href="https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/">feedback</a>.
+        {{- t("visits:cancelConfirmed.feedback", {
+          url: "https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/"
+        }) | safe -}}
       </p>
 
     </div>

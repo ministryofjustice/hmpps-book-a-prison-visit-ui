@@ -3,7 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set activeLink = 'visits-link' %}
-{% set pageTitle = "Visits" %}
+{% set pageTitle = t("visits:future.title") %}
 
 {% block content %}
 
@@ -14,9 +14,14 @@
 
       {% if prisoner %}
 
-        <p>Only visits made using GOV.UK One Login are shown.</p>
+        <p>{{ t("visits:future.onlyGovukBookings") }}</p>
 
-        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">{{ prisoner | prisonerNameFirstLast }} at {{ prisoner.registeredPrisonName }}</h2>
+        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">
+          {{- t("visits:future.prisonerAtLocation", {
+            prisonerName: prisoner | prisonerNameFirstLast,
+            prisonName: prisoner.registeredPrisonName
+          }) -}}
+        </h2>
 
         {% if visits | length %}
           {% for visit in visits %}
@@ -28,7 +33,7 @@
               {% if isRequest %}
                 <li>
                   {{ govukTag({
-                  text: "Awaiting review",
+                  text: t("visits:future.awaitingReview"),
                   classes: "govuk-tag--orange govuk-!-margin-bottom-2",
                   attributes: { "data-test": "tag-" + loop.index  }
                 }) }}
@@ -40,20 +45,26 @@
                 <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
               </li>
               <li>
-                Visit reference:
+                {{ t("visits:future.visitReference") }}
                 <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
               </li>
               <li>
                 <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                  View details
+                  {{- t("visits:future.viewDetailsLink") }}
                   <span class="govuk-visually-hidden">
-                    of your visit for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                    {{ t("visits:future.viewDetailsLinkHidden", {
+                      startTime: visit.startTimestamp | formatTimeFromDateTime,
+                      date: visit.startTimestamp | formatDate('d MMMM')
+                    }) }}
                   </span>
                 </a>
                 <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-                  Cancel <span class="govuk-visually-hidden">your</span> visit
+                  {{- t("visits:future.cancelLink") }}
                   <span class="govuk-visually-hidden">
-                    for {{ visit.startTimestamp | formatTimeFromDateTime }} on {{ visit.startTimestamp | formatDate('d MMMM') }}
+                    {{ t("visits:future.cancelLinkHidden", {
+                      startTime: visit.startTimestamp | formatTimeFromDateTime,
+                      date: visit.startTimestamp | formatDate('d MMMM')
+                    }) }}
                   </span>
                 </a>
               </li>
@@ -61,7 +72,7 @@
           {% endfor %}
 
         {% else %}
-          <p data-test="no-visits">There are no future visits or requests.</p>
+          <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
         {% endif %}
 
         <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
@@ -70,7 +81,7 @@
           <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
 
           {{ govukButton({
-            text: "Book a visit",
+            text: t("common:buttons.bookAVisit"),
             classes: "govuk-!-margin-top-3",
             preventDoubleClick: true,
             attributes: { "data-test": "book-a-visit" }
@@ -78,17 +89,21 @@
         </form>
 
         <p>
-          <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">View past visits</a>
+          <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
+            {{- t("visits:future.viewPastVisits") -}}
+          </a>
         </p>
         <p>
-          <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">View rejected and cancelled visits</a>
+          <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">
+            {{- t("visits:future.viewCancelledVisits") -}}
+          </a>
         </p>
 
       {% else %}
-        <p data-test="no-prisoner">You need to add a prisoner to book a visit.</p>
+        <p data-test="no-prisoner">{{ t("visits:future.noPrisonerError") }}</p>
 
         {{ govukButton({
-          text: "Add a prisoner",
+          text: t("visits:future.addPrisoner"),
           href: paths.ADD_PRISONER.LOCATION,
           classes: "govuk-!-margin-top-3",
           preventDoubleClick: true,
