@@ -5,7 +5,7 @@ export default class VisitorsPage extends Page {
     super('Visitors')
   }
 
-  prisonerName = (): PageElement => cy.get('[data-test=prisoner-name]')
+  prisonerName = (): PageElement => cy.get('[data-test=prisoner-visitors]')
 
   visitorName = (index: number): PageElement => cy.get(`[data-test=visitor-name-${index}]`)
 
