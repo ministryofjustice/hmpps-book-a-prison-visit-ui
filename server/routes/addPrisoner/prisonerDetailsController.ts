@@ -84,22 +84,28 @@ export default class PrisonerDetailsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('firstName', 'Enter a first name').trim().isLength({ min: 1, max: 250 }),
-      body('lastName', 'Enter a last name').trim().isLength({ min: 1, max: 250 }),
+      body('firstName')
+        .trim()
+        .isLength({ min: 1, max: 250 })
+        .withMessage((_value, { req }) => req.t('validation:firstName')),
+      body('lastName')
+        .trim()
+        .isLength({ min: 1, max: 250 })
+        .withMessage((_value, { req }) => req.t('validation:lastName')),
 
       ...dateOfBirthValidationChain('prisonerDob'),
 
       body('prisonNumber')
         .trim()
         .notEmpty()
-        .withMessage('Enter a prison number')
+        .withMessage((_value, { req }) => req.t('validation:prisonNumber'))
         .bail()
         .isLength({ min: 7, max: 7 })
-        .withMessage('Enter a prison number with 7 characters')
+        .withMessage((_value, { req }) => req.t('validation:prisonNumberLength'))
         .bail()
         .toUpperCase()
         .matches(/^[A-Z][0-9]{4}[A-Z]{2}$/)
-        .withMessage('Enter a prison number with only letters and numbers'),
+        .withMessage((_value, { req }) => req.t('validation:prisonNumberFormat')),
     ]
   }
 }
