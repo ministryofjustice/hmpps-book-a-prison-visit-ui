@@ -1,6 +1,40 @@
 {
   "applicationName": "Visit someone in prison",
 
+  "navigation": {
+    "visits": "Visits",
+    "visitors": "Visitors"
+  },
+
+  "phase": {
+    "beta": "Beta",
+    "feedback": "This is a new service – your <a href=\"https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/\" target=\"_blank\">feedback (opens in a new tab)</a> will help us to improve it."
+  },
+
+  "links": {
+    "back": "Back"
+  },
+
+  "footer": {
+    "accessibility": "Accessibility",
+    "cookies": "Cookies",
+    "privacy": "Privacy",
+    "terms": "Terms and conditions"
+  },
+
+  "cookieBanner": {
+    "cookiesOn": "Cookies on $t(common:applicationName)",
+    "essential": "We use some essential cookies to make this service work.",
+    "analytics": "We’d also like to use analytics cookies so we can understand how you use the service and make improvements.",
+    "acceptButton": "Accept analytics cookies",
+    "rejectButton": "Reject analytics cookies",
+    "viewButton": "View cookies",
+    "acceptedAnalytics": "You’ve accepted analytics cookies.",
+    "rejectedAnalytics": "You’ve rejected analytics cookies.",
+    "changeSettings": "You can <a href=\"{{url}}\">change your cookie settings</a> at any time.",
+    "hideCookieMessage": "Hide cookie message"
+  },
+
   "buttons": {
     "addVisitors": "Add visitors",
     "acceptAndSend": "Accept and send",
@@ -46,7 +80,10 @@
 
     "visitTime_zero": "no visit times",
     "visitTime_one": "{{count}} visit time",
-    "visitTime_other": "{{count}} visit times"
+    "visitTime_other": "{{count}} visit times",
+
+    "year_one": "{{count}} year",
+    "year_other": "{{count}} years"
   },
 
   "visitors": {

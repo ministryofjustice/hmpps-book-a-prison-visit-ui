@@ -8,13 +8,13 @@
 {% set navigationItems = [
   {
     href: paths.VISITS.HOME,
-    text: "Visits",
+    text: t("common:navigation.visits"),
     id: "visits-link",
     active: true if activeLink == "visits-link"
   },
   {
     href: paths.VISITORS,
-    text: "Visitors",
+    text: t("common:navigation.visitors"),
     id: "visitors-link",
     active: true if activeLink == "visitors-link"
   }
@@ -81,18 +81,18 @@
 {% block beforeContent %}
   {{ govukPhaseBanner({
     tag: {
-      text: "Beta"
+      text: t("common:phase.beta")
     },
     attributes: {
       role: "complementary"
     },
-    html: 'This is a new service – your <a href="https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/" target="_blank">feedback (opens in a new tab)</a> will help us to improve it.'
+    html: t("common:phase.feedback")
   }) }}
 
   {% if backLinkHref %}
     <div role="navigation">
       {{ govukBackLink({
-        text: "Back",
+        text: t("common:links.back"),
         href: backLinkHref,
         attributes: { "data-test": "back-link" }
       }) }}
@@ -104,19 +104,19 @@
   {% set footerLinks = [
     {
       href: paths.ACCESSIBILITY,
-      text: "Accessibility"
+      text: t("common:footer.accessibility")
     },
     {
       href: paths.COOKIES,
-      text: "Cookies"
+      text: t("common:footer.cookies")
     },
     {
       href: paths.PRIVACY,
-      text: "Privacy"
+      text: t("common:footer.privacy")
     },
     {
       href: paths.TERMS,
-      text: "Terms and conditions"
+      text: t("common:footer.terms")
     }
   ] %}
 

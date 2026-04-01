@@ -1,1 +1,11 @@
-{}
+{
+  "authError": {
+    "title": "Sorry, there is a problem with the service",
+    "tryAgain": "Try again later by <a href=\"{{url}}\">signing into the service using GOV.UK One Login</a>."
+  },
+  "error": {
+    "logged": "The error has been logged.",
+    "tryReload": "You can try reloading the page or <a href=\"{{url}}\">start again</a>.",
+    "contactPrisonLink": "Or you can contact the prison directly"
+  }
+}

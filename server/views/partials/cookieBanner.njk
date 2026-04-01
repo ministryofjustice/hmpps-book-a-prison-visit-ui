@@ -1,34 +1,40 @@
 {% from "govuk/components/cookie-banner/macro.njk" import govukCookieBanner %}
 
 {% set html %}
-<p class="govuk-body">We use some essential cookies to make this service work.</p>
-<p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+<p>{{ t("common:cookieBanner.essential") }}</p>
+<p>{{ t("common:cookieBanner.analytics") }}</p>
 {% endset %}
 
 {% set acceptHtml %}
-  <p class="govuk-body">You’ve accepted analytics cookies. You can <a class="govuk-link" href="{{ paths.COOKIES }}">change your cookie settings</a> at any time.</p>
+  <p class="no-visited-state">
+    {{- t("common:cookieBanner.acceptedAnalytics") }}
+    {{ t("common:cookieBanner.changeSettings", { url: paths.COOKIES }) | safe }}
+  </p>
 {% endset %}
 
 {% set rejectHtml %}
-  <p class="govuk-body">You’ve rejected analytics cookies. You can <a class="govuk-link" href="{{ paths.COOKIES }}">change your cookie settings</a> at any time.</p>
+  <p class="no-visited-state">
+    {{- t("common:cookieBanner.rejectedAnalytics") }}
+    {{ t("common:cookieBanner.changeSettings", { url: paths.COOKIES }) | safe }}
+  </p>
 {% endset %}
 
 {{ govukCookieBanner({
-  ariaLabel: "Cookies on " + t("common:applicationName"),
+  ariaLabel: t("common:cookieBanner.cookiesOn"),
   attributes: {
     id: "cookie-banner"
   },
   hidden: true,
   messages: [
     {
-      headingText: "Cookies on " + t("common:applicationName"),
+      headingText: t("common:cookieBanner.cookiesOn"),
       attributes: {
         id: "cookie-banner-main"
       },
       html: html,
       actions: [
         {
-          text: "Accept analytics cookies",
+          text: t("common:cookieBanner.acceptButton"),
           type: "button",
           value: "yes",
           attributes: {
@@ -36,7 +42,7 @@
           }
         },
         {
-          text: "Reject analytics cookies",
+          text: t("common:cookieBanner.rejectButton"),
           type: "button",
           value: "no",
           attributes: {
@@ -44,7 +50,8 @@
           }
         },
         {
-          text: "View cookies",
+          text: t("common:cookieBanner.viewButton"),
+          classes:"govuk-link--no-visited-state",
           href: paths.COOKIES
         }
       ]
@@ -57,7 +64,7 @@
       hidden: true,
       actions: [
         {
-          text: "Hide cookie message",
+          text: t("common:cookieBanner.hideCookieMessage"),
           type: "button",
           attributes: {
             "data-test": "hide-cookies-accepted"
@@ -73,7 +80,7 @@
       hidden: true,
       actions: [
         {
-          text: "Hide cookie message",
+          text: t("common:cookieBanner.hideCookieMessage"),
           type: "button",
           attributes: {
             "data-test": "hide-cookies-rejected"

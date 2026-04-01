@@ -7,13 +7,13 @@
   <h1 class="govuk-heading-l">{{ message }}</h1>
 
   {% if production %}
-    <p>The error has been logged.</p>
-    <p>You can try reloading the page or
-      <a href="{{ paths.VISITS.HOME }}" class="govuk-link--no-visited-state">start again</a>.
+    <p>{{ t("errors:error.logged") }}</p>
+    <p class="no-visited-state">
+      {{- t("errors:error.tryReload", { url: paths.VISITS.HOME }) | safe -}}
     </p>
     <p>
       <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">
-        Or you can contact the prison directly</a>.
+        {{ t("errors:error.contactPrisonLink") }}</a>.
     </p>
   {% else %}
     <h2 class="govuk-heading-m">{{ status }}</h2>
