@@ -33,6 +33,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           'shared',
           'visitors',
           'visits',
+          'staticPages',
         ],
         defaultNS: 'common',
 

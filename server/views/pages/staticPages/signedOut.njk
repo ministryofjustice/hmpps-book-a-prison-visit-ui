@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "You have signed out" %}
+{% set pageTitle = t("staticPages:signedOut.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -8,9 +8,8 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>
-        You can book a visit or view your visits by
-        <a href="{{ paths.SIGN_IN }}" class="govuk-link--no-visited-state" data-test="sign-in">signing into the service using GOV.UK One Login</a>.
+      <p class="no-visited-state" data-test="sign-in">
+        {{- t("staticPages:signedOut.signInAgain", { url: paths.SIGN_IN }) | safe -}}
       </p>
 
     </div>

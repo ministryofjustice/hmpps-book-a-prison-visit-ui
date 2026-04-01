@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Sorry, there is a problem with the service" %}
+{% set pageTitle = t("errors:authError.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -9,8 +9,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>
-        Try again later by
-        <a href="{{ paths.SIGN_IN }}">signing into the service using GOV.UK One Login</a>.
+        {{- t("errors:authError.tryAgain", { url: paths.SIGN_IN }) | safe -}}
       </p>
 
     </div>

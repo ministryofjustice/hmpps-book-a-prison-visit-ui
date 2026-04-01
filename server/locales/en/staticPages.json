@@ -1,0 +1,201 @@
+{
+  "accessibility": {
+    "title": "Accessibility statement for Visit someone in prison",
+    "applies": "This accessibility statement applies to https://prison-visits.service.justice.gov.uk.",
+    "runBy": "This website is run by HM Prison and Probation Service (HMPPS).",
+    "wantManyPeople": "We want as many people as possible to be able to use this website. We will make improvements to accessibility as we find issues.",
+    "abilityNet": "<a href=\"{{url}}\">AbilityNet</a> has advice on making your device easier to use if you have a disability.",
+
+    "complianceHeading": "Compliance Status",
+    "wcagCompliance": "This website is fully compliant with the <a href=\"{{url}}\">Web Content Accessibility Guidelines version 2.2 AA standard</a>.",
+    "testedBy": "It was last tested by <a href=\"{{url}}\">User Vision</a> in October 2024 against the WCAG 2.2 AA standard.",
+    "testedUsing": "User Vision assessed pages using the following assistive technology:",
+    "assistiveTech": {
+      "nvda": "NVDA (using Edge, Chrome and Firefox browsers)",
+      "jaws": "JAWS (using Edge, Chrome and Firefox browsers)",
+      "talkBack": "TalkBack for Android",
+      "voiceOver": "VoiceOver for iOS and MacOS",
+      "dragon": "Dragon Naturally Speaking on desktop"
+    },
+    "issuesFix": "This testing identified 3 non-compliance issues. These issues were fixed on 24 June 2025. They were tested to check compliance with the WCAG 2.2 AA standard by our website team.",
+
+    "feedbackHeading": "Feedback",
+    "sendFeedback": "If you find any problems or think we’re not meeting accessibility requirements, you can <a href=\"{{url}}\">send us feedback</a>.",
+
+    "enforcementHeading": "Enforcement procedure",
+    "enforcement": "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, <a href=\"{{url}}\">contact the Equality Advisory and Support Service (EASS)</a>.",
+
+    "technicalHeading": "Technical information about this website’s accessibility",
+    "technical": "HMPPS is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.",
+
+    "preparationHeading": "Preparation of this accessibility statement",
+    "preparation": "This statement was prepared on 29 May 2024. It was last reviewed on 24 June 2025."
+  },
+
+  "cookies": {
+    "title": "Cookies",
+    "whatAreCookies": "Cookies are small files saved on your phone, tablet or computer when you visit a website.",
+    "whatWeUse": "We use cookies to make ‘Visit someone in prison’ work and collect information about how you use the service.",
+
+    "essentialHeading": "Essential cookies",
+    "essentialDescription": "Essential cookies keep your information secure while you use the service. We do not need to ask permission to use them.",
+    "tableHeaders": {
+      "name": "Name",
+      "purpose": "Purpose",
+      "expires": "Expires"
+    },
+    "sessionCookiePurpose": "Used to keep you signed in",
+    "sessionCookieExpiry": "20 minutes",
+    "consentCookiePurpose": "Saves your cookie consent settings",
+
+    "analyticsHeading": "Analytics cookies (optional)",
+    "analyticsDescription": "With your permission, we use Google Analytics to collect data about how you use ‘Visit someone in prison’. This information helps us to improve the service.",
+    "analyticsNoShare": "Google is not allowed to use or share our analytics data with anyone.",
+    "analyticsStores": "Google Analytics stores anonymised information about:",
+    "analyticsItems": {
+      "howYouArrived": "how you got to the service",
+      "pagesVisited": "the pages you visit on the service and how long you spend on them",
+      "errors": "any errors you see while using the service"
+    },
+    "analyticsSets": "Google Analytics sets the following cookies.",
+    "gaCookiePurpose": "Checks if you’ve visited the service before. This helps us count how many people visit our site.",
+    "gaIdCookiePurpose": "Used by Google Analytics to find and track an individual session with your device.",
+
+    "acceptQuestion": "Do you want to accept analytics cookies?",
+    "saveSettings": "Save cookie settings"
+  },
+
+  "maintenance": {
+    "title": "Sorry, the service is unavailable",
+    "notSaved": "We have not saved your answers. When the service is available you will need to <a href=\"{{url}}\">start again</a>.",
+    "contactPrisonLink": "Or you can contact the prison directly"
+  },
+
+  "privacy": {
+    "title": "Privacy notice",
+    "intro": "The ‘Visit someone in prison’ service is managed by HM Prison and Probation Service (HMPPS), an executive agency of the Ministry of Justice (MOJ). Our <a href=\"{{url}}\">personal information charter</a> explains your rights and how we deal with your personal information.",
+    "dataController": "MOJ is the data controller for the personal information we hold.",
+    "dataControllerDetails": "A data controller determines how and why personal data is processed. For more information, read the Cabinet Office’s entry in the <a href=\"{{url}}\">Data Protection Public Register</a>.",
+    "oneLogin": "You need a GOV.UK One Login to use the service. Read the <a href=\"{{url}}\">full GOV.UK One Login privacy notice</a> to find out how it stores, processes and shares your personal information.",
+
+    "whatDataHeading": "What data we collect",
+    "whatDataIntro": "The personal data we collect from you includes:",
+    "dataItems": {
+      "emailPhone": "an email address and phone number",
+      "prisonerDetails": "the name, date of birth, prison number and location of the person you want to visit",
+      "visitorDetails": "the names and dates of birth of visitors"
+    },
+
+    "feedbackDataIntro": "If you provide feedback to us, this can include:",
+    "feedbackItems": {
+      "contactDetails": "your email address or other contact details you give us",
+      "personalInfo": "any personal information you include in questions, queries or feedback you leave"
+    },
+
+    "analyticsData": "Information about how you use the site is collected in Google Analytics using cookies and page tagging techniques. It does not contain any personal data and is only collected if you <a href=\"{{url}}\">consent</a> to this. It is shared with the Government Digital Service.",
+
+    "whyNeedHeading": "Why we need your data",
+    "whyNeedIntro": "We collect your personal data to:",
+    "whyItems": {
+      "bookVisits": "book social visits with prisoners",
+      "informChanges": "inform you of any changes to your visits",
+      "textMessages": "send text messages to users who request them",
+      "feedback": "gather feedback to improve the service",
+      "respondFeedback": "respond to any feedback you send us, if you’ve asked us to",
+      "securityThreats": "monitor use of the site to identify security threats",
+      "performance": "monitor the performance of the site to identify inefficiencies and errors"
+    },
+
+    "doThisToHelp": "We do this to help:",
+    "helpItems": {
+      "meetNeeds": "make sure the service is meeting the needs of its users",
+      "improvements": "make improvements to the service",
+      "performanceImprovements": "make performance improvements to the website, for example improving page load time and data usage"
+    },
+    "futureResearch": "We may also use the data to contact you to offer you the opportunity to take part in future research to improve our services.",
+
+    "legalBasisHeading": "Our legal basis for processing your data",
+    "legalBasis": "We collect personal data so that you can request to visit someone in prison. Prisons and Young Offender Institutions need this information to ensure visits are safe and secure for visitors, prisoners and staff. Our legal basis for collecting this data is that it is necessary for performing this public task.",
+    "analyticsLegalBasis": "The legal basis for processing data collected with Google Analytics is your consent.",
+
+    "sharedWithHeading": "Who the information may be shared with",
+    "sharedWithIntro": "The data we collect may be shared with other government departments, agencies and public bodies. It may also be shared with our technology suppliers, for example our hosting provider.",
+    "sharedWithOrgs": "The organisations we share personal information with are:",
+    "notifyOrg": "<a href=\"{{url}}\">GOV.UK Notify</a> to send texts and emails.",
+    "notifyPrivacy": "See their <a href=\"{{url}}\">privacy notice</a>.",
+    "formsOrg": "<a href=\"{{url}}\">GOV.UK Forms</a> to collect feedback.",
+    "formsPrivacy": "See their <a href=\"{{url}}\">privacy notice</a>.",
+
+    "analyticsTransfer": "The data we collect with Google Analytics cookies is transferred and stored with Google where we analyse it with Google Analytics software (Universal Analytics). We do not allow Google to use or share this data for their own purposes.",
+    "agentsReps": "We may share your information with our agents or representatives, so they can manage your visits. Our agents or representatives will only use your personal data in line with what we have set out in this privacy notice.",
+
+    "willNot": "We will not:",
+    "willNotItems": {
+      "sellData": "sell or rent your data to third parties",
+      "shareMarketing": "share your data with third parties for marketing purposes"
+    },
+    "lawRequired": "We will share your data if we are required to do so by law - for example, by court order, or to prevent fraud or other crime.",
+
+    "howLongHeading": "How long we keep data",
+    "howLong": "Data is retained for seven years in accordance with <a href=\"{{url}}\">HMPPS retention policy</a>.",
+
+    "whereProcessedHeading": "Where your data is processed and stored",
+    "whereProcessed": "We design, build and run our systems to make sure that your data is as safe as possible at all stages, both while it’s processed and when it’s stored.",
+    "whereProcessedPersonal": "All personal data is stored in the <a href=\"{{url}}\">European Economic Area</a> (EEA). Data collected by Google Analytics may be transferred outside the EEA for processing.",
+    "usDataBridge": "Where data processing happens in the US, suppliers need to meet the certification standards set out in the <a href=\"{{url}}\">UK-US data bridge</a> agreement. This facilitates flows of personal data to certified US companies that have opted in to the EU-US Data Privacy Framework.",
+
+    "howProtectHeading": "How we protect your data and keep it secure",
+    "howProtect1": "We are committed to doing all that we can to keep your data secure. We have set up systems and processes to prevent unauthorised access or disclosure of your data - for example, we protect your data using varying levels of encryption.",
+    "howProtect2": "We also make sure that any third parties that we deal with keep all personal data they process on our behalf secure.",
+
+    "yourRightsHeading": "Your rights",
+    "yourRights": "Your rights are set out in the <a href=\"{{url}}\">Ministry of Justice personal information charter</a>.",
+    "contactDPT": "For more information please contact the Data Protection Team.",
+    "emailHeading": "Email",
+    "postHeading": "Post",
+
+    "accessHeading": "Access to personal information",
+    "access": "You can find out if we hold any personal data about you by making a ‘subject access request’. This process is set out in the <a href=\"{{url}}\">Ministry of Justice personal information charter</a>.",
+
+    "complaintHeading": "Make a complaint",
+    "complaint": "When we ask you for information, we will keep to the law. If you think that your information has been handled incorrectly, you can contact the Information Commissioner for independent advice about data protection.",
+    "icoEmailHeading": "Email",
+    "icoPhoneHeading": "Telephone",
+    "icoTextphoneHeading": "Textphone",
+    "icoTextphoneHours": "Monday to Friday, 9am to 4:30pm",
+    "callChargesLink": "Find out about call charges",
+    "icoPostHeading": "Post",
+
+    "changesHeading": "Changes to this notice",
+    "changes1": "We may change this privacy notice. In that case, the ‘last updated’ date at the bottom of this page will also change. Any changes to this privacy notice will apply to you and your data immediately.",
+    "changes2": "If these changes affect how your personal data is processed, MOJ will take reasonable steps to let you know.",
+    "lastUpdated": "Last updated on 24 February 2026."
+  },
+
+  "signedOut": {
+    "title": "You have signed out",
+    "signInAgain": "You can book a visit or view your visits by <a href=\"{{url}}\">signing into the service using GOV.UK One Login</a>."
+  },
+
+  "terms": {
+    "title": "Terms and conditions",
+    "intro": "By using the ‘visit someone in prison’ service you agree to these terms and conditions.",
+
+    "purposeHeading": "Purpose of these terms and conditions",
+    "purpose": "These terms and conditions affect your rights and liabilities under the law. They govern your use of, and relationship with, the ‘visit someone in prison’ service. They don’t apply to other services provided by the Ministry of Justice, or to any other department or service which is linked to in this service.",
+    "updates": "We may occasionally update these terms and conditions. This might happen if there’s a change in the law or to the way this service works. We recommend you check this page for any updates.",
+    "noAgreement": "If you don’t agree to the terms and conditions set out in this document, you should not use this service.",
+
+    "lawHeading": "Applicable law",
+    "law": "Your use of this service and any dispute arising from its use will be governed by and construed in accordance with the laws of England and Wales.",
+
+    "responsiblyHeading": "How to use this service responsibly",
+    "sharedComputer": "There are risks in using a shared computer to use this service. It’s your responsibility to be aware of these risks and to avoid using any computer which may leave your personal information accessible to others. You are responsible if you choose to leave a computer unprotected while in the process of making a prison visit request.",
+    "precautions": "We make every effort to check and test this service whenever we amend or update it. However, you must take your own precautions to ensure that the way you access this service does not expose you to the risk of viruses, malicious computer code or other forms of interference which may damage your own computer system.",
+    "misuse": "You must not misuse our service by knowingly introducing viruses, trojans, worms, logic bombs or other material which is malicious or technologically harmful. You must not attempt to gain unauthorised access to our service, the system on which our service is stored or any server, computer or database connected to our service. You must not attack our site via a denial-of-service attack or a distributed denial-of-service attack.",
+
+    "disclaimerHeading": "Disclaimer",
+    "disclaimer1": "We don’t accept liability for loss or damage incurred by users of this service, whether direct, indirect or consequential, whether caused by tort, breach of contract or otherwise. This includes loss of income or revenue, business, profits or contracts, anticipated savings, data, goodwill, tangible property or wasted time in connection with this service or any websites linked to it and any materials posted on it. This condition shall not prevent claims for loss of or damage to your tangible property or any other claims for direct financial loss that are not excluded by any of the categories set out above.",
+    "disclaimer2": "This does not affect our liability for death or personal injury arising from our negligence, nor our liability for fraudulent misrepresentation or misrepresentation as to a fundamental matter, nor any other liability which cannot be excluded or limited under applicable law."
+  }
+}

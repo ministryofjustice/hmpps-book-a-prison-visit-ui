@@ -1,6 +1,6 @@
 {% extends "partials/layout.njk" %}
 
-{% set pageTitle = "Sorry, the service is unavailable" %}
+{% set pageTitle = t("staticPages:maintenance.title") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,12 +11,13 @@
       <p data-test="maintenance-message">{{ maintenanceMessage }}</p>
 
       <p>
-        We have not saved your answers. When the service is available you will need to
-        <a href="{{ paths.GOVUK_START_PAGE }}">start again</a>.
+        {{- t("staticPages:maintenance.notSaved", { url: paths.GOVUK_START_PAGE }) | safe -}}
       </p>
 
       <p>
-        <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">Or you can contact the prison directly</a>.
+        <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">
+          {{- t("staticPages:maintenance.contactPrisonLink") -}}
+        </a>.
       </p>
 
     </div>

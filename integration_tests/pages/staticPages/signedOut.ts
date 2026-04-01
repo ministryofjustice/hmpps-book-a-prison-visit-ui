@@ -5,5 +5,5 @@ export default class SignedOutPage extends Page {
     super('You have signed out')
   }
 
-  signInLink = (): PageElement => cy.get('[data-test=sign-in]')
+  signInLink = (): PageElement => cy.get('[data-test=sign-in] a')
 }
