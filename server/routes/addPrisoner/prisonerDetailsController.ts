@@ -98,7 +98,7 @@ export default class PrisonerDetailsController {
       body('prisonNumber')
         .trim()
         .notEmpty()
-        .withMessage((_value, { req }) => req.t('validation:prisonNumber'))
+        .withMessage((_value, { req }) => req.t('validation:prisonNumberRequired'))
         .bail()
         .isLength({ min: 7, max: 7 })
         .withMessage((_value, { req }) => req.t('validation:prisonNumberLength'))
