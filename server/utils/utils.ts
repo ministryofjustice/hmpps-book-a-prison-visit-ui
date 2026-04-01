@@ -68,10 +68,6 @@ export const formatTimeDuration = (startTime: string, endTime: string): string =
   }
 }
 
-export const pluralise = (word: string, count: string | number, plural = `${word}s`): string => {
-  return parseInt(count.toString(), 10) === 1 ? word : plural
-}
-
 export const isAdult = (dateOfBirth: string | undefined, referenceDate: Date = new Date()): boolean => {
   if (!dateOfBirth) return false
   const dobDate = parseISO(dateOfBirth)
