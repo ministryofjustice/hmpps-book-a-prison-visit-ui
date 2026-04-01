@@ -83,6 +83,11 @@ export default class CancelVisitController {
   }
 
   public validateCancelChoice(): ValidationChain[] {
-    return [body('cancelVisit').isIn(['yes', 'no']).withMessage('No answer selected'), validateVisitDisplayId]
+    return [
+      body('cancelVisit')
+        .isIn(['yes', 'no'])
+        .withMessage((_value, { req }) => req.t('validation:noAnswerSelected')),
+      validateVisitDisplayId,
+    ]
   }
 }

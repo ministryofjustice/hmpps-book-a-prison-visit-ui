@@ -152,7 +152,7 @@ export default class ChooseVisitTimeController {
           return allVisitSessionIds!.includes(visitSession) ? visitSession : undefined
         })
         .notEmpty()
-        .withMessage('No visit time selected'),
+        .withMessage((_value, { req }) => req.t('validation:visitTimeRequired')),
     ]
   }
 

@@ -3,7 +3,6 @@ import { ValidationChain, body, matchedData, validationResult } from 'express-va
 import { differenceInYears } from 'date-fns'
 import { UUID } from 'crypto'
 import { BookerService, VisitSessionsService } from '../../services'
-import { pluralise } from '../../utils/utils'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 
@@ -113,7 +112,7 @@ export default class SelectVisitorsController {
           return [...uniqueVisitorDisplayIds]
         })
         .isArray({ min: 1 })
-        .withMessage('No visitors selected')
+        .withMessage((_value, { req }) => req.t('validation:visitorsNoneSelected'))
         .bail()
         // validate visitor totals
         .custom((visitorDisplayIds: string[], { req }) => {
@@ -123,7 +122,7 @@ export default class SelectVisitorsController {
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {
-            throw new Error(`Select no more than ${maxTotalVisitors} visitors`)
+            throw new Error(req.t('validation:visitorsTooMany', { count: maxTotalVisitors }))
           }
 
           // calculate selected visitor ages
@@ -137,24 +136,20 @@ export default class SelectVisitorsController {
           // max 'adult age' visitors
           const numAdultVisitors = visitorAges.filter(age => age >= adultAgeYears).length
           if (numAdultVisitors > maxAdultVisitors) {
-            throw new Error(
-              `Select no more than ${maxAdultVisitors} ${pluralise('visitor', maxAdultVisitors)} ` +
-                `${adultAgeYears} ${pluralise('year', adultAgeYears)} old or older`,
-            )
+            throw new Error(req.t('validation:visitorsAdultsTooMany', { count: maxAdultVisitors, age: adultAgeYears }))
           }
 
           // max 'child age' visitors
           const numChildVisitors = visitorAges.filter(age => age < adultAgeYears).length
           if (numChildVisitors > maxChildVisitors) {
             throw new Error(
-              `Select no more than ${maxChildVisitors} ${pluralise('visitor', maxChildVisitors)} ` +
-                `under ${adultAgeYears} ${pluralise('year', adultAgeYears)} old`,
+              req.t('validation:visitorsChildrenTooMany', { count: maxChildVisitors, age: adultAgeYears }),
             )
           }
 
           // at least one visitor over 18
           if (!visitorAges.some(age => age >= 18)) {
-            throw new Error('Add a visitor who is 18 years old or older')
+            throw new Error(req.t('validation:visitorsNeedAdult'))
           }
 
           return true

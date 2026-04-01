@@ -53,20 +53,21 @@ export default class ContactDetailsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('getUpdatesBy', 'Select at least one contact method')
+      body('getUpdatesBy')
         .toArray()
         .isArray({ min: 1, max: 2 })
+        .withMessage((_value, { req }) => req.t('validation:contactMethodRequired'))
         .isIn(['email', 'phone']),
       body('mainContactEmail')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('email')))
         .trim()
         .isEmail()
-        .withMessage('Enter a valid email address'),
+        .withMessage((_value, { req }) => req.t('validation:emailInvalid')),
       body('mainContactPhone')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('phone')))
         .trim()
         .matches(/^(?:0|\+?44)(?:\d\s?){9,10}$/)
-        .withMessage('Enter a UK phone number, like 07700 900 982 or 01632 960 001'),
+        .withMessage((_value, { req }) => req.t('validation:phoneInvalid')),
     ]
   }
 }
