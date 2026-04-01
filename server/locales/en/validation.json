@@ -11,7 +11,7 @@
   "mainContactRequired": "No main contact selected",
   "noAnswerSelected": "No answer selected",
   "phoneInvalid": "Enter a UK phone number, like 07700 900 982 or 01632 960 001",
-  "prisonNumber": "Enter a prison number",
+  "prisonNumberRequired": "Enter a prison number",
   "prisonNumberFormat": "Enter a prison number with only letters and numbers",
   "prisonNumberLength": "Enter a prison number with 7 characters",
   "prisonSelectNone": "No prison selected",
