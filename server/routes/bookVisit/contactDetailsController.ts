@@ -57,7 +57,8 @@ export default class ContactDetailsController {
         .toArray()
         .isArray({ min: 1, max: 2 })
         .withMessage((_value, { req }) => req.t('validation:contactMethodRequired'))
-        .isIn(['email', 'phone']),
+        .isIn(['email', 'phone'])
+        .withMessage((_value, { req }) => req.t('validation:contactMethodRequired')),
       body('mainContactEmail')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('email')))
         .trim()
