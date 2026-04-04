@@ -11,7 +11,6 @@ import {
   initialiseName,
   isAdult,
   isMobilePhoneNumber,
-  pluralise,
 } from './utils'
 import TestData from '../routes/testutils/testData'
 import { Visitor } from '../services/bookerService'
@@ -92,27 +91,6 @@ describe('formatTimeDuration', () => {
       expect(formatTimeDuration(startTime, endTime as string)).toEqual(expected)
     },
   )
-})
-
-describe('pluralise', () => {
-  describe('Regular plurals', () => {
-    it.each([
-      ['should return plural form when count is 0', 'table', '0', 'tables'],
-      ['should return singular form when count is 1', 'table', '1', 'table'],
-      ['should return plural form when count is 2', 'table', '2', 'tables'],
-    ])('%s pluralise(%s, %s) = %s', (_: string, word: string, count: string, expected: string) => {
-      expect(pluralise(word, count)).toBe(expected)
-    })
-  })
-  describe('Irregular plurals', () => {
-    it.each([
-      ['should return plural form when count is 0', 'child', '0', 'children', 'children'],
-      ['should return singular form when count is 1', 'child', '1', 'children', 'child'],
-      ['should return plural form when count is 2', 'child', '2', 'children', 'children'],
-    ])('%s pluralise(%s, %s) = %s', (_: string, word: string, count: string, plural: string, expected: string) => {
-      expect(pluralise(word, count, plural)).toBe(expected)
-    })
-  })
 })
 
 describe('isAdult', () => {

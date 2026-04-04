@@ -53,6 +53,10 @@ export default class CookiesController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('acceptAnalytics', 'No answer selected').isIn(['yes', 'no'])]
+    return [
+      body('acceptAnalytics')
+        .isIn(['yes', 'no'])
+        .withMessage((_value, { req }) => req.t('validation:noAnswerSelected')),
+    ]
   }
 }

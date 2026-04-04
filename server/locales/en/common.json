@@ -78,6 +78,9 @@
     "person_one": "{{count}} person",
     "person_other": "{{count}} people",
 
+    "visitor_one": "{{count}} visitor",
+    "visitor_other": "{{count}} visitors",
+
     "visitTime_zero": "no visit times",
     "visitTime_one": "{{count}} visit time",
     "visitTime_other": "{{count}} visit times",

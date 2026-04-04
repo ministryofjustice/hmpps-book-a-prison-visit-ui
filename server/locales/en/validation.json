@@ -1,1 +1,27 @@
-{}
+{
+  "contactMethodRequired": "Select at least one contact method",
+  "dateOfBirth": "Enter a date of birth",
+  "dateOfBirthIncomplete": "Enter a date of birth and include a day, month and year",
+  "dateOfBirthInvalid": "Date of birth must be a real date",
+  "dateOfBirthPast": "Date of birth must be in the past",
+  "emailInvalid": "Enter a valid email address",
+  "firstName": "Enter a first name",
+  "lastName": "Enter a last name",
+  "mainContactNameRequired": "Enter the name of the main contact",
+  "mainContactRequired": "No main contact selected",
+  "noAnswerSelected": "No answer selected",
+  "phoneInvalid": "Enter a UK phone number, like 07700 900 982 or 01632 960 001",
+  "prisonNumberRequired": "Enter a prison number",
+  "prisonNumberFormat": "Enter a prison number with only letters and numbers",
+  "prisonNumberLength": "Enter a prison number with 7 characters",
+  "prisonSelectNone": "No prison selected",
+  "prisonSelectRequired": "Select a prison",
+  "supportDetailsLength": "Please enter at least 3 and no more than 200 characters",
+  "supportDetailsRequired": "Enter details of the request",
+  "visitorsAdultsTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} }) $t(common:plurals.ageYears, {\"count\": {{age}} }) or older",
+  "visitorsChildrenTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} }) under $t(common:plurals.ageYears, {\"count\": {{age}} })",
+  "visitorsNeedAdult": "Add a visitor who is 18 years old or older",
+  "visitorsNoneSelected": "No visitors selected",
+  "visitorsTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} })",
+  "visitTimeRequired": "No visit time selected"
+}
