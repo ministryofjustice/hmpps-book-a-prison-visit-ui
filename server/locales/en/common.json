@@ -75,6 +75,9 @@
     "ageYears_one": "{{count}} year old",
     "ageYears_other": "{{count}} years old",
 
+    "minute_one": "{{count}} minute",
+    "minute_other": "{{count}} minutes",
+
     "person_one": "{{count}} person",
     "person_other": "{{count}} people",
 
