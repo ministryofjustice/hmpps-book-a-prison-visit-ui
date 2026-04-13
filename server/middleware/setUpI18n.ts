@@ -20,7 +20,6 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
         fallbackLng: LOCALE.EN,
         supportedLngs: SUPPORTED_LOCALES,
         preload: SUPPORTED_LOCALES,
-        showSupportNotice: false,
 
         ns: [
           'common',
