@@ -11,7 +11,6 @@ import {
   formatTimeDuration,
   formatTimeFromDateTime,
   initialiseName,
-  pluralise,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
@@ -114,8 +113,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatTimeDuration', formatTimeDuration)
 
   njkEnv.addFilter('initialiseName', initialiseName)
-
-  njkEnv.addFilter('pluralise', pluralise)
 
   njkEnv.addGlobal('govukRebrand', true)
 

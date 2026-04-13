@@ -41,6 +41,10 @@ export default class SelectPrisonController {
   }
 
   public validate(): ValidationChain[] {
-    return [body('prisonId').isLength({ min: 3, max: 3 }).withMessage('No prison selected')]
+    return [
+      body('prisonId')
+        .isLength({ min: 3, max: 3 })
+        .withMessage((_value, { req }) => req.t('validation:prisonSelectNone')),
+    ]
   }
 }
