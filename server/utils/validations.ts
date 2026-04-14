@@ -17,22 +17,23 @@ export const dateOfBirthValidationChain = (dobFieldBaseName: string): Validation
 
     // set any validation errors against the 'day' field so ErrorSummary links to this
     body(`${dobFieldBaseName}-day`).custom((_value, { req }) => {
+      const request = req as Express.Request
       const date = req.body[dobFieldBaseName] ?? ''
       if (date === 'NaN-NaN-NaN') {
-        throw new Error('Enter a date of birth')
+        throw new Error(request.t('validation:dateOfBirth'))
       }
 
       if (date.includes('NaN')) {
-        throw new Error('Enter a date of birth and include a day, month and year')
+        throw new Error(request.t('validation:dateOfBirthIncomplete'))
       }
 
       const parsedDate = parseISO(date)
       if (!isValid(parsedDate)) {
-        throw new Error('Date of birth must be a real date')
+        throw new Error(request.t('validation:dateOfBirthInvalid'))
       }
 
       if (isAfter(parsedDate, new Date())) {
-        throw new Error('Date of birth must be in the past')
+        throw new Error(request.t('validation:dateOfBirthPast'))
       }
 
       return true

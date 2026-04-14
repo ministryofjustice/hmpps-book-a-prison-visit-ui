@@ -51,10 +51,12 @@ export default class PrisonerLocationController {
 
   public validate(): ValidationChain[] {
     return [
-      body('prisonId', 'Select a prison').custom((prisonId: string, { req }) => {
-        const supportedPrisons = (req as Express.Request).session.addPrisonerJourney?.supportedPrisons ?? []
-        return supportedPrisons.some(prison => prison.prisonId === prisonId)
-      }),
+      body('prisonId')
+        .custom((prisonId: string, { req }) => {
+          const supportedPrisons = (req as Express.Request).session.addPrisonerJourney?.supportedPrisons ?? []
+          return supportedPrisons.some(prison => prison.prisonId === prisonId)
+        })
+        .withMessage((_value, { req }) => req.t('validation:prisonSelectRequired')),
     ]
   }
 }

@@ -63,7 +63,7 @@ export default class MainContactController {
 
   public validate(): ValidationChain[] {
     return [
-      body('contact', 'No main contact selected')
+      body('contact')
         // filter invalid values - it should be a selected adult visitor or 'someoneElse'
         .customSanitizer((contact: string, { req }) => {
           if (contact === 'someoneElse') {
@@ -76,11 +76,13 @@ export default class MainContactController {
 
           return selectedAdultVisitorIds.includes(contact) ? contact : undefined
         })
-        .notEmpty(),
-      body('someoneElseName', 'Enter the name of the main contact')
+        .notEmpty()
+        .withMessage((_value, { req }) => req.t('validation:mainContactRequired')),
+      body('someoneElseName')
         .if(body('contact').equals('someoneElse'))
         .trim()
-        .notEmpty(),
+        .notEmpty()
+        .withMessage((_value, { req }) => req.t('validation:mainContactNameRequired')),
     ]
   }
 }

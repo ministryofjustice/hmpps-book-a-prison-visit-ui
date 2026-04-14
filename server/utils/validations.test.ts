@@ -2,9 +2,11 @@ import { Request } from 'express'
 import { validationResult } from 'express-validator'
 import { addDays } from 'date-fns'
 import { dateOfBirthValidationChain } from './validations'
+import { mockTFunction } from '../data/testutils/mockI18n'
 
 const runValidation = async (body: Record<string, unknown>) => {
   const req = { body } as Request
+  req.t = mockTFunction
 
   const validationChains = dateOfBirthValidationChain('dob')
 
@@ -44,7 +46,7 @@ describe('dateOfBirthValidationChain', () => {
     const result = await runValidation({})
 
     expect(result.errors.isEmpty()).toBe(false)
-    expect(result.errors.array()[0].msg).toBe('Enter a date of birth')
+    expect(result.errors.array()[0].msg).toBe('validation:dateOfBirth')
   })
 
   it('should fail if partial input', async () => {
@@ -55,7 +57,7 @@ describe('dateOfBirthValidationChain', () => {
     })
 
     expect(result.errors.isEmpty()).toBe(false)
-    expect(result.errors.array()[0].msg).toBe('Enter a date of birth and include a day, month and year')
+    expect(result.errors.array()[0].msg).toBe('validation:dateOfBirthIncomplete')
   })
 
   it('should fail if date is in the future', async () => {
@@ -70,7 +72,7 @@ describe('dateOfBirthValidationChain', () => {
     })
 
     expect(result.errors.isEmpty()).toBe(false)
-    expect(result.errors.array()[0].msg).toBe('Date of birth must be in the past')
+    expect(result.errors.array()[0].msg).toBe('validation:dateOfBirthPast')
   })
 
   it('should fail on invalid real date (e.g. 30 Feb)', async () => {
@@ -81,6 +83,6 @@ describe('dateOfBirthValidationChain', () => {
     })
 
     expect(result.errors.isEmpty()).toBe(false)
-    expect(result.errors.array()[0].msg).toBe('Date of birth must be a real date')
+    expect(result.errors.array()[0].msg).toBe('validation:dateOfBirthInvalid')
   })
 })

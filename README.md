@@ -74,11 +74,7 @@ The [GOV.UK One Login](https://www.sign-in.service.gov.uk) service is used to au
 
 When running this application locally or in development environments, the GOV.UK One Login integration environment is used. For integration tests the [GOV.UK One Login Simulator](https://github.com/govuk-one-login/simulator) is used.
 
-This application has several changes to core files inherited from the HMPPS TypeScript Template app in order to support GOV.UK One Login. These are:
-
-* an additional Kubernetes secret `govuk-one-login` in the namespace to store the private key, etc.
-* client and server public/private key pairs (in `./integration_tests/testKeys/`) for integration testing
-* a new NPM task (`oidc-wiremock`) and customisations to `start-feature` and `watch-node-feature` that ensure the OIDC Discovery Endpoint mock and a private key is available before the application starts
+In Kubernetes there is an additional secret `govuk-one-login` in each namespace to store the client ID and private key.
 
 
 ## Maintenance page

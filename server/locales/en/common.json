@@ -75,8 +75,14 @@
     "ageYears_one": "{{count}} year old",
     "ageYears_other": "{{count}} years old",
 
+    "minute_one": "{{count}} minute",
+    "minute_other": "{{count}} minutes",
+
     "person_one": "{{count}} person",
     "person_other": "{{count}} people",
+
+    "visitor_one": "{{count}} visitor",
+    "visitor_other": "{{count}} visitors",
 
     "visitTime_zero": "no visit times",
     "visitTime_one": "{{count}} visit time",
