@@ -1,11 +1,12 @@
 {
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
-    "types": ["cypress", "cypress-axe", "express", "express-session"],
+    "types": ["cypress"],
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": "./integration_tests",
+    "ignoreDeprecations": "6.0"
   },
-  "include": ["**/*.ts"]
+  "include": ["**/index.d.ts"]
 }
