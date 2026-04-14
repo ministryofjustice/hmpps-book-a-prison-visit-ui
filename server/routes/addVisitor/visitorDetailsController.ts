@@ -58,8 +58,14 @@ export default class VisitorDetailsController {
 
   public validate(): ValidationChain[] {
     return [
-      body('firstName', 'Enter a first name').trim().isLength({ min: 1, max: 250 }),
-      body('lastName', 'Enter a last name').trim().isLength({ min: 1, max: 250 }),
+      body('firstName')
+        .trim()
+        .isLength({ min: 1, max: 250 })
+        .withMessage((_value, { req }) => req.t('validation:firstName')),
+      body('lastName')
+        .trim()
+        .isLength({ min: 1, max: 250 })
+        .withMessage((_value, { req }) => req.t('validation:lastName')),
 
       ...dateOfBirthValidationChain('visitorDob'),
     ]

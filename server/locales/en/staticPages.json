@@ -34,22 +34,24 @@
 
   "cookies": {
     "title": "Cookies",
-    "whatAreCookies": "Cookies are small files saved on your phone, tablet or computer when you visit a website.",
-    "whatWeUse": "We use cookies to make ‘Visit someone in prison’ work and collect information about how you use the service.",
+    "policyAppliesTo": "This cookies policy only covers ‘Visit someone in prison’. Read the main <a href=\"https://www.gov.uk/help/cookies\">GOV.UK cookies policy</a> to find out about cookies that are used on GOV.UK.",
+    "whatAreCookies": "Cookies are files saved on your phone, tablet or computer when you visit a website. We use cookies to make ‘Visit someone in prison’ work.",
+    "mayUseAnalytics": "We may also use analytics cookies to learn about how you use ‘Visit someone in prison’ and help us improve it. We’ll ask for your permission before we do this.",
+    "notUsedToIdentify": "Cookies are not used to identify you personally.",
 
     "essentialHeading": "Essential cookies",
-    "essentialDescription": "Essential cookies keep your information secure while you use the service. We do not need to ask permission to use them.",
+    "essentialDescription": "We use essential cookies to make ‘Visit someone in prison’ work. They also keep your information secure while you use the service.",
     "tableHeaders": {
       "name": "Name",
       "purpose": "Purpose",
       "expires": "Expires"
     },
     "sessionCookiePurpose": "Used to keep you signed in",
-    "sessionCookieExpiry": "20 minutes",
     "consentCookiePurpose": "Saves your cookie consent settings",
+    "languageCookiePurpose": "Remembers the language you use in the service",
 
     "analyticsHeading": "Analytics cookies (optional)",
-    "analyticsDescription": "With your permission, we use Google Analytics to collect data about how you use ‘Visit someone in prison’. This information helps us to improve the service.",
+    "analyticsDescription": "With your permission, we use Google Analytics to collect anonymised data about how you use ‘Visit someone in prison’. This information helps us to improve the service.",
     "analyticsNoShare": "Google is not allowed to use or share our analytics data with anyone.",
     "analyticsStores": "Google Analytics stores anonymised information about:",
     "analyticsItems": {
@@ -57,7 +59,6 @@
       "pagesVisited": "the pages you visit on the service and how long you spend on them",
       "errors": "any errors you see while using the service"
     },
-    "analyticsSets": "Google Analytics sets the following cookies.",
     "gaCookiePurpose": "Checks if you’ve visited the service before. This helps us count how many people visit our site.",
     "gaIdCookiePurpose": "Used by Google Analytics to find and track an individual session with your device.",
 

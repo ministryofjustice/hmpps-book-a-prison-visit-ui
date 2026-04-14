@@ -12,8 +12,10 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+      <p>{{ t("staticPages:cookies.policyAppliesTo") | safe }}</p>
       <p>{{ t("staticPages:cookies.whatAreCookies") }}</p>
-      <p>{{ t("staticPages:cookies.whatWeUse") }}</p>
+      <p>{{ t("staticPages:cookies.mayUseAnalytics") }}</p>
+      <p>{{ t("staticPages:cookies.notUsedToIdentify") }}</p>
 
 
       <h2 class="govuk-heading-m">{{ t("staticPages:cookies.essentialHeading") }}</h2>
@@ -40,7 +42,7 @@
               text: t("staticPages:cookies.sessionCookiePurpose")
             },
             {
-              text: t("staticPages:cookies.sessionCookieExpiry")
+              text: t("common:plurals.minute", { count: 20 })
             }
           ],
           [
@@ -49,6 +51,17 @@
             },
             {
               text: t("staticPages:cookies.consentCookiePurpose")
+            },
+            {
+              text: t("common:plurals.year", { count: 1 })
+            }
+          ],
+          [
+            {
+              text: "lng"
+            },
+            {
+              text: t("staticPages:cookies.languageCookiePurpose")
             },
             {
               text: t("common:plurals.year", { count: 1 })
@@ -67,7 +80,6 @@
         <li>{{ t("staticPages:cookies.analyticsItems.pagesVisited") }}</li>
         <li>{{ t("staticPages:cookies.analyticsItems.errors") }}</li>
       </ul>
-      <p>{{ t("staticPages:cookies.analyticsSets") }}</p>
 
       {{ govukTable({
         head: [

@@ -54,15 +54,17 @@ export default class AdditionalSupportController {
 
   public validate(): ValidationChain[] {
     return [
-      body('additionalSupportRequired').isIn(['yes', 'no']).withMessage('No answer selected'),
+      body('additionalSupportRequired')
+        .isIn(['yes', 'no'])
+        .withMessage((_value, { req }) => req.t('validation:noAnswerSelected')),
       body('additionalSupport')
         .trim()
         .if(body('additionalSupportRequired').equals('yes'))
         .notEmpty()
-        .withMessage('Enter details of the request')
+        .withMessage((_value, { req }) => req.t('validation:supportDetailsRequired'))
         .bail()
         .isLength({ min: 3, max: 200 })
-        .withMessage('Please enter at least 3 and no more than 200 characters'),
+        .withMessage((_value, { req }) => req.t('validation:supportDetailsLength')),
     ]
   }
 }
