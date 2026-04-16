@@ -251,10 +251,10 @@ export default class TestData {
 
   static prisonNames = ({
     prisonNames = {
-      CFI: { prisonName: 'Cardiff (HMP & YOI)', prisonNameInWelsh: 'Carchar Caerdydd' },
-      DHI: { prisonName: 'Drake Hall (HMP & YOI)' },
-      FHI: { prisonName: 'Foston Hall (HMP & YOI)' },
-      HEI: { prisonName: 'Hewell (HMP & YOI)' },
+      CFI: { name: { en: 'Cardiff (HMP & YOI)', cy: 'Carchar Caerdydd' } },
+      DHI: { name: { en: 'Drake Hall (HMP & YOI)' } },
+      FHI: { name: { en: 'Foston Hall (HMP & YOI)' } },
+      HEI: { name: { en: 'Hewell (HMP & YOI)' } },
     },
   }: Partial<{ prisonNames: PrisonNames }> = {}): PrisonNames => prisonNames
 

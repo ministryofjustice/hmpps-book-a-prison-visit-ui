@@ -3,7 +3,7 @@ import { PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiType
 
 type CacheConfig = { key: string; ttlSecs: number }
 
-export type PrisonNames = Record<string, { prisonName: string; prisonNameInWelsh?: string }>
+export type PrisonNames = Record<string, { name: { en: string; cy?: string } }>
 
 export default class PrisonService {
   private readonly allPrisonNamesCache: CacheConfig = { key: 'allPrisonNames', ttlSecs: 60 * 60 * 24 } // 24 hour cache
@@ -33,8 +33,10 @@ export default class PrisonService {
 
     const allPrisonNames: PrisonNames = allPrisonNameDtos.reduce((acc, prison) => {
       acc[prison.prisonId] = {
-        prisonName: prison.prisonName,
-        ...(prison.prisonNameInWelsh && { prisonNameInWelsh: prison.prisonNameInWelsh }),
+        name: {
+          en: prison.prisonName,
+          ...(prison.prisonNameInWelsh && { cy: prison.prisonNameInWelsh }),
+        },
       }
       return acc
     }, {} as PrisonNames)
