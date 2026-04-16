@@ -250,6 +250,7 @@ export default class TestData {
 
   static prisonNameDtos = ({
     prisons = [
+      { prisonId: 'CFI', prisonName: 'Cardiff (HMP & YOI)', prisonNameInWelsh: 'Carchar Caerdydd' },
       { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
       { prisonId: 'FHI', prisonName: 'Foston Hall (HMP & YOI)' },
       { prisonId: 'HEI', prisonName: 'Hewell (HMP & YOI)' },

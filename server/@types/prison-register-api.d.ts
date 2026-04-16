@@ -307,7 +307,7 @@ export interface components {
       /** @description Set of types for this prison */
       prisonTypes: ('HMP' | 'YOI' | 'IRC' | 'STC' | 'YCS')[]
       /** @description Set of categories for this prison */
-      categories: ('A' | 'B' | 'C' | 'D')[]
+      categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
     }
     AddressDto: {
       /**
@@ -402,7 +402,7 @@ export interface components {
       /** @description List of types for this prison */
       types: components['schemas']['PrisonTypeDto'][]
       /** @description List of the categories for this prison */
-      categories: ('A' | 'B' | 'C' | 'D')[]
+      categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
       /** @description List of address for this prison */
       addresses: components['schemas']['AddressDto'][]
       /** @description List of operators for this prison */
@@ -528,7 +528,7 @@ export interface components {
       /** @description List of addresses for this prison */
       addresses: components['schemas']['UpdateAddressDto'][]
       /** @description Set of categories for this prison */
-      categories: ('A' | 'B' | 'C' | 'D')[]
+      categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
     }
     /** @description Full name of prison with id */
     PrisonNameDto: {
@@ -542,6 +542,11 @@ export interface components {
        * @example Moorland HMP
        */
       prisonName: string
+      /**
+       * @description Name of the prison in Welsh
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
     }
   }
   responses: never
