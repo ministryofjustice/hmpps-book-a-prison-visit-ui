@@ -7,6 +7,11 @@ import PrivacyNoticePage from '../pages/staticPages/privacyNotice'
 import TermsAndConditionsPage from '../pages/staticPages/termsAndConditions'
 
 context('Static content pages', () => {
+  beforeEach(() => {
+    cy.task('reset')
+    cy.task('stubPrisonNames')
+  })
+
   describe('Unauthenticated user', () => {
     it('should be able to access static content pages', () => {
       cy.hideCookieBanner()
@@ -28,7 +33,6 @@ context('Static content pages', () => {
   describe('Authenticated user', () => {
     const bookerReference = TestData.bookerReference().value
     it('should be able to navigate to static content pages from Visits home page using footer links', () => {
-      cy.task('reset')
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')

@@ -11,6 +11,7 @@ context('Add a prisoner', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
 
     cy.task('stubGetSupportedPrisons')
     cy.task('stubGetBookerReference')

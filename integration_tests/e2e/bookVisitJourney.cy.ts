@@ -101,6 +101,7 @@ context('Book visit journey', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
 
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
