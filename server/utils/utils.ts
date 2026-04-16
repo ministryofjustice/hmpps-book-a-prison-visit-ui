@@ -3,6 +3,8 @@ import { differenceInYears, format, formatDuration, intervalToDuration, parse, p
 // eslint-disable-next-line import/no-named-as-default
 import parsePhoneNumber from 'libphonenumber-js/mobile'
 import type { Visitor } from '../services/bookerService'
+import { PrisonNames } from '../services/prisonService'
+import { Locale } from '../constants/locales'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -86,4 +88,14 @@ export const getMainContactName = (mainContact: Visitor | string = ''): string =
 
 export const isMobilePhoneNumber = (phoneNumber: string | undefined): boolean => {
   return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
+}
+
+export const getPrisonName = (prisonId: string, prisonNames: PrisonNames, lng: Locale): string => {
+  const prison = prisonNames[prisonId]
+
+  if (!prison) {
+    return prisonId
+  }
+
+  return prison.name?.[lng] ?? prison.name.en
 }

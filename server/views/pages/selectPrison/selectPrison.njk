@@ -10,7 +10,7 @@
 {% for prisonId, prison in prisonNames %}
   {% set prisonSelectItems = (prisonSelectItems.push({
     value: prisonId,
-    text: prison.name.en
+    text: prisonId | getPrisonName(prisonNames, language)
   }), prisonSelectItems) %}
 {% endfor %}
 

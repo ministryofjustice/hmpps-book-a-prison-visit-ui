@@ -8,12 +8,15 @@ import {
   formatTimeDuration,
   formatTimeFromDateTime,
   getMainContactName,
+  getPrisonName,
   initialiseName,
   isAdult,
   isMobilePhoneNumber,
 } from './utils'
 import TestData from '../routes/testutils/testData'
 import { Visitor } from '../services/bookerService'
+import { PrisonNames } from '../services/prisonService'
+import { Locale } from '../constants/locales'
 
 describe('convert to title case', () => {
   it.each([
@@ -148,5 +151,21 @@ describe('isMobilePhoneNumber', () => {
     ['undefined number', undefined, false],
   ])('%s - %s - %s', (_: string, number: string | undefined, expected: boolean) => {
     expect(isMobilePhoneNumber(number)).toBe(expected)
+  })
+})
+
+describe('getPrisonName', () => {
+  const prisonNames: PrisonNames = {
+    A: { name: { en: 'Prison A' } },
+    B: { name: { en: 'Prison B', cy: 'Carchar B' } },
+  }
+
+  it.each([
+    ['returns English name when language is English', 'A', prisonNames, 'en', 'Prison A'],
+    ['returns Welsh name when language is Welsh', 'B', prisonNames, 'cy', 'Carchar B'],
+    ['falls back to English name if Welsh name not available', 'A', prisonNames, 'cy', 'Prison A'],
+    ['returns prison ID if prison is not found', 'C', prisonNames, 'en', 'C'],
+  ] as const)('%s', (_: string, prisonId: string, names: PrisonNames, lng: Locale, expected: string) => {
+    expect(getPrisonName(prisonId, names, lng)).toBe(expected)
   })
 })
