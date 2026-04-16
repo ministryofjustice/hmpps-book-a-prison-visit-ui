@@ -21,6 +21,7 @@ import unauthenticatedRoutes from './routes/unauthenticatedRoutes'
 import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
 import analyticsConsent from './middleware/analyticsConsent'
+import populatePrisonNames from './middleware/populatePrisonNames'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -46,6 +47,7 @@ export default function createApp(services: Services): express.Application {
   app.use(analyticsConsent())
   app.use(setUpCsrf())
 
+  app.use(populatePrisonNames(services.prisonService))
   app.use(unauthenticatedRoutes(services))
 
   app.use(authenticationMiddleware())

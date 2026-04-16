@@ -10,6 +10,7 @@ import {
   MoJAlert,
   BookedVisits,
 } from '../bapv'
+import { PrisonNames } from '../../services/prisonService'
 
 export default {}
 
@@ -67,6 +68,8 @@ export declare global {
     interface Locals {
       user?: Express.User
       analyticsEnabled?: boolean
+
+      prisonNames?: PrisonNames
     }
   }
 }

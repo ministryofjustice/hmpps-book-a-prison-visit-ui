@@ -11,11 +11,8 @@ export default class SelectPrisonController {
     return async (req, res) => {
       delete req.session.selectedPrisonId
 
-      const prisons = await this.prisonService.getAllPrisonNames()
-
       return res.render('pages/selectPrison/selectPrison', {
         errors: req.flash('errors'),
-        prisons,
       })
     }
   }

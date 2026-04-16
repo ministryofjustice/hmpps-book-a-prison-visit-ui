@@ -78,6 +78,8 @@ function appSetup(
     res.locals = {
       ...res.locals,
       ...(req.user && { user: { ...req.user } }),
+
+      prisonNames: TestData.prisonNames(), // emulate populatePrisonNames()
     }
     next()
   })
