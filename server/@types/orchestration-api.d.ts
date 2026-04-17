@@ -2120,11 +2120,6 @@ export interface components {
     /** @description An address */
     AddressDto: {
       /**
-       * @description Address Type
-       * @example BUS
-       */
-      addressType?: string
-      /**
        * @description Flat
        * @example 3B
        */
@@ -2179,40 +2174,6 @@ export interface components {
        * @example false
        */
       noFixedAddress: boolean
-      /**
-       * Format: date
-       * @description Date Added
-       * @example 2000-10-31
-       */
-      startDate?: string
-      /**
-       * Format: date
-       * @description Date ended
-       * @example 2000-10-31
-       */
-      endDate?: string
-      /** @description The phone number associated with the address */
-      phones: components['schemas']['TelephoneDto'][]
-      /** @description The address usages/types */
-      addressUsages: components['schemas']['AddressUsageDto'][]
-    }
-    /** @description An Offender's address usage */
-    AddressUsageDto: {
-      /**
-       * @description The address usages
-       * @example HDC
-       */
-      addressUsage?: string
-      /**
-       * @description The address usages description
-       * @example HDC Address
-       */
-      addressUsageDescription?: string
-      /**
-       * @description Active Flag
-       * @example true
-       */
-      activeFlag?: boolean
     }
     /** @description AlertDto returned from orchestration, made of fields from AlertResponseDto from Alerts API call */
     AlertDto: {
@@ -2371,6 +2332,11 @@ export interface components {
        * @example Moorland HMP
        */
       prisonName: string
+      /**
+       * @description Name of the prison in Welsh
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
     }
     PrisonerDetailsDto: {
       /**
@@ -2456,24 +2422,6 @@ export interface components {
        * @example This is a comment text
        */
       comment?: string
-    }
-    /** @description Telephone Details */
-    TelephoneDto: {
-      /**
-       * @description Telephone number
-       * @example 0114 2345678
-       */
-      number: string
-      /**
-       * @description Telephone type
-       * @example TEL
-       */
-      type: string
-      /**
-       * @description Telephone extension number
-       * @example 123
-       */
-      ext?: string
     }
     VisitBookingDetailsDto: {
       /**
@@ -2782,10 +2730,10 @@ export interface components {
       sort?: components['schemas']['SortObject']
       /** Format: int32 */
       pageSize?: number
-      /** Format: int32 */
-      pageNumber?: number
       paged?: boolean
       unpaged?: boolean
+      /** Format: int32 */
+      pageNumber?: number
     }
     SortObject: {
       empty?: boolean
@@ -2972,6 +2920,8 @@ export interface components {
        * @example 2000-01-31
        */
       dateOfBirth?: string
+      /** @description Approved Visitor Flag */
+      approvedVisitor: boolean
       /**
        * Format: date
        * @description Date when visitor was last approved for a visit (approved / auto-approved)
@@ -3399,6 +3349,11 @@ export interface components {
        * @example MDI
        */
       prisonName: string
+      /**
+       * @description Name of the prison in Welsh
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
     }
     /** @description Visit */
     OrchestrationVisitDto: {
@@ -4037,6 +3992,11 @@ export interface components {
        * @example HMP Hewell
        */
       prisonName: string
+      /**
+       * @description Name of the prison in Welsh
+       * @example Carchar Brynbuga
+       */
+      prisonNameInWelsh?: string
       /**
        * @description is prison active
        * @example true

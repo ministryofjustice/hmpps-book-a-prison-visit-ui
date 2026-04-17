@@ -15,6 +15,7 @@ context('Add a visitor', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
 
     cy.task('stubGetSupportedPrisons')
     cy.task('stubGetBookerReference')

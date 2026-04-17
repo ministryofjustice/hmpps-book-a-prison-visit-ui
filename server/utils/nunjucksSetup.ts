@@ -10,6 +10,7 @@ import {
   formatTime,
   formatTimeDuration,
   formatTimeFromDateTime,
+  getPrisonName,
   initialiseName,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
@@ -113,6 +114,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatTimeDuration', formatTimeDuration)
 
   njkEnv.addFilter('initialiseName', initialiseName)
+
+  njkEnv.addFilter('getPrisonName', getPrisonName)
 
   njkEnv.addGlobal('govukRebrand', true)
 

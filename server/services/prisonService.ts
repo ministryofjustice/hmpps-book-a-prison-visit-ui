@@ -1,11 +1,12 @@
 import { DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient, RestClientBuilder } from '../data'
 import { PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiTypes'
-import { PrisonNameDto } from '../data/prisonRegisterApiTypes'
 
 type CacheConfig = { key: string; ttlSecs: number }
 
+export type PrisonNames = Record<string, { name: { en: string; cy?: string } }>
+
 export default class PrisonService {
-  private readonly allPrisonNamesCache: CacheConfig = { key: 'prisonNames', ttlSecs: 60 * 60 * 24 } // 24 hour cache
+  private readonly allPrisonNamesCache: CacheConfig = { key: 'allPrisonNames', ttlSecs: 60 * 60 * 24 } // 24 hour cache
 
   private readonly supportedPrisonIdsCache: CacheConfig = { key: 'supportedPrisonIds', ttlSecs: 60 * 5 } // 5 min cache
 
@@ -18,8 +19,8 @@ export default class PrisonService {
     private readonly dataCache: DataCache,
   ) {}
 
-  async getAllPrisonNames(): Promise<PrisonNameDto[]> {
-    const cachedAllPrisonNames = await this.dataCache.get<PrisonNameDto[]>(this.allPrisonNamesCache.key)
+  async getAllPrisonNames(): Promise<PrisonNames> {
+    const cachedAllPrisonNames = await this.dataCache.get<PrisonNames>(this.allPrisonNamesCache.key)
 
     if (cachedAllPrisonNames) {
       return cachedAllPrisonNames
@@ -28,7 +29,17 @@ export default class PrisonService {
     const token = await this.hmppsAuthClient.getSystemClientToken()
     const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
 
-    const allPrisonNames = await prisonRegisterApiClient.getPrisonNames()
+    const allPrisonNameDtos = await prisonRegisterApiClient.getPrisonNames()
+
+    const allPrisonNames: PrisonNames = allPrisonNameDtos.reduce((acc, prison) => {
+      acc[prison.prisonId] = {
+        name: {
+          en: prison.prisonName,
+          ...(prison.prisonNameInWelsh && { cy: prison.prisonNameInWelsh }),
+        },
+      }
+      return acc
+    }, {} as PrisonNames)
 
     await this.dataCache.set(this.allPrisonNamesCache.key, allPrisonNames, this.allPrisonNamesCache.ttlSecs)
     return allPrisonNames

@@ -43,6 +43,7 @@ context('Book visit journey - drop-out points', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
   })
 
   describe('Book visit journey - drop-out points', () => {

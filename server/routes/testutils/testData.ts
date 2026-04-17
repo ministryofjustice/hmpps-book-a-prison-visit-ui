@@ -18,6 +18,7 @@ import type {
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
+import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
 
 export default class TestData {
@@ -248,8 +249,18 @@ export default class TestData {
 
   static prisonIds = (prisonIds = ['DHI', 'FHI', 'HEI']): string[] => prisonIds
 
+  static prisonNames = ({
+    prisonNames = {
+      CFI: { name: { en: 'Cardiff (HMP & YOI)', cy: 'Carchar Caerdydd' } },
+      DHI: { name: { en: 'Drake Hall (HMP & YOI)' } },
+      FHI: { name: { en: 'Foston Hall (HMP & YOI)' } },
+      HEI: { name: { en: 'Hewell (HMP & YOI)' } },
+    },
+  }: Partial<{ prisonNames: PrisonNames }> = {}): PrisonNames => prisonNames
+
   static prisonNameDtos = ({
     prisons = [
+      { prisonId: 'CFI', prisonName: 'Cardiff (HMP & YOI)', prisonNameInWelsh: 'Carchar Caerdydd' },
       { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
       { prisonId: 'FHI', prisonName: 'Foston Hall (HMP & YOI)' },
       { prisonId: 'HEI', prisonName: 'Hewell (HMP & YOI)' },

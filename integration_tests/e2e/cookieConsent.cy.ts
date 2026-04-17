@@ -9,6 +9,7 @@ context('Cookie consent and analytics', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.task('stubGetFuturePublicVisits', {

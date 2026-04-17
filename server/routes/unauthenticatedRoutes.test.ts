@@ -3,11 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import paths from '../constants/paths'
-import { createMockPrisonService } from '../services/testutils/mocks'
 import config from '../config'
 
 let app: Express
-const prisonService = createMockPrisonService()
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -28,9 +26,7 @@ describe('/ - root path redirect', () => {
 describe('/select-prison', () => {
   // Full tests for this route in ./server/routes/selectPrison
   it('should render select prison page', () => {
-    prisonService.getAllPrisonNames.mockResolvedValue([])
-
-    app = appWithAllRoutes({ services: { prisonService } })
+    app = appWithAllRoutes({})
     return request(app)
       .get(paths.SELECT_PRISON)
       .expect('Content-Type', /html/)

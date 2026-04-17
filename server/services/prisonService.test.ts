@@ -39,26 +39,27 @@ describe('Prison service', () => {
   })
 
   describe('getAllPrisonNames', () => {
+    const prisonNames = TestData.prisonNames() // Prison names key/value object used in the app
+    const prisonNameDtos = TestData.prisonNameDtos() // PrisonNameDto array from the API
+
     it('should return all prison names if cache hit', async () => {
-      const prisonNames = TestData.prisonNameDtos()
       dataCache.get.mockResolvedValue(prisonNames)
 
       expect(await prisonService.getAllPrisonNames()).toStrictEqual(prisonNames)
 
-      expect(dataCache.get).toHaveBeenCalledWith('prisonNames')
+      expect(dataCache.get).toHaveBeenCalledWith('allPrisonNames')
       expect(dataCache.set).not.toHaveBeenCalled()
       expect(prisonRegisterApiClient.getPrisonNames).not.toHaveBeenCalled()
     })
 
     it('should return all prison names and save to cache if a cache miss', async () => {
-      const prisonNames = TestData.prisonNameDtos()
       dataCache.get.mockResolvedValue(null)
-      prisonRegisterApiClient.getPrisonNames.mockResolvedValue(prisonNames)
+      prisonRegisterApiClient.getPrisonNames.mockResolvedValue(prisonNameDtos)
 
       expect(await prisonService.getAllPrisonNames()).toStrictEqual(prisonNames)
 
-      expect(dataCache.get).toHaveBeenCalledWith('prisonNames')
-      expect(dataCache.set).toHaveBeenCalledWith('prisonNames', prisonNames, 86400) // 24 hours
+      expect(dataCache.get).toHaveBeenCalledWith('allPrisonNames')
+      expect(dataCache.set).toHaveBeenCalledWith('allPrisonNames', prisonNames, 86400) // 24 hours
       expect(prisonRegisterApiClient.getPrisonNames).toHaveBeenCalled()
     })
   })

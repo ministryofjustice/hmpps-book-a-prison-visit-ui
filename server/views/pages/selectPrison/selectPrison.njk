@@ -7,15 +7,14 @@
 {% set backLinkHref = paths.GOVUK_START_PAGE  %}
 
 {% set prisonSelectItems = [{ value: "", text: t("selectPrison:selectPrison.selectLabel") }] %}
-{% for prison in prisons %}
+{% for prisonId, prison in prisonNames %}
   {% set prisonSelectItems = (prisonSelectItems.push({
-    value: prison.prisonId,
-    text: prison.prisonName
+    value: prisonId,
+    text: prisonId | getPrisonName(prisonNames, language)
   }), prisonSelectItems) %}
 {% endfor %}
 
 {% block content %}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 

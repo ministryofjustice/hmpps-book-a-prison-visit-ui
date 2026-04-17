@@ -30,6 +30,7 @@ context('Visits home page', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrison')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })

@@ -17,7 +17,6 @@ const prisonService = createMockPrisonService()
 
 beforeEach(() => {
   sessionData = {} as SessionData
-  prisonService.getAllPrisonNames.mockResolvedValue(prisonNames)
 
   app = appWithAllRoutes({ services: { prisonService }, sessionData })
 })
@@ -54,7 +53,6 @@ describe('Select a prison', () => {
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
           expect(sessionData.selectedPrisonId).toBeUndefined()
-          expect(prisonService.getAllPrisonNames).toHaveBeenCalled()
         })
     })
 
