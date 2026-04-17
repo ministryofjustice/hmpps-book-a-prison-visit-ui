@@ -4,16 +4,15 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import TestData from '../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
 
-const selectedPrison = TestData.prisonRegisterPrisonDto()
-const supportedPrisons = [selectedPrison]
+const selectedPrisonId = 'HEI'
+const supportedPrisonIds = [selectedPrisonId]
 
 beforeEach(() => {
-  sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
+  sessionData = { addPrisonerJourney: { supportedPrisonIds, selectedPrisonId } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })
@@ -40,7 +39,7 @@ describe('Prisoner not matched', () => {
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_PRISONER.DETAILS)
           expect($('h1').text()).toBe('Prisoner details do not match')
-          expect($('[data-test=no-match-at-prison]').text()).toContain(selectedPrison.prisonName)
+          expect($('[data-test=no-match-at-prison]').text()).toContain('Hewell (HMP & YOI)')
           expect($('[data-test=check-details] a').attr('href')).toBe(paths.ADD_PRISONER.DETAILS)
         })
     })

@@ -4,7 +4,6 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   CreateVisitorRequestResponseDto,
   PrisonDto,
-  PrisonRegisterPrisonDto,
 } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 import { type VisitDetails } from '../services/visitService'
@@ -16,8 +15,8 @@ export type Booker = {
 
 // data that is built up during an add prisoner journey
 export type AddPrisonerJourney = {
-  supportedPrisons: PrisonRegisterPrisonDto[]
-  selectedPrison?: PrisonRegisterPrisonDto
+  supportedPrisonIds: string[]
+  selectedPrisonId?: string
   prisonerDetails?: {
     firstName: string
     lastName: string

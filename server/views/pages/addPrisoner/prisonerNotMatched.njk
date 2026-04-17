@@ -10,7 +10,9 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p data-test="no-match-at-prison">
-        {{- t("addPrisoner:prisonerNotMatched.noMatch", { prisonName: prisonName }) -}}
+        {{- t("addPrisoner:prisonerNotMatched.noMatch", {
+          prisonName: prisonId | getPrisonName(prisonNames, language)
+        }) -}}
       </p>
 
       <p>{{ t("addPrisoner:prisonerNotMatched.reason") }}</p>

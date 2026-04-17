@@ -24,9 +24,7 @@ export type Prisoner = {
   firstName: string
   lastName: string
   prisonId?: string
-  prisonName?: string
   registeredPrisonId: string
-  registeredPrisonName: string
   availableVos: number
   nextAvailableVoDate: string
   convictedStatus?: ConvictedStatus
@@ -152,9 +150,7 @@ export default class BookerService {
         firstName: prisoner.firstName,
         lastName: prisoner.lastName,
         prisonId: prisoner.prisonId,
-        prisonName: prisoner.prisonName,
         registeredPrisonId: registeredPrison.prisonCode,
-        registeredPrisonName: registeredPrison.prisonName,
         availableVos,
         nextAvailableVoDate,
         convictedStatus: prisoner.convictedStatus,

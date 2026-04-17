@@ -64,18 +64,6 @@ describe('Prison service', () => {
     })
   })
 
-  describe('getSupportedPrisons', () => {
-    it('should return list of supported prisons', async () => {
-      const prisons = [TestData.prisonRegisterPrisonDto()]
-      orchestrationApiClient.getSupportedPrisons.mockResolvedValue(prisons)
-
-      const results = await prisonService.getSupportedPrisons()
-
-      expect(orchestrationApiClient.getSupportedPrisons).toHaveBeenCalled()
-      expect(results).toStrictEqual(prisons)
-    })
-  })
-
   describe('getPrison', () => {
     it('should return prison config for given prison code if cache hit', async () => {
       const prison = TestData.prisonDto()
@@ -121,6 +109,31 @@ describe('Prison service', () => {
 
       expect(await prisonService.isSupportedPrison('HEI')).toBe(true)
       expect(await prisonService.isSupportedPrison('XYZ')).toBe(false)
+
+      expect(dataCache.get).toHaveBeenCalledWith('supportedPrisonIds')
+      expect(dataCache.set).toHaveBeenCalledWith('supportedPrisonIds', prisonIds, 300) // 5 mins
+      expect(orchestrationApiClient.getSupportedPrisonIds).toHaveBeenCalled()
+    })
+  })
+
+  describe('getSupportedPrisonIds', () => {
+    it('should return supported prison IDs if cache hit', async () => {
+      const prisonIds = TestData.prisonIds()
+      dataCache.get.mockResolvedValue(prisonIds)
+
+      expect(await prisonService.getSupportedPrisonIds()).toStrictEqual(prisonIds)
+
+      expect(dataCache.get).toHaveBeenCalledWith('supportedPrisonIds')
+      expect(dataCache.set).not.toHaveBeenCalled()
+      expect(orchestrationApiClient.getSupportedPrisonIds).not.toHaveBeenCalled()
+    })
+
+    it('should return supported prison IDs and store them if cache miss', async () => {
+      const prisonIds = TestData.prisonIds()
+      dataCache.get.mockResolvedValue(null)
+      orchestrationApiClient.getSupportedPrisonIds.mockResolvedValue(prisonIds)
+
+      expect(await prisonService.getSupportedPrisonIds()).toStrictEqual(prisonIds)
 
       expect(dataCache.get).toHaveBeenCalledWith('supportedPrisonIds')
       expect(dataCache.set).toHaveBeenCalledWith('supportedPrisonIds', prisonIds, 300) // 5 mins

@@ -15,11 +15,11 @@ let app: Express
 const bookerService = createMockBookerService()
 let sessionData: SessionData
 
-const selectedPrison = TestData.prisonRegisterPrisonDto()
-const supportedPrisons = [selectedPrison]
+const selectedPrisonId = 'HEI'
+const supportedPrisonIds = [selectedPrisonId]
 
 beforeEach(() => {
-  sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
+  sessionData = { addPrisonerJourney: { supportedPrisonIds, selectedPrisonId } } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })
@@ -37,8 +37,8 @@ describe('Prisoner details', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
-    it('should redirect to prisoner location page if selectedPrison not set in session', () => {
-      sessionData.addPrisonerJourney!.selectedPrison = undefined
+    it('should redirect to prisoner location page if selectedPrisonId not set in session', () => {
+      sessionData.addPrisonerJourney!.selectedPrisonId = undefined
       return request(app).get(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
@@ -141,8 +141,8 @@ describe('Prisoner details', () => {
     } as const
     const registerPrisonerDto = TestData.registerPrisonerForBookerDto()
 
-    it('should redirect to prisoner location page if selectedPrison not set in session', () => {
-      sessionData.addPrisonerJourney!.selectedPrison = undefined
+    it('should redirect to prisoner location page if selectedPrisonId not set in session', () => {
+      sessionData.addPrisonerJourney!.selectedPrisonId = undefined
       return request(app).post(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 

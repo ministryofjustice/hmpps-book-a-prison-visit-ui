@@ -10,7 +10,7 @@ export default class PrisonerDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addPrisonerJourney } = req.session
-      if (!addPrisonerJourney?.selectedPrison) {
+      if (!addPrisonerJourney?.selectedPrisonId) {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
       }
 
@@ -30,7 +30,7 @@ export default class PrisonerDetailsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const { addPrisonerJourney } = req.session
-      if (!addPrisonerJourney?.selectedPrison) {
+      if (!addPrisonerJourney?.selectedPrisonId) {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
       }
 
@@ -59,7 +59,7 @@ export default class PrisonerDetailsController {
         prisonerFirstName: data.firstName,
         prisonerLastName: data.lastName,
         prisonerDateOfBirth: data.prisonerDob,
-        prisonId: addPrisonerJourney.selectedPrison.prisonId,
+        prisonId: addPrisonerJourney.selectedPrisonId,
       })
 
       addPrisonerJourney.result = result

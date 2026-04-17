@@ -24,7 +24,9 @@
       {{ govukPanel({
         titleText: pageTitle,
         classes: "visits-request-confirmation",
-        text: t("bookVisit:visitRequested.requestReviewBy", { prisonName: bookVisitConfirmed.prison.prisonName }),
+        text: t("bookVisit:visitRequested.requestReviewBy", {
+          prisonName: bookVisitConfirmed.prison.code | getPrisonName(prisonNames, language)
+        }),
         attributes: { "data-test": "visit-requested-panel" }
       }) }}
 
@@ -43,7 +45,9 @@
       <p>{{ t("bookVisit:visitRequested.notBookedYet") }}</p>
 
       <p data-test="confirm-or-reject">
-        {{- t("bookVisit:visitRequested.confirmOrReject", { prisonName: bookVisitConfirmed.prison.prisonName }) -}}
+        {{- t("bookVisit:visitRequested.confirmOrReject", {
+          prisonName: bookVisitConfirmed.prison.code | getPrisonName(prisonNames, language)
+        }) -}}
       </p>
 
       {% if responseMessage %}

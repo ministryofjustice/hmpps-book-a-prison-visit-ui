@@ -13,7 +13,7 @@ context('Add a prisoner', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubPrisonNames')
 
-    cy.task('stubGetSupportedPrisons')
+    cy.task('stubGetSupportedPrisonIds')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners')
 

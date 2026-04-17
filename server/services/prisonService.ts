@@ -1,5 +1,5 @@
 import { DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient, RestClientBuilder } from '../data'
-import { PrisonDto, PrisonRegisterPrisonDto } from '../data/orchestrationApiTypes'
+import { PrisonDto } from '../data/orchestrationApiTypes'
 
 type CacheConfig = { key: string; ttlSecs: number }
 
@@ -45,13 +45,6 @@ export default class PrisonService {
     return allPrisonNames
   }
 
-  async getSupportedPrisons(): Promise<PrisonRegisterPrisonDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    return orchestrationApiClient.getSupportedPrisons()
-  }
-
   async getPrison(prisonCode: string): Promise<PrisonDto> {
     const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`)
 
@@ -72,7 +65,7 @@ export default class PrisonService {
     return (await this.getSupportedPrisonIds()).includes(prisonCode)
   }
 
-  private async getSupportedPrisonIds(): Promise<string[]> {
+  async getSupportedPrisonIds(): Promise<string[]> {
     const cachedSupportedPrisonIds = await this.dataCache.get<string[]>(this.supportedPrisonIdsCache.key)
 
     if (cachedSupportedPrisonIds) {

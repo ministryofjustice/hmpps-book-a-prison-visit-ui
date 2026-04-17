@@ -8,25 +8,25 @@ export default class PrisonerLocationController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const selectedPrison = req.session.addPrisonerJourney?.selectedPrison
+      const selectedPrisonId = req.session.addPrisonerJourney?.selectedPrisonId
       const prisonerDetails = req.session.addPrisonerJourney?.prisonerDetails
-      const prisons = await this.prisonService.getSupportedPrisons()
+      const supportedPrisonIds = await this.prisonService.getSupportedPrisonIds()
 
       req.session.addPrisonerJourney = {
-        supportedPrisons: prisons,
-        ...(selectedPrison && { selectedPrison }),
+        supportedPrisonIds,
+        ...(selectedPrisonId && { selectedPrisonId }),
         ...(prisonerDetails && { prisonerDetails }),
       }
 
       const formValues = {
-        ...(selectedPrison && { prisonId: selectedPrison.prisonId }),
+        ...(selectedPrisonId && { prisonId: selectedPrisonId }),
       }
 
       return res.render('pages/addPrisoner/prisonerLocation', {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        prisons,
+        supportedPrisonIds,
       })
     }
   }
@@ -41,9 +41,7 @@ export default class PrisonerLocationController {
 
       const addPrisonerJourney = req.session.addPrisonerJourney!
       const { prisonId } = matchedData<{ prisonId: string }>(req)
-      addPrisonerJourney.selectedPrison = addPrisonerJourney.supportedPrisons.find(
-        prison => prison.prisonId === prisonId,
-      )
+      addPrisonerJourney.selectedPrisonId = prisonId
 
       return res.redirect(paths.ADD_PRISONER.DETAILS)
     }
@@ -53,8 +51,8 @@ export default class PrisonerLocationController {
     return [
       body('prisonId')
         .custom((prisonId: string, { req }) => {
-          const supportedPrisons = (req as Express.Request).session.addPrisonerJourney?.supportedPrisons ?? []
-          return supportedPrisons.some(prison => prison.prisonId === prisonId)
+          const supportedPrisonIds = (req as Express.Request).session.addPrisonerJourney?.supportedPrisonIds ?? []
+          return supportedPrisonIds.includes(prisonId)
         })
         .withMessage((_value, { req }) => req.t('validation:prisonSelectRequired')),
     ]

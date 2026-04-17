@@ -24,7 +24,7 @@
         <p data-test="cannot-book-reason">
           {{- t("bookVisit:cannotBook.transferOrRelease", {
             name: prisoner | prisonerNameFirstLast,
-            prisonName: prisoner.registeredPrisonName
+            prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
           }) -}}
         </p>
 
@@ -43,7 +43,7 @@
         <p data-test="cannot-book-reason">
           {{- t("bookVisit:cannotBook.unsupportedPrison", {
             name: prisoner | prisonerNameFirstLast,
-            prisonName: prisoner.registeredPrisonName
+            prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
           }) -}}
         </p>
 

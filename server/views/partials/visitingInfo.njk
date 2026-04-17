@@ -1,5 +1,7 @@
 <h2 class="govuk-heading-m">
-  {{- t("shared:visitingInfo.title", { prisonName: prison.prisonName }) -}}
+  {{- t("shared:visitingInfo.title", {
+    prisonName: prison.code | getPrisonName(prisonNames, language)
+  }) -}}
 </h2>
 
 <p>
@@ -13,7 +15,7 @@
 <p data-test="more-visits-info">
   {{- t("shared:visitingInfo.moreVisitsInfo", {
     url: prison.webAddress,
-    prisonName: prison.prisonName
+    prisonName: prison.code | getPrisonName(prisonNames, language)
   }) | safe -}}
 </p>
 

@@ -19,7 +19,7 @@
         <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">
           {{- t("visits:future.prisonerAtLocation", {
             prisonerName: prisoner | prisonerNameFirstLast,
-            prisonName: prisoner.registeredPrisonName
+            prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
           }) -}}
         </h2>
 

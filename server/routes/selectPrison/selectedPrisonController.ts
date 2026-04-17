@@ -13,9 +13,9 @@ export default class SelectedPrisonController {
         return res.redirect(paths.SELECT_PRISON)
       }
 
-      const { prisonName } = await this.prisonService.getPrison(selectedPrisonId)
+      const { code: prisonId } = await this.prisonService.getPrison(selectedPrisonId)
 
-      return res.render('pages/selectPrison/selectedPrison', { prisonName })
+      return res.render('pages/selectPrison/selectedPrison', { prisonId })
     }
   }
 }

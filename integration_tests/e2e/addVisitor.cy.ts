@@ -17,7 +17,6 @@ context('Add a visitor', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubPrisonNames')
 
-    cy.task('stubGetSupportedPrisons')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.task('stubGetVisitors')

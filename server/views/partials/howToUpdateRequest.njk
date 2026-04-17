@@ -5,12 +5,12 @@
 <p data-test="contact-prison">
   {%- if prison.phoneNumber %}
     {{- t("shared:howToUpdateRequest.contactPrisonPhone", {
-      prisonName: prison.prisonName,
+      prisonName: prison.code | getPrisonName(prisonNames, language),
       phoneNumber: prison.phoneNumber
     }) -}}
   {% else %}
     {{- t("shared:howToUpdateRequest.contactPrisonWebsite", {
-      prisonName: prison.prisonName,
+      prisonName: prison.code | getPrisonName(prisonNames, language),
       url: prison.webAddress
     }) | safe -}}
   {% endif -%}
