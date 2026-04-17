@@ -15,7 +15,6 @@ import {
   VisitorInfoDto,
   AvailableVisitSessionRestrictionDto,
   CancelVisitOrchestrationDto,
-  PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
   BookingRequestVisitorDetailsDto,
   AddVisitorToBookerPrisonerRequestDto,
@@ -283,10 +282,6 @@ export default class OrchestrationApiClient {
 
   async getSupportedPrisonIds(): Promise<string[]> {
     return this.restClient.get({ path: '/config/prisons/user-type/PUBLIC/supported' })
-  }
-
-  async getSupportedPrisons(): Promise<PrisonRegisterPrisonDto[]> {
-    return this.restClient.get({ path: '/config/prisons/user-type/PUBLIC/supported/detailed' })
   }
 
   async getPrison(prisonCode: string): Promise<PrisonDto> {

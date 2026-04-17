@@ -4,21 +4,19 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockPrisonService } from '../../services/testutils/mocks'
 import { AddPrisonerJourney } from '../../@types/bapv'
-import { PrisonRegisterPrisonDto } from '../../data/orchestrationApiTypes'
 
 let app: Express
 let sessionData: SessionData
 
-const supportedPrisons = [TestData.prisonRegisterPrisonDto()]
+const supportedPrisonIds = ['HEI']
 const prisonService = createMockPrisonService()
 
 beforeEach(() => {
   sessionData = {} as SessionData
-  prisonService.getSupportedPrisons.mockResolvedValue(supportedPrisons)
+  prisonService.getSupportedPrisonIds.mockResolvedValue(supportedPrisonIds)
 
   app = appWithAllRoutes({ services: { prisonService }, sessionData })
 })
@@ -54,18 +52,16 @@ describe('Prisoner location', () => {
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(sessionData.addPrisonerJourney!.supportedPrisons).toStrictEqual<PrisonRegisterPrisonDto[]>(
-            supportedPrisons,
-          )
+          expect(sessionData.addPrisonerJourney!.supportedPrisonIds).toStrictEqual(supportedPrisonIds)
         })
     })
 
     it('should pre-populate prison choice if selected prison set in session', () => {
-      const selectedPrison = TestData.prisonRegisterPrisonDto()
+      const selectedPrisonId = 'HEI'
       const prisonerDetails = { firstName: 'name' } as AddPrisonerJourney['prisonerDetails']
       sessionData.addPrisonerJourney = {
-        supportedPrisons,
-        selectedPrison,
+        supportedPrisonIds,
+        selectedPrisonId,
         prisonerDetails,
       }
 
@@ -79,8 +75,8 @@ describe('Prisoner location', () => {
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
 
           expect(sessionData.addPrisonerJourney).toStrictEqual<AddPrisonerJourney>({
-            supportedPrisons,
-            selectedPrison,
+            supportedPrisonIds,
+            selectedPrisonId,
             prisonerDetails,
           })
         })
@@ -110,17 +106,17 @@ describe('Prisoner location', () => {
 
   describe(`POST ${paths.ADD_PRISONER.LOCATION}`, () => {
     it('should save selected prison to session and redirect to prisoner details page', () => {
-      sessionData.addPrisonerJourney = { supportedPrisons }
-      const selectedPrison = TestData.prisonRegisterPrisonDto()
+      sessionData.addPrisonerJourney = { supportedPrisonIds }
+      const selectedPrisonId = 'HEI'
 
       return request(app)
         .post(paths.ADD_PRISONER.LOCATION)
-        .send({ prisonId: selectedPrison.prisonId })
+        .send({ prisonId: selectedPrisonId })
         .expect(302)
         .expect('Location', paths.ADD_PRISONER.DETAILS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney!.selectedPrison).toStrictEqual(selectedPrison)
+          expect(sessionData.addPrisonerJourney!.selectedPrisonId).toBe(selectedPrisonId)
         })
     })
 
@@ -134,7 +130,7 @@ describe('Prisoner location', () => {
       })
 
       it('should set a validation error and redirect to original page when no prison selected', () => {
-        sessionData.addPrisonerJourney = { supportedPrisons }
+        sessionData.addPrisonerJourney = { supportedPrisonIds }
 
         return request(app)
           .post(paths.ADD_PRISONER.LOCATION)
@@ -142,7 +138,7 @@ describe('Prisoner location', () => {
           .expect('Location', paths.ADD_PRISONER.LOCATION)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.addPrisonerJourney!.selectedPrison).toBeUndefined()
+            expect(sessionData.addPrisonerJourney!.selectedPrisonId).toBeUndefined()
           })
       })
 
@@ -155,12 +151,12 @@ describe('Prisoner location', () => {
           .expect('Location', paths.ADD_PRISONER.LOCATION)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.addPrisonerJourney?.selectedPrison).toBeUndefined()
+            expect(sessionData.addPrisonerJourney?.selectedPrisonId).toBeUndefined()
           })
       })
 
       it('should set a validation error and redirect to original page when invalid prisonId selected', () => {
-        sessionData.addPrisonerJourney = { supportedPrisons }
+        sessionData.addPrisonerJourney = { supportedPrisonIds }
         expectedFlashErrors[0].value = 'XYZ'
 
         return request(app)
@@ -170,7 +166,7 @@ describe('Prisoner location', () => {
           .expect('Location', paths.ADD_PRISONER.LOCATION)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.addPrisonerJourney!.selectedPrison).toBeUndefined()
+            expect(sessionData.addPrisonerJourney!.selectedPrisonId).toBeUndefined()
           })
       })
     })

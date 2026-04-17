@@ -18,7 +18,9 @@
       <p>{{ t("bookVisit:additionalSupport.description") }}</p>
 
       <p data-test="prison-name-support">
-        {{- t("bookVisit:additionalSupport.prisonSupport", { prisonName: prisonName }) -}}
+        {{- t("bookVisit:additionalSupport.prisonSupport", {
+          prisonName: prisonId | getPrisonName(prisonNames, language)
+        }) -}}
       </p>
 
       <form action="{{ paths.BOOK_VISIT.ADDITIONAL_SUPPORT }}" method="POST" novalidate>

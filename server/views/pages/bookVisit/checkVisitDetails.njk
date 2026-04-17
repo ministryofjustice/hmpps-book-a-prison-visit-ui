@@ -28,7 +28,7 @@
               html: '<span data-test="prisoner-details">' +
                 t("bookVisit:checkVisitDetails.prisonerAtPrison", {
                   name: prisoner | prisonerNameFirstLast,
-                  prisonName: prisoner.prisonName
+                  prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
                 }) + "</span>"
             }
           },

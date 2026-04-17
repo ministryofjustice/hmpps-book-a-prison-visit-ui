@@ -16,8 +16,7 @@ let sessionData: SessionData
 const bookerReference = TestData.bookerReference().value
 const prisonerWithoutVOs = TestData.prisoner({
   availableVos: -1,
-  registeredPrisonId: 'BLI',
-  registeredPrisonName: 'Bristol (HMP)',
+  registeredPrisonId: 'CFI',
 })
 
 afterEach(() => {
@@ -84,7 +83,7 @@ describe('A visit cannot be booked', () => {
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
-            'John Smith is no longer at Bristol (HMP). They may have moved to another prison or been released.',
+            'John Smith is no longer at Cardiff (HMP & YOI). They may have moved to another prison or been released.',
           )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)
@@ -104,7 +103,7 @@ describe('A visit cannot be booked', () => {
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
-            'John Smith is at Bristol (HMP). This prison is not currently supported by this service.',
+            'John Smith is at Cardiff (HMP & YOI). This prison is not currently supported by this service.',
           )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)

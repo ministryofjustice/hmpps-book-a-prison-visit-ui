@@ -53,7 +53,7 @@
         <p data-test="max-visitors">
           {{- t("bookVisit:selectVisitors.visitorLimits.maxVisitors", {
             maxVisitors: prison.maxTotalVisitors,
-            prisonName: prison.prisonName
+            prisonName: prison.code | getPrisonName(prisonNames, language)
           }) -}}
         </p>
         <ul class="govuk-list govuk-list--bullet">

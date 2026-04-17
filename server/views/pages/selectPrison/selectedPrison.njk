@@ -2,13 +2,15 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = t("selectPrison:selectedPrison.title", { prisonName: prisonName }) %}
+{% set pageTitle = t("selectPrison:selectedPrison.title", {
+  prisonName: prisonId | getPrisonName(prisonNames, language)
+}) %}
 
 {% set backLinkHref = paths.SELECT_PRISON %}
 
 {% set insetText -%}
   {{- t("selectPrison:selectedPrison.onlyOnePrisoner", {
-    prisonName: prisonName,
+    prisonName: prisonId | getPrisonName(prisonNames, language),
     url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
   }) | safe -}}
 {%- endset %}

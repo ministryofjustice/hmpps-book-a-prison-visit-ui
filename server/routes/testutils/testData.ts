@@ -10,7 +10,6 @@ import type {
   VisitDto,
   VisitorInfoDto,
   ConvictedStatus,
-  PrisonRegisterPrisonDto,
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
   BookerPrisonerVisitorRequestDto,
@@ -215,21 +214,13 @@ export default class TestData {
       clients,
     }) as PrisonDto
 
-  static prisonRegisterPrisonDto = ({
-    prisonId = 'HEI',
-    prisonName = 'Hewell (HMP & YOI)',
-  }: Partial<PrisonRegisterPrisonDto> = {}): PrisonRegisterPrisonDto =>
-    ({ prisonId, prisonName }) as PrisonRegisterPrisonDto
-
   static prisoner = ({
     prisonerDisplayId = 'uuidv4-1-1-1-1',
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
     prisonId = 'HEI',
-    prisonName = 'Hewell (HMP & YOI)',
     registeredPrisonId = 'HEI',
-    registeredPrisonName = 'Hewell (HMP & YOI)',
     availableVos = 2,
     nextAvailableVoDate = '2024-07-01',
     convictedStatus = 'Convicted',
@@ -239,15 +230,13 @@ export default class TestData {
     firstName,
     lastName,
     prisonId,
-    prisonName,
     registeredPrisonId,
-    registeredPrisonName,
     availableVos,
     nextAvailableVoDate,
     convictedStatus,
   })
 
-  static prisonIds = (prisonIds = ['DHI', 'FHI', 'HEI']): string[] => prisonIds
+  static prisonIds = (prisonIds = ['CFI', 'DHI', 'FHI', 'HEI']): string[] => prisonIds
 
   static prisonNames = ({
     prisonNames = {

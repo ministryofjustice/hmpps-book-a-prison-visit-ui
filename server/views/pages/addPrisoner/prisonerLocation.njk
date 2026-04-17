@@ -7,11 +7,11 @@
 {% set backLinkHref = paths.VISITS.HOME %}
 
 {% set prisonsRadios = [] %}
-{% for prison in prisons %}
+{% for prisonId in supportedPrisonIds %}
   {% set prisonsRadios = (prisonsRadios.push(
     {
-      text: prison.prisonName,
-      value: prison.prisonId
+      text: prisonId | getPrisonName(prisonNames, language),
+      value: prisonId
     }
   ), prisonsRadios) %}
 {% endfor %}

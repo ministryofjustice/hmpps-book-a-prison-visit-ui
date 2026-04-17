@@ -4,16 +4,15 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import TestData from '../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
 
-const selectedPrison = TestData.prisonRegisterPrisonDto()
-const supportedPrisons = [selectedPrison]
+const selectedPrisonId = 'HEI'
+const supportedPrisonIds = [selectedPrisonId]
 
 beforeEach(() => {
-  sessionData = { addPrisonerJourney: { supportedPrisons, selectedPrison } } as SessionData
+  sessionData = { addPrisonerJourney: { supportedPrisonIds, selectedPrisonId } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })

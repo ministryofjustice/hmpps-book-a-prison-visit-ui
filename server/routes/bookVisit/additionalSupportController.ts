@@ -25,7 +25,7 @@ export default class AdditionalSupportController {
       res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues,
-        prisonName: prison!.prisonName,
+        prisonId: prison!.code,
         applicationReference,
       })
     }
