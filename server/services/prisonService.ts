@@ -6,7 +6,7 @@ type CacheConfig = { key: string; ttlSecs: number }
 export type PrisonNames = Record<string, { name: { en: string; cy?: string } }>
 
 export default class PrisonService {
-  private readonly allPrisonNamesCache: CacheConfig = { key: 'allPrisonNames', ttlSecs: 60 * 60 * 24 } // 24 hour cache
+  private readonly allPrisonNamesCache: CacheConfig = { key: 'allPrisonNames', ttlSecs: 60 * 60 * 1 } // 1 hour cache
 
   private readonly supportedPrisonIdsCache: CacheConfig = { key: 'supportedPrisonIds', ttlSecs: 60 * 5 } // 5 min cache
 

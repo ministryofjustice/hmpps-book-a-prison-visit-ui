@@ -59,7 +59,7 @@ describe('Prison service', () => {
       expect(await prisonService.getAllPrisonNames()).toStrictEqual(prisonNames)
 
       expect(dataCache.get).toHaveBeenCalledWith('allPrisonNames')
-      expect(dataCache.set).toHaveBeenCalledWith('allPrisonNames', prisonNames, 86400) // 24 hours
+      expect(dataCache.set).toHaveBeenCalledWith('allPrisonNames', prisonNames, 3600) // 1 hour
       expect(prisonRegisterApiClient.getPrisonNames).toHaveBeenCalled()
     })
   })
