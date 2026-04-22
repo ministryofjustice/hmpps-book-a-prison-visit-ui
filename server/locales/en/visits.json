@@ -52,7 +52,7 @@
     "onlyGovukBookings": "Only requests and visits booked using GOV.UK One Login are shown.",
     "viewDetailsLink": "View details",
     "viewDetailsLinkHidden": "of your visit for {{startTime}} on {{date}}",
-    "noCancelledVisits": "You do not have any cancelled visits."
+    "noCancelledVisits": "You do not have any rejected or cancelled visits."
   },
   "visit": {
     "title": "Visit details",
