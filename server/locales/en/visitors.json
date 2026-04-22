@@ -1,4 +1,11 @@
 {
+  "availability": {
+    "canBook": "Yes",
+    "banned": "No, banned",
+    "bannedUntil": "No, banned until {{date}}",
+    "notApproved": "No, visitor not approved"
+  },
+
   "visitors": {
     "title": "Visitors",
     "visitorsOf": "{{name}}’s visitors",

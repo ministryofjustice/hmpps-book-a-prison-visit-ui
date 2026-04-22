@@ -57,8 +57,7 @@ describe('Cancel a visit - Are you sure page', () => {
           expect($('h1').text()).toBe('Are you sure you want to cancel your visit?')
 
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
-          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
-          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
+          expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('[data-test="visitor-name-1"]').text()).toContain('Keith Phillips')
           expect($('form[method=POST]').attr('action')).toBe(

@@ -1,16 +1,20 @@
+import { TFunction } from 'i18next'
 import { formatDate } from '../../utils/utils'
 import type { Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
 import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 
-export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => {
+export const buildVisitorsTableRows = ({ visitors, t }: { visitors: Visitor[]; t: TFunction }): GOVUKTableRow[] => {
   return visitors.map((visitor, index) => {
-    let canBookText = 'Yes'
+    let visitorAvailabilityText = t('visitors:availability.canBook')
     if (visitor.banned) {
-      canBookText = `No, banned${visitor.banExpiryDate ? ` until ${formatDate(visitor.banExpiryDate)}` : ''}`
+      visitorAvailabilityText = visitor.banExpiryDate
+        ? t('visitors:availability.bannedUntil', { date: formatDate(visitor.banExpiryDate) })
+        : t('visitors:availability.banned')
     } else if (!visitor.approved) {
-      canBookText = `No, visitor not approved`
+      visitorAvailabilityText = t('visitors:availability.notApproved')
     }
+
     return [
       // Visitor name
       {
@@ -24,7 +28,7 @@ export const buildVisitorsTableRows = (visitors: Visitor[]): GOVUKTableRow[] => 
       },
       // Can you book for visitor?
       {
-        text: canBookText,
+        text: visitorAvailabilityText,
         classes: visitor.banned || !visitor.approved ? 'warning' : '',
         attributes: { 'data-test': `visitor-availability-${index}` },
       },

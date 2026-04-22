@@ -32,8 +32,7 @@ context('Cancel visit journey', () => {
   it('should navigate to Future visits page, then view visit details and cancel it', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.visitDate(1).contains('Thursday 21 May 2026')
-    visitsPage.visitStartTime(1).contains('10am')
-    visitsPage.visitEndTime(1).contains('11:30am')
+    visitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
     visitsPage.visitLink(1).click()
@@ -45,8 +44,7 @@ context('Cancel visit journey', () => {
 
     const cancelVisitPage = Page.verifyOnPage(CancelVisitPage)
     cancelVisitPage.visitDate().contains('Thursday 21 May 2026')
-    cancelVisitPage.visitStartTime().contains('10am')
-    cancelVisitPage.visitEndTime().contains('11:30am')
+    cancelVisitPage.visitStartEndTime().contains('10am to 11:30am')
     cancelVisitPage.prisonerName().contains('John Smith')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
     cancelVisitPage.cancelVisitNo().click()

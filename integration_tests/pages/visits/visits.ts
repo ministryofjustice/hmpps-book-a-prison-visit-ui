@@ -7,9 +7,7 @@ export default class VisitsPage extends Page {
 
   visitDate = (index: number): PageElement => cy.get(`[data-test=visit-date-${index}]`)
 
-  visitStartTime = (index: number): PageElement => cy.get(`[data-test=visit-start-time-${index}]`)
-
-  visitEndTime = (index: number): PageElement => cy.get(`[data-test=visit-end-time-${index}]`)
+  visitStartEndTime = (index: number): PageElement => cy.get(`[data-test=visit-start-end-time-${index}]`)
 
   visitReference = (index: number): PageElement => cy.get(`[data-test=visit-reference-${index}]`)
 

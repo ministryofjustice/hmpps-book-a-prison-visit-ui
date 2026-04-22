@@ -44,16 +44,14 @@ context('Visits home page', () => {
   it('should show Visits home page with future visits and navigate to view the visit details', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.visitDate(1).contains('Thursday 21 May 2026')
-    visitsPage.visitStartTime(1).contains('10am')
-    visitsPage.visitEndTime(1).contains('11:30am')
+    visitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
     visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
-    visitDetailsPage.visitStartTime().contains('10am')
-    visitDetailsPage.visitEndTime().contains('11:30am')
+    visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
     visitDetailsPage.prisonerName().contains('John Smith')
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
     visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
@@ -81,15 +79,13 @@ context('Visits home page', () => {
 
     const pastVisitsPage = Page.verifyOnPage(PastVisitsPage)
     pastVisitsPage.visitDate(1).contains('Tuesday 30 May 2023')
-    pastVisitsPage.visitStartTime(1).contains('10am')
-    pastVisitsPage.visitEndTime(1).contains('11:30am')
+    pastVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     pastVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.PAST)
     visitDetailsPage.visitDate().contains('Tuesday 30 May 2023')
-    visitDetailsPage.visitStartTime().contains('10am')
-    visitDetailsPage.visitEndTime().contains('11:30am')
+    visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
   })
 
   it('should show Cancelled visits page with visits and navigate to view the visit details', () => {
@@ -109,15 +105,13 @@ context('Visits home page', () => {
 
     const cancelledVisitsPage = Page.verifyOnPage(CancelledVisitsPage)
     cancelledVisitsPage.visitDate(1).contains('Thursday 21 May 2026')
-    cancelledVisitsPage.visitStartTime(1).contains('10am')
-    cancelledVisitsPage.visitEndTime(1).contains('11:30am')
+    cancelledVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     cancelledVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.CANCELLED)
     visitDetailsPage.getMessages(0).contains(/Visit cancelled(.*)This visit was cancelled by the prison\./)
     visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
-    visitDetailsPage.visitStartTime().contains('10am')
-    visitDetailsPage.visitEndTime().contains('11:30am')
+    visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
   })
 })

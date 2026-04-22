@@ -17,10 +17,11 @@
         {% for visit in visits %}
           <h2 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h2>
           <ul class="govuk-list">
-            <li>
-              <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-              to
-              <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+            <li data-test="visit-start-end-time-{{ loop.index }}">
+              {{- t("common:dateTime.timeRange", {
+                startTime: visit.startTimestamp | formatTimeFromDateTime,
+                endTime: visit.endTimestamp | formatTimeFromDateTime
+              }) -}}
             </li>
             <li>
               <a href="{{ paths.VISITS.VISIT_PAST }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">

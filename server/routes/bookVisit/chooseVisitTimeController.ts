@@ -50,9 +50,9 @@ export default class ChooseVisitTimeController {
       if (selectedVisitSession && !isSelectedSessionStillAvailable) {
         messages.push({
           variant: 'error',
-          title: 'Your visit time is no longer available.',
+          title: req.t('bookVisit:chooseVisitTime.alert.sessionUnavailable.title'),
           showTitleAsHeading: true,
-          text: 'Select a new time',
+          text: req.t('bookVisit:chooseVisitTime.alert.sessionUnavailable.text'),
         })
       }
 
@@ -129,9 +129,9 @@ export default class ChooseVisitTimeController {
         if ((error as SanitisedError).status === 400) {
           req.flash('messages', {
             variant: 'error',
-            title: 'Your visit time is no longer available',
+            title: req.t('bookVisit:chooseVisitTime.alert.sessionUnavailable.title'),
             showTitleAsHeading: true,
-            text: 'Select a new time.',
+            text: req.t('bookVisit:chooseVisitTime.alert.sessionUnavailable.text'),
           })
 
           delete bookVisitJourney.selectedVisitSession
