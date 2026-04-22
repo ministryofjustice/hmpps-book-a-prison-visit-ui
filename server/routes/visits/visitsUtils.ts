@@ -1,69 +1,76 @@
+import type { TFunction } from 'i18next'
 import { MoJAlert } from '../../@types/bapv'
 import { VisitDetails } from '../../services/visitService'
 
 // eslint-disable-next-line import/prefer-default-export
-export const getVisitMessages = ({ visit, prisonName }: { visit: VisitDetails; prisonName: string }): MoJAlert[] => {
+export const getVisitMessages = ({
+  visit,
+  prisonName,
+  t,
+}: {
+  visit: VisitDetails
+  prisonName: string
+  t: TFunction
+}): MoJAlert[] => {
   if (visit.visitStatus === 'BOOKED' && visit.visitSubStatus !== 'REQUESTED') {
     return []
   }
 
-  const message: MoJAlert = {
-    variant: 'information',
-    text: '',
-    title: '',
-    showTitleAsHeading: true,
-  }
+  const variant: MoJAlert['variant'] = 'information'
+  let text: string
+  let title: string
+  let showTitleAsHeading = true
 
   // Cancelled visits
   if (visit.visitSubStatus === 'CANCELLED') {
     switch (visit.outcomeStatus) {
       case 'BOOKER_CANCELLED':
-        message.title = 'Visit cancelled'
-        message.text = 'You cancelled this visit.'
+        title = t('visits:alerts.cancelled.title')
+        text = t('visits:alerts.cancelled.byBooker')
         break
 
       case 'PRISONER_CANCELLED':
-        message.title = 'Visit cancelled'
-        message.text = 'This visit was cancelled by the prisoner.'
+        title = t('visits:alerts.cancelled.title')
+        text = t('visits:alerts.cancelled.byPrisoner')
         break
 
       case 'VISITOR_CANCELLED':
-        message.title = 'Visit cancelled'
-        message.text = 'This visit was cancelled by a visitor.'
+        title = t('visits:alerts.cancelled.title')
+        text = t('visits:alerts.cancelled.byVisitor')
         break
 
       default:
-        message.title = 'Visit cancelled'
-        message.text = 'This visit was cancelled by the prison.'
+        title = t('visits:alerts.cancelled.title')
+        text = t('visits:alerts.cancelled.byPrison')
         break
     }
 
-    return [message]
+    return [{ variant, title, text, showTitleAsHeading }]
   }
 
   // Visit requests
   switch (visit.visitSubStatus) {
     case 'REQUESTED':
-      message.title = 'Your request needs to be reviewed'
-      message.text = `This visit is not booked yet. It needs to be checked by ${prisonName}.`
+      title = t('visits:alerts.requested.title')
+      text = t('visits:alerts.requested.text', { prisonName })
       break
 
     case 'AUTO_REJECTED':
     case 'REJECTED':
-      message.title = 'Your request was rejected'
-      message.showTitleAsHeading = false
-      message.text = `This request was rejected by ${prisonName}.`
+      title = t('visits:alerts.rejected.title')
+      showTitleAsHeading = false
+      text = t('visits:alerts.rejected.text', { prisonName })
       break
 
     case 'WITHDRAWN':
-      message.title = 'Visit request cancelled'
-      message.showTitleAsHeading = false
-      message.text = 'You cancelled this visit request.'
+      title = t('visits:alerts.withdrawn.title')
+      showTitleAsHeading = false
+      text = t('visits:alerts.withdrawn.text')
       break
 
     default:
       return []
   }
 
-  return [message]
+  return [{ variant, title, text, showTitleAsHeading }]
 }

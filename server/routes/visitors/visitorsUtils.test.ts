@@ -1,4 +1,5 @@
 import { GOVUKTableRow } from '../../@types/bapv'
+import { mockTFunction } from '../../data/testutils/mockI18n'
 import TestData from '../testutils/testData'
 import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
 
@@ -39,18 +40,22 @@ describe('buildVisitorsTableRows', () => {
       [
         { text: 'Visitor One', attributes: { 'data-test': 'visitor-name-0' } },
         { text: '1 August 2000', attributes: { 'data-test': 'visitor-dob-0' } },
-        { text: 'Yes', classes: '', attributes: { 'data-test': 'visitor-availability-0' } },
+        { text: 'visitors:availability.canBook', classes: '', attributes: { 'data-test': 'visitor-availability-0' } },
       ],
       [
         { text: 'Visitor Two', attributes: { 'data-test': 'visitor-name-1' } },
         { text: '2 August 2000', attributes: { 'data-test': 'visitor-dob-1' } },
-        { text: 'No, banned', classes: 'warning', attributes: { 'data-test': 'visitor-availability-1' } },
+        {
+          text: 'visitors:availability.banned',
+          classes: 'warning',
+          attributes: { 'data-test': 'visitor-availability-1' },
+        },
       ],
       [
         { text: 'Visitor Three', attributes: { 'data-test': 'visitor-name-2' } },
         { text: '3 August 2000', attributes: { 'data-test': 'visitor-dob-2' } },
         {
-          text: 'No, banned until 1 September 2025',
+          text: 'visitors:availability.bannedUntil|date:1 September 2025',
           classes: 'warning',
           attributes: { 'data-test': 'visitor-availability-2' },
         },
@@ -59,7 +64,7 @@ describe('buildVisitorsTableRows', () => {
         { text: 'Visitor Four', attributes: { 'data-test': 'visitor-name-3' } },
         { text: '4 August 2000', attributes: { 'data-test': 'visitor-dob-3' } },
         {
-          text: 'No, visitor not approved',
+          text: 'visitors:availability.notApproved',
           classes: 'warning',
           attributes: { 'data-test': 'visitor-availability-3' },
         },
@@ -68,14 +73,14 @@ describe('buildVisitorsTableRows', () => {
         { text: 'Visitor Five', attributes: { 'data-test': 'visitor-name-4' } },
         { text: '5 August 2000', attributes: { 'data-test': 'visitor-dob-4' } },
         {
-          text: 'No, banned until 2 September 2025',
+          text: 'visitors:availability.bannedUntil|date:2 September 2025',
           classes: 'warning',
           attributes: { 'data-test': 'visitor-availability-4' },
         },
       ],
     ]
 
-    expect(buildVisitorsTableRows(visitors)).toStrictEqual(expectedTableRows)
+    expect(buildVisitorsTableRows({ visitors, t: mockTFunction })).toStrictEqual(expectedTableRows)
   })
 })
 

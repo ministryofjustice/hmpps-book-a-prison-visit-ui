@@ -1,4 +1,29 @@
 {
+  "alerts": {
+    "cancelled": {
+      "title": "Visit cancelled",
+      "byBooker": "You cancelled this visit.",
+      "byPrisoner": "This visit was cancelled by the prisoner.",
+      "byVisitor": "This visit was cancelled by a visitor.",
+      "byPrison": "This visit was cancelled by the prison."
+    },
+
+    "requested": {
+      "title": "Your request needs to be reviewed",
+      "text": "This visit is not booked yet. It needs to be checked by {{prisonName}}."
+    },
+
+    "rejected": {
+      "title": "Your request was rejected",
+      "text": "This request was rejected by {{prisonName}}."
+    },
+
+    "withdrawn": {
+      "title": "Visit request cancelled",
+      "text": "You cancelled this visit request."
+    }
+  },
+
   "future": {
     "title": "Visits",
     "onlyGovukBookings": "Only visits made using GOV.UK One Login are shown.",

@@ -11,6 +11,9 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
   const router = express.Router()
 
   if (!i18next.isInitialized) {
+    const cookieExpirationDate = new Date()
+    cookieExpirationDate.setFullYear(cookieExpirationDate.getFullYear() + 1) // 1 year
+
     i18next
       .use(FsBackend)
       .use(i18nextMiddleware.LanguageDetector)
@@ -46,6 +49,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           lookupCookie: 'lng',
           caches: ['cookie'],
           ignoreCase: true,
+          cookieExpirationDate,
           cookieSecure: config.https,
           cookieDomain: new URL(config.domain).hostname,
           cookieSameSite: 'lax',

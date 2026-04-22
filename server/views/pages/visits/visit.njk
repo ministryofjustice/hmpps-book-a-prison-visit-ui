@@ -25,10 +25,11 @@
       </h3>
       <ul class="govuk-list">
         <li data-test="visit-date">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</li>
-        <li>
-          <span data-test="visit-start-time">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-          to
-          <span data-test="visit-end-time">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+        <li data-test="visit-start-end-time">
+          {{- t("common:dateTime.timeRange", {
+            startTime: visit.startTimestamp | formatTimeFromDateTime,
+            endTime: visit.endTimestamp | formatTimeFromDateTime
+          }) -}}
         </li>
       </ul>
 

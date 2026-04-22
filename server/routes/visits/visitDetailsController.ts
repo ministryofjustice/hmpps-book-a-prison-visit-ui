@@ -37,7 +37,7 @@ export default class VisitDetailsController {
       const prison = await this.prisonService.getPrison(visit.prisonId)
 
       const prisonName = getPrisonName(prison.code, res.locals.prisonNames!, req.language as Locale)
-      const messages = getVisitMessages({ visit, prisonName })
+      const messages = getVisitMessages({ visit, prisonName, t: req.t })
 
       const nowTimestamp = new Date()
       const visitStartTimestamp = new Date(visit.startTimestamp)

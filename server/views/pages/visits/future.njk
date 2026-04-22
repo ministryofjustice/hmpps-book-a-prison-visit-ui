@@ -39,10 +39,11 @@
                 }) }}
                 </li>
               {% endif %}
-              <li>
-                <span data-test="visit-start-time-{{ loop.index }}">{{ visit.startTimestamp | formatTimeFromDateTime }}</span>
-                to
-                <span data-test="visit-end-time-{{ loop.index }}">{{ visit.endTimestamp | formatTimeFromDateTime }}</span>
+              <li data-test="visit-start-end-time-{{ loop.index }}">
+                {{- t("common:dateTime.timeRange", {
+                  startTime: visit.startTimestamp | formatTimeFromDateTime,
+                  endTime: visit.endTimestamp | formatTimeFromDateTime
+                }) -}}
               </li>
               <li>
                 {{ t("visits:future.visitReference") }}

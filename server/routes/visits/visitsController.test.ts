@@ -53,8 +53,7 @@ describe('Visits home page (future visits list)', () => {
         expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
         expect($('[data-test="tag-1"]').length).toBe(0)
-        expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
-        expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
+        expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
@@ -206,8 +205,7 @@ describe('Past visits list page', () => {
         expect($('h1').text()).toBe('Past visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
-        expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
-        expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
+        expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
         )
@@ -262,8 +260,7 @@ describe('Cancelled visits list page', () => {
         expect($('h1').text()).toBe('Rejected and cancelled visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
-        expect($('[data-test="visit-start-time-1"]').text()).toBe('10am')
-        expect($('[data-test="visit-end-time-1"]').text()).toBe('11:30am')
+        expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,
         )

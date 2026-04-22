@@ -16,9 +16,9 @@ export default function maintenancePage(): Router {
         const endTime = format(parsedEndDateTime, timeFormat)
         const endDate = format(parsedEndDateTime, DateFormats.PRETTY_DATE)
 
-        maintenanceMessage = `You will be able to use the service from ${endTime} on ${endDate}.`
+        maintenanceMessage = req.t('staticPages:maintenance.availableFrom', { time: endTime, date: endDate })
       } catch {
-        maintenanceMessage = 'You will be able to use the service later.'
+        maintenanceMessage = req.t('staticPages:maintenance.availableLater')
       }
 
       // don't load analytics or display cookie banner

@@ -60,6 +60,13 @@
   },
 
   "chooseVisitTime": {
+    "alert": {
+      "sessionUnavailable": {
+        "title": "Your visit time is no longer available.",
+        "text": "Select a new time."
+      }
+    },
+
     "title": "Choose the visit time",
 
     "reservationTime": "Select one visit time. It will be reserved for 10 minutes.",

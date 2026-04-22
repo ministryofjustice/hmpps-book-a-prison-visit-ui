@@ -59,8 +59,7 @@ describe('View a single visit', () => {
 
           expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
-          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
-          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
+          expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
           expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
           expect($('[data-test="visitor-name-1"]').text().trim()).toBe('Keith Phillips')
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access requested')
@@ -149,8 +148,7 @@ describe('View a single visit', () => {
 
           expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
-          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
-          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
+          expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
 
           expect($('[data-test="change-visit-heading"]').length).toBeFalsy()
           expect($('[data-test="change-request-heading"]').length).toBeFalsy()
@@ -178,8 +176,7 @@ describe('View a single visit', () => {
 
           expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
-          expect($('[data-test="visit-start-time"]').text()).toBe('10am')
-          expect($('[data-test="visit-end-time"]').text()).toBe('11:30am')
+          expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
           expect($('.moj-alert').eq(0).text()).toContain('Visit cancelled')
           expect($('.moj-alert').eq(0).text()).toContain('This visit was cancelled by the prison')
 

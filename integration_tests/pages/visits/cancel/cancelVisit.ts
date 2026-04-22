@@ -7,9 +7,7 @@ export default class CancelVisitPage extends Page {
 
   visitDate = (): PageElement => cy.get(`[data-test=visit-date]`)
 
-  visitStartTime = (): PageElement => cy.get(`[data-test=visit-start-time`)
-
-  visitEndTime = (): PageElement => cy.get(`[data-test=visit-end-time`)
+  visitStartEndTime = (): PageElement => cy.get(`[data-test=visit-start-end-time`)
 
   prisonerName = (): PageElement => cy.get(`[data-test=prisoner-name`)
 

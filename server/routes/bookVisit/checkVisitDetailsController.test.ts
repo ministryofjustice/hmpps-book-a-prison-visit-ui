@@ -241,7 +241,7 @@ describe('Check visit details', () => {
           variant: 'error',
           title: 'Your visit time is no longer available.',
           showTitleAsHeading: true,
-          text: 'Select a new time',
+          text: 'Select a new time.',
         }
 
         it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {

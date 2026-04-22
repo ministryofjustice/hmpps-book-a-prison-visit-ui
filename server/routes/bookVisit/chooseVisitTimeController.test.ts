@@ -432,7 +432,7 @@ describe('Choose visit time', () => {
     describe('Handle API errors', () => {
       const expectedFlashMessage: MoJAlert = {
         variant: 'error',
-        title: 'Your visit time is no longer available',
+        title: 'Your visit time is no longer available.',
         showTitleAsHeading: true,
         text: 'Select a new time.',
       }

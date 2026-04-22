@@ -24,7 +24,7 @@ export default class VisitorsController {
         }),
       ])
 
-      const visitorsTableRows = buildVisitorsTableRows(visitors)
+      const visitorsTableRows = buildVisitorsTableRows({ visitors, t: req.t })
       const visitorRequestsTableRows = buildVisitorRequestsTableRows(visitorRequests)
 
       return res.render('pages/visitors/visitors', {
