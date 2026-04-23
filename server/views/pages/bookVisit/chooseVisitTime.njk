@@ -80,7 +80,7 @@
 
                 {%- if numberOfSessions %}
                   <a id="day-link-{{ date }}" href="#day-group-{{ date }}">
-                    {{ date | formatDate("d") }}
+                    {{ date | formatDate("d", language) }}
                     <span class="govuk-visually-hidden">
                       {{- t("bookVisit:chooseVisitTime.availableTimesForDate", {
                         date: date | formatDate("MMMM - eeee", language),
