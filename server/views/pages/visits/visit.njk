@@ -29,8 +29,8 @@
         </li>
         <li data-test="visit-start-end-time">
           {{- t("common:dateTime.timeRange", {
-            startTime: visit.startTimestamp | formatTimeFromDateTime,
-            endTime: visit.endTimestamp | formatTimeFromDateTime
+            startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+            endTime: visit.endTimestamp | formatTimeFromDateTime(language)
           }) -}}
         </li>
       </ul>

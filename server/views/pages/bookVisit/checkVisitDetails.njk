@@ -62,8 +62,8 @@
                   sessionDate | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) +
                 "</span></p>" +
                 '<p><span data-test="visit-time">' + t("common:dateTime.timeRange", {
-                  startTime: sessionTimeSlot.startTime | formatTime,
-                  endTime: sessionTimeSlot.endTime | formatTime
+                  startTime: sessionTimeSlot.startTime | formatTime(language),
+                  endTime: sessionTimeSlot.endTime | formatTime(language)
                 }) + "</span></p>"
             },
             actions: {

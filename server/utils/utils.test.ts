@@ -67,7 +67,7 @@ describe('formatTime', () => {
     ['Truncate whole hours', '09:00', '9am'],
     ['Invalid date', 'not a date', ''],
   ])('%s formatTime(%s) = %s', (_: string, date: string, expected: string) => {
-    expect(formatTime(date)).toEqual(expected)
+    expect(formatTime(date, 'en')).toEqual(expected)
   })
 })
 
@@ -79,20 +79,20 @@ describe('formatDateTime', () => {
     ['Empty', '', ''],
     ['Invalid date', 'not a date', ''],
   ])('%s formatTimeFromDateTime(%s) = %s', (_: string, date: string, expected: string) => {
-    expect(formatTimeFromDateTime(date)).toEqual(expected)
+    expect(formatTimeFromDateTime(date, 'en')).toEqual(expected)
   })
 })
 
 describe('formatTimeDuration', () => {
   it.each([
-    ['Hours and minutes', '10:00', '11:30', '1 hour and 30 minutes'],
+    ['Hours and minutes', '10:00', '11:30', '1 hour 30 minutes'],
     ['Minutes only', '14:00', '14:45', '45 minutes'],
     ['Hours only', '11:00', '13:00', '2 hours'],
     ['Invalid times', 'not a time', undefined, ''],
   ])(
     '%s formatTimeDuration(%s, %s) = %s',
     (_: string, startTime: string, endTime: string | undefined, expected: string) => {
-      expect(formatTimeDuration(startTime, endTime as string)).toEqual(expected)
+      expect(formatTimeDuration(startTime, endTime as string, 'en')).toEqual(expected)
     },
   )
 })

@@ -21,8 +21,8 @@
           <ul class="govuk-list">
             <li data-test="visit-start-end-time-{{ loop.index }}">
               {{- t("common:dateTime.timeRange", {
-                startTime: visit.startTimestamp | formatTimeFromDateTime,
-                endTime: visit.endTimestamp | formatTimeFromDateTime
+                startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+                endTime: visit.endTimestamp | formatTimeFromDateTime(language)
               }) -}}
             </li>
             <li>
@@ -30,7 +30,7 @@
                 {{- t("visits:past.viewDetailsLink") }}
                 <span class="govuk-visually-hidden">
                   {{ t("visits:past.viewDetailsLinkHidden", {
-                    startTime: visit.startTimestamp | formatTimeFromDateTime,
+                    startTime: visit.startTimestamp | formatTimeFromDateTime(language),
                     date: visit.startTimestamp | formatDate("d MMMM", language)
                   }) }}
                 </span>

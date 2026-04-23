@@ -115,8 +115,14 @@
                 {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
                   value: radioValue,
-                  html: t("common:dateTime.timeRange", { startTime: session.startTime | formatTime, endTime: session.endTime | formatTime }) +
-                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>',
+                  html:
+                    t("common:dateTime.timeRange", {
+                      startTime: session.startTime | formatTime(language),
+                      endTime: session.endTime | formatTime(language)
+                    }) +
+                    ' <span class="visits-calendar__session-duration">(' +
+                      (session.startTime | formatTimeDuration(session.endTime, language)) +
+                    ')</span>',
                   checked: formValues.visitSession == radioValue
                 }), visitSessionItems) %}
               {% endfor %}

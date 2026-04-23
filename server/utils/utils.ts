@@ -37,25 +37,25 @@ export const formatDate = (date: string, dateFormat: string, lng: Locale): strin
   }
 }
 
-export const formatTime = (time: string): string => {
+export const formatTime = (time: string, lng: Locale): string => {
   try {
     const referenceDate = new Date()
     const parsedTime = parse(time, 'HH:mm', referenceDate)
-    return format(parsedTime, 'h:mmaaa').replace(':00', '')
+    return format(parsedTime, 'h:mmaaa', { locale: DATE_FNS_LOCALE[lng] }).replace(':00', '')
   } catch {
     return ''
   }
 }
 
-export const formatTimeFromDateTime = (dateTime: string): string => {
+export const formatTimeFromDateTime = (dateTime: string, lng: Locale): string => {
   try {
-    return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : ''
+    return dateTime ? format(parseISO(dateTime), 'h:mmaaa', { locale: DATE_FNS_LOCALE[lng] }).replace(':00', '') : ''
   } catch {
     return ''
   }
 }
 
-export const formatTimeDuration = (startTime: string, endTime: string): string => {
+export const formatTimeDuration = (startTime: string, endTime: string, lng: Locale): string => {
   try {
     const referenceDate = new Date()
     const start = parse(startTime, 'HH:mm', referenceDate)
@@ -63,7 +63,7 @@ export const formatTimeDuration = (startTime: string, endTime: string): string =
 
     const duration = intervalToDuration({ start, end })
 
-    return formatDuration(duration, { delimiter: ' and ' })
+    return formatDuration(duration, { locale: DATE_FNS_LOCALE[lng] })
   } catch {
     return ''
   }
