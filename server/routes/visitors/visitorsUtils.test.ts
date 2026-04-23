@@ -80,7 +80,7 @@ describe('buildVisitorsTableRows', () => {
       ],
     ]
 
-    expect(buildVisitorsTableRows({ visitors, t: mockTFunction })).toStrictEqual(expectedTableRows)
+    expect(buildVisitorsTableRows({ visitors, t: mockTFunction, lng: 'en' })).toStrictEqual(expectedTableRows)
   })
 })
 
@@ -95,6 +95,6 @@ describe('buildVisitorRequestsTableRows', () => {
       ],
     ]
 
-    expect(buildVisitorRequestsTableRows(visitorRequests)).toStrictEqual(expectedTableRows)
+    expect(buildVisitorRequestsTableRows({ visitors: visitorRequests, lng: 'en' })).toStrictEqual(expectedTableRows)
   })
 })

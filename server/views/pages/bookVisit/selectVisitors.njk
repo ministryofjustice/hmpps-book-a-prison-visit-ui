@@ -23,7 +23,10 @@
     </p>
     {% if visitor.banExpiryDate %}
       <p data-test="ban-expiry-{{ loop.index }}" class="secondary-text govuk-!-margin-bottom-0">
-        {{- t("common:visitors.bannedUntil", { name: visitor.firstName, date: visitor.banExpiryDate | formatDate }) -}}
+        {{- t("common:visitors.bannedUntil", {
+          name: visitor.firstName,
+          date: visitor.banExpiryDate | formatDate(dateFormats.DISPLAY_DATE, language)
+        }) -}}
       </p>
     {% endif %}
 
@@ -84,7 +87,7 @@
               <p class="secondary-text govuk-!-margin-bottom-0">
                 {{- t("common:visitors.bannedUntil", {
                   name: visitor.firstName,
-                  date: visitor.banExpiryDate | formatDate
+                  date: visitor.banExpiryDate | formatDate(dateFormats.DISPLAY_DATE, language)
                 }) -}}
               </p>
               <p class="secondary-text">{{ t("bookVisit:selectVisitors.banDateHint") }}</p>

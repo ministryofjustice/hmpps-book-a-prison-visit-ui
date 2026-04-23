@@ -3,13 +3,25 @@ import { formatDate } from '../../utils/utils'
 import type { Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
 import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
+import type { Locale } from '../../constants/locales'
+import { DateFormats } from '../../constants/dateFormats'
 
-export const buildVisitorsTableRows = ({ visitors, t }: { visitors: Visitor[]; t: TFunction }): GOVUKTableRow[] => {
+export const buildVisitorsTableRows = ({
+  visitors,
+  t,
+  lng,
+}: {
+  visitors: Visitor[]
+  t: TFunction
+  lng: Locale
+}): GOVUKTableRow[] => {
   return visitors.map((visitor, index) => {
     let visitorAvailabilityText = t('visitors:availability.canBook')
     if (visitor.banned) {
       visitorAvailabilityText = visitor.banExpiryDate
-        ? t('visitors:availability.bannedUntil', { date: formatDate(visitor.banExpiryDate) })
+        ? t('visitors:availability.bannedUntil', {
+            date: formatDate(visitor.banExpiryDate, DateFormats.DISPLAY_DATE, lng),
+          })
         : t('visitors:availability.banned')
     } else if (!visitor.approved) {
       visitorAvailabilityText = t('visitors:availability.notApproved')
@@ -23,7 +35,7 @@ export const buildVisitorsTableRows = ({ visitors, t }: { visitors: Visitor[]; t
       },
       // Visitor DoB
       {
-        text: formatDate(visitor.dateOfBirth ?? ''),
+        text: formatDate(visitor.dateOfBirth ?? '', DateFormats.DISPLAY_DATE, lng),
         attributes: { 'data-test': `visitor-dob-${index}` },
       },
       // Can you book for visitor?
@@ -36,7 +48,13 @@ export const buildVisitorsTableRows = ({ visitors, t }: { visitors: Visitor[]; t
   })
 }
 
-export const buildVisitorRequestsTableRows = (visitors: BookerPrisonerVisitorRequestDto[]): GOVUKTableRow[] => {
+export const buildVisitorRequestsTableRows = ({
+  visitors,
+  lng,
+}: {
+  visitors: BookerPrisonerVisitorRequestDto[]
+  lng: Locale
+}): GOVUKTableRow[] => {
   return visitors.map((visitor, index) => {
     return [
       // Visitor name
@@ -46,7 +64,7 @@ export const buildVisitorRequestsTableRows = (visitors: BookerPrisonerVisitorReq
       },
       // Visitor DoB
       {
-        text: formatDate(visitor.dateOfBirth),
+        text: formatDate(visitor.dateOfBirth ?? '', DateFormats.DISPLAY_DATE, lng),
         attributes: { 'data-test': `visitor-request-dob-${index}` },
       },
     ]

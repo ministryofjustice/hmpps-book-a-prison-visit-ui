@@ -18,17 +18,17 @@ context('Book visit journey - drop-out points', () => {
     visitorId: 1000,
     firstName: 'Adult',
     lastName: 'One',
-    dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
+    dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old
   })
   const childVisitor = TestData.visitorInfoDto({
     visitorId: 1000,
     firstName: 'Child',
     lastName: 'One',
-    dateOfBirth: format(subYears(today, 5), DateFormats.ISO_DATE), // 5-year-old
+    dateOfBirth: format(subYears(today, 5), DateFormats.API_DATE), // 5-year-old
   })
 
-  const tomorrow = format(addDays(today, 1), DateFormats.ISO_DATE)
-  const in10Days = format(addDays(today, 10), DateFormats.ISO_DATE)
+  const tomorrow = format(addDays(today, 1), DateFormats.API_DATE)
+  const in10Days = format(addDays(today, 10), DateFormats.API_DATE)
 
   const visitSessions: AvailableVisitSessionDto[] = [
     TestData.availableVisitSessionDto({
@@ -168,7 +168,7 @@ context('Book visit journey - drop-out points', () => {
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getCannotBookReason().contains('John Smith')
       cy.contains('has used their allowance of visits')
-      cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.PRETTY_DATE))
+      cannotBookPage.getBookFromDate().contains(format(in10Days, DateFormats.DISPLAY_DATE_WITH_DAY))
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()

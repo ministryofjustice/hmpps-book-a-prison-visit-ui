@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export enum DateFormats {
-  ISO_DATE = 'yyyy-MM-dd',
-  PRETTY_DATE = 'EEEE d MMMM yyyy',
-  SHORT_DATE = 'd/M/yyyy',
+  API_DATE = 'yyyy-MM-dd',
+  DISPLAY_DATE_WITH_DAY = 'EEEE d MMMM yyyy',
+  DISPLAY_DATE = 'd MMMM yyyy',
+  DISPLAY_DATE_NUMERIC = 'd/M/yyyy',
 }

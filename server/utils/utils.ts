@@ -1,10 +1,9 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
-// eslint-disable-next-line import/no-named-as-default
-import parsePhoneNumber from 'libphonenumber-js/mobile'
+import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
 import type { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
-import { Locale } from '../constants/locales'
+import { DATE_FNS_LOCALE, Locale } from '../constants/locales'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -30,9 +29,9 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export const formatDate = (date: string, dateFormat = 'd MMMM yyyy'): string => {
+export const formatDate = (date: string, dateFormat: string, lng: Locale): string => {
   try {
-    return format(parseISO(date), dateFormat)
+    return format(parseISO(date), dateFormat, { locale: DATE_FNS_LOCALE[lng] })
   } catch {
     return ''
   }

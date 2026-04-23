@@ -13,53 +13,52 @@ import VisitBookedPage from '../pages/bookVisit/visitBooked'
 import ClosedVisitPage from '../pages/bookVisit/closedVisit'
 import ContactDetailsPage from '../pages/bookVisit/contactDetails'
 import VisitRequestedPage from '../pages/bookVisit/visitRequested'
-import { formatDate } from '../../server/utils/utils'
 
 context('Book visit journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
   const prisoner = TestData.bookerPrisonerInfoDto()
 
-  const banExpiryDate = format(addYears(today, 1), DateFormats.ISO_DATE)
+  const banExpiryDate = format(addYears(today, 1), DateFormats.API_DATE)
   const visitors = [
     TestData.visitorInfoDto({
       visitorId: 1000,
       firstName: 'Adult',
       lastName: 'One',
-      dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
+      dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old
     }),
     TestData.visitorInfoDto({
       visitorId: 2000,
       firstName: 'Child',
       lastName: 'One',
-      dateOfBirth: format(subYears(today, 12), DateFormats.ISO_DATE), // 12-year-old
+      dateOfBirth: format(subYears(today, 12), DateFormats.API_DATE), // 12-year-old
     }),
     TestData.visitorInfoDto({
       visitorId: 3000,
       firstName: 'Child',
       lastName: 'Two',
-      dateOfBirth: format(subYears(today, 5), DateFormats.ISO_DATE), // 5-year-old
+      dateOfBirth: format(subYears(today, 5), DateFormats.API_DATE), // 5-year-old
     }),
     TestData.visitorInfoDto({
       visitorId: 4000,
       firstName: 'Adult',
       lastName: 'Banned',
-      dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old
+      dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old
       visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: banExpiryDate }],
     }),
     TestData.visitorInfoDto({
       visitorId: 5000,
       firstName: 'Adult',
       lastName: 'NotApproved',
-      dateOfBirth: format(subYears(today, 25), DateFormats.ISO_DATE), // 25-year-old,
+      dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old,
       approved: false,
     }),
   ]
 
-  const tomorrow = format(addDays(today, 1), DateFormats.ISO_DATE)
-  const in5Days = format(addDays(today, 5), DateFormats.ISO_DATE)
-  const in10Days = format(addDays(today, 10), DateFormats.ISO_DATE)
-  const in35Days = format(addDays(today, 35), DateFormats.ISO_DATE)
+  const tomorrow = format(addDays(today, 1), DateFormats.API_DATE)
+  const in5Days = format(addDays(today, 5), DateFormats.API_DATE)
+  const in10Days = format(addDays(today, 10), DateFormats.API_DATE)
+  const in35Days = format(addDays(today, 35), DateFormats.API_DATE)
   const visitSessions: AvailableVisitSessionDto[] = [
     TestData.availableVisitSessionDto({
       sessionDate: tomorrow,
@@ -83,7 +82,7 @@ context('Book visit journey', () => {
     }),
     // next month - testing multiple months
     TestData.availableVisitSessionDto({
-      sessionDate: format(in35Days, DateFormats.ISO_DATE),
+      sessionDate: format(in35Days, DateFormats.API_DATE),
       sessionTemplateReference: 'e',
       sessionTimeSlot: { startTime: '09:00', endTime: '11:00' },
     }),
@@ -135,7 +134,9 @@ context('Book visit journey', () => {
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
     selectVisitorsPage.unavailableVisitor(1).contains('Adult Banned (25 years old)')
-    selectVisitorsPage.bannedVisitorExpiryDate(1).contains(`Adult is banned until ${formatDate(banExpiryDate)}`)
+    selectVisitorsPage
+      .bannedVisitorExpiryDate(1)
+      .contains(`Adult is banned until ${format(banExpiryDate, DateFormats.DISPLAY_DATE)}`)
     selectVisitorsPage.unavailableVisitor(2).contains('Adult NotApproved (25 years old)')
     selectVisitorsPage.visitorRequest(0).should('not.exist')
     cy.task('stubGetSessionRestriction', {
@@ -192,7 +193,7 @@ context('Book visit journey', () => {
     checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
-    checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
+    checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.DISPLAY_DATE_WITH_DAY))
     checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
     checkVisitDetailsPage.additionalSupport().contains('Wheelchair access')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
@@ -285,7 +286,7 @@ context('Book visit journey', () => {
     checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
-    checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.PRETTY_DATE))
+    checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.DISPLAY_DATE_WITH_DAY))
     checkVisitDetailsPage.visitTime().contains('2pm to 3pm')
     checkVisitDetailsPage.additionalSupport().contains('None')
     checkVisitDetailsPage.mainContactName().contains('Adult One')
