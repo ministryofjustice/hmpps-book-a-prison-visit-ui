@@ -2,7 +2,7 @@
   "howToChangeVisit": {
     "title": "How to change your visit",
 
-    "contactPrisonPhone": "To update your visit, call {{prisonName}} on {{phoneNumber}} between 9am and 5pm, Monday to Friday.",
+    "contactPrisonPhone": "To update your visit, call {{prisonName}} on {{phoneNumber}}.",
     "contactPrisonWebsite": "To update your visit, <a href=\"{{url}}\">contact {{prisonName}} directly</a>.",
 
     "visitReference": "You will need the visit reference to make changes. Your visit reference is {{ visitReference }}.",
@@ -13,7 +13,7 @@
   "howToUpdateRequest": {
     "title": "How to update your request",
 
-    "contactPrisonPhone": "To update your request, call {{prisonName}} on {{phoneNumber}} between 9am and 5pm, Monday to Friday.",
+    "contactPrisonPhone": "To update your request, call {{prisonName}} on {{phoneNumber}}.",
     "contactPrisonWebsite": "To update your request, <a href=\"{{url}}\">contact {{prisonName}} directly</a>.",
 
     "visitReference": "You will need the visit reference to make changes. Your request reference is {{ visitReference }}."
