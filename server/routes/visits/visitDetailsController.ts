@@ -7,7 +7,7 @@ import { VisitDetails } from '../../services/visitService'
 import { validateVisitDisplayId } from './validations'
 import { BookedVisits } from '../../@types/bapv'
 import { getPrisonName } from '../../utils/utils'
-import { Locale } from '../../constants/locales'
+import type { Locale } from '../../constants/locales'
 
 export default class VisitDetailsController {
   // label visits with these statuses as a 'request' rather than a 'visit'

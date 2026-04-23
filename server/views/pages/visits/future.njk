@@ -27,7 +27,9 @@
           {% for visit in visits %}
             {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
 
-            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">{{ visit.startTimestamp | formatDate(dateFormats.PRETTY_DATE) }}</h3>
+            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">
+              {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
+            </h3>
 
             <ul class="govuk-list">
               {% if isRequest %}
@@ -55,7 +57,7 @@
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.viewDetailsLinkHidden", {
                       startTime: visit.startTimestamp | formatTimeFromDateTime,
-                      date: visit.startTimestamp | formatDate('d MMMM')
+                      date: visit.startTimestamp | formatDate("d MMMM", language)
                     }) }}
                   </span>
                 </a>
@@ -64,7 +66,7 @@
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.cancelLinkHidden", {
                       startTime: visit.startTimestamp | formatTimeFromDateTime,
-                      date: visit.startTimestamp | formatDate('d MMMM')
+                      date: visit.startTimestamp | formatDate("d MMMM", language)
                     }) }}
                   </span>
                 </a>

@@ -16,7 +16,9 @@
         </p>
 
         <p data-test="book-from-date">
-          {{- t("bookVisit:cannotBook.bookFromDate", { date: prisoner.nextAvailableVoDate | formatDate(dateFormats.PRETTY_DATE) }) -}}
+          {{- t("bookVisit:cannotBook.bookFromDate", {
+            date: prisoner.nextAvailableVoDate | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language)
+          }) -}}
         </p>
       {% endif %}
 

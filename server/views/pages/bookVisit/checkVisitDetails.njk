@@ -58,7 +58,9 @@
               text: t("bookVisit:checkVisitDetails.dateAndTime")
             },
             value: {
-              html: '<p><span data-test="visit-date">' + sessionDate | formatDate(dateFormats.PRETTY_DATE) + "</span></p>" +
+              html: '<p><span data-test="visit-date">' +
+                  sessionDate | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) +
+                "</span></p>" +
                 '<p><span data-test="visit-time">' + t("common:dateTime.timeRange", {
                   startTime: sessionTimeSlot.startTime | formatTime,
                   endTime: sessionTimeSlot.endTime | formatTime

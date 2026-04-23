@@ -5,6 +5,7 @@ import { UUID } from 'crypto'
 import { BookerService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
+import type { Locale } from '../../constants/locales'
 
 export default class SelectVisitorsController {
   public constructor(
@@ -50,7 +51,10 @@ export default class SelectVisitorsController {
           bookerReference: booker.reference,
           prisonerNumber: prisoner.prisonerNumber,
         })
-        visitorRequestsTableRows = buildVisitorRequestsTableRows(visitorRequests)
+        visitorRequestsTableRows = buildVisitorRequestsTableRows({
+          visitors: visitorRequests,
+          lng: req.language as Locale,
+        })
       }
 
       return res.render('pages/bookVisit/selectVisitors', {

@@ -16,7 +16,8 @@ import {
 import TestData from '../routes/testutils/testData'
 import { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
-import { Locale } from '../constants/locales'
+import type { Locale } from '../constants/locales'
+import { DateFormats } from '../constants/dateFormats'
 
 describe('convert to title case', () => {
   it.each([
@@ -49,13 +50,13 @@ describe('initialise name', () => {
 
 describe('formatDate', () => {
   it.each([
-    ['Default format (date/time input)', '2022-02-14T10:00:00', undefined, '14 February 2022'],
-    ['Default format (short date input)', '2022-02-14', undefined, '14 February 2022'],
+    ['Format date from date and time input', '2022-02-14T10:00:00', DateFormats.DISPLAY_DATE, '14 February 2022'],
+    ['Format date from date input', '2022-02-14', DateFormats.DISPLAY_DATE, '14 February 2022'],
     ['Custom format', '2022-02-14T10:00:00', 'yy MMM d', '22 Feb 14'],
-    ['Invalid date', 'not a date', undefined, ''],
+    ['Invalid date', 'not a date', DateFormats.DISPLAY_DATE, ''],
     ['Invalid format', '2022-02-14T10:00:00', '', ''],
-  ])('%s formatDate(%s, %s) = %s', (_: string, date: string, format: string | undefined, expected: string) => {
-    expect(formatDate(date, format)).toEqual(expected)
+  ])('%s formatDate(%s, %s) = %s', (_: string, date: string, format: string, expected: string) => {
+    expect(formatDate(date, format, 'en')).toEqual(expected)
   })
 })
 

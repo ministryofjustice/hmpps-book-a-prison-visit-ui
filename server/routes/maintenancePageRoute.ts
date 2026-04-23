@@ -14,7 +14,7 @@ export default function maintenancePage(): Router {
         const parsedEndDateTime = parseISO(endDateTime)
         const timeFormat = parsedEndDateTime.getMinutes() === 0 ? 'haaa' : 'h:mmaaa' // 2pm instead of 2:00pm
         const endTime = format(parsedEndDateTime, timeFormat)
-        const endDate = format(parsedEndDateTime, DateFormats.PRETTY_DATE)
+        const endDate = format(parsedEndDateTime, DateFormats.DISPLAY_DATE_WITH_DAY)
 
         maintenanceMessage = req.t('staticPages:maintenance.availableFrom', { time: endTime, date: endDate })
       } catch {

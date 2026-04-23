@@ -56,7 +56,9 @@
             },
             value: {
               html:
-                '<span data-test="date-of-birth">' + (visitorDetails.visitorDob | formatDate(dateFormats.SHORT_DATE)) + "</span>"
+                '<span data-test="date-of-birth">' +
+                (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE_NUMERIC, language)) +
+                "</span>"
             }
           }
         ]

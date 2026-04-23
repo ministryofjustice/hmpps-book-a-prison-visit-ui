@@ -40,7 +40,7 @@
             <span data-test="banned-visitor-{{ loop.index }}">
               {{- t("common:visitors.bannedUntil", {
                 name: visitor.firstName + " " + visitor.lastName,
-                date: visitor.banExpiryDate | formatDate
+                date: visitor.banExpiryDate | formatDate(dateFormats.DISPLAY_DATE, language)
               }) -}}
             </span>
             <br>
@@ -52,7 +52,7 @@
       <nav class="visits-calendar" aria-label="{{ t('bookVisit:chooseVisitTime.calendarAriaLabel') }}" role="navigation">
         {# Loop over months #}
         {% for monthName, monthData in calendar %}
-          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy') }}</h2>
+          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy', language) }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}
@@ -73,7 +73,7 @@
             {% for date, sessions in monthData %}
               {%- set numberOfSessions = sessions | length -%}
               <li data-date="{{ date }}" class="visits-calendar__day
-                {%- if loop.first %} visits-calendar__day--start-col-{{ date | formatDate('i') }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
+                {%- if loop.first %} visits-calendar__day--start-col-{{ date | formatDate("i", language) }}{% endif %} {# add column offset based on ISO day of week (1-7) #}
                 {%- if selectedDate == date %} visits-calendar__day--selected
                 {%- endif %}"
                 {%- if not numberOfSessions %}aria-hidden="true"{% endif %}>
@@ -83,16 +83,16 @@
                     {{ date | formatDate("d") }}
                     <span class="govuk-visually-hidden">
                       {{- t("bookVisit:chooseVisitTime.availableTimesForDate", {
-                        date: date | formatDate("MMMM - eeee"),
+                        date: date | formatDate("MMMM - eeee", language),
                         count: numberOfSessions
                       }) -}}
                     </span>
                   </a>
                 {% else %}
-                    <span>{{ date | formatDate("d") }}</span>
+                    <span>{{ date | formatDate("d", language) }}</span>
                     <span class="govuk-visually-hidden">
                       {{- t("bookVisit:chooseVisitTime.availableTimesForDate", {
-                        date: date | formatDate("MMMM - eeee"),
+                        date: date | formatDate("MMMM - eeee", language),
                         count: 0
                       }) -}}
                     </span>
@@ -135,7 +135,7 @@
                 fieldset: {
                   attributes: { id: 'day-group-' + date },
                   legend: {
-                    text: date | formatDate(dateFormats.PRETTY_DATE),
+                    text: date | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language),
                     classes: "govuk-fieldset__legend--s"
                   }
                 },

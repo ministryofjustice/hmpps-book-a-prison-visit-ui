@@ -62,7 +62,7 @@ export default class VisitSessionsService {
     })
 
     allCalendarDates.forEach(date => {
-      const dateKey = format(date, DateFormats.ISO_DATE)
+      const dateKey = format(date, DateFormats.API_DATE)
       const monthKey = dateKey.substring(0, 7) // get e.g. '2024-05'
 
       const currentMonth = calendar[monthKey] ?? (calendar[monthKey] = {})
