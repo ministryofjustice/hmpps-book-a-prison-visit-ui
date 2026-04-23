@@ -56,7 +56,7 @@
     "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
     "i18next": "26.0.4",
-    "i18next-fs-backend": "2.6.3",
+    "i18next-fs-backend": "2.6.4",
     "i18next-http-middleware": "3.9.3",
     "libphonenumber-js": "^1.12.41",
     "nocache": "^4.0.0",
