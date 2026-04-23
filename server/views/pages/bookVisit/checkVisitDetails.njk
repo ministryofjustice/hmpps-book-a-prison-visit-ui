@@ -14,7 +14,7 @@
 
       {%- set visitorsHtml -%}
         {% for visitor in visitors %}
-          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge }})</span></p>
+          <p><span data-test="visitor-name-{{ loop.index }}">{{ visitor.firstName }} {{ visitor.lastName }} ({{ visitor.dateOfBirth | displayAge(t) }})</span></p>
         {% endfor %}
       {%- endset -%}
 

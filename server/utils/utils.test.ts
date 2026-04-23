@@ -3,6 +3,7 @@ import { SessionData } from 'express-session'
 import {
   clearSession,
   convertToTitleCase,
+  displayAge,
   formatDate,
   formatTime,
   formatTimeDuration,
@@ -18,6 +19,7 @@ import { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
 import type { Locale } from '../constants/locales'
 import { DateFormats } from '../constants/dateFormats'
+import { mockTFunction } from '../data/testutils/mockI18n'
 
 describe('convert to title case', () => {
   it.each([
@@ -45,6 +47,36 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string | null, expected: string | null) => {
     expect(initialiseName(a as string)).toEqual(expected)
+  })
+})
+
+describe('displayAge', () => {
+  beforeAll(() => {
+    const fakeDate = new Date('2020-12-14T12:00:00')
+    jest.useFakeTimers({ advanceTimers: true, now: new Date(fakeDate) })
+  })
+  afterAll(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2020-12-15', ''], // future date of birth
+    ['2020-11-15', 'common:plurals.ageMonths|count:0'],
+    ['2020-11-14', 'common:plurals.ageMonths|count:1'],
+    ['2020-10-15', 'common:plurals.ageMonths|count:1'],
+    ['2020-10-14', 'common:plurals.ageMonths|count:2'],
+    ['2020-10-13', 'common:plurals.ageMonths|count:2'],
+    ['2019-12-15', 'common:plurals.ageMonths|count:11'],
+    ['2019-12-14', 'common:plurals.ageYears|count:1'],
+    ['2018-12-15', 'common:plurals.ageYears|count:1'],
+    ['2018-12-14', 'common:plurals.ageYears|count:2'],
+    ['2017-12-15', 'common:plurals.ageYears|count:2'],
+    ['2010-12-14', 'common:plurals.ageYears|count:10'],
+    ['', ''],
+    ['random string', ''],
+  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string, expected: string) => {
+    const result = displayAge(dateOfBirth, mockTFunction)
+    expect(result).toEqual(expected)
   })
 })
 

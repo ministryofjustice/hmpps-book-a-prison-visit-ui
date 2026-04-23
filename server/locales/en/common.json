@@ -72,6 +72,9 @@
   },
 
   "plurals": {
+    "ageMonths_one": "{{count}} month old",
+    "ageMonths_other": "{{count}} months old",
+
     "ageYears_one": "{{count}} year old",
     "ageYears_other": "{{count}} years old",
 

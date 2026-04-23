@@ -2,10 +2,10 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import { formatDuration, intervalToDuration, isAfter } from 'date-fns'
 import { FieldValidationError } from 'express-validator'
 import {
   convertToTitleCase,
+  displayAge,
   formatDate,
   formatTime,
   formatTimeDuration,
@@ -58,27 +58,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     },
   )
 
-  njkEnv.addFilter('displayAge', (dateOfBirth: string) => {
-    const dob = new Date(dateOfBirth)
-    const today = new Date()
-
-    if (dob.toString() === 'Invalid Date' || isAfter(dob, today)) {
-      return ''
-    }
-
-    const duration = intervalToDuration({ start: dob, end: today })
-
-    let age = ''
-    if (duration.years) {
-      age = formatDuration(duration, { format: ['years'] })
-    } else {
-      // workaround below for Duration zero/undefined change (https://github.com/date-fns/date-fns/issues/3658)
-      age = formatDuration(duration, { format: ['months'] }) || '0 months'
-    }
-
-    return `${age} old`
-  })
-
   // convert errors to format for GOV.UK error summary component
   njkEnv.addFilter('errorSummaryList', (errors = []) => {
     return Object.keys(errors).map(error => {
@@ -104,6 +83,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('prisonerNameFirstLast', prisoner => {
     return convertToTitleCase(`${prisoner?.firstName} ${prisoner?.lastName}`)
   })
+
+  njkEnv.addFilter('displayAge', displayAge)
 
   njkEnv.addFilter('formatDate', formatDate)
 
