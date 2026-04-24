@@ -57,7 +57,7 @@
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.viewDetailsLinkHidden", {
                       startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                      date: visit.startTimestamp | formatDate("d MMMM", language)
+                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                     }) }}
                   </span>
                 </a>
@@ -66,7 +66,7 @@
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.cancelLinkHidden", {
                       startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                      date: visit.startTimestamp | formatDate("d MMMM", language)
+                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                     }) }}
                   </span>
                 </a>

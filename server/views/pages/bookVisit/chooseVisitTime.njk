@@ -52,7 +52,7 @@
       <nav class="visits-calendar" aria-label="{{ t('bookVisit:chooseVisitTime.calendarAriaLabel') }}" role="navigation">
         {# Loop over months #}
         {% for monthName, monthData in calendar %}
-          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy', language) }}</h2>
+          <h2 class="govuk-heading-m">{{ monthName | formatDate(dateFormats.DISPLAY_DATE_MONTH_YEAR, language) }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}

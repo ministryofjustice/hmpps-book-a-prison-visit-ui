@@ -31,7 +31,7 @@
                 <span class="govuk-visually-hidden">
                   {{ t("visits:cancelled.viewDetailsLinkHidden", {
                     startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                    date: visit.startTimestamp | formatDate('d MMMM', language)
+                    date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                   }) }}
                 </span>
               </a>
