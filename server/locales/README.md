@@ -42,7 +42,7 @@ res.render('template', {
 
 {# Nested translation reference (for reusable strings) #}
 <p>{{ t("bookVisit:checkVisitDetails.visitors") }}</p>
-where that key value contains: "{{ t('common:plurals.visitor', { \"count\": {{ visitorCount }} }) }}"
+where that key value contains: "$t(common:plurals.visitor, {\"count\": {{count}} })"
 
 {# Using translation in conditionals #}
 {% if not email %}
