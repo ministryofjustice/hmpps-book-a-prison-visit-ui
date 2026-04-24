@@ -53,9 +53,9 @@
               </li>
               <li>
                 <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                  {{- t("visits:future.viewDetailsLink") }}
+                  {{- t("visits:shared.viewDetailsLink") }}
                   <span class="govuk-visually-hidden">
-                    {{ t("visits:future.viewDetailsLinkHidden", {
+                    {{ t("visits:shared.viewDetailsLinkHidden", {
                       startTime: visit.startTimestamp | formatTimeFromDateTime(language),
                       date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                     }) }}

@@ -40,7 +40,7 @@
   <p>
     <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
   </p>
-  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
+  <p>{{ t("common:visitors.requestResponseTime") }}</p>
 {% endset %}
 
 {% block content %}
@@ -147,7 +147,7 @@
 
       {% else %}
         {{ govukWarningText({
-          text: t("bookVisit:selectVisitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked"),
           iconFallbackText: t("common:labels.warning")
         }) }}
 
@@ -178,11 +178,11 @@
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ t("bookVisit:selectVisitors.linkingNewVisitorsTitle") }}</h2>
+        <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
 
         <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkedVisitorsOnly") }}</p>
         <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.mustBeOnVisitorList") }}</p>
-        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
+        <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
         {{ govukButton({
           text: t("common:buttons.linkNewVisitor"),

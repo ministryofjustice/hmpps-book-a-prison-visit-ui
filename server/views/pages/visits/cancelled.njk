@@ -11,7 +11,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>{{ t("visits:cancelled.onlyGovukBookings") }}</p>
+      <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
 
       {% if visits | length %}
         {% for visit in visits %}
@@ -27,9 +27,9 @@
             </li>
             <li>
               <a href="{{ paths.VISITS.VISIT_CANCELLED }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                {{- t("visits:cancelled.viewDetailsLink") }}
+                {{- t("visits:shared.viewDetailsLink") }}
                 <span class="govuk-visually-hidden">
-                  {{ t("visits:cancelled.viewDetailsLinkHidden", {
+                  {{ t("visits:shared.viewDetailsLinkHidden", {
                     startTime: visit.startTimestamp | formatTimeFromDateTime(language),
                     date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                   }) }}

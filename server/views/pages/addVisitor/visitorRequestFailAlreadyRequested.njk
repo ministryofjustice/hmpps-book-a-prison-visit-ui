@@ -17,7 +17,7 @@
 
       <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.waitingToBeReviewed") }}</p>
 
-      <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.respondWithinFiveDays") }}</p>
+      <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
       <div class="govuk-button-group">
         {{ govukButton({
@@ -29,7 +29,7 @@
         }) }}
 
         <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">
-          {{- t("addVisitor:visitorRequestFailAlreadyRequested.viewLinkedAndRequestedVisitors") -}}
+          {{- t("addVisitor:actions.viewLinkedAndRequestedVisitors") -}}
         </a>
       </div>
 

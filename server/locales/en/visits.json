@@ -1,4 +1,10 @@
 {
+  "shared": {
+    "viewDetailsLink": "View details",
+    "viewDetailsLinkHidden": "of your visit for {{startTime}} on {{date}}",
+    "onlyGovukBookings": "Only requests and visits booked using GOV.UK One Login are shown."
+  },
+
   "alerts": {
     "cancelled": {
       "title": "Visit cancelled",
@@ -30,8 +36,6 @@
     "prisonerAtLocation": "{{prisonerName}} at {{prisonName}}",
     "awaitingReview": "Awaiting review",
     "visitReference": "Visit reference:",
-    "viewDetailsLink": "View details",
-    "viewDetailsLinkHidden": "of your visit for {{startTime}} on {{date}}",
     "cancelLink": "Cancel visit",
     "cancelLinkHidden": "for {{startTime}} on {{date}}",
     "noFutureVisits": "There are no future visits or requests.",
@@ -42,16 +46,10 @@
   },
   "past": {
     "title": "Past visits",
-    "onlyGovukBookings": "Only requests and visits booked using GOV.UK One Login are shown.",
-    "viewDetailsLink": "View details",
-    "viewDetailsLinkHidden": "of your visit for {{startTime}} on {{date}}",
     "noPastVisits": "You do not have any past visits."
   },
   "cancelled": {
     "title": "Rejected and cancelled visits",
-    "onlyGovukBookings": "Only requests and visits booked using GOV.UK One Login are shown.",
-    "viewDetailsLink": "View details",
-    "viewDetailsLinkHidden": "of your visit for {{startTime}} on {{date}}",
     "noCancelledVisits": "You do not have any rejected or cancelled visits."
   },
   "visit": {

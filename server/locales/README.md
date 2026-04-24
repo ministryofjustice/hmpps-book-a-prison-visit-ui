@@ -15,3 +15,14 @@ Content split for translations:
 * feature namespaces:
   * all copy specific to a journey/feature area
   * examples: staticPages, bookVisit, addPrisoner, addVisitor, visits, visitors
+
+Conventions for key shape:
+
+* use `title` for page-level heading text
+* use `...Heading` for section headings within a page
+* prefer one key name for the same concept across journeys/features
+
+Conventions for reuse:
+
+* if the same sentence appears in multiple features and context is identical, move it to `common`
+* keep feature-specific wording in feature namespaces when context differs even if sentences are similar

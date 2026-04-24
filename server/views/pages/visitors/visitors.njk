@@ -39,7 +39,7 @@
         }) }}
       {% else %}
         {{ govukWarningText({
-          text: t("visitors:visitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked"),
           iconFallbackText: t("common:labels.warning"),
           attributes: { "data-test": "no-visitors" }
         }) }}
@@ -66,11 +66,11 @@
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m">{{ t("visitors:visitors.linkingNewVisitorsHeading") }}</h2>
+      <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
 
       <p>{{ t("visitors:visitors.linkedVisitorsOnly") }}</p>
       <p>{{ t("visitors:visitors.mustBeOnVisitorList") }}</p>
-      <p>{{ t("visitors:visitors.responseTime") }}</p>
+      <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
       {{ govukButton({
         text: t("common:buttons.linkNewVisitor"),

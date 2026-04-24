@@ -21,8 +21,6 @@
   "selectVisitors": {
     "title": "Who is going on the visit?",
 
-    "noVisitorsLinked": "No visitors are linked to your account.",
-
     "visitorLimits": {
       "maxVisitors": "Up to $t(common:plurals.person, {\"count\": {{maxVisitors}} }) can visit someone at {{prisonName}}. This includes:",
       "maxAdults": "$t(common:plurals.person, {\"count\": {{maxAdultVisitors}} }) $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} }) or older",
@@ -43,11 +41,8 @@
       "detailsHeading": "Want to book for someone else?",
       "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
       "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
-      "linkVisitorAction": "Make a request to link a visitor",
-      "responseTime": "We will respond to your request within 5 working days."
-    },
-
-    "linkingNewVisitorsTitle": "Linking new visitors to your account"
+      "linkVisitorAction": "Make a request to link a visitor"
+    }
   },
 
   "closedVisit": {

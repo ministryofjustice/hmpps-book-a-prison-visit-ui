@@ -12,7 +12,8 @@
   },
 
   "links": {
-    "back": "Back"
+    "back": "Back",
+    "contactPrisonLink": "Or you can contact the prison directly"
   },
 
   "footer": {
@@ -119,6 +120,9 @@
   "visitors": {
     "banned": "Banned",
     "bannedUntil": "{{name}} is banned until {{date}}.",
-    "notApproved": "Not approved"
+    "notApproved": "Not approved",
+    "noVisitorsLinked": "No visitors are linked to your account.",
+    "linkingNewVisitorsHeading": "Linking new visitors to your account",
+    "requestResponseTime": "We will respond to your request within 5 working days."
   }
 }
