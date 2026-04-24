@@ -43,8 +43,8 @@
               {% endif %}
               <li data-test="visit-start-end-time-{{ loop.index }}">
                 {{- t("common:dateTime.timeRange", {
-                  startTime: visit.startTimestamp | formatTimeFromDateTime,
-                  endTime: visit.endTimestamp | formatTimeFromDateTime
+                  startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+                  endTime: visit.endTimestamp | formatTimeFromDateTime(language)
                 }) -}}
               </li>
               <li>
@@ -56,8 +56,8 @@
                   {{- t("visits:future.viewDetailsLink") }}
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.viewDetailsLinkHidden", {
-                      startTime: visit.startTimestamp | formatTimeFromDateTime,
-                      date: visit.startTimestamp | formatDate("d MMMM", language)
+                      startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                     }) }}
                   </span>
                 </a>
@@ -65,8 +65,8 @@
                   {{- t("visits:future.cancelLink") }}
                   <span class="govuk-visually-hidden">
                     {{ t("visits:future.cancelLinkHidden", {
-                      startTime: visit.startTimestamp | formatTimeFromDateTime,
-                      date: visit.startTimestamp | formatDate("d MMMM", language)
+                      startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
                     }) }}
                   </span>
                 </a>

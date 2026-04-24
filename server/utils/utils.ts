@@ -1,6 +1,7 @@
 import { Request } from 'express'
-import { differenceInYears, format, formatDuration, intervalToDuration, parse, parseISO } from 'date-fns'
+import { differenceInYears, format, formatDuration, intervalToDuration, isAfter, parse, parseISO } from 'date-fns'
 import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
+import type { TFunction } from 'i18next'
 import type { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
 import { DATE_FNS_LOCALE, Locale } from '../constants/locales'
@@ -29,6 +30,23 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
+export const displayAge = (dateOfBirth: string, t: TFunction): string => {
+  const dob = new Date(dateOfBirth)
+  const today = new Date()
+
+  if (dob.toString() === 'Invalid Date' || isAfter(dob, today)) {
+    return ''
+  }
+
+  const age = intervalToDuration({ start: dob, end: today })
+
+  if (age?.years && age.years > 0) {
+    return t('common:plurals.ageYears', { count: age.years })
+  }
+
+  return t('common:plurals.ageMonths', { count: age?.months ?? 0 })
+}
+
 export const formatDate = (date: string, dateFormat: string, lng: Locale): string => {
   try {
     return format(parseISO(date), dateFormat, { locale: DATE_FNS_LOCALE[lng] })
@@ -37,25 +55,25 @@ export const formatDate = (date: string, dateFormat: string, lng: Locale): strin
   }
 }
 
-export const formatTime = (time: string): string => {
+export const formatTime = (time: string, lng: Locale): string => {
   try {
     const referenceDate = new Date()
     const parsedTime = parse(time, 'HH:mm', referenceDate)
-    return format(parsedTime, 'h:mmaaa').replace(':00', '')
+    return format(parsedTime, 'h:mmaaa', { locale: DATE_FNS_LOCALE[lng] }).replace(':00', '')
   } catch {
     return ''
   }
 }
 
-export const formatTimeFromDateTime = (dateTime: string): string => {
+export const formatTimeFromDateTime = (dateTime: string, lng: Locale): string => {
   try {
-    return dateTime ? format(parseISO(dateTime), 'h:mmaaa').replace(':00', '') : ''
+    return dateTime ? format(parseISO(dateTime), 'h:mmaaa', { locale: DATE_FNS_LOCALE[lng] }).replace(':00', '') : ''
   } catch {
     return ''
   }
 }
 
-export const formatTimeDuration = (startTime: string, endTime: string): string => {
+export const formatTimeDuration = (startTime: string, endTime: string, lng: Locale): string => {
   try {
     const referenceDate = new Date()
     const start = parse(startTime, 'HH:mm', referenceDate)
@@ -63,7 +81,7 @@ export const formatTimeDuration = (startTime: string, endTime: string): string =
 
     const duration = intervalToDuration({ start, end })
 
-    return formatDuration(duration, { delimiter: ' and ' })
+    return formatDuration(duration, { locale: DATE_FNS_LOCALE[lng] })
   } catch {
     return ''
   }

@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import { format, parseISO } from 'date-fns'
 import config from '../config'
 import { DateFormats } from '../constants/dateFormats'
+import { formatDate, formatTimeFromDateTime } from '../utils/utils'
+import { Locale } from '../constants/locales'
 
 export default function maintenancePage(): Router {
   const router = Router()
@@ -9,17 +10,13 @@ export default function maintenancePage(): Router {
 
   if (enabled) {
     router.use((req, res) => {
-      let maintenanceMessage: string
-      try {
-        const parsedEndDateTime = parseISO(endDateTime)
-        const timeFormat = parsedEndDateTime.getMinutes() === 0 ? 'haaa' : 'h:mmaaa' // 2pm instead of 2:00pm
-        const endTime = format(parsedEndDateTime, timeFormat)
-        const endDate = format(parsedEndDateTime, DateFormats.DISPLAY_DATE_WITH_DAY)
+      const endTime = formatTimeFromDateTime(endDateTime, req.language as Locale)
+      const endDate = formatDate(endDateTime, DateFormats.DISPLAY_DATE_WITH_DAY, req.language as Locale)
 
-        maintenanceMessage = req.t('staticPages:maintenance.availableFrom', { time: endTime, date: endDate })
-      } catch {
-        maintenanceMessage = req.t('staticPages:maintenance.availableLater')
-      }
+      const maintenanceMessage =
+        endTime && endDate
+          ? req.t('staticPages:maintenance.availableFrom', { time: endTime, date: endDate })
+          : req.t('staticPages:maintenance.availableLater')
 
       // don't load analytics or display cookie banner
       res.locals.analyticsEnabled = false

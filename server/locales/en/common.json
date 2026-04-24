@@ -50,6 +50,27 @@
     "timeRange": "{{startTime}} to {{endTime}}"
   },
 
+  "days": {
+    "short": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "singleLetter": {
+      "monday": "M",
+      "tuesday": "T",
+      "wednesday": "W",
+      "thursday": "T",
+      "friday": "F",
+      "saturday": "S",
+      "sunday": "S"
+    }
+  },
+
   "labels": {
     "dateOfBirth": "Date of birth",
     "firstName": "First name",
@@ -72,6 +93,9 @@
   },
 
   "plurals": {
+    "ageMonths_one": "{{count}} month old",
+    "ageMonths_other": "{{count}} months old",
+
     "ageYears_one": "{{count}} year old",
     "ageYears_other": "{{count}} years old",
 

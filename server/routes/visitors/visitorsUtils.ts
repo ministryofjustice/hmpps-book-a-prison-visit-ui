@@ -1,4 +1,4 @@
-import { TFunction } from 'i18next'
+import type { TFunction } from 'i18next'
 import { formatDate } from '../../utils/utils'
 import type { Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'

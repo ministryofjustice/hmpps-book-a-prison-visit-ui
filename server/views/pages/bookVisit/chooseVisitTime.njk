@@ -52,19 +52,29 @@
       <nav class="visits-calendar" aria-label="{{ t('bookVisit:chooseVisitTime.calendarAriaLabel') }}" role="navigation">
         {# Loop over months #}
         {% for monthName, monthData in calendar %}
-          <h2 class="govuk-heading-m">{{ monthName | formatDate('MMMM yyyy', language) }}</h2>
+          <h2 class="govuk-heading-m">{{ monthName | formatDate(dateFormats.DISPLAY_DATE_MONTH_YEAR, language) }}</h2>
 
           {# Day name headings on first month only #}
           {% if loop.first %}
-            {# TODO i18n: weekday heading abbreviations #}
-            <ul class="govuk-list visits-calendar__day-headings" aria-hidden="true">
-              <li>M<span>on</span></li>
-              <li>T<span>ue</span></li>
-              <li>W<span>ed</span></li>
-              <li>T<span>hu</span></li>
-              <li>F<span>ri</span></li>
-              <li>S<span>at</span></li>
-              <li>S<span>un</span></li>
+            {# Single letter day headings for mobile #}
+            <ul class="govuk-list visits-calendar__day-headings visits-calendar__day-headings--single-letter" aria-hidden="true">
+              <li>{{ t("common:days.singleLetter.monday") }}</li>
+              <li>{{ t("common:days.singleLetter.tuesday") }}</li>
+              <li>{{ t("common:days.singleLetter.wednesday") }}</li>
+              <li>{{ t("common:days.singleLetter.thursday") }}</li>
+              <li>{{ t("common:days.singleLetter.friday") }}</li>
+              <li>{{ t("common:days.singleLetter.saturday") }}</li>
+              <li>{{ t("common:days.singleLetter.sunday") }}</li>
+            </ul>
+            {# Short name day headings for tablet and desktop #}
+            <ul class="govuk-list visits-calendar__day-headings visits-calendar__day-headings--short" aria-hidden="true">
+              <li>{{ t("common:days.short.monday") }}</li>
+              <li>{{ t("common:days.short.tuesday") }}</li>
+              <li>{{ t("common:days.short.wednesday") }}</li>
+              <li>{{ t("common:days.short.thursday") }}</li>
+              <li>{{ t("common:days.short.friday") }}</li>
+              <li>{{ t("common:days.short.saturday") }}</li>
+              <li>{{ t("common:days.short.sunday") }}</li>
             </ul>
           {% endif %}
 
@@ -115,8 +125,14 @@
                 {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
                   value: radioValue,
-                  html: t("common:dateTime.timeRange", { startTime: session.startTime | formatTime, endTime: session.endTime | formatTime }) +
-                   ' <span class="visits-calendar__session-duration">(' + (session.startTime | formatTimeDuration(session.endTime)) + ')</span>',
+                  html:
+                    t("common:dateTime.timeRange", {
+                      startTime: session.startTime | formatTime(language),
+                      endTime: session.endTime | formatTime(language)
+                    }) +
+                    ' <span class="visits-calendar__session-duration">(' +
+                      (session.startTime | formatTimeDuration(session.endTime, language)) +
+                    ')</span>',
                   checked: formValues.visitSession == radioValue
                 }), visitSessionItems) %}
               {% endfor %}

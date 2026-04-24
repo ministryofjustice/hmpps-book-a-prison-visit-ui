@@ -23,12 +23,17 @@
       min-width: 2.25rem;
       max-width: 3rem;
     }
+  }
 
-    // only show abbreviated weekday names on mobile
-    span {
-      @include govuk-media-query($until: tablet) {
-        display: none;
-      }
+  .visits-calendar__day-headings--single-letter {
+    @include govuk-media-query($from: tablet) {
+      display: none;
+    }
+  }
+
+  .visits-calendar__day-headings--short {
+    @include govuk-media-query($until: tablet) {
+      display: none;
     }
   }
 
