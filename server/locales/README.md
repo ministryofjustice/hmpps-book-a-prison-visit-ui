@@ -1,5 +1,9 @@
 Content split for translations:
 
+Translator guidance:
+
+* see `server/locales/TRANSLATOR_CONTEXT.md` for key-group-to-screen mapping and interpolation variable context
+
 * common:
   * app-wide reusable copy used across journeys and shared templates
   * includes service name, navigation/footer labels, phase banner, cookie banner, global buttons, shared labels, generic hints and back link text
