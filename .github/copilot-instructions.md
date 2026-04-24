@@ -61,6 +61,16 @@ View templates use two custom filters for errors:
 
 See [server/utils/nunjucksSetup.ts](server/utils/nunjucksSetup.ts) for filter implementation.
 
+**Internationalization (i18n):**
+The app uses i18next with English (en) and Welsh (cy) support. Configuration is in [server/middleware/setUpI18n.ts](server/middleware/setUpI18n.ts).
+- **In Templates:** Use `t("namespace:key", { var: value })` syntax. Example: `t("bookVisit:checkVisitDetails.prisoner")`
+- **In Code:** Use `req.t("namespace:key")` in controllers for validation messages or view data
+- **Plurals:** Handled via `_one` and `_other` key suffixes; pass `{count: n}` to resolve correct form
+- **Nested References:** Locale values can contain `$t(namespace:key)` to reference other translations
+- **Language Detection:** Via query parameter (`?lng=cy`) or cookie; falls back to English
+- **Files:** Locales stored in `server/locales/{en,cy}/{namespace}.json` (11 namespaces: common, errors, validation, addPrisoner, addVisitor, bookVisit, selectPrison, shared, visitors, visits, staticPages)
+- **Documentation:** See [server/locales/README.md](server/locales/README.md) for setup details, [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for translator guidance
+
 ## Services Layer
 
 **BookerService** ([server/services/bookerService.ts](server/services/bookerService.ts))
@@ -239,6 +249,16 @@ beforeEach(() => {
 4. **Add journey step to array in bookVisitSessionValidator middleware** (critical!)
 5. Create session object property in [server/@types/bapv.d.ts](server/@types/bapv.d.ts)
 6. Create view template in [server/views/bookVisit/](server/views/bookVisit/)
+7. **Add translation keys** to `server/locales/en/bookVisit.json` and reference via `t("bookVisit:...")` in template/controller
+
+**Adding UI text / translation keys:**
+1. Identify the appropriate namespace: use `common` for app-wide reuse, feature namespace (e.g., `bookVisit`) for feature-specific text
+2. Add keys to `server/locales/en/{namespace}.json` with clear, concise English text
+3. Follow naming conventions: use `title` for page headings, `...Heading` for section headings
+4. Reference in templates via `{{ t("namespace:key.path") }}`; in code via `req.t("namespace:key.path")`
+5. For plurals, create paired `_one` and `_other` keys; use `{{ t("namespace:plural", { count: n }) }}` in templates
+6. Consider reuse: if the same string appears in multiple places with identical context, consolidate to `common` namespace
+
 
 **Adding validation:**
 Use `express-validator` body() chains. For complex validation (e.g., date of birth), extract to [server/utils/validations.ts](server/utils/validations.ts) and reuse via `dateOfBirthValidationChain()` pattern.
@@ -255,3 +275,6 @@ Use `express-validator` body() chains. For complex validation (e.g., date of bir
 - **Date handling:** Use `date-fns` library throughout (not moment or native Date).
 - **Phone number validation:** Uses `libphonenumber-js` for UK phone validation.
 - **Assets:** SCSS files auto-compile to CSS, views auto-copy during dev mode.
+- **i18n Development:** Missing translation keys throw errors in development (see `server/middleware/setUpI18n.ts`). Always add keys to English locale before referencing in code/templates. Locale files are auto-copied to `dist/` during build.
+- **i18n for Agents:** When adding new UI copy, always add to locale JSON files first, then reference via `t()` in templates/code. Use [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for namespace guidance.
+
