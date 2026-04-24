@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = t("visits:cancelConfirmed.title") %}
+{% set pageTitle = t("common:labels.visitCancelled") %}
 
 {% if not visitCancelled.hasEmail and visitCancelled.hasMobile %}
   {% set confirmationMessage =

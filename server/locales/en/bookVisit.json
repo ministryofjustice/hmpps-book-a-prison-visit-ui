@@ -107,23 +107,16 @@
   "checkVisitDetails": {
     "title": "Check the visit details",
 
-    "prisoner": "Prisoner",
     "prisonerAtPrison": "{{name}} at {{prisonName}}",
 
-    "visitors": "Visitors",
     "changeVisitors": "visitors",
 
-    "dateAndTime": "Date and time",
     "changeDateAndTime": "date and time",
 
-    "additionalSupport": "Additional support requests",
     "changeAdditionalSupport": "additional support requests",
 
-    "mainContact": "Main contact",
     "changeMainContact": "main contact",
 
-    "contactDetails": "Contact details",
-    "noContactDetails": "No contact details provided",
     "changeContactDetails": "contact details"
   },
 
@@ -146,7 +139,6 @@
     "detailsByText": "We have sent a text message with the details of your request to the main contact.",
     "detailsByEmail": "We have sent an email with the details of your request to the main contact.",
     "detailsByEmailAndText": "We have sent an email and a text message with the details of your request to the main contact.",
-    "visitReference": "Visit reference:",
     "notBookedYet": "Your visit is not booked yet. It needs to be checked.",
     "confirmOrReject": "{{prisonName}} will confirm or reject your request.",
     "responseByText": "A text message with the prison’s decision will be sent to the main contact.",

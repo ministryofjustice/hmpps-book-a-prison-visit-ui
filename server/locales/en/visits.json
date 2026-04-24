@@ -35,8 +35,6 @@
     "onlyGovukBookings": "Only visits made using GOV.UK One Login are shown.",
     "prisonerAtLocation": "{{prisonerName}} at {{prisonName}}",
     "awaitingReview": "Awaiting review",
-    "visitReference": "Visit reference:",
-    "cancelLink": "Cancel visit",
     "cancelLinkHidden": "for {{startTime}} on {{date}}",
     "noFutureVisits": "There are no future visits or requests.",
     "viewPastVisits": "View past visits",
@@ -54,28 +52,16 @@
   },
   "visit": {
     "title": "Visit details",
-    "referenceHeading": "Visit reference:",
-    "dateTimeHeading": "Date and time",
-    "prisonerHeading": "Prisoner",
-    "visitorsHeading": "Visitors",
-    "supportHeading": "Additional support requests",
-    "noSupport": "None",
-    "contactHeading": "Main contact",
-    "noContactDetails": "No contact details provided",
-    "cancelButton": "Cancel visit"
+    "noSupport": "None"
   },
   "cancel": {
     "title": "Cancel your visit",
     "heading": "Are you sure you want to cancel your visit?",
-    "dateTimeHeading": "Date and time",
-    "prisonerHeading": "Prisoner",
-    "visitorsHeading": "Visitors",
     "yesCancelOption": "Yes, cancel this visit",
     "noCancelOption": "No, keep this visit",
     "confirmButton": "Confirm"
   },
   "cancelConfirmed": {
-    "title": "Visit cancelled",
     "textMessageConfirmation": "A text message will be sent to the main contact to confirm the visit has been cancelled.",
     "emailAndTextConfirmation": "An email and a text message will be sent to the main contact to confirm the visit has been cancelled.",
     "emailConfirmation": "An email will be sent to the main contact to confirm the visit has been cancelled."
