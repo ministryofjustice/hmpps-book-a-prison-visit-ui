@@ -12,7 +12,8 @@
   },
 
   "links": {
-    "back": "Back"
+    "back": "Back",
+    "contactPrisonLink": "Or you can contact the prison directly"
   },
 
   "footer": {
@@ -50,6 +51,12 @@
     "timeRange": "{{startTime}} to {{endTime}}"
   },
 
+  "postBooking": {
+    "whatHappensNext": "What happens next",
+    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
+    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+  },
+
   "days": {
     "short": {
       "monday": "Mon",
@@ -72,16 +79,26 @@
   },
 
   "labels": {
+    "additionalSupport": "Additional support requests",
+    "cancelVisit": "Cancel visit",
+    "contactDetails": "Contact details",
+    "dateAndTime": "Date and time",
     "dateOfBirth": "Date of birth",
-    "firstName": "First name",
     "emailAddress": "Email address",
+    "firstName": "First name",
     "lastName": "Last name",
+    "mainContact": "Main contact",
     "name": "Name",
     "no": "No",
+    "noContactDetails": "No contact details provided",
     "none": "None",
     "phoneNumber": "Phone number",
+    "prisoner": "Prisoner",
     "prisonNumber": "Prison number",
     "someoneElse": "Someone else",
+    "visitCancelled": "Visit cancelled",
+    "visitReference": "Visit reference",
+    "visitors": "Visitors",
     "warning": "Warning",
     "yes": "Yes",
     "yesDetails": "If yes, provide details"
@@ -119,6 +136,13 @@
   "visitors": {
     "banned": "Banned",
     "bannedUntil": "{{name}} is banned until {{date}}.",
-    "notApproved": "Not approved"
+    "notApproved": "Not approved",
+    "noVisitorsLinked": "No visitors are linked to your account.",
+    "visitorRequestsHeading": "Visitors awaiting review",
+    "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
+    "linkingNewVisitorsHeading": "Linking new visitors to your account",
+    "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
+    "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
+    "requestResponseTime": "We will respond to your request within 5 working days."
   }
 }

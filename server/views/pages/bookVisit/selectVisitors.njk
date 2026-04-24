@@ -35,12 +35,12 @@
 {% endset %}
 
 {% set detailsHtml %}
-  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkedVisitorsOnly") }}</p>
-  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.mustBeOnVisitorList") }}</p>
+  <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
+  <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
   <p>
     <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
   </p>
-  <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
+  <p>{{ t("common:visitors.requestResponseTime") }}</p>
 {% endset %}
 
 {% block content %}
@@ -147,16 +147,16 @@
 
       {% else %}
         {{ govukWarningText({
-          text: t("bookVisit:selectVisitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked"),
           iconFallbackText: t("common:labels.warning")
         }) }}
 
         {% if visitorRequestsTableRows | length %}
           <h2 class="govuk-heading-m" data-test="visitor-requests">
-            {{- t("bookVisit:selectVisitors.visitorRequestsHeading") -}}
+            {{- t("common:visitors.visitorRequestsHeading") -}}
           </h2>
 
-          <p>{{ t("bookVisit:selectVisitors.reviewedByPrison") }}</p>
+          <p>{{ t("common:visitors.reviewedByPrison") }}</p>
 
           {{ govukTable({
             classes: "govuk-!-width-two-thirds",
@@ -178,11 +178,11 @@
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ t("bookVisit:selectVisitors.linkingNewVisitorsTitle") }}</h2>
+        <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
 
-        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkedVisitorsOnly") }}</p>
-        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.mustBeOnVisitorList") }}</p>
-        <p>{{ t("bookVisit:selectVisitors.bookForSomeoneElse.responseTime") }}</p>
+        <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
+        <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
+        <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
         {{ govukButton({
           text: t("common:buttons.linkNewVisitor"),

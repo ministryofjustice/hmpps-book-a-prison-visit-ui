@@ -127,6 +127,17 @@ kubectl -n visit-someone-in-prison-frontend-svc-dev set env deployment/hmpps-boo
 ```
 This will update the environment variables and restart the pods. Once these are restarted, the maintenance page will be turned off.
 
+## Internationalization (i18n)
+
+The application supports English and Welsh through i18next. For detailed information on the i18n setup, usage patterns, and translation conventions, see [server/locales/README.md](server/locales/README.md).
+
+**Quick Reference:**
+- **Language Detection**: Via query parameter (`?lng=cy`) or browser cookie
+- **Keys in Templates**: Use `t("namespace:key.path", { variable: value })`
+- **Keys in Code**: Use `req.t("namespace:key")` in controllers
+- **Plural Forms**: Automatically handled via `_one` and `_other` suffixes
+
+For translators, see [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for namespace-to-screen mapping and interpolation variable reference.
 
 ---
 

@@ -1,7 +1,7 @@
 {% extends "partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = t("visits:cancelConfirmed.title") %}
+{% set pageTitle = t("common:labels.visitCancelled") %}
 
 {% if not visitCancelled.hasEmail and visitCancelled.hasMobile %}
   {% set confirmationMessage =
@@ -24,18 +24,18 @@
         titleText: pageTitle
       }) }}
 
-      <h2 class="govuk-heading-m">{{ t("visits:cancelConfirmed.whatHappensNextHeading") }}</h1>
+      <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
 
       {% if confirmationMessage %}
         <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
       {% endif %}
 
       <p class="no-visited-state">
-        {{- t("visits:cancelConfirmed.viewVisits", { url: paths.VISITS.HOME }) | safe -}}
+        {{- t("common:postBooking.checkVisitDetails", { url: paths.VISITS.HOME }) | safe -}}
       </p>
 
       <p>
-        {{- t("visits:cancelConfirmed.feedback", {
+        {{- t("common:postBooking.feedback", {
           url: "https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/"
         }) | safe -}}
       </p>

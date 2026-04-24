@@ -21,8 +21,6 @@
   "selectVisitors": {
     "title": "Who is going on the visit?",
 
-    "noVisitorsLinked": "No visitors are linked to your account.",
-
     "visitorLimits": {
       "maxVisitors": "Up to $t(common:plurals.person, {\"count\": {{maxVisitors}} }) can visit someone at {{prisonName}}. This includes:",
       "maxAdults": "$t(common:plurals.person, {\"count\": {{maxAdultVisitors}} }) $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} }) or older",
@@ -36,18 +34,10 @@
     "unavailableVisitorsHeading": "Unavailable visitors",
     "cannotBookForVisitor": "You cannot currently book a visit for this visitor.",
 
-    "visitorRequestsHeading": "Visitors awaiting review",
-    "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
-
     "bookForSomeoneElse": {
       "detailsHeading": "Want to book for someone else?",
-      "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
-      "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
-      "linkVisitorAction": "Make a request to link a visitor",
-      "responseTime": "We will respond to your request within 5 working days."
-    },
-
-    "linkingNewVisitorsTitle": "Linking new visitors to your account"
+      "linkVisitorAction": "Make a request to link a visitor"
+    }
   },
 
   "closedVisit": {
@@ -117,23 +107,16 @@
   "checkVisitDetails": {
     "title": "Check the visit details",
 
-    "prisoner": "Prisoner",
     "prisonerAtPrison": "{{name}} at {{prisonName}}",
 
-    "visitors": "Visitors",
     "changeVisitors": "visitors",
 
-    "dateAndTime": "Date and time",
     "changeDateAndTime": "date and time",
 
-    "additionalSupport": "Additional support requests",
     "changeAdditionalSupport": "additional support requests",
 
-    "mainContact": "Main contact",
     "changeMainContact": "main contact",
 
-    "contactDetails": "Contact details",
-    "noContactDetails": "No contact details provided",
     "changeContactDetails": "contact details"
   },
 
@@ -145,11 +128,7 @@
     "confirmByText": "A text message confirming the visit will be sent to the main contact.",
     "confirmByEmail": "An email confirming the visit will be sent to the main contact.",
     "confirmByEmailAndText": "An email and a text message confirming the visit will be sent to the main contact.",
-    "withReference": "This will include the visit reference.",
-
-    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
-
-    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+    "withReference": "This will include the visit reference."
   },
 
   "visitRequested": {
@@ -160,9 +139,6 @@
     "detailsByText": "We have sent a text message with the details of your request to the main contact.",
     "detailsByEmail": "We have sent an email with the details of your request to the main contact.",
     "detailsByEmailAndText": "We have sent an email and a text message with the details of your request to the main contact.",
-    "visitReference": "Visit reference:",
-
-    "whatNextHeading": "What happens next",
     "notBookedYet": "Your visit is not booked yet. It needs to be checked.",
     "confirmOrReject": "{{prisonName}} will confirm or reject your request.",
     "responseByText": "A text message with the prison’s decision will be sent to the main contact.",

@@ -16,12 +16,12 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <h2 class="govuk-heading-m govuk-!-padding-top-5">
-        {{- t("visits:visit.referenceHeading") }}
+        {{- t("common:labels.visitReference") }}:
         <span data-test="visit-reference">{{ visit.reference }}</span>
       </h2>
 
       <h3 class="govuk-heading-s govuk-!-padding-top-4">
-        {{- t("visits:visit.dateTimeHeading") -}}
+        {{- t("common:labels.dateAndTime") -}}
       </h3>
       <ul class="govuk-list">
         <li data-test="visit-date">
@@ -35,12 +35,12 @@
         </li>
       </ul>
 
-      <h3 class="govuk-heading-s">{{ t("visits:visit.prisonerHeading") }}</h3>
+      <h3 class="govuk-heading-s">{{ t("common:labels.prisoner") }}</h3>
       <ul class="govuk-list">
         <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
       </ul>
 
-      <h3 class="govuk-heading-s">{{ t("visits:visit.visitorsHeading") }}</h3>
+      <h3 class="govuk-heading-s">{{ t("common:labels.visitors") }}</h3>
       <ul class="govuk-list">
         {% for visitor in visit.visitors %}
           <li data-test="visitor-name-{{ loop.index }}">
@@ -49,14 +49,14 @@
         {% endfor %}
       </ul>
 
-      <h3 class="govuk-heading-s">{{ t("visits:visit.supportHeading") }}</h3>
+      <h3 class="govuk-heading-s">{{ t("common:labels.additionalSupport") }}</h3>
       <ul class="govuk-list">
         <li data-test="additional-support">
           {{- visit.visitorSupport.description | d(t("visits:visit.noSupport"), true) -}}
         </li>
       </ul>
 
-      <h3 class="govuk-heading-s">{{ t("visits:visit.contactHeading") }}</h3>
+      <h3 class="govuk-heading-s">{{ t("common:labels.mainContact") }}</h3>
       <ul class="govuk-list">
         <li data-test="main-contact-name">{{ visit.visitContact.name }}</li>
         {% if visit.visitContact.email %}
@@ -67,14 +67,14 @@
         {% endif %}
         {% if not visit.visitContact.email and not visit.visitContact.telephone %}
           <li data-test="main-contact-no-details">
-            {{- t("visits:visit.noContactDetails") -}}
+            {{- t("common:labels.noContactDetails") -}}
           </li>
         {% endif %}
       </ul>
 
       {% if showCancelButton %}
         {{ govukButton({
-          text: t("visits:visit.cancelButton"),
+          text: t("common:labels.cancelVisit"),
           classes: "govuk-button--secondary",
           href: paths.VISITS.CANCEL_VISIT + '/' + visit.visitDisplayId,
           attributes: { "data-test": "cancel-visit" },

@@ -14,7 +14,7 @@
 
       <h1 class="govuk-heading-l">{{ t("visits:cancel.heading") }}</h1>
 
-      <h2 class="govuk-heading-m">{{ t("visits:cancel.dateTimeHeading") }}</h2>
+      <h2 class="govuk-heading-m">{{ t("common:labels.dateAndTime") }}</h2>
       <ul class="govuk-list">
         <li data-test="visit-date">
           {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
@@ -27,13 +27,13 @@
         </li>
       </ul>
 
-      <h2 class="govuk-heading-m">{{ t("visits:cancel.prisonerHeading") }}</h2>
+      <h2 class="govuk-heading-m">{{ t("common:labels.prisoner") }}</h2>
       <ul class="govuk-list">
         <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
       </ul>
 
 
-      <h2 class="govuk-heading-m">{{ t("visits:cancel.visitorsHeading") }}</h2>
+      <h2 class="govuk-heading-m">{{ t("common:labels.visitors") }}</h2>
       <ul class="govuk-list">
         {% for visitor in visit.visitors %}
           <li data-test="visitor-name-{{ loop.index }}">

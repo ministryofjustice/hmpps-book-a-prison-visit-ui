@@ -10,7 +10,6 @@
   "error": {
     "message": "Sorry, there is a problem with the service.",
     "logged": "The error has been logged.",
-    "tryReload": "You can try reloading the page or <a href=\"{{url}}\">start again</a>.",
-    "contactPrisonLink": "Or you can contact the prison directly"
+    "tryReload": "You can try reloading the page or <a href=\"{{url}}\">start again</a>."
   }
 }

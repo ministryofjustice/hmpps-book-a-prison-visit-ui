@@ -22,7 +22,7 @@
         rows: [
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.prisoner")
+              text: t("common:labels.prisoner")
             },
             value: {
               html: '<span data-test="prisoner-details">' +
@@ -35,7 +35,7 @@
 
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.visitors")
+              text: t("common:labels.visitors")
             },
             value: {
               html: visitorsHtml
@@ -55,7 +55,7 @@
 
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.dateAndTime")
+              text: t("common:labels.dateAndTime")
             },
             value: {
               html: '<p><span data-test="visit-date">' +
@@ -81,7 +81,7 @@
 
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.additionalSupport")
+              text: t("common:labels.additionalSupport")
             },
             value: {
               html: '<p data-test="additional-support">' + additionalSupport | d(t("common:labels.none"), true) | escape + "</p>"
@@ -101,7 +101,7 @@
 
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.mainContact")
+              text: t("common:labels.mainContact")
             },
             value: {
               html: '<p><span data-test="main-contact-name">' + mainContactName | escape + "</span></p>"
@@ -121,13 +121,13 @@
 
           {
             key: {
-              text: t("bookVisit:checkVisitDetails.contactDetails")
+              text: t("common:labels.contactDetails")
             },
             value: {
               html: '<p><span data-test="contact-details-email">' + mainContactEmail | escape + "</span></p>" +
                     '<p><span data-test="contact-details-phone">' + mainContactPhone | escape + "</span></p>"
                       if mainContactEmail or mainContactPhone else
-                    '<p><span data-test="no-contact-details">' + t("bookVisit:checkVisitDetails.noContactDetails") + '</span>'
+                    '<p><span data-test="no-contact-details">' + t("common:labels.noContactDetails") + '</span>'
             },
             actions: {
               items: [

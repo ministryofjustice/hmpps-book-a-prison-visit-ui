@@ -1,4 +1,8 @@
 {
+  "actions": {
+    "viewLinkedAndRequestedVisitors": "View linked and requested visitors"
+  },
+
   "addVisitorStart": {
     "title": "Providing visitor information",
     "identityRequirement": "All visitors to prisons in England and Wales, other than accompanied children under the age of 16, are required to prove their identity before entry.",
@@ -36,16 +40,13 @@
   "visitorRequestFailAlreadyLinked": {
     "title": "Visitor already linked",
     "visitorAlreadyLinked": "You have previously linked {{visitorName}} to your account.",
-    "noNeedToSubmit": "You do not need to submit a new request for this visitor.",
-    "viewLinkedAndRequestedVisitors": "View linked and requested visitors"
+    "noNeedToSubmit": "You do not need to submit a new request for this visitor."
   },
 
   "visitorRequestFailAlreadyRequested": {
     "title": "Visitor already requested",
     "visitorAlreadyRequested": "You have previously submitted a request for {{visitorName}}.",
-    "waitingToBeReviewed": "It is waiting to be reviewed by the prison.",
-    "respondWithinFiveDays": "We will respond to your request within 5 working days.",
-    "viewLinkedAndRequestedVisitors": "View linked and requested visitors"
+    "waitingToBeReviewed": "It is waiting to be reviewed by the prison."
   },
 
   "visitorRequestFailTooManyRequests": {
