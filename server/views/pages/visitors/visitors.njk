@@ -47,10 +47,10 @@
 
       {% if visitorRequestsTableRows | length %}
         <h2 class="govuk-heading-m" data-test="visitor-requests">
-          {{- t("visitors:visitors.visitorRequestsHeading") -}}
+          {{- t("common:visitors.visitorRequestsHeading") -}}
         </h2>
 
-        <p>{{ t("visitors:visitors.reviewedByPrison") }}</p>
+        <p>{{ t("common:visitors.reviewedByPrison") }}</p>
 
         {{ govukTable({
           classes: "govuk-!-width-two-thirds",
@@ -68,8 +68,8 @@
 
       <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
 
-      <p>{{ t("visitors:visitors.linkedVisitorsOnly") }}</p>
-      <p>{{ t("visitors:visitors.mustBeOnVisitorList") }}</p>
+      <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
+      <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
       <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
       {{ govukButton({

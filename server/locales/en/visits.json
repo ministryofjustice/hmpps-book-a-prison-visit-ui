@@ -76,11 +76,8 @@
   },
   "cancelConfirmed": {
     "title": "Visit cancelled",
-    "whatHappensNextHeading": "What happens next",
     "textMessageConfirmation": "A text message will be sent to the main contact to confirm the visit has been cancelled.",
     "emailAndTextConfirmation": "An email and a text message will be sent to the main contact to confirm the visit has been cancelled.",
-    "emailConfirmation": "An email will be sent to the main contact to confirm the visit has been cancelled.",
-    "viewVisits": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
-    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+    "emailConfirmation": "An email will be sent to the main contact to confirm the visit has been cancelled."
   }
 }

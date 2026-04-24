@@ -11,12 +11,6 @@
     "visitorsOf": "{{name}}’s visitors",
 
     "linkedVisitorsHeading": "Visitors linked to your account",
-    "bookVisitForThem": "Can you book a visit for them?",
-
-    "visitorRequestsHeading": "Visitors awaiting review",
-    "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
-
-    "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
-    "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list."
+    "bookVisitForThem": "Can you book a visit for them?"
   }
 }

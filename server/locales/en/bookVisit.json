@@ -34,13 +34,8 @@
     "unavailableVisitorsHeading": "Unavailable visitors",
     "cannotBookForVisitor": "You cannot currently book a visit for this visitor.",
 
-    "visitorRequestsHeading": "Visitors awaiting review",
-    "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
-
     "bookForSomeoneElse": {
       "detailsHeading": "Want to book for someone else?",
-      "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
-      "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
       "linkVisitorAction": "Make a request to link a visitor"
     }
   },
@@ -140,11 +135,7 @@
     "confirmByText": "A text message confirming the visit will be sent to the main contact.",
     "confirmByEmail": "An email confirming the visit will be sent to the main contact.",
     "confirmByEmailAndText": "An email and a text message confirming the visit will be sent to the main contact.",
-    "withReference": "This will include the visit reference.",
-
-    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
-
-    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+    "withReference": "This will include the visit reference."
   },
 
   "visitRequested": {
@@ -156,8 +147,6 @@
     "detailsByEmail": "We have sent an email with the details of your request to the main contact.",
     "detailsByEmailAndText": "We have sent an email and a text message with the details of your request to the main contact.",
     "visitReference": "Visit reference:",
-
-    "whatNextHeading": "What happens next",
     "notBookedYet": "Your visit is not booked yet. It needs to be checked.",
     "confirmOrReject": "{{prisonName}} will confirm or reject your request.",
     "responseByText": "A text message with the prison’s decision will be sent to the main contact.",
