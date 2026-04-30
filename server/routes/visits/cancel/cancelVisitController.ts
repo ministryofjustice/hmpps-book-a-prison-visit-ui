@@ -70,8 +70,8 @@ export default class CancelVisitController {
       })
 
       req.session.visitCancelled = {
-        hasEmail: !!visit.visitContact.email,
-        hasMobile: isMobilePhoneNumber(visit.visitContact.telephone),
+        hasEmail: !!visit.visitContact?.email,
+        hasMobile: isMobilePhoneNumber(visit.visitContact?.telephone),
       }
 
       return res.redirect(paths.VISITS.CANCEL_CONFIRMATION)

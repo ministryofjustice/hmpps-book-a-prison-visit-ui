@@ -97,8 +97,8 @@ describe('Cancel a visit - Are you sure page', () => {
     })
 
     it('should cancel the visit, set data in session and redirect to confirmation page - no phone number', () => {
-      sessionData.bookedVisits!.visits[0].visitContact.telephone = undefined
-      sessionData.bookedVisits!.visits[0].visitContact.email = undefined
+      sessionData.bookedVisits!.visits[0].visitContact!.telephone = undefined
+      sessionData.bookedVisits!.visits[0].visitContact!.email = undefined
 
       return request(app)
         .post(`${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`)

@@ -23,7 +23,7 @@ export type Prisoner = {
   prisonerNumber: string
   firstName: string
   lastName: string
-  prisonId?: string
+  prisonId?: string | null
   registeredPrisonId: string
   availableVos: number
   nextAvailableVoDate: string
@@ -35,7 +35,7 @@ export type Visitor = {
   visitorId: number
   firstName: string
   lastName: string
-  dateOfBirth?: string
+  dateOfBirth?: string | null
   adult: boolean
   banned: boolean
   banExpiryDate: string | null
