@@ -96,7 +96,7 @@ export default class TestData {
     prisonerNumber: string
     firstName: string
     lastName: string
-    prisonId: string
+    prisonId: string | null
     prisonName: string
     registeredPrisonId: string
     registeredPrisonName: string

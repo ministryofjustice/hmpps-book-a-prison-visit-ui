@@ -87,7 +87,7 @@ export const formatTimeDuration = (startTime: string, endTime: string, lng: Loca
   }
 }
 
-export const isAdult = (dateOfBirth: string | undefined, referenceDate: Date = new Date()): boolean => {
+export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: Date = new Date()): boolean => {
   if (!dateOfBirth) return false
   const dobDate = parseISO(dateOfBirth)
   return differenceInYears(referenceDate, dobDate) >= 18
@@ -103,7 +103,7 @@ export const getMainContactName = (mainContact: Visitor | string = ''): string =
   return typeof mainContact === 'string' ? mainContact : `${mainContact.firstName} ${mainContact.lastName}`
 }
 
-export const isMobilePhoneNumber = (phoneNumber: string | undefined): boolean => {
+export const isMobilePhoneNumber = (phoneNumber: string | null | undefined): boolean => {
   return parsePhoneNumber(phoneNumber ?? '', 'GB')?.getType() === 'MOBILE'
 }
 

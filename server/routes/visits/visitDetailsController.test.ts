@@ -85,8 +85,8 @@ describe('View a single visit', () => {
     })
 
     it('should render the visit details page - no main contact details', () => {
-      visitDetails.visitContact.email = undefined
-      visitDetails.visitContact.telephone = undefined
+      visitDetails.visitContact!.email = undefined
+      visitDetails.visitContact!.telephone = undefined
       sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
