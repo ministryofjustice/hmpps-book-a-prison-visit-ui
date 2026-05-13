@@ -9,7 +9,7 @@ export default class SelectPrisonController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      delete req.session.selectedPrisonId
+      delete req.session.selectedPrison
 
       return res.render('pages/selectPrison/selectPrison', {
         errors: req.flash('errors'),
@@ -27,9 +27,10 @@ export default class SelectPrisonController {
 
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       const isSupportedPrison = await this.prisonService.isSupportedPrison(prisonId)
+      const hasDigitalService = !config.noDigitalServicePrisonIds.includes(prisonId)
 
-      if (isSupportedPrison) {
-        req.session.selectedPrisonId = prisonId
+      if (isSupportedPrison || !hasDigitalService) {
+        req.session.selectedPrison = { prisonId, hasDigitalService }
         return res.redirect(paths.SELECTED_PRISON)
       }
 

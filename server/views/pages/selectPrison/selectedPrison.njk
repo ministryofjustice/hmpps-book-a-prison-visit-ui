@@ -22,20 +22,28 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p>{{ t("selectPrison:selectedPrison.howBookingChanged") }}</p>
+      {% if hasDigitalService %}
+        <p>{{ t("selectPrison:selectedPrison.howBookingChanged") }}</p>
 
-      <p>{{ t("selectPrison:selectedPrison.signInPrompt") }}</p>
+        <p>{{ t("selectPrison:selectedPrison.signInPrompt") }}</p>
 
-      {{ govukInsetText({
-        html: insetText
-      }) }}
+        {{ govukInsetText({
+          html: insetText
+        }) }}
 
-      {{ govukButton({
-        text: t("common:buttons.continue"),
-        href: paths.SIGN_IN,
-        attributes: { "data-test": "continue-button" },
-        preventDoubleClick: true
-      }) }} 
+        {{ govukButton({
+          text: t("common:buttons.continue"),
+          href: paths.SIGN_IN,
+          attributes: { "data-test": "continue-button" },
+          preventDoubleClick: true
+        }) }}
+      {% else %}
+        <p data-test="no-digital-service">
+          {{ t("selectPrison:selectedPrison.noDigitalService", {
+            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
+          }) | safe -}}
+        </p>
+      {% endif %}
     </div>
   </div>
 

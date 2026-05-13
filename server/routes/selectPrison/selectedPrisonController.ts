@@ -1,21 +1,21 @@
 import type { RequestHandler } from 'express'
-import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 
 export default class SelectedPrisonController {
-  public constructor(private readonly prisonService: PrisonService) {}
+  public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { selectedPrisonId } = req.session
-
-      if (!selectedPrisonId) {
+      if (!req.session.selectedPrison) {
         return res.redirect(paths.SELECT_PRISON)
       }
 
-      const { code: prisonId } = await this.prisonService.getPrison(selectedPrisonId)
+      const { prisonId, hasDigitalService } = req.session.selectedPrison
 
-      return res.render('pages/selectPrison/selectedPrison', { prisonId })
+      return res.render('pages/selectPrison/selectedPrison', {
+        prisonId,
+        hasDigitalService,
+      })
     }
   }
 }

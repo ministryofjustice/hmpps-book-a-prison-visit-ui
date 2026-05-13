@@ -11,7 +11,7 @@ export default function routes({ prisonService }: Services): Router {
   const router = Router()
 
   const selectPrisonController = new SelectPrisonController(prisonService)
-  const selectedPrisonController = new SelectedPrisonController(prisonService)
+  const selectedPrisonController = new SelectedPrisonController()
 
   // Root path '/' redirect
   router.get(paths.ROOT, async (req, res) => {

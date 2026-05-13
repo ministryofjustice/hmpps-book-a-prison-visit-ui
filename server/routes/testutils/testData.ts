@@ -240,6 +240,7 @@ export default class TestData {
 
   static prisonNames = ({
     prisonNames = {
+      ACI: { name: { en: 'Altcourse (HMP & YOI)' } }, // prison with no digital service
       CFI: { name: { en: 'Cardiff (HMP & YOI)', cy: 'Carchar Caerdydd' } },
       DHI: { name: { en: 'Drake Hall (HMP & YOI)' } },
       FHI: { name: { en: 'Foston Hall (HMP & YOI)' } },
@@ -249,6 +250,7 @@ export default class TestData {
 
   static prisonNameDtos = ({
     prisons = [
+      { prisonId: 'ACI', prisonName: 'Altcourse (HMP & YOI)' }, // prison with no digital service
       { prisonId: 'CFI', prisonName: 'Cardiff (HMP & YOI)', prisonNameInWelsh: 'Carchar Caerdydd' },
       { prisonId: 'DHI', prisonName: 'Drake Hall (HMP & YOI)' },
       { prisonId: 'FHI', prisonName: 'Foston Hall (HMP & YOI)' },
