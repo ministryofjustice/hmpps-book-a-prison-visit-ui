@@ -132,7 +132,10 @@ export default {
   noDigitalServicePrisonIds: get(
     'NO_DIGITAL_SERVICE_PRISON_IDS',
     'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI,WYI',
-  ).split(','),
+  )
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean),
 
   pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),
 
