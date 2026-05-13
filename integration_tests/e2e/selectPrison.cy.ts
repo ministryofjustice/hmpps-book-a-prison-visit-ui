@@ -21,11 +21,11 @@ context('Select a prison', () => {
 
     // Submit selected prison
     cy.task('stubGetSupportedPrisonIds')
-    cy.task('stubGetPrison')
     selectPrisonPage.continue()
 
     // Visiting selected prison page
     const selectedPrisonPage = Page.verifyOnPage(SelectedPrisonPage, 'Hewell (HMP & YOI)')
+    selectedPrisonPage.noDigitalService().should('not.exist')
 
     // Continue
     cy.task('stubHmppsAuthToken')
@@ -35,6 +35,25 @@ context('Select a prison', () => {
 
     // Visits home page (via GOVUK One Login)
     Page.verifyOnPage(VisitsPage)
+  })
+
+  it('should select a prison with no digital service and see the contact prison directly message', () => {
+    cy.hideCookieBanner()
+
+    // Start at select prison page and type into autocomplete input
+    cy.visit(paths.SELECT_PRISON)
+    const selectPrisonPage = Page.verifyOnPage(SelectPrisonPage)
+    selectPrisonPage.autoCompletePrisonName('Alt', 'Altcourse (HMP & YOI)')
+
+    // Submit selected prison
+    cy.task('stubGetSupportedPrisonIds')
+    selectPrisonPage.continue()
+
+    // Visiting selected prison page
+    const selectedPrisonPage = Page.verifyOnPage(SelectedPrisonPage, 'Altcourse (HMP & YOI)')
+
+    // Message about no digital service should be shown
+    selectedPrisonPage.noDigitalService().should('exist')
   })
 
   it('should select an unsupported prison be redirected to PVB', () => {

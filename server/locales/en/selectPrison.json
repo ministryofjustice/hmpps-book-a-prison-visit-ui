@@ -11,6 +11,8 @@
     "title": "Visiting {{prisonName}}",
     "howBookingChanged": "How you book visits at this prison has changed.",
     "signInPrompt": "You need to sign in or create a GOV.UK One Login to book a visit online.",
-    "onlyOnePrisoner": "You can only book visits for one prisoner at {{prisonName}} using this service. If you need to visit another prisoner, <a href=\"{{url}}\">contact the prison directly</a>."
+    "onlyOnePrisoner": "You can only book visits for one prisoner at {{prisonName}} using this service. If you need to visit another prisoner, <a href=\"{{url}}\">contact the prison directly</a>.",
+
+    "noDigitalService": "You need to <a href=\"{{url}}\">contact this prison directly</a> to book visits."
   }
 }

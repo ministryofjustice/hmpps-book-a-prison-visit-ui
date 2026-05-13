@@ -3,21 +3,15 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
-import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
-import { createMockPrisonService } from '../../services/testutils/mocks'
 
 let app: Express
 let sessionData: SessionData
 
-const prison = TestData.prisonDto()
-const prisonService = createMockPrisonService()
-
 beforeEach(() => {
   sessionData = {} as SessionData
-  prisonService.getPrison.mockResolvedValue(prison)
 
-  app = appWithAllRoutes({ services: { prisonService }, sessionData })
+  app = appWithAllRoutes({ sessionData })
 })
 
 afterEach(() => {
@@ -26,8 +20,8 @@ afterEach(() => {
 
 describe('Visiting selected prison page', () => {
   describe(`GET ${paths.SELECTED_PRISON}`, () => {
-    it('should render visiting selected prison page', () => {
-      sessionData.selectedPrisonId = 'HEI'
+    it('should render visiting selected prison page - prison with digital service', () => {
+      sessionData.selectedPrison = { prisonId: 'HEI', hasDigitalService: true }
 
       return request(app)
         .get(paths.SELECTED_PRISON)
@@ -42,18 +36,31 @@ describe('Visiting selected prison page', () => {
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
           expect($('[data-test="continue-button"]').attr('href')).toBe(paths.SIGN_IN)
 
-          expect(prisonService.getPrison).toHaveBeenCalledWith(sessionData.selectedPrisonId)
+          expect($('[data-test="no-digital-service"]').length).toBe(0)
+        })
+    })
+
+    it('should render visiting selected prison page - prison without digital service', () => {
+      sessionData.selectedPrison = { prisonId: 'ACI', hasDigitalService: false }
+
+      return request(app)
+        .get(paths.SELECTED_PRISON)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Visiting Altcourse \(HMP & YOI\) -/)
+          expect($('#navigation').length).toBe(0)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.SELECT_PRISON)
+          expect($('h1').text().trim()).toBe('Visiting Altcourse (HMP & YOI)')
+
+          expect($('[data-test="no-digital-service"]').length).toBe(1)
+
+          expect($('[data-test="continue-button"]').length).toBe(0)
         })
     })
 
     it('should redirect to select prison page if selected prison not set in session', () => {
-      return request(app)
-        .get(paths.SELECTED_PRISON)
-        .expect(302)
-        .expect('Location', paths.SELECT_PRISON)
-        .expect(() => {
-          expect(prisonService.getPrison).not.toHaveBeenCalled()
-        })
+      return request(app).get(paths.SELECTED_PRISON).expect(302).expect('Location', paths.SELECT_PRISON)
     })
   })
 })

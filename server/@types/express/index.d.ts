@@ -33,7 +33,7 @@ declare module 'express-session' {
 
     visitCancelled?: VisitCancelled
 
-    selectedPrisonId?: string
+    selectedPrison?: { prisonId: string; hasDigitalService: boolean }
   }
 }
 

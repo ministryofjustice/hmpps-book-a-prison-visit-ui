@@ -1,4 +1,4 @@
-import Page from '../page'
+import Page, { PageElement } from '../page'
 
 export default class SelectedPrisonPage extends Page {
   constructor(private readonly prisonName: string) {
@@ -8,4 +8,6 @@ export default class SelectedPrisonPage extends Page {
   continue = (): void => {
     cy.get('[data-test="continue-button"]').click()
   }
+
+  noDigitalService = (): PageElement => cy.get('[data-test="no-digital-service"]')
 }

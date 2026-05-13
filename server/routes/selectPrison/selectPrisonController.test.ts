@@ -15,6 +15,8 @@ let sessionData: SessionData
 const prisonNames = TestData.prisonNameDtos()
 const prisonService = createMockPrisonService()
 
+jest.replaceProperty(config, 'noDigitalServicePrisonIds', ['ACI'])
+
 beforeEach(() => {
   sessionData = {} as SessionData
 
@@ -35,7 +37,7 @@ describe('Select a prison', () => {
     })
 
     it('should render select prison page with list of prisons and store supported prison in session', () => {
-      sessionData.selectedPrisonId = 'HEI'
+      sessionData.selectedPrison = { prisonId: 'HEI', hasDigitalService: true }
 
       return request(app)
         .get(paths.SELECT_PRISON)
@@ -52,7 +54,7 @@ describe('Select a prison', () => {
           expect($('select#prisonId option[value="HEI"]').text()).toBe('Hewell (HMP & YOI)')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
-          expect(sessionData.selectedPrisonId).toBeUndefined()
+          expect(sessionData.selectedPrison).toBeUndefined()
         })
     })
 
@@ -90,7 +92,23 @@ describe('Select a prison', () => {
         .expect('Location', paths.SELECTED_PRISON)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.selectedPrisonId).toBe(prisonId)
+          expect(sessionData.selectedPrison).toStrictEqual({ prisonId, hasDigitalService: true })
+          expect(prisonService.isSupportedPrison).toHaveBeenCalledWith(prisonId)
+        })
+    })
+
+    it('should save selected prison to session and redirect to selected prison info page - prison with no online service', () => {
+      const prisonId = 'ACI'
+      prisonService.isSupportedPrison.mockResolvedValue(false)
+
+      return request(app)
+        .post(paths.SELECT_PRISON)
+        .send({ prisonId })
+        .expect(302)
+        .expect('Location', paths.SELECTED_PRISON)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.selectedPrison).toStrictEqual({ prisonId, hasDigitalService: false })
           expect(prisonService.isSupportedPrison).toHaveBeenCalledWith(prisonId)
         })
     })
@@ -106,7 +124,7 @@ describe('Select a prison', () => {
         .expect('Location', config.pvbUrl)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.selectedPrisonId).toBeUndefined()
+          expect(sessionData.selectedPrison).toBeUndefined()
           expect(prisonService.isSupportedPrison).toHaveBeenCalledWith(prisonId)
         })
     })
@@ -127,7 +145,7 @@ describe('Select a prison', () => {
           .expect('Location', paths.SELECT_PRISON)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
-            expect(sessionData.selectedPrisonId).toBeUndefined()
+            expect(sessionData.selectedPrison).toBeUndefined()
           })
       })
     })

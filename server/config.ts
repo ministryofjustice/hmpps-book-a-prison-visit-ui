@@ -127,8 +127,20 @@ export default {
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
+
+  // Prisons that do not use this service or PVB
+  noDigitalServicePrisonIds: get(
+    'NO_DIGITAL_SERVICE_PRISON_IDS',
+    'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI,WYI',
+  )
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean),
+
   pvbUrl: get('PVB_URL', 'https://dev.prisonvisits.prison.service.justice.gov.uk/en/request', requiredInProduction),
+
   rootPathRedirect: get('ROOT_PATH_REDIRECT', '/visits'), // Where to redirect unauthenticated users to for requests to '/'
+
   maintenance: {
     enabled: get('MAINTENANCE_MODE', 'false') === 'true',
     endDateTime: get('MAINTENANCE_MODE_END_DATE_TIME', ''), // ISO format e.g. YYYY-MM-DDTHH:MM
