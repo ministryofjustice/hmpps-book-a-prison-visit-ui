@@ -12,5 +12,6 @@ $path: "/assets/images/";
 @import 'service-header/dist/styles/service-header-no-imports.scss';
 
 @import './components/visits-spacing';
-@import './components/visitsCalendar';
+@import './components/visits-calendar';
+@import './components/language-toggle';
 @import './local';
