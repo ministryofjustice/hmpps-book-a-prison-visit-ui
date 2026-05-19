@@ -56,4 +56,19 @@ describe('Language toggle', () => {
         expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
       })
   })
+
+  it('should show language toggle with language set to Welsh', () => {
+    app = appWithAllRoutes({ lng: 'cy' })
+    return request(app)
+      .get(url)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/Ymweld â rhywun yn y carchar/)
+
+        expect($('.visits-language-toggle li[aria-current="true"]').text().trim()).toBe('Cymraeg')
+        expect($('.visits-language-toggle a').text().trim()).toBe('English')
+        expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=en')
+      })
+  })
 })
