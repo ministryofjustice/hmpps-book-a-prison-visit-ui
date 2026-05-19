@@ -9,6 +9,6 @@ export default function setCurrentUrl(): RequestHandler {
 
     res.locals.currentUrlCy = new URL(currentUrl)
     res.locals.currentUrlCy.searchParams.set('lng', 'cy')
-    return next()
+    next()
   }
 }

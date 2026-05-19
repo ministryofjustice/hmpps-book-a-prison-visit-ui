@@ -14,6 +14,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import setCurrentUrl from './middleware/setCurrentUrl'
+import removeLngAndRedirect from './middleware/removeLngAndRedirect'
 
 import maintenancePageRoute from './routes/maintenancePageRoute'
 import authenticatedRoutes from './routes/authenticatedRoutes'
@@ -43,6 +44,7 @@ export default function createApp(services: Services): express.Application {
   nunjucksSetup(app, services.applicationInfo)
 
   app.get('*any', setCurrentUrl())
+  app.get('*any', removeLngAndRedirect())
 
   app.use(maintenancePageRoute())
 
