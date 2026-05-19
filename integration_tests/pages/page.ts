@@ -69,10 +69,18 @@ export default abstract class Page {
 
   signOut = (): PageElement => cy.get('.rebranded-one-login-header').contains('a', 'Sign out').click()
 
+  getServiceName = (): PageElement => cy.get('.govuk-service-navigation__text')
+
   goToServiceHeaderLinkByName = (name: string): PageElement =>
     cy.get('.govuk-service-navigation').contains('a', name).click()
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
+
+  getCurrentLanguage = (): PageElement => cy.get('.visits-language-toggle li[aria-current="true"]')
+
+  selectEnglishLanguage = (): PageElement => cy.get('.visits-language-toggle a').contains('English').click()
+
+  selectWelshLanguage = (): PageElement => cy.get('.visits-language-toggle a').contains('Cymraeg').click()
 
   getMessages = (index: number): PageElement => cy.get('.moj-alert').eq(index)
 
