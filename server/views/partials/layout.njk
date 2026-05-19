@@ -103,8 +103,8 @@
   {{ visitsLanguageToggle({
     selectedLang: language,
     href: {
-      en: "?lng=en",
-      cy: "?lng=cy"
+      en: currentUrlEn,
+      cy: currentUrlCy
     }
   }) if features.welshLanguageEnabled }}
 {% endblock %}

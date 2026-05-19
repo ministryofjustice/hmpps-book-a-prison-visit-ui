@@ -21,6 +21,7 @@ import type { Session, SessionData } from 'express-session'
 import { ValidationError } from 'express-validator'
 
 import setUpI18n from '../../middleware/setUpI18n'
+import setCurrentUrl from '../../middleware/setCurrentUrl'
 import maintenancePageRoute from '../maintenancePageRoute'
 import authenticatedRoutes from '../authenticatedRoutes'
 import unauthenticatedRoutes from '../unauthenticatedRoutes'
@@ -85,6 +86,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
+  app.get('*any', setCurrentUrl())
   app.use(maintenancePageRoute())
   app.use(analyticsConsent())
   app.use(unauthenticatedRoutes(services))
