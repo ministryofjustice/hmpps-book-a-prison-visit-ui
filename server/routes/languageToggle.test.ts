@@ -71,4 +71,19 @@ describe('Language toggle', () => {
         expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=en')
       })
   })
+
+  it('should show language toggle when rendering from a POST request (e.g. a server error)', () => {
+    app = appWithAllRoutes({})
+    return request(app)
+      .post(url)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/Visit someone in prison/)
+
+        expect($('.visits-language-toggle li[aria-current="true"]').text().trim()).toBe('English')
+        expect($('.visits-language-toggle a').text().trim()).toBe('Cymraeg')
+        expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
+      })
+  })
 })

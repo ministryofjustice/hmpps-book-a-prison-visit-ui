@@ -95,7 +95,7 @@ function appSetup(
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.get('*any', setCurrentUrl())
+  app.use(setCurrentUrl())
   app.get('*any', removeLngAndRedirect())
   app.use(maintenancePageRoute())
   app.use(analyticsConsent())

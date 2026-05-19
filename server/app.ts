@@ -43,7 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpStaticResources())
   nunjucksSetup(app, services.applicationInfo)
 
-  app.get('*any', setCurrentUrl())
+  app.use(setCurrentUrl())
   app.get('*any', removeLngAndRedirect())
 
   app.use(maintenancePageRoute())
