@@ -5,7 +5,7 @@ export default function removeLngAndRedirect(): RequestHandler {
     if (req.query.lng) {
       const currentUrl = new URL(req.originalUrl, `${req.protocol}://${req.get('host')}`)
       currentUrl.searchParams.delete('lng')
-      return res.redirect(currentUrl.toString())
+      return res.redirect(`${currentUrl.pathname}${currentUrl.search}`)
     }
 
     return next()

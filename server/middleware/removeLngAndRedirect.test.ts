@@ -24,7 +24,7 @@ describe('removeLngAndRedirect middleware', () => {
 
     removeLngAndRedirect()(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledWith('http://localhost/some-path?foo=bar')
+    expect(res.redirect).toHaveBeenCalledWith('/some-path?foo=bar')
     expect(next).not.toHaveBeenCalled()
   })
 

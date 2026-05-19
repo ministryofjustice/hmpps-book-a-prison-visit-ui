@@ -103,8 +103,8 @@
   {{ visitsLanguageToggle({
     selectedLang: language,
     href: {
-      en: currentUrlEn,
-      cy: currentUrlCy
+      en: currentUrlEn.pathname + currentUrlEn.search,
+      cy: currentUrlCy.pathname + currentUrlCy.search
     }
   }) if features.welshLanguageEnabled }}
 {% endblock %}
