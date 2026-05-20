@@ -69,6 +69,9 @@ export declare global {
       user?: Express.User
       analyticsEnabled?: boolean
 
+      currentUrlEn: URL
+      currentUrlCy: URL
+
       prisonNames?: PrisonNames
     }
   }

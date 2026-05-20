@@ -4,6 +4,7 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "service-header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "components/language-toggle/macro.njk" import visitsLanguageToggle %}
 
 {% set navigationItems = [
   {
@@ -90,7 +91,7 @@
   }) }}
 
   {% if backLinkHref %}
-    <div role="navigation">
+    <div class="govuk-!-display-inline" role="navigation">
       {{ govukBackLink({
         text: t("common:links.back"),
         href: backLinkHref,
@@ -98,6 +99,14 @@
       }) }}
     </div>
   {% endif %}
+
+  {{ visitsLanguageToggle({
+    selectedLang: language,
+    href: {
+      en: currentUrlEn.pathname + currentUrlEn.search,
+      cy: currentUrlCy.pathname + currentUrlCy.search
+    }
+  }) if features.welshLanguageEnabled }}
 {% endblock %}
 
 {% block footer %}
