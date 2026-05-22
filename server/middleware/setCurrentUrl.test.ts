@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express'
 import setCurrentUrl from './setCurrentUrl'
+import config from '../config'
 
 describe('setCurrentUrl middleware', () => {
   it('sets the current URLs with en/cy query param on res.locals', () => {
     const req = {
       originalUrl: '/test?foo=bar',
       protocol: 'http',
-      get: () => 'example.com',
     } as unknown as Request
 
     const res = {
@@ -17,8 +17,8 @@ describe('setCurrentUrl middleware', () => {
 
     setCurrentUrl()(req, res, next)
 
-    expect(res.locals.currentUrlEn.toString()).toBe('http://example.com/test?foo=bar&lng=en')
-    expect(res.locals.currentUrlCy.toString()).toBe('http://example.com/test?foo=bar&lng=cy')
+    expect(res.locals.currentUrlEn.toString()).toBe(`${config.domain}/test?foo=bar&lng=en`)
+    expect(res.locals.currentUrlCy.toString()).toBe(`${config.domain}/test?foo=bar&lng=cy`)
     expect(next).toHaveBeenCalled()
   })
 })
