@@ -1,3 +1,4 @@
+import { addDays, format, subDays } from 'date-fns'
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import VisitsPage from '../pages/visits/visits'
@@ -5,19 +6,28 @@ import CancelledVisitsPage from '../pages/visits/cancel/cancelledVisits'
 import PastVisitsPage from '../pages/visits/pastVisits'
 import VisitDetailsPage from '../pages/visits/visitDetails'
 import Page from '../pages/page'
+import { DateFormats } from '../../server/constants/dateFormats'
 
 context('Visits home page', () => {
-  const orchestrationVisitDto = TestData.orchestrationVisitDto({
-    startTimestamp: '2026-05-21T10:00:00',
-    endTimestamp: '2026-05-21T11:30:00',
+  const yesterday = subDays(new Date(), 1)
+  const yesterdayApiDate = format(yesterday, DateFormats.API_DATE)
+  const yesterdayDisplayDate = format(yesterday, DateFormats.DISPLAY_DATE_WITH_DAY)
+
+  const tomorrow = addDays(new Date(), 1)
+  const tomorrowApiDate = format(tomorrow, DateFormats.API_DATE)
+  const tomorrowDisplayDate = format(tomorrow, DateFormats.DISPLAY_DATE_WITH_DAY)
+
+  const futureVisitDto = TestData.orchestrationVisitDto({
+    startTimestamp: `${tomorrowApiDate}T10:00:00`,
+    endTimestamp: `${tomorrowApiDate}T11:30:00`,
   })
   const pastVisitDto = TestData.orchestrationVisitDto({
-    startTimestamp: '2023-05-30T10:00:00',
-    endTimestamp: '2023-05-30T11:30:00',
+    startTimestamp: `${yesterdayApiDate}T10:00:00`,
+    endTimestamp: `${yesterdayApiDate}T11:30:00`,
   })
   const cancelledVisitDto = TestData.orchestrationVisitDto({
-    startTimestamp: '2026-05-21T10:00:00',
-    endTimestamp: '2026-05-21T11:30:00',
+    startTimestamp: `${yesterdayApiDate}T10:00:00`,
+    endTimestamp: `${yesterdayApiDate}T11:30:00`,
     outcomeStatus: 'ESTABLISHMENT_CANCELLED',
     visitStatus: 'CANCELLED',
     visitSubStatus: 'CANCELLED',
@@ -36,21 +46,21 @@ context('Visits home page', () => {
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
     cy.task('stubGetFuturePublicVisits', {
       bookerReference: bookerReference.value,
-      visits: [orchestrationVisitDto],
+      visits: [futureVisitDto],
     })
     cy.signIn()
   })
 
-  it('should show Visits home page with future visits and navigate to view the visit details', () => {
+  it('should show Visits home page with future visits and navigate to view the visit details for a future visit ', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    visitsPage.visitDate(1).contains(tomorrowDisplayDate)
     visitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
     visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
-    visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
+    visitDetailsPage.visitDate().contains(tomorrowDisplayDate)
     visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
     visitDetailsPage.prisonerName().contains('John Smith')
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
@@ -62,12 +72,7 @@ context('Visits home page', () => {
     visitDetailsPage.contactPrison().contains(prison.phoneNumber)
   })
 
-  it('should show Past visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference: bookerReference.value,
-      visits: [orchestrationVisitDto],
-    })
-
+  it('should show Past visits page and navigate to view the visit details for a past visit', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetPastPublicVisits', {
@@ -78,22 +83,17 @@ context('Visits home page', () => {
     visitsPage.pastVisitsLink().click()
 
     const pastVisitsPage = Page.verifyOnPage(PastVisitsPage)
-    pastVisitsPage.visitDate(1).contains('Tuesday 30 May 2023')
+    pastVisitsPage.visitDate(1).contains(yesterdayDisplayDate)
     pastVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     pastVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.PAST)
-    visitDetailsPage.visitDate().contains('Tuesday 30 May 2023')
+    visitDetailsPage.visitDate().contains(yesterdayDisplayDate)
     visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
   })
 
-  it('should show Cancelled visits page with visits and navigate to view the visit details', () => {
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference: bookerReference.value,
-      visits: [orchestrationVisitDto],
-    })
-
+  it('should show Cancelled visits page and navigate to view the visit details for a cancelled visit', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     cy.task('stubGetCancelledPublicVisits', {
@@ -104,14 +104,14 @@ context('Visits home page', () => {
     visitsPage.cancelledVisitsLink().click()
 
     const cancelledVisitsPage = Page.verifyOnPage(CancelledVisitsPage)
-    cancelledVisitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    cancelledVisitsPage.visitDate(1).contains(yesterdayDisplayDate)
     cancelledVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     cancelledVisitsPage.visitLink(1).click()
 
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.CANCELLED)
     visitDetailsPage.getMessages(0).contains(/Visit cancelled(.*)This visit was cancelled by the prison\./)
-    visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
+    visitDetailsPage.visitDate().contains(yesterdayDisplayDate)
     visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
   })
 })

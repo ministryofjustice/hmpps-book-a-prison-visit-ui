@@ -1,3 +1,4 @@
+import { addDays, format } from 'date-fns'
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import VisitsPage from '../pages/visits/visits'
@@ -5,11 +6,16 @@ import CancelConfirmedPage from '../pages/visits/cancel/cancelConfirmed'
 import CancelVisitPage from '../pages/visits/cancel/cancelVisit'
 import VisitDetailsPage from '../pages/visits/visitDetails'
 import Page from '../pages/page'
+import { DateFormats } from '../../server/constants/dateFormats'
 
 context('Cancel visit journey', () => {
+  const tomorrow = addDays(new Date(), 1) // needs to be a future date for visit to be cancellable
+  const tomorrowApiDate = format(tomorrow, DateFormats.API_DATE)
+  const tomorrowDisplayDate = format(tomorrow, DateFormats.DISPLAY_DATE_WITH_DAY)
+
   const orchestrationVisitDto = TestData.orchestrationVisitDto({
-    startTimestamp: '2026-05-21T10:00:00',
-    endTimestamp: '2026-05-21T11:30:00',
+    startTimestamp: `${tomorrowApiDate}T10:00:00`,
+    endTimestamp: `${tomorrowApiDate}T11:30:00`,
   })
 
   const prisoner = TestData.bookerPrisonerInfoDto()
@@ -31,19 +37,19 @@ context('Cancel visit journey', () => {
 
   it('should navigate to Future visits page, then view visit details and cancel it', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.visitDate(1).contains('Thursday 21 May 2026')
+    visitsPage.visitDate(1).contains(tomorrowDisplayDate)
     visitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
     visitsPage.visitLink(1).click()
     const visitDetailsPage = Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
-    visitDetailsPage.visitDate().contains('Thursday 21 May 2026')
+    visitDetailsPage.visitDate().contains(tomorrowDisplayDate)
     visitDetailsPage.cancelVisitButton().contains('Cancel visit')
     visitDetailsPage.cancelVisitButton().click()
 
     const cancelVisitPage = Page.verifyOnPage(CancelVisitPage)
-    cancelVisitPage.visitDate().contains('Thursday 21 May 2026')
+    cancelVisitPage.visitDate().contains(tomorrowDisplayDate)
     cancelVisitPage.visitStartEndTime().contains('10am to 11:30am')
     cancelVisitPage.prisonerName().contains('John Smith')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
