@@ -96,15 +96,20 @@
     "prisoner": "Prisoner",
     "prisonNumber": "Prison number",
     "someoneElse": "Someone else",
+    "updatesInEnglish": "Updates in English",
+    "updatesInWelsh": "Updates to be sent in Welsh",
+    "updatesInWelshAndEnglish": "Updates in Welsh and English",
     "visitCancelled": "Visit cancelled",
     "visitReference": "Visit reference",
     "visitors": "Visitors",
     "warning": "Warning",
     "yes": "Yes",
-    "yesDetails": "If yes, provide details"
+    "yesDetails": "If yes, provide details",
+    "welshLanguage": "Welsh language"
   },
 
   "hints": {
+    "alsoInEnglish": "They will also be sent in English.",
     "dateOfBirth": "For example, 27 3 1977",
     "prisonNumber": "For example, A1234BC"
   },

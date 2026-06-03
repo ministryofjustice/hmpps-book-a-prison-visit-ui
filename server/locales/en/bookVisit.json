@@ -101,22 +101,17 @@
 
     "getUpdatesByEmail": "Get updates by email",
     "getUpdatesByText": "Get updates by text message",
-    "ukMobileHint": "If this is a UK mobile phone number, we will send a text message to confirm the visit"
+    "ukMobileHint": "If this is a UK mobile phone number, we will send a text message to confirm the visit",
+    "updatesInWelsh": "Tick for updates to be sent in Welsh"
   },
 
   "checkVisitDetails": {
     "title": "Check the visit details",
-
     "prisonerAtPrison": "{{name}} at {{prisonName}}",
-
     "changeVisitors": "visitors",
-
     "changeDateAndTime": "date and time",
-
     "changeAdditionalSupport": "additional support requests",
-
     "changeMainContact": "main contact",
-
     "changeContactDetails": "contact details"
   },
 

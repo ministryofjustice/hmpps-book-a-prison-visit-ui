@@ -12,7 +12,8 @@
   },
 
   "visitorDetails": {
-    "title": "Visitor information"
+    "title": "Visitor information",
+    "updatesInWelsh": "Tick for updates about this request to be sent in Welsh"
   },
 
   "checkVisitorDetails": {
