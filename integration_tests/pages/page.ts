@@ -34,6 +34,9 @@ export default abstract class Page {
 
         // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
         { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
+
+        // GOV.UK footer component not in a landmark
+        { id: 'region', selector: '.govuk-footer' },
       ],
     })
 
