@@ -54,7 +54,7 @@ describe('Static content pages - unauthenticated users', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe(pageTitle)
 
-        expect($('header.govuk-header').length).toBe(1)
+        expect($('div.govuk-header').length).toBe(1)
         expect($('header .rebranded-one-login-header').length).toBe(0)
         expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
 
