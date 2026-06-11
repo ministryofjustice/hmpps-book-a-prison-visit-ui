@@ -56,27 +56,24 @@
   {% endif %}
 {% endblock %}
 
-{% block header %}
+{% block govukHeader %}
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
   {{ govukOneLoginServiceHeader({ 
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink,
-    lng: language,
-    serviceNavigationParams: {
-      serviceName: serviceName,
-      navigation: navigationItems,
-      collapseNavigationOnMobile: false
-    }
+    lng: language
   }) }}
 {% else %}
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk"
   }) }}
-  {{ govukServiceNavigation({
-    serviceName: serviceName
-  }) }}
 {% endif %}
+{{ govukServiceNavigation({
+  serviceName: serviceName,
+  navigation: navigationItems,
+  collapseNavigationOnMobile: false
+}) }}
 {% endblock %}
 
 {% block beforeContent %}
