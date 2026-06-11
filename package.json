@@ -35,7 +35,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@govuk-one-login/service-header": "5.0.0",
+    "@govuk-one-login/service-header": "6.0.0",
     "@ministryofjustice/frontend": "^8.0.1",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "accessible-autocomplete": "^3.0.1",
