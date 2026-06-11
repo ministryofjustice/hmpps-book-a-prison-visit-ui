@@ -69,11 +69,13 @@
     homepageUrl: "https://www.gov.uk"
   }) }}
 {% endif %}
-{{ govukServiceNavigation({
-  serviceName: serviceName,
-  navigation: navigationItems,
-  collapseNavigationOnMobile: false
-}) }}
+{% endblock %}
+{% block govukServiceNavigation %}
+  {{ govukServiceNavigation({
+    serviceName: serviceName,
+    navigation: navigationItems,
+    collapseNavigationOnMobile: false
+  }) }}
 {% endblock %}
 
 {% block beforeContent %}
