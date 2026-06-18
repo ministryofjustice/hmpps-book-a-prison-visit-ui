@@ -98,7 +98,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('getPrisonName', getPrisonName)
 
-  njkEnv.addGlobal('govukRebrand', true)
-
   return njkEnv
 }
