@@ -57,7 +57,7 @@
             value: {
               html:
                 '<span data-test="date-of-birth">' +
-                (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE_NUMERIC, language)) +
+                (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE, language)) +
                 "</span>"
             }
           }
@@ -79,7 +79,7 @@
           text: t("common:buttons.acceptAndSend"),
           attributes: { "data-test": "submit" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

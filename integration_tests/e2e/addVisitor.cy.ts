@@ -54,7 +54,7 @@ context('Add a visitor', () => {
     const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
     checkVisitorDetailsPage.firstName().contains('Joan')
     checkVisitorDetailsPage.lastName().contains('Smith')
-    checkVisitorDetailsPage.dateOfBirth().contains('21/2/1980')
+    checkVisitorDetailsPage.dateOfBirth().contains('21 February 1980')
 
     // Change details and continue
     checkVisitorDetailsPage.changeDetails()
@@ -96,7 +96,7 @@ context('Add a visitor', () => {
     const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
     checkVisitorDetailsPage.firstName().contains('Joan')
     checkVisitorDetailsPage.lastName().contains('Smith')
-    checkVisitorDetailsPage.dateOfBirth().contains('21/2/1980')
+    checkVisitorDetailsPage.dateOfBirth().contains('21 February 1980')
 
     // Change details and continue
     checkVisitorDetailsPage.changeDetails()

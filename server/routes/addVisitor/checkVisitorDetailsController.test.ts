@@ -49,7 +49,7 @@ describe('Check visitor request details', () => {
           expect($('[data-test=change]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
           expect($('[data-test=first-name]').text().trim()).toBe('first')
           expect($('[data-test=last-name]').text().trim()).toBe('last')
-          expect($('[data-test=date-of-birth]').text().trim()).toBe('1/2/2000')
+          expect($('[data-test=date-of-birth]').text().trim()).toBe('1 February 2000')
           expect($('[data-test=submit]').parent('form').attr('action')).toBe(paths.ADD_VISITOR.CHECK)
           expect($('[data-test=submit]').text().trim()).toBe('Accept and send')
         })
