@@ -2,7 +2,7 @@ import { initialiseTelemetry, flushTelemetry, telemetry } from '@ministryofjusti
 import logger from '../../logger'
 
 initialiseTelemetry({
-  serviceName: 'hmpps-template-typescript',
+  serviceName: 'hmpps-book-a-prison-visit-ui',
   serviceVersion: process.env.BUILD_NUMBER || 'unknown',
   connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
   debug: process.env.DEBUG_TELEMETRY === 'true',
