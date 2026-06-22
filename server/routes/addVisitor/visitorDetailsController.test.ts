@@ -60,6 +60,7 @@ describe('Visitor details', () => {
           'visitorDob-month': '2',
           'visitorDob-year': '2000',
           visitorDob: '2000-02-01',
+          languagePreference: 'en',
         },
       }
 
@@ -127,6 +128,7 @@ describe('Visitor details', () => {
       'visitorDob-month': '2',
       'visitorDob-year': '2000',
       visitorDob: '2000-02-01',
+      languagePreference: 'en',
     } as const
 
     it('should save visitor information to session and redirect to check request page', () => {

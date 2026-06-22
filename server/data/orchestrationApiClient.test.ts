@@ -141,7 +141,7 @@ describe('orchestrationApiClient', () => {
       const applicationRestriction: SessionRestriction = 'OPEN'
       const sessionTemplateReference = 'v9d.7ed.7u'
       const sessionDate = '2024-05-01'
-      const visitContact = { name: 'Visit Contact' }
+      const visitContact: ChangeApplicationDto['visitContact'] = { name: 'Visit Contact', languagePreference: 'en' }
       const visitors = [
         { nomisPersonId: 1, visitContact: true },
         { nomisPersonId: 2, visitContact: false },

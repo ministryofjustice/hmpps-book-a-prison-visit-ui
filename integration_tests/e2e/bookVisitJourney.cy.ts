@@ -179,7 +179,12 @@ context('Book visit journey', () => {
     contactDetailsPage.enterPhoneNumber('07712 000 000')
     cy.task('stubChangeVisitApplication', {
       ...application,
-      visitContact: { name: 'Adult One', telephone: '07712 000 000', email: 'adult.one@example.com' },
+      visitContact: {
+        name: 'Adult One',
+        telephone: '07712 000 000',
+        email: 'adult.one@example.com',
+        languagePreference: 'en',
+      },
       visitors: [
         { nomisPersonId: 1000, visitContact: true },
         { nomisPersonId: 3000, visitContact: false },
@@ -272,7 +277,7 @@ context('Book visit journey', () => {
     contactDetailsPage.enterEmail('adult.one@example.com')
     cy.task('stubChangeVisitApplication', {
       ...application,
-      visitContact: { name: 'Adult One', email: 'adult.one@example.com' },
+      visitContact: { name: 'Adult One', email: 'adult.one@example.com', languagePreference: 'en' },
       visitors: [
         { nomisPersonId: 1000, visitContact: true },
         { nomisPersonId: 3000, visitContact: false },

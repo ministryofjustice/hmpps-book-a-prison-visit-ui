@@ -36,6 +36,7 @@ export default class CheckVisitorDetailsController {
           firstName: visitorDetails.firstName,
           lastName: visitorDetails.lastName,
           dateOfBirth: visitorDetails.visitorDob,
+          languagePreference: visitorDetails.languagePreference,
         },
       })
 

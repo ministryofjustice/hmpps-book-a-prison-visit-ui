@@ -1,3 +1,4 @@
+import { Locale } from '../constants/locales'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 import {
   AvailableVisitSessionDto,
@@ -37,6 +38,7 @@ export type AddVisitorJourney = {
     'visitorDob-month': string
     'visitorDob-year': string
     visitorDob: string
+    languagePreference: Locale
   }
   result?: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
 }
@@ -81,6 +83,7 @@ export type BookVisitJourney = {
   // contact details
   mainContactEmail?: string
   mainContactPhone?: string
+  languagePreference?: Locale
 }
 
 export type BookVisitConfirmed = {
