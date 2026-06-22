@@ -49,6 +49,7 @@ export default class VisitorDetailsController {
           'visitorDob-month': data['visitorDob-month'],
           'visitorDob-year': data['visitorDob-year'],
           visitorDob: data.visitorDob,
+          languagePreference: 'en',
         },
       }
 

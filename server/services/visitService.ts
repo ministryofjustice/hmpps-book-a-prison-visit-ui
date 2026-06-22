@@ -51,13 +51,14 @@ export default class VisitService {
     const orchestrationApiClient = this.orchestrationApiClientFactory(token)
 
     const { mainContact } = bookVisitJourney
-    const { mainContactEmail, mainContactPhone } = bookVisitJourney
+    const { mainContactEmail, mainContactPhone, languagePreference } = bookVisitJourney
 
     const visitContact = mainContact
       ? {
           name: getMainContactName(mainContact),
           ...(mainContactPhone && { telephone: mainContactPhone }),
           ...(mainContactEmail && { email: mainContactEmail }),
+          languagePreference: languagePreference ?? 'en',
         }
       : undefined
 

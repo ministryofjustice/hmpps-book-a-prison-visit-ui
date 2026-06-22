@@ -44,6 +44,7 @@ export default class ContactDetailsController {
 
       bookVisitJourney.mainContactEmail = getUpdatesBy.includes('email') ? mainContactEmail : undefined
       bookVisitJourney.mainContactPhone = getUpdatesBy.includes('phone') ? mainContactPhone : undefined
+      bookVisitJourney.languagePreference = 'en'
 
       await this.visitService.changeVisitApplication({ bookVisitJourney })
 

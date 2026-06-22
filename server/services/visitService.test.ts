@@ -80,7 +80,12 @@ describe('Visit service', () => {
 
     describe('changeVisitApplication', () => {
       it('should change an existing visit application to update it with book visit journey data', async () => {
-        const visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'user@example.com' }
+        const visitContact = {
+          name: 'Joan Phillips',
+          telephone: '07712 000 000',
+          email: 'user@example.com',
+          languagePreference: 'en',
+        }
         const visitors = [
           { nomisPersonId: 100, visitContact: true },
           { nomisPersonId: 200, visitContact: false },
@@ -108,7 +113,7 @@ describe('Visit service', () => {
         bookVisitJourney.mainContactEmail = undefined
         bookVisitJourney.mainContactPhone = undefined
 
-        const visitContact = { name: 'Someone Else' }
+        const visitContact = { name: 'Someone Else', languagePreference: 'en' }
         const visitors = [
           { nomisPersonId: 100, visitContact: false },
           { nomisPersonId: 200, visitContact: false },

@@ -261,26 +261,26 @@ export interface components {
        * @description email address
        * @example example@example.com
        */
-      emailAddress?: string
+      emailAddress?: string | null
       /**
        * @description Phone Number
        * @example 01234567890
        */
-      phoneNumber?: string
+      phoneNumber?: string | null
       /**
        * @description Web address
        * @example https://www.example.co.uk
        */
-      webAddress?: string
+      webAddress?: string | null
     }
     ErrorResponse: {
       /** Format: int32 */
       status: number
       /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      moreInfo?: string
+      errorCode?: number | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      moreInfo?: string | null
     }
     /** @description Prison Update Record */
     UpdatePrisonDto: {
@@ -293,7 +293,7 @@ export interface components {
        * @description Welsh name of the prison
        * @example Carchar Brynbuga
        */
-      prisonNameInWelsh?: string
+      prisonNameInWelsh?: string | null
       /** @description Whether the prison is still active */
       active: boolean
       /** @description If this is a male prison */
@@ -304,9 +304,19 @@ export interface components {
       contracted: boolean
       /** @description If this prison is part of the long term high security estate */
       lthse: boolean
-      /** @description Set of types for this prison */
+      /**
+       * @description Set of types for this prison
+       * @example [
+       *       "HMP"
+       *     ]
+       */
       prisonTypes: ('HMP' | 'YOI' | 'IRC' | 'STC' | 'YCS')[]
-      /** @description Set of categories for this prison */
+      /**
+       * @description Set of categories for this prison
+       * @example [
+       *       "A"
+       *     ]
+       */
       categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
     }
     AddressDto: {
@@ -320,12 +330,12 @@ export interface components {
        * @description Address line 1
        * @example Bawtry Road
        */
-      addressLine1?: string
+      addressLine1?: string | null
       /**
        * @description Address line 2
        * @example Hatfield Woodhouse
        */
-      addressLine2?: string
+      addressLine2?: string | null
       /**
        * @description Village/Town/City
        * @example Doncaster
@@ -335,7 +345,7 @@ export interface components {
        * @description County
        * @example South Yorkshire
        */
-      county?: string
+      county?: string | null
       /**
        * @description Postcode
        * @example DN7 6BW
@@ -350,27 +360,27 @@ export interface components {
        * @description Address line 1 in Welsh
        * @example Coed-y-Paen
        */
-      addressLine1InWelsh?: string
+      addressLine1InWelsh?: string | null
       /**
        * @description Address line 2 in Welsh
        * @example Hatfield Woodhouse
        */
-      addressLine2InWelsh?: string
+      addressLine2InWelsh?: string | null
       /**
        * @description Village/Town/City in Welsh
        * @example Pont-y-pŵl
        */
-      townInWelsh?: string
+      townInWelsh?: string | null
       /**
        * @description County in Welsh
        * @example Sir Fynwy
        */
-      countyInWelsh?: string
+      countyInWelsh?: string | null
       /**
        * @description Country in Welsh
        * @example Cymru
        */
-      countryInWelsh?: string
+      countryInWelsh?: string | null
     }
     /** @description Prison Information */
     PrisonDto: {
@@ -388,7 +398,7 @@ export interface components {
        * @description Name of the prison in Welsh
        * @example Carchar Brynbuga
        */
-      prisonNameInWelsh?: string
+      prisonNameInWelsh?: string | null
       /** @description Whether the prison is still active */
       active: boolean
       /** @description Whether the prison has male prisoners */
@@ -434,27 +444,27 @@ export interface components {
        * @description Address line 1 in Welsh
        * @example Bawtry Road
        */
-      addressLine1InWelsh?: string
+      addressLine1InWelsh?: string | null
       /**
        * @description Address line 2 in Welsh
        * @example Hatfield Woodhouse
        */
-      addressLine2InWelsh?: string
+      addressLine2InWelsh?: string | null
       /**
        * @description Village/Town/City in Welsh
        * @example Brynbuga
        */
-      townInWelsh?: string
+      townInWelsh?: string | null
       /**
        * @description County in Welsh
        * @example Sir Fynwy
        */
-      countyInWelsh?: string
+      countyInWelsh?: string | null
       /**
        * @description Country in Welsh
        * @example Cymru
        */
-      countryInWelsh?: string
+      countryInWelsh?: string | null
     }
     /** @description Address Update Record */
     UpdateAddressDto: {
@@ -462,12 +472,12 @@ export interface components {
        * @description Address line 1
        * @example Bawtry Road
        */
-      addressLine1?: string
+      addressLine1?: string | null
       /**
        * @description Address line 2
        * @example Hatfield Woodhouse
        */
-      addressLine2?: string
+      addressLine2?: string | null
       /**
        * @description Village/Town/City
        * @example Doncaster
@@ -477,7 +487,7 @@ export interface components {
        * @description County
        * @example South Yorkshire
        */
-      county?: string
+      county?: string | null
       /**
        * @description Postcode
        * @example DN7 6BW
@@ -491,7 +501,7 @@ export interface components {
     }
     PrisonRequest: {
       /** @description List of prison ids */
-      prisonIds: string[]
+      prisonIds: string[] | null
     }
     /** @description Prison Insert Record */
     InsertPrisonDto: {
@@ -509,7 +519,7 @@ export interface components {
        * @description Welsh name of the prison
        * @example Carchar Brynbuga
        */
-      prisonNameInWelsh?: string
+      prisonNameInWelsh?: string | null
       /** @description Whether the prison is still active */
       active: boolean
       /** @description If this is a male prison */
@@ -527,7 +537,12 @@ export interface components {
       prisonTypes: ('HMP' | 'YOI' | 'IRC' | 'STC' | 'YCS')[]
       /** @description List of addresses for this prison */
       addresses: components['schemas']['UpdateAddressDto'][]
-      /** @description Set of categories for this prison */
+      /**
+       * @description Set of categories for this prison
+       * @example [
+       *       "A"
+       *     ]
+       */
       categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
     }
     /** @description Full name of prison with id */
@@ -546,7 +561,7 @@ export interface components {
        * @description Name of the prison in Welsh
        * @example Carchar Brynbuga
        */
-      prisonNameInWelsh?: string
+      prisonNameInWelsh?: string | null
     }
   }
   responses: never
@@ -741,7 +756,6 @@ export interface operations {
             | '101 SWITCHING_PROTOCOLS'
             | '102 PROCESSING'
             | '103 EARLY_HINTS'
-            | '103 CHECKPOINT'
             | '200 OK'
             | '201 CREATED'
             | '202 ACCEPTED'
@@ -755,10 +769,8 @@ export interface operations {
             | '300 MULTIPLE_CHOICES'
             | '301 MOVED_PERMANENTLY'
             | '302 FOUND'
-            | '302 MOVED_TEMPORARILY'
             | '303 SEE_OTHER'
             | '304 NOT_MODIFIED'
-            | '305 USE_PROXY'
             | '307 TEMPORARY_REDIRECT'
             | '308 PERMANENT_REDIRECT'
             | '400 BAD_REQUEST'
@@ -774,17 +786,15 @@ export interface operations {
             | '410 GONE'
             | '411 LENGTH_REQUIRED'
             | '412 PRECONDITION_FAILED'
+            | '413 CONTENT_TOO_LARGE'
             | '413 PAYLOAD_TOO_LARGE'
-            | '413 REQUEST_ENTITY_TOO_LARGE'
             | '414 URI_TOO_LONG'
-            | '414 REQUEST_URI_TOO_LONG'
             | '415 UNSUPPORTED_MEDIA_TYPE'
             | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
             | '417 EXPECTATION_FAILED'
             | '418 I_AM_A_TEAPOT'
-            | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
-            | '420 METHOD_FAILURE'
-            | '421 DESTINATION_LOCKED'
+            | '421 MISDIRECTED_REQUEST'
+            | '422 UNPROCESSABLE_CONTENT'
             | '422 UNPROCESSABLE_ENTITY'
             | '423 LOCKED'
             | '424 FAILED_DEPENDENCY'
