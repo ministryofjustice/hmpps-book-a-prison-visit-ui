@@ -30,7 +30,7 @@ describe('Visitor details', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
-    it('should render visitor information page', () => {
+    it('should render visitor information page (in English - without Welsh updates preference checkbox)', () => {
       return request(app)
         .get(paths.ADD_VISITOR.DETAILS)
         .expect('Content-Type', /html/)
@@ -47,7 +47,21 @@ describe('Visitor details', () => {
           expect($('input[name=visitorDob-day]').length).toBe(1)
           expect($('input[name=visitorDob-month]').length).toBe(1)
           expect($('input[name=visitorDob-year]').length).toBe(1)
+          expect($('input[name=languagePreference]').length).toBe(0)
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+        })
+    })
+
+    it('should render visitor information page (in Welsh - with Welsh updates preference checkbox)', () => {
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.ADD_VISITOR.DETAILS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name=languagePreference]').length).toBe(1)
+          expect($('input[name=languagePreference]').prop('checked')).toBe(true)
         })
     })
 
@@ -121,25 +135,46 @@ describe('Visitor details', () => {
   })
 
   describe(`POST ${paths.ADD_VISITOR.DETAILS}`, () => {
-    const visitorDetails: AddVisitorJourney['visitorDetails'] = {
+    const formData = {
       firstName: 'first',
       lastName: 'last',
       'visitorDob-day': '1',
       'visitorDob-month': '2',
       'visitorDob-year': '2000',
       visitorDob: '2000-02-01',
-      languagePreference: 'en',
-    } as const
+    }
 
-    it('should save visitor information to session and redirect to check request page', () => {
+    it('should save visitor information to session and redirect to check request page (English language)', () => {
+      const expectedVisitorDetails: AddVisitorJourney['visitorDetails'] = {
+        ...formData,
+        languagePreference: 'en',
+      }
       return request(app)
         .post(paths.ADD_VISITOR.DETAILS)
-        .send(visitorDetails)
+        .send(formData)
         .expect(302)
         .expect('Location', paths.ADD_VISITOR.CHECK)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(visitorDetails)
+          expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(expectedVisitorDetails)
+        })
+    })
+
+    it('should save visitor information to session and redirect to check request page (Welsh language with updates in Welsh checked)', () => {
+      const expectedVisitorDetails: AddVisitorJourney['visitorDetails'] = {
+        ...formData,
+        languagePreference: 'cy',
+      }
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .post(paths.ADD_VISITOR.DETAILS)
+        .send({ ...formData, languagePreference: 'cy' })
+        .expect(302)
+        .expect('Location', paths.ADD_VISITOR.CHECK)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(expectedVisitorDetails)
         })
     })
 

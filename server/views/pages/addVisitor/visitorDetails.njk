@@ -2,6 +2,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set pageTitle = t("addVisitor:visitorDetails.title") %}
 
@@ -46,11 +47,31 @@
 
         {{ dateOfBirthInput('visitorDob', formValues, errors) }}
 
+        {# Only render if the language is Welsh #}
+        {{ govukCheckboxes({
+          name: "languagePreference",
+          fieldset: {
+            legend: {
+              text: t("common:labels.welshLanguage")
+            }
+          },
+          items: [
+            {
+              value: "cy",
+              text: t("addVisitor:visitorDetails.updatesInWelsh"),
+              hint: {
+                text: t("common:hints.alsoInEnglish")
+              },
+              checked: formValues.languagePreference === "cy"
+            }
+          ]
+        }) if language == 'cy' }}
+
         {{ govukButton({
           text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

@@ -30,6 +30,7 @@
         </div>
       </div>
 
+       {# Only render last item if the language is Welsh #}
       {{ govukSummaryList({
         rows: [
           {
@@ -60,7 +61,18 @@
                 (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE, language)) +
                 "</span>"
             }
-          }
+          },
+          ({
+            key: {
+              text: t("common:labels.updatesInWelsh")
+            },
+            value: {
+              html:
+                '<span data-test="updates-in-welsh">' +
+                (t("common:labels.yes") if visitorDetails.languagePreference == 'cy' else t("common:labels.no")) +
+                "</span>"
+            }
+          } if language == 'cy')
         ]
       }) }}
 
