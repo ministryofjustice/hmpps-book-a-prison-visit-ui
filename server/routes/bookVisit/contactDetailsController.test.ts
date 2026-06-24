@@ -78,7 +78,7 @@ describe('Contact details', () => {
         })
     })
 
-    it('should render contact details page for selected main contact and all fields empty (in English - without without Welsh updates preference checkbox)', () => {
+    it('should render contact details page for selected main contact and all fields empty (in English - without Welsh updates preference checkbox)', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
         .expect(200)
