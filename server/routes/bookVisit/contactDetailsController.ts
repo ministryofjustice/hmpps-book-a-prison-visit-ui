@@ -9,13 +9,21 @@ export default class ContactDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { mainContact, mainContactEmail, mainContactPhone } = req.session.bookVisitJourney!
+      const { mainContact, mainContactEmail, mainContactPhone, languagePreference } = req.session.bookVisitJourney!
+
+      const flashFormValues = req.flash('formValues')?.[0] ?? {}
+
+      // Default to updates in Welsh on initial form load if user language is Welsh
+      if (req.language === 'cy' && !languagePreference && Object.keys(flashFormValues).length === 0) {
+        flashFormValues.languagePreference = 'cy'
+      }
 
       const formValues = {
         mainContactEmail,
         mainContactPhone,
         getUpdatesBy: [...(mainContactEmail ? ['email'] : []), ...(mainContactPhone ? ['phone'] : [])],
-        ...req.flash('formValues')?.[0],
+        languagePreference,
+        ...flashFormValues,
       }
 
       res.render('pages/bookVisit/contactDetails', {
@@ -36,15 +44,16 @@ export default class ContactDetailsController {
       }
 
       const bookVisitJourney = req.session.bookVisitJourney!
-      const { getUpdatesBy, mainContactEmail, mainContactPhone } = matchedData<{
+      const { getUpdatesBy, mainContactEmail, mainContactPhone, languagePreference } = matchedData<{
         getUpdatesBy: string[]
         mainContactEmail?: string
         mainContactPhone?: string
+        languagePreference?: 'cy'
       }>(req)
 
       bookVisitJourney.mainContactEmail = getUpdatesBy.includes('email') ? mainContactEmail : undefined
       bookVisitJourney.mainContactPhone = getUpdatesBy.includes('phone') ? mainContactPhone : undefined
-      bookVisitJourney.languagePreference = 'en'
+      bookVisitJourney.languagePreference = languagePreference ?? 'en'
 
       await this.visitService.changeVisitApplication({ bookVisitJourney })
 
@@ -60,16 +69,20 @@ export default class ContactDetailsController {
         .withMessage((_value, { req }) => req.t('validation:contactMethodRequired'))
         .isIn(['email', 'phone'])
         .withMessage((_value, { req }) => req.t('validation:contactMethodRequired')),
+
       body('mainContactEmail')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('email')))
         .trim()
         .isEmail()
         .withMessage((_value, { req }) => req.t('validation:emailInvalid')),
+
       body('mainContactPhone')
         .if(body('getUpdatesBy').custom((value: string[]) => value.includes('phone')))
         .trim()
         .matches(/^(?:0|\+?44)(?:\d\s?){9,10}$/)
         .withMessage((_value, { req }) => req.t('validation:phoneInvalid')),
+
+      body('languagePreference').optional().isIn(['cy']),
     ]
   }
 }

@@ -125,9 +125,16 @@
             },
             value: {
               html: '<p><span data-test="contact-details-email">' + mainContactEmail | escape + "</span></p>" +
-                    '<p><span data-test="contact-details-phone">' + mainContactPhone | escape + "</span></p>"
-                      if mainContactEmail or mainContactPhone else
-                    '<p><span data-test="no-contact-details">' + t("common:labels.noContactDetails") + '</span>'
+                    (
+                      '<p><span data-test="contact-details-phone">' + mainContactPhone | escape + "</span></p>"
+                        if mainContactEmail or mainContactPhone else
+                      '<p><span data-test="no-contact-details">' + t("common:labels.noContactDetails") + '</span></p>'
+                    ) +
+                    ((
+                      '<p><span data-test="updates-in-language">' +
+                        (t("common:labels.updatesInWelshAndEnglish") if languagePreference == 'cy' else t("common:labels.updatesInEnglish")) +
+                      '</span></p>'
+                    ) if language == 'cy')
             },
             actions: {
               items: [
