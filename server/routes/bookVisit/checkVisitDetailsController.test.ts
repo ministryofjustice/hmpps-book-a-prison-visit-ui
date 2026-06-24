@@ -44,6 +44,7 @@ beforeEach(() => {
       mainContact: 'User One',
       mainContactPhone: '07712 000 000',
       mainContactEmail: 'user@example.com',
+      languagePreference: 'en',
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -79,7 +80,7 @@ describe('Check visit details', () => {
         })
     })
 
-    it('should render check visit details page', () => {
+    it('should render check visit details page (in English - no updates in English/Welsh row)', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
@@ -101,7 +102,36 @@ describe('Check visit details', () => {
           expect($('[data-test="main-contact-name"]').text()).toBe('User One')
           expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
           expect($('[data-test="contact-details-phone"]').text()).toBe('07712 000 000')
+          expect($('[data-test=updates-in-language]').length).toBe(0)
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
+        })
+    })
+
+    it('should render check visit details page (in Welsh - with updates in Welsh and English)', () => {
+      sessionData.bookVisitJourney!.languagePreference = 'cy'
+
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-language]').text()).toBe('Updates in Welsh and English')
+        })
+    })
+
+    it('should render check visit details page (in Welsh - with updates in English only)', () => {
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-language]').text()).toBe('Updates in English')
         })
     })
 

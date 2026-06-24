@@ -15,6 +15,7 @@ export default class CheckVisitDetailsController {
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookVisitJourney.visitorSupport,
+        languagePreference: bookVisitJourney.languagePreference,
         mainContactName: getMainContactName(bookVisitJourney.mainContact),
         mainContactPhone: bookVisitJourney.mainContactPhone,
         mainContactEmail: bookVisitJourney.mainContactEmail,

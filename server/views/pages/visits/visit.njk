@@ -70,6 +70,11 @@
             {{- t("common:labels.noContactDetails") -}}
           </li>
         {% endif %}
+        {% if language == 'cy' %}
+          <li data-test="main-contact-updates-language">
+            {{- t("common:labels.updatesInWelshAndEnglish") if visit.visitContact.languagePreference == 'cy' else t("common:labels.updatesInEnglish") -}}
+          </li>
+        {% endif %}
       </ul>
 
       {% if showCancelButton %}

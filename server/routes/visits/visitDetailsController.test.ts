@@ -45,7 +45,7 @@ describe('View a single visit', () => {
       jest.useRealTimers()
     })
 
-    it('should render the visit details page', () => {
+    it('should render the visit details page (in English with no Welsh/English preference)', () => {
       sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
@@ -67,6 +67,7 @@ describe('View a single visit', () => {
           expect($('[data-test="main-contact-email"]').text()).toBe('visitor@example.com')
           expect($('[data-test="main-contact-number"]').text()).toBe('07712 000 000')
           expect($('[data-test="main-contact-no-details"]').length).toBe(0)
+          expect($('[data-test="main-contact-updates-language"]').length).toBe(0)
 
           expect($('[data-test="contact-prison"]').text()).toContain(prison.prisonName)
           expect($('[data-test="contact-prison"]').text()).toContain(prison.phoneNumber)
@@ -81,6 +82,35 @@ describe('View a single visit', () => {
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should render the visit details page (in Welsh with English and Welsh updates preference)', () => {
+      visitDetails.visitContact!.languagePreference = 'cy'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
+
+      app = appWithAllRoutes({ services: { prisonService }, sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Updates in Welsh and English')
+        })
+    })
+
+    it('should render the visit details page (in Welsh with English only updates preference)', () => {
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
+
+      app = appWithAllRoutes({ services: { prisonService }, sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Updates in English')
         })
     })
 

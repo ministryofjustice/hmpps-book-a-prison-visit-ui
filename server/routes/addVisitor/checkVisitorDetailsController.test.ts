@@ -22,6 +22,7 @@ beforeEach(() => {
         'visitorDob-month': '2',
         'visitorDob-year': '2000',
         visitorDob: '2000-02-01',
+        languagePreference: 'en',
       },
     },
   } as SessionData
@@ -35,7 +36,7 @@ afterEach(() => {
 
 describe('Check visitor request details', () => {
   describe(`GET ${paths.ADD_VISITOR.CHECK}`, () => {
-    it('should render check visitor request page', () => {
+    it('should render check visitor request page (in English - no updates in Welsh row)', () => {
       return request(app)
         .get(paths.ADD_VISITOR.CHECK)
         .expect('Content-Type', /html/)
@@ -50,8 +51,34 @@ describe('Check visitor request details', () => {
           expect($('[data-test=first-name]').text().trim()).toBe('first')
           expect($('[data-test=last-name]').text().trim()).toBe('last')
           expect($('[data-test=date-of-birth]').text().trim()).toBe('1 February 2000')
+          expect($('[data-test=updates-in-welsh]').length).toBe(0)
           expect($('[data-test=submit]').parent('form').attr('action')).toBe(paths.ADD_VISITOR.CHECK)
           expect($('[data-test=submit]').text().trim()).toBe('Accept and send')
+        })
+    })
+
+    it('should render check visitor request page (in Welsh - with updates in Welsh row showing no)', () => {
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.ADD_VISITOR.CHECK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('No')
+        })
+    })
+
+    it('should render check visitor request page (in Welsh - with updates in Welsh row showing yes)', () => {
+      sessionData.addVisitorJourney!.visitorDetails.languagePreference = 'cy'
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.ADD_VISITOR.CHECK)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('Yes')
         })
     })
 
@@ -88,6 +115,7 @@ describe('Check visitor request details', () => {
                 firstName: 'first',
                 lastName: 'last',
                 dateOfBirth: '2000-02-01',
+                languagePreference: 'en',
               },
             })
           })

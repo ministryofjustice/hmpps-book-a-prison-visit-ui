@@ -8,9 +8,14 @@ export default class VisitorDetailsController {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
 
-      const formValues = {
+      const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
         ...req.flash('formValues')?.[0],
+      }
+
+      // Default to updates in Welsh on initial form load if user language is Welsh
+      if (req.language === 'cy' && Object.keys(formValues).length === 0) {
+        formValues.languagePreference = 'cy'
       }
 
       return res.render('pages/addVisitor/visitorDetails', {
@@ -38,6 +43,7 @@ export default class VisitorDetailsController {
           'visitorDob-month': string
           'visitorDob-year': string
           visitorDob: string
+          languagePreference?: 'cy'
         }
       >matchedData(req)
 
@@ -49,7 +55,7 @@ export default class VisitorDetailsController {
           'visitorDob-month': data['visitorDob-month'],
           'visitorDob-year': data['visitorDob-year'],
           visitorDob: data.visitorDob,
-          languagePreference: 'en',
+          languagePreference: data.languagePreference ?? 'en',
         },
       }
 
@@ -63,12 +69,15 @@ export default class VisitorDetailsController {
         .trim()
         .isLength({ min: 1, max: 250 })
         .withMessage((_value, { req }) => req.t('validation:firstName')),
+
       body('lastName')
         .trim()
         .isLength({ min: 1, max: 250 })
         .withMessage((_value, { req }) => req.t('validation:lastName')),
 
       ...dateOfBirthValidationChain('visitorDob'),
+
+      body('languagePreference').optional().isIn(['cy']),
     ]
   }
 }
