@@ -37,7 +37,7 @@
   "dependencies": {
     "@govuk-one-login/service-header": "6.0.0",
     "@ministryofjustice/frontend": "^9.0.0",
-    "@ministryofjustice/hmpps-azure-telemetry": "1.0.0",
+    "@ministryofjustice/hmpps-azure-telemetry": "1.0.2",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.6.0",
