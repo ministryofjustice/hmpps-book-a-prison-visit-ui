@@ -1,8 +1,3 @@
-/* eslint-disable import/first */
-import applicationInfoSupplier from '../applicationInfo'
-
-const applicationInfo = applicationInfoSupplier()
-
 import HmppsAuthClient from './hmppsAuthClient'
 import OrchestrationApiClient from './orchestrationApiClient'
 import tokenStoreFactory from './tokenStore/tokenStoreFactory'
@@ -12,6 +7,9 @@ import { createRedisClient } from './redisClient'
 import { DataCache } from './dataCache/dataCache'
 import InMemoryDataCache from './dataCache/inMemoryDataCache'
 import RedisDataCache from './dataCache/redisDataCache'
+import applicationInfoSupplier from '../applicationInfo'
+
+const applicationInfo = applicationInfoSupplier()
 
 type RestClientBuilder<T> = (token: string) => T
 
