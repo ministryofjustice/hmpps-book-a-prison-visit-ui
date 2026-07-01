@@ -40,15 +40,19 @@ res.render('template', {
   prisonName: prisonLocation
 }) }}</p>
 
-{# Nested translation reference (for reusable strings) #}
-<p>{{ t("bookVisit:checkVisitDetails.visitors") }}</p>
-where that key value contains: "$t(common:plurals.visitor, {\"count\": {{count}} })"
+{# Translation containing link token, rendered with filter #}
+<p>{{ t("common:postBooking.feedback") | renderLinkTag("https://example.test") | safe }}</p>
 
 {# Using translation in conditionals #}
 {% if not email %}
   <p>{{ t("common:labels.noContactDetails") }}</p>
 {% endif %}
 ```
+
+Guidance:
+- Avoid nested translation calls (`$t(...)`) inside locale values.
+- Use interpolation placeholders (for example `{{count}}`) and plural suffix keys (`_one`, `_other`, etc.).
+- Use `<link>...</link>` tokens in locale strings and render links in templates with `renderLinkTag`.
 
 **Key Format Convention:**
 - `namespace:path.to.key` - namespaces and keys are required
@@ -65,6 +69,7 @@ Several utilities work alongside i18n for localization:
 | `formatTime` | Format time with locale | `visit.time \| formatTime(language)` |
 | `displayAge` | Translate age phrases | `visitor.dob \| displayAge(t)` (uses `common:plurals.ageYears/ageMonths`) |
 | `getPrisonName` | Lookup prison name | `prisoner.prisonId \| getPrisonName(prisonNames, language)` |
+| `renderLinkTag` | Replaces a `<link>...</link>` token with a safe anchor element | `t("common:postBooking.feedback") \| renderLinkTag(url) \| safe` |
 
 These utilities are registered in [server/utils/nunjucksSetup.ts](../utils/nunjucksSetup.ts).
 

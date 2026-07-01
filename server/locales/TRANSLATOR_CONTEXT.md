@@ -34,7 +34,6 @@ Use i18next interpolation style with no spaces inside braces, for example `{{pri
 | `startTime` / `endTime` | Visit start/end time strings | `common`, `visits` |
 | `count` | Pluralization count | `common.plurals`, `bookVisit`, `validation` |
 | `age` / `adultAgeYears` | Age threshold/count context | `validation`, `bookVisit` |
-| `count` + `adultAgeYears` | Visit capacity values and age thresholds | `bookVisit.selectVisitors`, `validation` |
 | `phoneNumber` | Prison contact phone number | `shared` |
 | `visitReference` | Booking/request reference | `shared` |
 | `visitorName` / `prisonerName` | Display names in confirmation/status copy | `addVisitor`, `visits` |
@@ -44,12 +43,13 @@ Use i18next interpolation style with no spaces inside braces, for example `{{pri
 - Keys ending in `title` are page-level headings (usually H1).
 - Keys ending in `Heading` are section headings within a page.
 - Locale values should not contain nested translation references (for example `$t(...)`). Use plain text with placeholders and plural suffix keys (`_one`, `_other`, etc.) instead.
+- For links, use a `<link>...</link>` token in locale values. Templates render this with the `renderLinkTag` filter.
 - Some short labels intentionally repeat across screens (for example "Visitors", "Date and time").
 
 ## 4) Quick QA Checklist Before Submitting Translations
 
 - JSON remains valid.
 - Placeholder names are unchanged.
-- HTML tags are preserved and balanced.
+- Link tokens (`<link>...</link>`) are preserved and balanced.
 - Apostrophes/quotes are valid JSON-escaped where needed.
 - Tone remains plain, service-style GOV.UK English equivalent in target language.

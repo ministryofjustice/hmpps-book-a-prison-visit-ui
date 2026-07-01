@@ -66,7 +66,8 @@ The app uses i18next with English (en) and Welsh (cy) support. Configuration is 
 - **In Templates:** Use `t("namespace:key", { var: value })` syntax. Example: `t("bookVisit:checkVisitDetails.prisoner")`
 - **In Code:** Use `req.t("namespace:key")` in controllers for validation messages or view data
 - **Plurals:** Handled via `_one` and `_other` key suffixes; pass `{count: n}` to resolve correct form
-- **Nested References:** Locale values can contain `$t(namespace:key)` to reference other translations
+- **Nested References:** Avoid nested `$t(...)` inside locale values. Prefer plain strings with interpolation placeholders and plural suffix keys.
+- **Links in Translations:** Use `<link>...</link>` tokens in locale strings, then render with `| renderLinkTag(url) | safe` in templates.
 - **Language Detection:** Via query parameter (`?lng=cy`) or cookie; falls back to English
 - **Files:** Locales stored in `server/locales/{en,cy}/{namespace}.json` (11 namespaces: common, errors, validation, addPrisoner, addVisitor, bookVisit, selectPrison, shared, visitors, visits, staticPages)
 - **Documentation:** See [server/locales/README.md](server/locales/README.md) for setup details, [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for translator guidance
