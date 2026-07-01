@@ -221,6 +221,9 @@ describe('renderLinkTag', () => {
     ['null input', null, 'https://example.test', ''],
     ['undefined input', undefined, 'https://example.test', ''],
     ['no link tag', 'No link here', 'https://example.test', 'No link here'],
+    ['undefined link', 'undefined link', undefined, 'undefined link'],
+    ['null link', 'null link', null, 'null link'],
+    ['empty link', 'empty link', '', 'empty link'],
     [
       'single link tag',
       'Some text <link>link text</link> more text.',
@@ -251,7 +254,7 @@ describe('renderLinkTag', () => {
       'https://example.test',
       'Some text &lt;/link&gt;wrong order&lt;link&gt;',
     ],
-  ])('%s', (_: string, text: string | undefined | null, url: string, expected: string) => {
+  ])('%s', (_: string, text: string | undefined | null, url: string | undefined | null, expected: string) => {
     expect(renderLinkTag(text, url)).toBe(expected)
   })
 

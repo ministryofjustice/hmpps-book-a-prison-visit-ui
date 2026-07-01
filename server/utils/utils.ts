@@ -122,14 +122,18 @@ export const getPrisonName = (prisonId: string, prisonNames: PrisonNames, lng: L
 
 export const escapeHtml = (value: string | undefined | null): string => {
   const escape = nunjucksEnvironment.getFilter('escape')
-  return escape(value).val
+  return String(escape(value))
 }
 
-export const renderLinkTag = (text: string | undefined | null, url: string, openInNewTab = false): string => {
+export const renderLinkTag = (
+  text: string | undefined | null,
+  url: string | undefined | null,
+  openInNewTab = false,
+): string => {
   if (!text) return ''
 
   const match = text.match(/<link>(.*?)<\/link>/s)
-  if (!match || match.index === undefined) return escapeHtml(text)
+  if (!url || !match || match.index === undefined) return escapeHtml(text)
 
   const escapedUrl = escapeHtml(url)
   const targetAttribute = openInNewTab ? ' target="_blank"' : ''
