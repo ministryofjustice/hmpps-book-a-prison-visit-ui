@@ -22,9 +22,12 @@
     "title": "Who is going on the visit?",
 
     "visitorLimits": {
-      "maxVisitors": "Up to $t(common:plurals.person, {\"count\": {{maxVisitors}} }) can visit someone at {{prisonName}}. This includes:",
-      "maxAdults": "$t(common:plurals.person, {\"count\": {{maxAdultVisitors}} }) $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} }) or older",
-      "maxChildren": "$t(common:plurals.person, {\"count\": {{maxChildVisitors}} }) under $t(common:plurals.ageYears, {\"count\": {{adultAgeYears}} })",
+      "maxVisitors_one": "Up to {{count}} person can visit someone at {{prisonName}}. This includes:",
+      "maxVisitors_other": "Up to {{count}} people can visit someone at {{prisonName}}. This includes:",
+      "maxAdults_one": "{{count}} person {{adultAgeYears}} years old or older",
+      "maxAdults_other": "{{count}} people {{adultAgeYears}} years old or older",
+      "maxChildren_one": "{{count}} person under {{adultAgeYears}} years old",
+      "maxChildren_other": "{{count}} people under {{adultAgeYears}} years old",
       "atLeastOneAdult": "At least one visitor must be 18 years or older."
     },
 
@@ -62,7 +65,9 @@
     "reservationTime": "Select one visit time. It will be reserved for 10 minutes.",
     "prisonerVisitTimes": "Only times that {{name}} can attend are shown.",
 
-    "availableTimesForDate": "{{date}} - $t(common:plurals.visitTime, {\"count\": {{count}} }) available",
+    "availableTimesForDate_zero": "{{date}} - no visit times available",
+    "availableTimesForDate_one": "{{date}} - {{count}} visit time available",
+    "availableTimesForDate_other": "{{date}} - {{count}} visit times available",
 
     "onlyAfterDate": "Only visit times on or after this date are shown.",
 

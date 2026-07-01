@@ -20,14 +20,14 @@
 {% endset %}
 
 {{ govukCookieBanner({
-  ariaLabel: t("common:cookieBanner.cookiesOn"),
+  ariaLabel: t("common:cookieBanner.cookiesOn", { serviceName: t("common:applicationName") }),
   attributes: {
     id: "cookie-banner"
   },
   hidden: true,
   messages: [
     {
-      headingText: t("common:cookieBanner.cookiesOn"),
+      headingText: t("common:cookieBanner.cookiesOn", { serviceName: t("common:applicationName") }),
       attributes: {
         id: "cookie-banner-main"
       },

@@ -5,7 +5,7 @@
     "contactPrisonPhone": "To update your visit, call {{prisonName}} on {{phoneNumber}}.",
     "contactPrisonWebsite": "To update your visit, <link>contact {{prisonName}} directly</link>.",
 
-    "visitReference": "You will need the visit reference to make changes. Your visit reference is {{ visitReference }}.",
+    "visitReference": "You will need the visit reference to make changes. Your visit reference is {{visitReference}}.",
 
     "cancelVisit": "Or you can cancel your visit from <link>the visits page</link>."
   },
@@ -16,7 +16,7 @@
     "contactPrisonPhone": "To update your request, call {{prisonName}} on {{phoneNumber}}.",
     "contactPrisonWebsite": "To update your request, <link>contact {{prisonName}} directly</link>.",
 
-    "visitReference": "You will need the visit reference to make changes. Your request reference is {{ visitReference }}."
+    "visitReference": "You will need the visit reference to make changes. Your request reference is {{visitReference}}."
   },
 
   "visitingInfo": {

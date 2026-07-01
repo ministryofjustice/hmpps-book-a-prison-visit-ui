@@ -55,20 +55,20 @@
 
         <p data-test="max-visitors">
           {{- t("bookVisit:selectVisitors.visitorLimits.maxVisitors", {
-            maxVisitors: prison.maxTotalVisitors,
+            count: prison.maxTotalVisitors,
             prisonName: prison.code | getPrisonName(prisonNames, language)
           }) -}}
         </p>
         <ul class="govuk-list govuk-list--bullet">
           <li data-test="max-adults">
             {{- t("bookVisit:selectVisitors.visitorLimits.maxAdults", {
-              maxAdultVisitors: prison.maxAdultVisitors,
+              count: prison.maxAdultVisitors,
               adultAgeYears: prison.adultAgeYears
             }) -}}
           </li>
           <li data-test="max-children">
             {{- t("bookVisit:selectVisitors.visitorLimits.maxChildren", {
-              maxChildVisitors: prison.maxChildVisitors,
+              count: prison.maxChildVisitors,
               adultAgeYears: prison.adultAgeYears
             }) -}}
           </li>
@@ -104,11 +104,11 @@
 
             {% set visitorList = (visitorList.push({
               value: visitor.visitorDisplayId,
-              text: visitorNameAge 
+              text: visitorNameAge
             }), visitorList) %}
           {% endif%}
         {% endfor %}
-  
+
         <form action="{{ paths.BOOK_VISIT.SELECT_VISITORS }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -189,7 +189,7 @@
           href: paths.ADD_VISITOR.START,
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       {% endif %}
 
     </div>

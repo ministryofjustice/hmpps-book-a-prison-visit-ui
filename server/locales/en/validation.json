@@ -18,10 +18,13 @@
   "prisonSelectRequired": "Select a prison",
   "supportDetailsLength": "Please enter at least 3 and no more than 200 characters",
   "supportDetailsRequired": "Enter details of the request",
-  "visitorsAdultsTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} }) $t(common:plurals.ageYears, {\"count\": {{age}} }) or older",
-  "visitorsChildrenTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} }) under $t(common:plurals.ageYears, {\"count\": {{age}} })",
+  "visitorsAdultsTooMany_one": "Select no more than {{count}} visitor {{age}} years old or older",
+  "visitorsAdultsTooMany_other": "Select no more than {{count}} visitors {{age}} years old or older",
+  "visitorsChildrenTooMany_one": "Select no more than {{count}} visitor under {{age}} years old",
+  "visitorsChildrenTooMany_other": "Select no more than {{count}} visitors under {{age}} years old",
   "visitorsNeedAdult": "Add a visitor who is 18 years old or older",
   "visitorsNoneSelected": "No visitors selected",
-  "visitorsTooMany": "Select no more than $t(common:plurals.visitor, {\"count\": {{count}} })",
+  "visitorsTooMany_one": "Select no more than {{count}} visitor",
+  "visitorsTooMany_other": "Select no more than {{count}} visitors",
   "visitTimeRequired": "No visit time selected"
 }

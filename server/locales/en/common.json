@@ -24,7 +24,7 @@
   },
 
   "cookieBanner": {
-    "cookiesOn": "Cookies on $t(common:applicationName)",
+    "cookiesOn": "Cookies on {{serviceName}}",
     "essential": "We use some essential cookies to make this service work.",
     "analytics": "We’d also like to use analytics cookies so we can understand how you use the service and make improvements.",
     "acceptButton": "Accept analytics cookies",

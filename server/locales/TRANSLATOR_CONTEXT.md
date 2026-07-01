@@ -21,8 +21,8 @@ Use it with English source files in `server/locales/en`.
 
 ## 2) Interpolation Variables (Do Not Translate Variable Names)
 
-Keep placeholders exactly as written, including braces and spacing style.
-Example: `{{prisonName}}` must stay unchanged in translated text.
+Keep placeholders exactly as written.
+Use i18next interpolation style with no spaces inside braces, for example `{{prisonName}}`.
 
 | Variable | Meaning | Typical namespaces |
 |---|---|---|
@@ -34,7 +34,7 @@ Example: `{{prisonName}}` must stay unchanged in translated text.
 | `startTime` / `endTime` | Visit start/end time strings | `common`, `visits` |
 | `count` | Pluralization count | `common.plurals`, `bookVisit`, `validation` |
 | `age` / `adultAgeYears` | Age threshold/count context | `validation`, `bookVisit` |
-| `maxVisitors` / `maxAdultVisitors` / `maxChildVisitors` | Visit capacity values | `bookVisit.selectVisitors` |
+| `count` + `adultAgeYears` | Visit capacity values and age thresholds | `bookVisit.selectVisitors`, `validation` |
 | `phoneNumber` | Prison contact phone number | `shared` |
 | `visitReference` | Booking/request reference | `shared` |
 | `visitorName` / `prisonerName` | Display names in confirmation/status copy | `addVisitor`, `visits` |
@@ -43,7 +43,7 @@ Example: `{{prisonName}}` must stay unchanged in translated text.
 
 - Keys ending in `title` are page-level headings (usually H1).
 - Keys ending in `Heading` are section headings within a page.
-- Strings may contain nested translation references (for example `$t(common:plurals.visitor, {"count": {{count}} })`). Do not alter key names inside `$t(...)`.
+- Locale values should not contain nested translation references (for example `$t(...)`). Use plain text with placeholders and plural suffix keys (`_one`, `_other`, etc.) instead.
 - Some short labels intentionally repeat across screens (for example "Visitors", "Date and time").
 
 ## 4) Quick QA Checklist Before Submitting Translations
