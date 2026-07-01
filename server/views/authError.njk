@@ -9,7 +9,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>
-        {{- t("errors:authError.tryAgain", { url: paths.SIGN_IN }) | safe -}}
+        {{- t("errors:authError.tryAgain") | renderLinkTag(paths.SIGN_IN) | safe -}}
       </p>
 
     </div>

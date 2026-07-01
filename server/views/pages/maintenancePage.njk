@@ -11,7 +11,7 @@
       <p data-test="maintenance-message">{{ maintenanceMessage }}</p>
 
       <p>
-        {{- t("staticPages:maintenance.notSaved", { url: paths.GOVUK_START_PAGE }) | safe -}}
+        {{- t("staticPages:maintenance.notSaved") | renderLinkTag(paths.GOVUK_START_PAGE) | safe -}}
       </p>
 
       <p>

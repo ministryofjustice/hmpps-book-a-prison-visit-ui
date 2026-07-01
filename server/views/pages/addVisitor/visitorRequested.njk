@@ -16,9 +16,9 @@
       <p>{{ t("addVisitor:visitorRequested.approvedOrRejected") }}</p>
 
       <p>
-        {{- t("addVisitor:visitorRequested.statusOnVisitorsPage", {
-          url: paths.VISITORS
-        }) | safe -}}
+        {{- t("addVisitor:visitorRequested.statusOnVisitorsPage")
+          | renderLinkTag(paths.VISITORS)
+          | safe -}}
       </p>
 
       {{ govukButton({

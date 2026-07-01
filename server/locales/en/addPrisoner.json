@@ -1,7 +1,7 @@
 {
   "prisonerLocation": {
     "title": "Where is the prisoner you want to visit?",
-    "findPrisonerLink": "If you do not know, you can <a href=\"{{url}}\">apply to find the prisoner’s location</a>."
+    "findPrisonerLink": "If you do not know, you can <link>apply to find the prisoner’s location</link>."
   },
 
   "prisonerDetails": {
@@ -24,7 +24,7 @@
     "reason": "This could be because:",
     "reasonIncorrect": "the prisoner details are incorrect",
     "reasonNotAtPrison": "they are not located at this prison",
-    "checkDetails": "You can <a href=\"{{url}}\">check the details you submitted by going back to the previous page</a>.",
-    "contact": "If the prisoner details cannot be matched, you will need contact the prisoner to get the correct information before you book a visit."
+    "checkDetails": "You can <link>check the details you submitted by going back to the previous page</link>.",
+    "contact": "If the prisoner details cannot be matched, you will need to contact the prisoner to get the correct information before you book a visit."
   }
 }

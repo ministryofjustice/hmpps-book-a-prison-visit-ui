@@ -8,7 +8,7 @@
 
   "phase": {
     "beta": "Beta",
-    "feedback": "This is a new service – your <a href=\"https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/\" target=\"_blank\">feedback (opens in a new tab)</a> will help us to improve it."
+    "feedback": "This is a new service – your <link>feedback (opens in a new tab)</link> will help us to improve it."
   },
 
   "links": {
@@ -32,7 +32,7 @@
     "viewButton": "View cookies",
     "acceptedAnalytics": "You’ve accepted analytics cookies.",
     "rejectedAnalytics": "You’ve rejected analytics cookies.",
-    "changeSettings": "You can <a href=\"{{url}}\">change your cookie settings</a> at any time.",
+    "changeSettings": "You can <link>change your cookie settings</link> at any time.",
     "hideCookieMessage": "Hide cookie message"
   },
 
@@ -53,8 +53,8 @@
 
   "postBooking": {
     "whatHappensNext": "What happens next",
-    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
-    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <link>check the details of your visits</link>.",
+    "feedback": "You can help us to improve this service by giving <link>feedback</link>."
   },
 
   "days": {

@@ -13,9 +13,9 @@
       <p class="govuk-body-l">{{ t("addVisitor:addVisitorStart.identityRequirement") }}</p>
 
       <p>
-        {{- t("addVisitor:addVisitorStart.acceptableId", {
-          url: "https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a"
-        }) | safe -}}
+        {{- t("addVisitor:addVisitorStart.acceptableId")
+          | renderLinkTag("https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a")
+          | safe -}}
       </p>
 
       <p>{{ t("addVisitor:addVisitorStart.visitorList") }}</p>
@@ -27,7 +27,7 @@
         href: paths.ADD_VISITOR.DETAILS,
         attributes: { "data-test": "continue-button" },
         preventDoubleClick: true
-      }) }} 
+      }) }}
     </div>
   </div>
 {% endblock %}

@@ -186,7 +186,11 @@ async addVisitorRequest(...): Promise<...> {
 | **Feature Testing Setup** | `docker-compose -f docker-compose-test.yml up` (WireMock, Redis, OIDC simulator) |
 | **Feature Tests (dev mode)** | `npm run start-feature:dev` + `npm run int-test` in another terminal |
 | **Lint** | `npm run lint` (ESLint, zero warnings policy) |
+| **Lint Fix** | `npm run lint-fix` (ESLint, auto-fix issues) |
 | **Type Check** | `npm run typecheck` (tsc for server + integration_tests) |
+
+# After making code changes, always run `npm run lint-fix` then `npm run lint`
+# to auto-fix formatting and confirm zero warnings before considering a task done.
 
 ## Session & Journey Objects
 
@@ -277,4 +281,3 @@ Use `express-validator` body() chains. For complex validation (e.g., date of bir
 - **Assets:** SCSS files auto-compile to CSS, views auto-copy during dev mode.
 - **i18n Development:** Missing translation keys throw errors in development (see `server/middleware/setUpI18n.ts`). Always add keys to English locale before referencing in code/templates. Locale files are auto-copied to `dist/` during build.
 - **i18n for Agents:** When adding new UI copy, always add to locale JSON files first, then reference via `t()` in templates/code. Use [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for namespace guidance.
-

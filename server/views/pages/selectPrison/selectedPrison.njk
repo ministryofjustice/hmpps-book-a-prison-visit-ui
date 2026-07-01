@@ -10,9 +10,10 @@
 
 {% set insetText -%}
   {{- t("selectPrison:selectedPrison.onlyOnePrisoner", {
-    prisonName: prisonId | getPrisonName(prisonNames, language),
-    url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
-  }) | safe -}}
+    prisonName: prisonId | getPrisonName(prisonNames, language)
+  })
+    | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
+    | safe -}}
 {%- endset %}
 
 {% block content %}
@@ -39,9 +40,9 @@
         }) }}
       {% else %}
         <p data-test="no-digital-service">
-          {{ t("selectPrison:selectedPrison.noDigitalService", {
-            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
-          }) | safe -}}
+          {{ t("selectPrison:selectedPrison.noDigitalService")
+            | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
+            | safe -}}
         </p>
       {% endif %}
     </div>

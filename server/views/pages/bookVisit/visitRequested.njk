@@ -53,9 +53,9 @@
       {% if responseMessage %}
         <p data-test="response-message">{{ responseMessage }}</p>
       {% endif %}
-      
+
       <p class="no-visited-state">
-        {{- t("bookVisit:visitRequested.upcomingVisitsStatus", { url: paths.VISITS.HOME }) | safe -}}
+        {{- t("bookVisit:visitRequested.upcomingVisitsStatus") | renderLinkTag(paths.VISITS.HOME) | safe -}}
       </p>
 
     </div>

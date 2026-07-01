@@ -79,9 +79,9 @@
       <p>{{ t("addVisitor:checkVisitorDetails.confirmInformation") }}</p>
 
       <p>
-        {{- t("addVisitor:checkVisitorDetails.acceptableId", {
-          url: "https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a"
-        }) | safe -}}
+        {{- t("addVisitor:checkVisitorDetails.acceptableId")
+          | renderLinkTag("https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a")
+          | safe -}}
       </p>
 
       <form action="{{ paths.ADD_VISITOR.CHECK }}" method="POST" novalidate>

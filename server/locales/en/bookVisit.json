@@ -6,16 +6,16 @@
     "bookFromDate": "You can book a visit from {{date}}.",
 
     "transferOrRelease": "{{name}} is no longer at {{prisonName}}. They may have moved to another prison or been released.",
-    "findHowToBook": "If they have moved to another prison, <a href=\"{{url}}\">find out how to book a visit at their new prison</a>.",
-    "findPrisoner": "For help contacting them, you can <a href=\"{{url}}\">apply to find a prisoner’s location</a>.",
+    "findHowToBook": "If they have moved to another prison, <link>find out how to book a visit at their new prison</link>.",
+    "findPrisoner": "For help contacting them, you can <link>apply to find a prisoner’s location</link>.",
 
     "unsupportedPrison": "{{name}} is at {{prisonName}}. This prison is not currently supported by this service.",
-    "bookAtThisPrison": "Find out <a href=\"{{url}}\">how to book a visit at this prison</a>.",
+    "bookAtThisPrison": "Find out <link>how to book a visit at this prison</link>.",
 
     "noEligibleAdultVisitor": "One person on a visit must be 18 years old or older. None of your adult visitors can be selected. This may be because of a new restriction or a ban.",
     "addNewVisitorHeading": "Add a new visitor",
     "addNewVisitorDescription": "The person you want to book a visit for must be on the prisoner’s visitor list.",
-    "addNewVisitorRequest": "To make a request to book a visit for someone new, <a href=\"{{url}}\">complete the form</a>. We will respond within 5 working days."
+    "addNewVisitorRequest": "To make a request to book a visit for someone new, <link>complete the form</link>. We will respond within 5 working days."
   },
 
   "selectVisitors": {
@@ -76,7 +76,7 @@
 
     "noAvailableTimes": "There are currently no available visit times for {{name}}.",
     "tryLater": "Try again later to see if new visit times have become available.",
-    "contactPrison": "If you believe the prisoner should have available visit times, you can <a href=\"{{ url }}\">contact the prison directly</a>."
+    "contactPrison": "If you believe the prisoner should have available visit times, you can <link>contact the prison directly</link>."
   },
 
   "additionalSupport": {
@@ -139,6 +139,6 @@
     "responseByText": "A text message with the prison’s decision will be sent to the main contact.",
     "responseByEmail": "An email with the prison’s decision will be sent to the main contact.",
     "responseByEmailAndText": "An email and a text message with the prison’s decision will be sent to the main contact.",
-    "upcomingVisitsStatus": "<a href=\"{{url}}\">Your visits page</a> also shows the status of upcoming visits."
+    "upcomingVisitsStatus": "<link>Your visits page</link> also shows the status of upcoming visits."
   }
 }

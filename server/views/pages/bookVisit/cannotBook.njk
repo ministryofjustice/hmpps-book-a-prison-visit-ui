@@ -31,13 +31,13 @@
         </p>
 
         <p>
-          {{- t("bookVisit:cannotBook.findHowToBook", {
-            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
-          }) | safe -}}
+          {{- t("bookVisit:cannotBook.findHowToBook")
+            | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
+            | safe -}}
         </p>
-      
+
         <p>
-          {{- t("bookVisit:cannotBook.findPrisoner", { url: "https://www.gov.uk/find-prisoner" }) | safe -}}
+          {{- t("bookVisit:cannotBook.findPrisoner") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}
         </p>
       {% endif %}
 
@@ -50,9 +50,9 @@
         </p>
 
         <p>
-          {{- t("bookVisit:cannotBook.bookAtThisPrison", {
-            url: "https://www.gov.uk/government/collections/prisons-in-england-and-wales"
-          }) | safe -}}
+          {{- t("bookVisit:cannotBook.bookAtThisPrison")
+            | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
+            | safe -}}
         </p>
       {% endif %}
 
@@ -63,7 +63,7 @@
         <p>{{ t("bookVisit:cannotBook.addNewVisitorDescription") }}</p>
 
         <p>
-          {{- t("bookVisit:cannotBook.addNewVisitorRequest", { url: paths.ADD_VISITOR.START }) | safe -}}
+          {{- t("bookVisit:cannotBook.addNewVisitorRequest") | renderLinkTag(paths.ADD_VISITOR.START) | safe -}}
         </p>
       {% endif %}
     </div>

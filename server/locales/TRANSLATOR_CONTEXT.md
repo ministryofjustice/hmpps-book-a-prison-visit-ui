@@ -43,7 +43,6 @@ Example: `{{prisonName}}` must stay unchanged in translated text.
 
 - Keys ending in `title` are page-level headings (usually H1).
 - Keys ending in `Heading` are section headings within a page.
-- Strings may contain inline HTML (for example `<a href="{{url}}">...</a>`). Keep HTML tags and attributes intact.
 - Strings may contain nested translation references (for example `$t(common:plurals.visitor, {"count": {{count}} })`). Do not alter key names inside `$t(...)`.
 - Some short labels intentionally repeat across screens (for example "Visitors", "Date and time").
 
