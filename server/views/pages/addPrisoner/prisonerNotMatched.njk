@@ -22,7 +22,7 @@
       </ul>
 
       <p data-test="check-details">
-        {{- t("addPrisoner:prisonerNotMatched.checkDetails", { url: paths.ADD_PRISONER.DETAILS }) | safe -}}
+        {{- t("addPrisoner:prisonerNotMatched.checkDetails") | renderLinkTag(paths.ADD_PRISONER.DETAILS) | safe -}}
       </p>
 
       <p>{{ t("addPrisoner:prisonerNotMatched.contact") }}</p>

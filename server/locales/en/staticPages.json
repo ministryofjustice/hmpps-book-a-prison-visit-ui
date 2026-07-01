@@ -4,11 +4,11 @@
     "applies": "This accessibility statement applies to https://prison-visits.service.justice.gov.uk.",
     "runBy": "This website is run by HM Prison and Probation Service (HMPPS).",
     "wantManyPeople": "We want as many people as possible to be able to use this website. We will make improvements to accessibility as we find issues.",
-    "abilityNet": "<a href=\"{{url}}\">AbilityNet</a> has advice on making your device easier to use if you have a disability.",
+    "abilityNet": "<link>AbilityNet</link> has advice on making your device easier to use if you have a disability.",
 
     "complianceHeading": "Compliance Status",
-    "wcagCompliance": "This website is fully compliant with the <a href=\"{{url}}\">Web Content Accessibility Guidelines version 2.2 AA standard</a>.",
-    "testedBy": "It was last tested by <a href=\"{{url}}\">User Vision</a> in October 2024 against the WCAG 2.2 AA standard.",
+    "wcagCompliance": "This website is fully compliant with the <link>Web Content Accessibility Guidelines version 2.2 AA standard</link>.",
+    "testedBy": "It was last tested by <link>User Vision</link> in October 2024 against the WCAG 2.2 AA standard.",
     "testedUsing": "User Vision assessed pages using the following assistive technology:",
     "assistiveTech": {
       "nvda": "NVDA (using Edge, Chrome and Firefox browsers)",
@@ -20,10 +20,10 @@
     "issuesFix": "This testing identified 3 non-compliance issues. These issues were fixed on 24 June 2025. They were tested to check compliance with the WCAG 2.2 AA standard by our website team.",
 
     "feedbackHeading": "Feedback",
-    "sendFeedback": "If you find any problems or think we’re not meeting accessibility requirements, you can <a href=\"{{url}}\">send us feedback</a>.",
+    "sendFeedback": "If you find any problems or think we’re not meeting accessibility requirements, you can <link>send us feedback</link>.",
 
     "enforcementHeading": "Enforcement procedure",
-    "enforcement": "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, <a href=\"{{url}}\">contact the Equality Advisory and Support Service (EASS)</a>.",
+    "enforcement": "The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re not happy with how we respond to your complaint, <link>contact the Equality Advisory and Support Service (EASS)</link>.",
 
     "technicalHeading": "Technical information about this website’s accessibility",
     "technical": "HMPPS is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.",
@@ -34,7 +34,7 @@
 
   "cookies": {
     "title": "Cookies",
-    "policyAppliesTo": "This cookies policy only covers ‘Visit someone in prison’. Read the main <a href=\"https://www.gov.uk/help/cookies\">GOV.UK cookies policy</a> to find out about cookies that are used on GOV.UK.",
+    "policyAppliesTo": "This cookies policy only covers ‘Visit someone in prison’. Read the main <link>GOV.UK cookies policy</link> to find out about cookies that are used on GOV.UK.",
     "whatAreCookies": "Cookies are files saved on your phone, tablet or computer when you visit a website. We use cookies to make ‘Visit someone in prison’ work.",
     "mayUseAnalytics": "We may also use analytics cookies to learn about how you use ‘Visit someone in prison’ and help us improve it. We’ll ask for your permission before we do this.",
     "notUsedToIdentify": "Cookies are not used to identify you personally.",
@@ -70,15 +70,15 @@
     "title": "Sorry, the service is unavailable",
     "availableFrom": "You will be able to use the service from {{time}} on {{date}}.",
     "availableLater": "You will be able to use the service later.",
-    "notSaved": "We have not saved your answers. When the service is available you will need to <a href=\"{{url}}\">start again</a>."
+    "notSaved": "We have not saved your answers. When the service is available you will need to <link>start again</link>."
   },
 
   "privacy": {
     "title": "Privacy notice",
-    "intro": "The ‘Visit someone in prison’ service is managed by HM Prison and Probation Service (HMPPS), an executive agency of the Ministry of Justice (MOJ). Our <a href=\"{{url}}\">personal information charter</a> explains your rights and how we deal with your personal information.",
+    "intro": "The ‘Visit someone in prison’ service is managed by HM Prison and Probation Service (HMPPS), an executive agency of the Ministry of Justice (MOJ). Our <link>personal information charter</link> explains your rights and how we deal with your personal information.",
     "dataController": "MOJ is the data controller for the personal information we hold.",
-    "dataControllerDetails": "A data controller determines how and why personal data is processed. For more information, read the Cabinet Office’s entry in the <a href=\"{{url}}\">Data Protection Public Register</a>.",
-    "oneLogin": "You need a GOV.UK One Login to use the service. Read the <a href=\"{{url}}\">full GOV.UK One Login privacy notice</a> to find out how it stores, processes and shares your personal information.",
+    "dataControllerDetails": "A data controller determines how and why personal data is processed. For more information, read the Cabinet Office’s entry in the <link>Data Protection Public Register</link>.",
+    "oneLogin": "You need a GOV.UK One Login to use the service. Read the <link>full GOV.UK One Login privacy notice</link> to find out how it stores, processes and shares your personal information.",
 
     "whatDataHeading": "What data we collect",
     "whatDataIntro": "The personal data we collect from you includes:",
@@ -94,7 +94,7 @@
       "personalInfo": "any personal information you include in questions, queries or feedback you leave"
     },
 
-    "analyticsData": "Information about how you use the site is collected in Google Analytics using cookies and page tagging techniques. It does not contain any personal data and is only collected if you <a href=\"{{url}}\">consent</a> to this. It is shared with the Government Digital Service.",
+    "analyticsData": "Information about how you use the site is collected in Google Analytics using cookies and page tagging techniques. It does not contain any personal data and is only collected if you <link>consent</link> to this. It is shared with the Government Digital Service.",
 
     "whyNeedHeading": "Why we need your data",
     "whyNeedIntro": "We collect your personal data to:",
@@ -123,11 +123,10 @@
     "sharedWithHeading": "Who the information may be shared with",
     "sharedWithIntro": "The data we collect may be shared with other government departments, agencies and public bodies. It may also be shared with our technology suppliers, for example our hosting provider.",
     "sharedWithOrgs": "The organisations we share personal information with are:",
-    "notifyOrg": "<a href=\"{{url}}\">GOV.UK Notify</a> to send texts and emails.",
-    "notifyPrivacy": "See their <a href=\"{{url}}\">privacy notice</a>.",
-    "formsOrg": "<a href=\"{{url}}\">GOV.UK Forms</a> to collect feedback.",
-    "formsPrivacy": "See their <a href=\"{{url}}\">privacy notice</a>.",
-
+    "notifyOrg": "<link>GOV.UK Notify</link> to send texts and emails.",
+    "notifyPrivacy": "See their <link>privacy notice</link>.",
+    "formsOrg": "<link>GOV.UK Forms</link> to collect feedback.",
+    "formsPrivacy": "See their <link>privacy notice</link>.",
     "analyticsTransfer": "The data we collect with Google Analytics cookies is transferred and stored with Google where we analyse it with Google Analytics software (Universal Analytics). We do not allow Google to use or share this data for their own purposes.",
     "agentsReps": "We may share your information with our agents or representatives, so they can manage your visits. Our agents or representatives will only use your personal data in line with what we have set out in this privacy notice.",
 
@@ -139,25 +138,24 @@
     "lawRequired": "We will share your data if we are required to do so by law - for example, by court order, or to prevent fraud or other crime.",
 
     "howLongHeading": "How long we keep data",
-    "howLong": "Data is retained for seven years in accordance with <a href=\"{{url}}\">HMPPS retention policy</a>.",
-
+    "howLong": "Data is retained for seven years in accordance with <link>HMPPS retention policy</link>.",
     "whereProcessedHeading": "Where your data is processed and stored",
     "whereProcessed": "We design, build and run our systems to make sure that your data is as safe as possible at all stages, both while it’s processed and when it’s stored.",
-    "whereProcessedPersonal": "All personal data is stored in the <a href=\"{{url}}\">European Economic Area</a> (EEA). Data collected by Google Analytics may be transferred outside the EEA for processing.",
-    "usDataBridge": "Where data processing happens in the US, suppliers need to meet the certification standards set out in the <a href=\"{{url}}\">UK-US data bridge</a> agreement. This facilitates flows of personal data to certified US companies that have opted in to the EU-US Data Privacy Framework.",
+    "whereProcessedPersonal": "All personal data is stored in the <link>European Economic Area</link> (EEA). Data collected by Google Analytics may be transferred outside the EEA for processing.",
+    "usDataBridge": "Where data processing happens in the US, suppliers need to meet the certification standards set out in the <link>UK-US data bridge</link> agreement. This facilitates flows of personal data to certified US companies that have opted in to the EU-US Data Privacy Framework.",
 
     "howProtectHeading": "How we protect your data and keep it secure",
     "howProtect1": "We are committed to doing all that we can to keep your data secure. We have set up systems and processes to prevent unauthorised access or disclosure of your data - for example, we protect your data using varying levels of encryption.",
     "howProtect2": "We also make sure that any third parties that we deal with keep all personal data they process on our behalf secure.",
 
     "yourRightsHeading": "Your rights",
-    "yourRights": "Your rights are set out in the <a href=\"{{url}}\">Ministry of Justice personal information charter</a>.",
+    "yourRights": "Your rights are set out in the <link>Ministry of Justice personal information charter</link>.",
     "contactDPT": "For more information please contact the Data Protection Team.",
     "emailHeading": "Email",
     "postHeading": "Post",
 
     "accessHeading": "Access to personal information",
-    "access": "You can find out if we hold any personal data about you by making a ‘subject access request’. This process is set out in the <a href=\"{{url}}\">Ministry of Justice personal information charter</a>.",
+    "access": "You can find out if we hold any personal data about you by making a ‘subject access request’. This process is set out in the <link>Ministry of Justice personal information charter</link>.",
 
     "complaintHeading": "Make a complaint",
     "complaint": "When we ask you for information, we will keep to the law. If you think that your information has been handled incorrectly, you can contact the Information Commissioner for independent advice about data protection.",
@@ -176,7 +174,7 @@
 
   "signedOut": {
     "title": "You have signed out",
-    "signInAgain": "You can book a visit or view your visits by <a href=\"{{url}}\">signing into the service using GOV.UK One Login</a>."
+    "signInAgain": "You can book a visit or view your visits by <link>signing into the service using GOV.UK One Login</link>."
   },
 
   "terms": {

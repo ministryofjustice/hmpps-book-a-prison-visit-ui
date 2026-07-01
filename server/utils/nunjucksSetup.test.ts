@@ -73,4 +73,17 @@ describe('Nunjucks Filters', () => {
       expect(result).toEqual(null)
     })
   })
+
+  describe('renderLinkTag', () => {
+    it('should render link token as an anchor and escape other html', () => {
+      const result = njk.getFilter('renderLinkTag')(
+        'Text <link>label</link> <script>alert(1)</script>',
+        'https://example.test?a=1&b=2',
+      )
+
+      expect(result).toEqual(
+        'Text <a href="https://example.test?a=1&amp;b=2">label</a> &lt;script&gt;alert(1)&lt;/script&gt;',
+      )
+    })
+  })
 })

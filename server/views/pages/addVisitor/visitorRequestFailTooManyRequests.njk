@@ -9,13 +9,13 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>{{ t("addVisitor:visitorRequestFailTooManyRequests.limitReached") }}</p>
-      
+
       <p>{{ t("addVisitor:visitorRequestFailTooManyRequests.cannotMakeAnotherRequest") }}</p>
 
       <p class="no-visited-state">
-        {{- t("addVisitor:visitorRequestFailTooManyRequests.viewLinkedAndRequestedVisitors", {
-          url: paths.VISITORS
-        }) | safe -}}
+        {{- t("addVisitor:visitorRequestFailTooManyRequests.viewLinkedAndRequestedVisitors")
+          | renderLinkTag(paths.VISITORS)
+          | safe -}}
       </p>
 
     </div>

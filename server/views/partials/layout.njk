@@ -59,7 +59,7 @@
 {% block govukHeader %}
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
-  {{ govukOneLoginServiceHeader({ 
+  {{ govukOneLoginServiceHeader({
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink,
     lng: language
@@ -87,6 +87,7 @@
       role: "complementary"
     },
     html: t("common:phase.feedback")
+      | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/", true)
   }) }}
 
   {% if backLinkHref %}

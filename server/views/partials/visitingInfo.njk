@@ -5,18 +5,17 @@
 </h2>
 
 <p>
-  {{- t("shared:visitingInfo.acceptableId", {
-    url: "https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a"
-  }) | safe -}}
-</p> 
+  {{- t("shared:visitingInfo.acceptableId")
+    | renderLinkTag("https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a")
+    | safe -}}
+</p>
 
 <p>{{ t("shared:visitingInfo.arriveEarly") }}</p>
 
 <p data-test="more-visits-info">
   {{- t("shared:visitingInfo.moreVisitsInfo", {
-    url: prison.webAddress,
     prisonName: prison.code | getPrisonName(prisonNames, language)
-  }) | safe -}}
+  }) | renderLinkTag(prison.webAddress) | safe -}}
 </p>
 
 <h3 class="govuk-heading-s">{{ t("shared:visitingInfo.expectationsHeading") }}</h3>
@@ -27,7 +26,5 @@
 <h2 class="govuk-heading-m">{{ t("shared:visitingInfo.helpWithCostHeading") }}</h2>
 
 <p>
-  {{- t("shared:visitingInfo.helpWithCostDetails", {
-    url: "https://www.gov.uk/help-with-prison-visits"
-  }) | safe -}}
+  {{- t("shared:visitingInfo.helpWithCostDetails") | renderLinkTag("https://www.gov.uk/help-with-prison-visits") | safe -}}
 </p>

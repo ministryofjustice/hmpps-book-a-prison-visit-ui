@@ -1,10 +1,13 @@
 import { Request } from 'express'
 import { differenceInYears, format, formatDuration, intervalToDuration, isAfter, parse, parseISO } from 'date-fns'
 import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
+import nunjucks from 'nunjucks'
 import type { TFunction } from 'i18next'
 import type { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
 import { DATE_FNS_LOCALE, Locale } from '../constants/locales'
+
+const nunjucksEnvironment = new nunjucks.Environment()
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -115,4 +118,30 @@ export const getPrisonName = (prisonId: string, prisonNames: PrisonNames, lng: L
   }
 
   return prison.name?.[lng] ?? prison.name.en
+}
+
+export const escapeHtml = (value: string | undefined | null): string => {
+  const escape = nunjucksEnvironment.getFilter('escape')
+  return String(escape(value))
+}
+
+export const renderLinkTag = (
+  text: string | undefined | null,
+  url: string | undefined | null,
+  openInNewTab = false,
+): string => {
+  if (!text) return ''
+
+  const match = text.match(/<link>(.*?)<\/link>/s)
+  if (!url || !match || match.index === undefined) return escapeHtml(text)
+
+  const escapedUrl = escapeHtml(url)
+  const targetAttribute = openInNewTab ? ' target="_blank"' : ''
+  const relAttribute = openInNewTab ? ' rel="noreferrer noopener"' : ''
+  const fullMatch = match[0]
+  const linkText = match[1]
+  const before = escapeHtml(text.slice(0, match.index))
+  const after = escapeHtml(text.slice(match.index + fullMatch.length))
+
+  return `${before}<a href="${escapedUrl}"${targetAttribute}${relAttribute}>${escapeHtml(linkText)}</a>${after}`
 }

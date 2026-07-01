@@ -4,6 +4,7 @@ import {
   clearSession,
   convertToTitleCase,
   displayAge,
+  escapeHtml,
   formatDate,
   formatTime,
   formatTimeDuration,
@@ -13,6 +14,7 @@ import {
   initialiseName,
   isAdult,
   isMobilePhoneNumber,
+  renderLinkTag,
 } from './utils'
 import TestData from '../routes/testutils/testData'
 import { Visitor } from '../services/bookerService'
@@ -200,5 +202,65 @@ describe('getPrisonName', () => {
     ['returns prison ID if prison is not found', 'C', prisonNames, 'en', 'C'],
   ] as const)('%s', (_: string, prisonId: string, names: PrisonNames, lng: Locale, expected: string) => {
     expect(getPrisonName(prisonId, names, lng)).toBe(expected)
+  })
+})
+
+describe('escapeHtml', () => {
+  it('should escape HTML characters', () => {
+    expect(escapeHtml('Escape <this> & "that" !')).toBe('Escape &lt;this&gt; &amp; &quot;that&quot; !')
+  })
+
+  it('should handle undefined and null', () => {
+    expect(escapeHtml(null)).toBe('')
+    expect(escapeHtml(undefined)).toBe('')
+  })
+})
+
+describe('renderLinkTag', () => {
+  it.each([
+    ['null input', null, 'https://example.test', ''],
+    ['undefined input', undefined, 'https://example.test', ''],
+    ['no link tag', 'No link here', 'https://example.test', 'No link here'],
+    ['undefined link', 'undefined link', undefined, 'undefined link'],
+    ['null link', 'null link', null, 'null link'],
+    ['empty link', 'empty link', '', 'empty link'],
+    [
+      'single link tag',
+      'Some text <link>link text</link> more text.',
+      'https://example.test',
+      'Some text <a href="https://example.test">link text</a> more text.',
+    ],
+    [
+      'multiple link tags (only first is rendered)',
+      'Start <link>one</link> middle <link>two</link> end',
+      'https://example.test',
+      'Start <a href="https://example.test">one</a> middle &lt;link&gt;two&lt;/link&gt; end',
+    ],
+    [
+      'escapes non-link html and attributes',
+      'Before <script>alert("x")</script> <link>Click <b>here</b></link> after',
+      'https://example.test?a=1&b=2',
+      'Before &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt; <a href="https://example.test?a=1&amp;b=2">Click &lt;b&gt;here&lt;/b&gt;</a> after',
+    ],
+    [
+      'returns escaped text for open tag only',
+      'Some text <link>missing close',
+      'https://example.test',
+      'Some text &lt;link&gt;missing close',
+    ],
+    [
+      'returns escaped text for wrongly ordered tags',
+      'Some text </link>wrong order<link>',
+      'https://example.test',
+      'Some text &lt;/link&gt;wrong order&lt;link&gt;',
+    ],
+  ])('%s', (_: string, text: string | undefined | null, url: string | undefined | null, expected: string) => {
+    expect(renderLinkTag(text, url)).toBe(expected)
+  })
+
+  it('supports optional new-tab behavior with rel attributes', () => {
+    expect(renderLinkTag('Read <link>more</link>.', 'https://example.test', true)).toBe(
+      'Read <a href="https://example.test" target="_blank" rel="noreferrer noopener">more</a>.',
+    )
   })
 })

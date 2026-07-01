@@ -12,6 +12,7 @@ import {
   formatTimeFromDateTime,
   getPrisonName,
   initialiseName,
+  renderLinkTag,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
@@ -97,6 +98,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('initialiseName', initialiseName)
 
   njkEnv.addFilter('getPrisonName', getPrisonName)
+
+  njkEnv.addFilter('renderLinkTag', renderLinkTag)
 
   return njkEnv
 }

@@ -9,23 +9,23 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p>
-        {{- t("staticPages:privacy.intro", {
-          url: "https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter"
-        }) | safe -}}
+        {{- t("staticPages:privacy.intro")
+          | renderLinkTag("https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter")
+          | safe -}}
       </p>
 
       <p>{{ t("staticPages:privacy.dataController") }}</p>
 
       <p>
-        {{- t("staticPages:privacy.dataControllerDetails", {
-          url: "https://ico.org.uk/ESDWebPages/Entry/Z7414053"
-        }) | safe -}}
+        {{- t("staticPages:privacy.dataControllerDetails")
+          | renderLinkTag("https://ico.org.uk/ESDWebPages/Entry/Z7414053")
+          | safe -}}
       </p>
 
       <p>
-        {{- t("staticPages:privacy.oneLogin", {
-          url: "https://signin.account.gov.uk/privacy-notice"
-        }) | safe -}}
+        {{- t("staticPages:privacy.oneLogin")
+          | renderLinkTag("https://signin.account.gov.uk/privacy-notice")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.whatDataHeading") }}</h2>
@@ -46,7 +46,7 @@
       </ul>
 
       <p>
-        {{- t("staticPages:privacy.analyticsData", { url: paths.COOKIES }) | safe -}}
+        {{- t("staticPages:privacy.analyticsData") | renderLinkTag(paths.COOKIES) | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.whyNeedHeading") }}</h2>
@@ -87,20 +87,12 @@
 
       <ul class="govuk-list govuk-list--bullet">
           <li>
-            {{ t("staticPages:privacy.notifyOrg", {
-              url: "https://www.notifications.service.gov.uk/"
-            }) | safe }}
-            {{ t("staticPages:privacy.notifyPrivacy", {
-              url: "https://www.notifications.service.gov.uk/privacy"
-            }) | safe }}
+            {{ t("staticPages:privacy.notifyOrg") | renderLinkTag("https://www.notifications.service.gov.uk/") | safe }}
+            {{ t("staticPages:privacy.notifyPrivacy") | renderLinkTag("https://www.notifications.service.gov.uk/privacy") | safe }}
           </li>
           <li>
-            {{ t("staticPages:privacy.formsOrg", {
-              url: "https://www.forms.service.gov.uk/"
-            }) | safe }}
-             {{ t("staticPages:privacy.formsPrivacy", {
-              url: "https://www.forms.service.gov.uk/privacy"
-            }) | safe }}
+            {{ t("staticPages:privacy.formsOrg") | renderLinkTag("https://www.forms.service.gov.uk/") | safe }}
+             {{ t("staticPages:privacy.formsPrivacy") | renderLinkTag("https://www.forms.service.gov.uk/privacy") | safe }}
           </li>
       </ul>
 
@@ -120,9 +112,9 @@
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.howLongHeading") }}</h2>
 
       <p>
-        {{- t("staticPages:privacy.howLong", {
-          url: "https://www.gov.uk/government/publications/records-information-management-policy-psi-042018-pi-022018"
-        }) | safe -}}
+        {{- t("staticPages:privacy.howLong")
+          | renderLinkTag("https://www.gov.uk/government/publications/records-information-management-policy-psi-042018-pi-022018")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.whereProcessedHeading") }}</h2>
@@ -130,15 +122,15 @@
       <p>{{ t("staticPages:privacy.whereProcessed") }}</p>
 
       <p>
-        {{- t("staticPages:privacy.whereProcessedPersonal", {
-          url: "https://www.gov.uk/eu-eea"
-        }) | safe -}}
+        {{- t("staticPages:privacy.whereProcessedPersonal")
+          | renderLinkTag("https://www.gov.uk/eu-eea")
+          | safe -}}
       </p>
 
       <p>
-        {{- t("staticPages:privacy.usDataBridge", {
-          url: "https://www.gov.uk/government/publications/uk-us-data-bridge-supporting-documents/uk-us-data-bridge-explainer"
-        }) | safe -}}
+        {{- t("staticPages:privacy.usDataBridge")
+          | renderLinkTag("https://www.gov.uk/government/publications/uk-us-data-bridge-supporting-documents/uk-us-data-bridge-explainer")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.howProtectHeading") }}</h2>
@@ -150,11 +142,11 @@
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.yourRightsHeading") }}</h2>
 
       <p>
-        {{- t("staticPages:privacy.yourRights", {
-          url: "https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter"
-        }) | safe -}}
+        {{- t("staticPages:privacy.yourRights")
+          | renderLinkTag("https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter")
+          | safe -}}
       </p>
-      
+
       <p>{{ t("staticPages:privacy.contactDPT") }}</p>
 
       <h3 class="govuk-heading-s">{{ t("staticPages:privacy.emailHeading") }}</h3>
@@ -175,9 +167,9 @@
       <h3 class="govuk-heading-s">{{ t("staticPages:privacy.accessHeading") }}</h3>
 
       <p>
-        {{- t("staticPages:privacy.access", {
-          url: "https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter"
-        }) | safe -}}
+        {{- t("staticPages:privacy.access")
+          | renderLinkTag("https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.complaintHeading") }}</h2>
@@ -187,10 +179,10 @@
       <h3 class="govuk-heading-s">{{ t("staticPages:privacy.icoEmailHeading") }}</h3>
 
       <p><a href="mailto:icocasework@ico.org.uk">icocasework@ico.org.uk</a></p>
-      
+
       <h3 class="govuk-heading-s">{{ t("staticPages:privacy.icoPhoneHeading") }}</h3>
       <p>0303 123 1113</p>
-      
+
       <h3 class="govuk-heading-s">{{ t("staticPages:privacy.icoTextphoneHeading") }}</h3>
       <p>
         01625 545860<br>
@@ -212,11 +204,11 @@
       <h2 class="govuk-heading-m">{{ t("staticPages:privacy.changesHeading") }}</h2>
 
       <p>{{ t("staticPages:privacy.changes1") }}</p>
-      
+
       <p>{{ t("staticPages:privacy.changes2") }}</p>
 
       <p>{{ t("staticPages:privacy.lastUpdated") }}</p>
-      
+
     </div>
   </div>
 {% endblock %}
