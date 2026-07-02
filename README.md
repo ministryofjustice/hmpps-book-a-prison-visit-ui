@@ -58,7 +58,7 @@ Then run the server in test mode by:
 And then either, run tests in headless mode with:
 
 `npm run int-test`
- 
+
 Or run tests with the cypress UI:
 
 `npm run int-test-ui`
@@ -138,6 +138,8 @@ The application supports English and Welsh through i18next. For detailed informa
 - **Plural Forms**: Automatically handled via `_one` and `_other` suffixes
 
 For translators, see [server/locales/TRANSLATOR_CONTEXT.md](server/locales/TRANSLATOR_CONTEXT.md) for namespace-to-screen mapping and interpolation variable reference.
+
+Welsh translations are managed via an Excel workbook (`npm run i18n:export-xlsx` / `npm run i18n:import-xlsx`) - see [server/locales/README.md](server/locales/README.md#translating-to-welsh-via-excel) for details.
 
 ---
 

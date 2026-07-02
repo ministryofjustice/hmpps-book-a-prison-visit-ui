@@ -18,6 +18,7 @@
     "node_modules",
     "assets/**/*.js",
     "integration_tests",
+    "bin",
     "dist",
     "coverage",
     "test_results",
