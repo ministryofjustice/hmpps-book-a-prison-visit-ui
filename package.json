@@ -22,10 +22,12 @@
     "start-feature:dev": "concurrently -k -p \"[{name}]\" -n \"Views,Locales,TypeScript,Node,Sass\" -c \"yellow.bold,magenta.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-views\" \"npm run watch-locales\" \"npm run watch-ts\" \"npm run watch-node-feature\" \"npm run watch-sass\"",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --cache --max-warnings 0 --fix",
-    "typecheck": "tsc && tsc -p integration_tests",
+    "typecheck": "tsc && tsc -p integration_tests && tsc -p bin",
     "test": "jest",
     "test:ci": "jest --runInBand",
     "security_audit": "npx audit-ci --config audit-ci.json",
+    "i18n:export-xlsx": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nExportXlsx.ts",
+    "i18n:import-xlsx": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nImportXlsx.ts",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
     "clean": "rm -rf dist build node_modules stylesheets",
@@ -105,10 +107,12 @@
     "nodemon": "^3.1.14",
     "prettier": "^3.8.4",
     "prettier-plugin-jinja-template": "^2.2.0",
+    "read-excel-file": "9.2.0",
     "sass": "^1.101.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "write-excel-file": "4.1.1"
   },
   "overrides": {
     "@opentelemetry/core": "2.8.0",

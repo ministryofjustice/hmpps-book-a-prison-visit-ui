@@ -89,6 +89,15 @@ Usage in templates:
 
 ---
 
+## Translating to Welsh via Excel
+
+Translators work from a single `.xlsx` workbook rather than editing JSON directly. Two scripts convert between the two formats:
+
+- `npm run i18n:export-xlsx` - reads `server/locales/en/*.json` and writes `server/locales/translations.xlsx`, one worksheet per namespace, with columns `Translation key | English text | Welsh text`. Keys are flattened with dot-separated paths (e.g. `checkVisitDetails.title`). Any translations already present in `server/locales/cy/*.json` are carried over into the Welsh column, so re-running after adding new English keys only leaves the new rows blank.
+- `npm run i18n:import-xlsx` - reads the completed `server/locales/translations.xlsx` and writes `server/locales/cy/*.json`. Only rows with a non-empty Welsh cell are written, so untranslated keys keep falling back to English. Warns if the sheet has keys missing from, or not found in, the corresponding English JSON file.
+
+Workflow: run `i18n:export-xlsx`, send `server/locales/translations.xlsx` to the translator, then run `i18n:import-xlsx` once it's returned completed. The `.xlsx` file itself is git-ignored - it's a working file, not a source of truth.
+
 ## Namespace Overview
 
 Translator guidance:
