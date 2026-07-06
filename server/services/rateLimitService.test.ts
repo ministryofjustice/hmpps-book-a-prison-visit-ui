@@ -1,4 +1,4 @@
-import { TokenStore } from '../data/tokenStore/tokenStore'
+import RateLimitStore from '../data/rateLimitStore/rateLimitStore'
 import RateLimitService from './rateLimitService'
 import logger from '../../logger'
 import { RateLimitConfig } from '../config'
@@ -9,7 +9,7 @@ let rateLimitService: RateLimitService
 
 const rateLimitStore = {
   incrementCount: jest.fn(),
-} as unknown as jest.Mocked<TokenStore>
+} as unknown as jest.Mocked<RateLimitStore>
 
 const rateLimitConfig: RateLimitConfig = {
   keyPrefix: 'prisoner',

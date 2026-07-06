@@ -97,9 +97,11 @@ export default {
       agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
+
   // include short Git ref in dataCache prefix to invalidate data cache on deploy of new build
   // DATA_CACHE_PREFIX overrides for integration tests
   dataCachePrefix: `dataCache_${get('DATA_CACHE_PREFIX', '') || get('GIT_REF', 'local').slice(0, 7)}:`,
+
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey
     booker: {
@@ -119,6 +121,7 @@ export default {
       windowSeconds: Number(get('ADD_VISITOR_RATE_LIMIT_BOOKER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
     },
   },
+
   analytics: {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },

@@ -1,10 +1,10 @@
 import logger from '../../logger'
 import { RateLimitConfig } from '../config'
-import { TokenStore } from '../data/tokenStore/tokenStore'
+import RateLimitStore from '../data/rateLimitStore/rateLimitStore'
 
 export default class RateLimitService {
   constructor(
-    private readonly rateLimitStore: TokenStore,
+    private readonly rateLimitStore: RateLimitStore,
     private readonly config: RateLimitConfig,
   ) {}
 
