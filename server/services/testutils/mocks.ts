@@ -25,8 +25,8 @@ import {
   createMockOrchestrationApiClient,
   createMockPrisonRegisterApiClient,
 } from '../../data/testutils/mocks'
-import { TokenStore } from '../../data/tokenStore/tokenStore'
 import { RateLimitConfig } from '../../config'
+import RateLimitStore from '../../data/rateLimitStore/rateLimitStore'
 
 jest.mock('..')
 
@@ -48,7 +48,7 @@ export const createMockPrisonService = () =>
   ) as jest.Mocked<PrisonService>
 
 export const createMockRateLimitService = () =>
-  new RateLimitService({} as TokenStore, {} as RateLimitConfig) as jest.Mocked<RateLimitService>
+  new RateLimitService({} as RateLimitStore, {} as RateLimitConfig) as jest.Mocked<RateLimitService>
 
 export const createMockVisitService = () =>
   new VisitService(createMockOrchestrationApiClient, createMockHmppsAuthClient()) as jest.Mocked<VisitService>

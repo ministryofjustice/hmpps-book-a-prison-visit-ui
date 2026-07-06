@@ -1,13 +1,12 @@
 import type { RedisClient } from '../redisClient'
 
 import logger from '../../../logger'
-import { TokenStore, TokenStorePrefix } from './tokenStore'
+import TokenStore from './tokenStore'
 
 export default class RedisTokenStore implements TokenStore {
-  constructor(
-    private readonly client: RedisClient,
-    private readonly prefix: TokenStorePrefix,
-  ) {
+  private readonly prefix = 'systemToken:'
+
+  constructor(private readonly client: RedisClient) {
     client.on('error', error => {
       logger.error(error, `Redis error`)
     })
@@ -21,20 +20,12 @@ export default class RedisTokenStore implements TokenStore {
 
   public async setToken(key: string, token: string, durationSeconds: number): Promise<void> {
     await this.ensureConnected()
-    await this.client.set(`${this.prefix}:${key}`, token, { EX: durationSeconds })
+    await this.client.set(`${this.prefix}${key}`, token, { EX: durationSeconds })
   }
 
   public async getToken(key: string): Promise<string | null> {
     await this.ensureConnected()
-    const result = await this.client.get(`${this.prefix}:${key}`)
+    const result = await this.client.get(`${this.prefix}${key}`)
     return typeof result === 'string' ? result : null
-  }
-
-  public async incrementCount(key: string, windowSeconds: number): Promise<number> {
-    await this.ensureConnected()
-    const prefixedKey = `${this.prefix}:${key}`
-    const count = await this.client.incr(prefixedKey)
-    await this.client.expire(prefixedKey, windowSeconds)
-    return typeof count === 'number' ? count : parseInt(count, 10)
   }
 }

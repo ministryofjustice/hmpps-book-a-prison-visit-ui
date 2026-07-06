@@ -19,7 +19,7 @@ jest.mock('../../applicationInfo', () => {
 })
 
 import { DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient } from '..'
-import { TokenStore } from '../tokenStore/tokenStore'
+import TokenStore from '../tokenStore/tokenStore'
 
 jest.mock('..')
 

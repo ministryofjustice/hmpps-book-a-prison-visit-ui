@@ -7,7 +7,7 @@ import { RedisClient } from './redisClient'
 
 jest.mock('./tokenStore/redisTokenStore')
 
-const tokenStore = new TokenStore({} as RedisClient, 'systemToken') as jest.Mocked<TokenStore>
+const tokenStore = new TokenStore({} as RedisClient) as jest.Mocked<TokenStore>
 
 const token = { access_token: 'token-1', expires_in: 300 }
 
