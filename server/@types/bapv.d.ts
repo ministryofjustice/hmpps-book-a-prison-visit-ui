@@ -105,10 +105,7 @@ export type VisitCancelled = {
 }
 
 export type CannotBookReason =
-  | 'NO_VO_BALANCE'
-  | 'TRANSFER_OR_RELEASE'
-  | 'UNSUPPORTED_PRISON'
-  | 'NO_ELIGIBLE_ADULT_VISITOR'
+  'NO_VO_BALANCE' | 'TRANSFER_OR_RELEASE' | 'UNSUPPORTED_PRISON' | 'NO_ELIGIBLE_ADULT_VISITOR'
 
 export type FlashFormValues = Record<string, unknown>
 
