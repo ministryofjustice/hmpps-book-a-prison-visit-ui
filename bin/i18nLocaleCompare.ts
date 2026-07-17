@@ -64,11 +64,15 @@ function main() {
       console.log(`\n${fileName}:`)
       if (enOnlyKeys.length) {
         console.log(`  Keys only in 'en':`)
-        enOnlyKeys.forEach(key => console.log(`    ${namespace}:${key}, ${enEntries.get(key)}`))
+        enOnlyKeys.forEach(key =>
+          console.log(`    [\x1b[31m${namespace}:${key}\x1b[0m]: \x1b[34m${enEntries.get(key)}\x1b[0m`),
+        )
       }
       if (cyOnlyKeys.length) {
         console.log(`  Keys only in 'cy':`)
-        cyOnlyKeys.forEach(key => console.log(`    ${namespace}:${key}, ${cyEntries.get(key)}`))
+        cyOnlyKeys.forEach(key =>
+          console.log(`    [\x1b[31m${namespace}:${key}\x1b[0m]: \x1b[34m${cyEntries.get(key)}\x1b[0m`),
+        )
       }
     }
   })
