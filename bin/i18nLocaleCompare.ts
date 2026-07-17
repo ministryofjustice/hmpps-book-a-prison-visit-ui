@@ -27,8 +27,8 @@ function jsonFileNames(dir: string): string[] {
     .sort()
 }
 
-function keysOf(filePath: string): Set<string> {
-  return new Set(flattenLocale(readLocaleJson(filePath)).map(entry => entry.key))
+function entriesOf(filePath: string): Map<string, string> {
+  return new Map(flattenLocale(readLocaleJson(filePath)).map(entry => [entry.key, entry.value]))
 }
 
 function main() {
@@ -52,20 +52,23 @@ function main() {
   const commonFileNames = [...enFileNames].filter(fileName => cyFileNames.has(fileName)).sort()
 
   commonFileNames.forEach(fileName => {
-    const enKeys = keysOf(path.join(EN_LOCALES_DIR, fileName))
-    const cyKeys = keysOf(path.join(CY_LOCALES_DIR, fileName))
+    const namespace = path.basename(fileName, '.json')
+    const enEntries = entriesOf(path.join(EN_LOCALES_DIR, fileName))
+    const cyEntries = entriesOf(path.join(CY_LOCALES_DIR, fileName))
 
-    const enOnlyKeys = [...enKeys].filter(key => !cyKeys.has(key)).sort()
-    const cyOnlyKeys = [...cyKeys].filter(key => !enKeys.has(key)).sort()
+    const enOnlyKeys = [...enEntries.keys()].filter(key => !cyEntries.has(key)).sort()
+    const cyOnlyKeys = [...cyEntries.keys()].filter(key => !enEntries.has(key)).sort()
 
     if (enOnlyKeys.length || cyOnlyKeys.length) {
       problemsFound = true
       console.log(`\n${fileName}:`)
       if (enOnlyKeys.length) {
-        console.log(`  Keys only in 'en': ${enOnlyKeys.join(', ')}`)
+        console.log(`  Keys only in 'en':`)
+        enOnlyKeys.forEach(key => console.log(`    ${namespace}:${key}, ${enEntries.get(key)}`))
       }
       if (cyOnlyKeys.length) {
-        console.log(`  Keys only in 'cy': ${cyOnlyKeys.join(', ')}`)
+        console.log(`  Keys only in 'cy':`)
+        cyOnlyKeys.forEach(key => console.log(`    ${namespace}:${key}, ${cyEntries.get(key)}`))
       }
     }
   })
