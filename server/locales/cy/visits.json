@@ -34,7 +34,7 @@
     "noFutureVisits": "Nid oes unrhyw ymweliadau na cheisiadau wedi'u archebu ar gyfer y dyfodol.",
     "viewPastVisits": "Gweld ymweliadau blaenorol",
     "viewCancelledVisits": "Gweld ymweliadau a wrthodwyd ac a ganslwyd",
-    "noPrisonerError": "Mae angen i chi ychwanegu carcharor i archebu ymweliad.P",
+    "noPrisonerError": "Mae angen i chi ychwanegu carcharor i archebu ymweliad.",
     "addPrisoner": "Ychwanegu carcharor"
   },
   "past": {
