@@ -98,6 +98,11 @@ Translators work from a single `.xlsx` workbook rather than editing JSON directl
 
 Workflow: run `i18n:export-xlsx`, send `server/locales/translations.xlsx` to the translator, then run `i18n:import-xlsx` once it's returned completed. The `.xlsx` file itself is git-ignored - it's a working file, not a source of truth.
 
+## Checking for missing translations
+Use `npm run i18n:locale-compare` to compare the set of English and Welsh translations. It will report on:
+* any JSON files missing from either locale
+* any translation keys missing from either locale
+
 ## Namespace Overview
 
 Translator guidance:
