@@ -118,7 +118,7 @@ describe('Check visit details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test=updates-in-language]').text()).toBe('Updates in Welsh and English')
+          expect($('[data-test=updates-in-language]').text()).toBe("Diweddariadau yn y Gymraeg a'r Saesneg")
         })
     })
 
@@ -131,7 +131,7 @@ describe('Check visit details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test=updates-in-language]').text()).toBe('Updates in English')
+          expect($('[data-test=updates-in-language]').text()).toBe('Diweddariadau yn Saesneg')
         })
     })
 

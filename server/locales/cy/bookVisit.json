@@ -1,1 +1,115 @@
-{}
+{
+  "cannotBook": {
+    "title": "Ni ellir archebu ymweliad",
+    "noVoBalance": "Mae {{name}} wedi defnyddio nifer yr ymweliadau sydd ar gael iddynt ar gyfer y mis hwn.",
+    "bookFromDate": "Gallwch archebu ymweliad o {{date}}.",
+    "transferOrRelease": "Nid yw {{name}} bellach yn {{prisonName}}. Efallai eu bod wedi symud i garchar arall neu wedi cael eu rhyddhau",
+    "findHowToBook": "Os ydyn nhw wedi symud i garchar arall, <link>darganfyddwch sut i archebu ymweliad yn eu carchar newydd</link>.",
+    "findPrisoner": "I gael help i gysylltu â nhw, gallwch <link>wneud cais i ddod o hyd i leoliad</dolen> carcharor.",
+    "unsupportedPrison": "Mae {{name}} yn {{prisonName}}.  Nid yw'r carchar hwn yn cael ei gefnogi gan y gwasanaeth hwn ar hyn o bryd.",
+    "bookAtThisPrison": "Darganfyddwch <dolen>sut i archebu ymweliad â'r carchar hwn</dolen>.",
+    "noEligibleAdultVisitor": "Rhaid i un unigolyn ar ymweliad fod yn 18 oed neu'n hŷn.  Ni ellir dewis unrhyw un o'ch ymwelwyr sy'n oedolion. Gall hyn fod oherwydd cyfyngiad newydd neu waharddiad.",
+    "addNewVisitorHeading": "Ychwanegu tyst newydd",
+    "addNewVisitorDescription": "Rhaid i'r sawl rydych chi am archebu ymweliad iddo fod ar restr ymwelwyr y carcharor.",
+    "addNewVisitorRequest": "I wneud cais i archebu ymweliad ar gyfer rhywun newydd, <link>llenwch y ffurflen</link>.  Byddwn yn ymateb o fewn 5 diwrnod gwaith."
+  },
+  "selectVisitors": {
+    "title": "Pwy sy’n mynd ar yr ymweliad?",
+    "visitorLimits": {
+      "maxVisitors_one": "Gall hyd at {{count}} unigolyn ymweld â rhywun yn {{prisonName}}.  Mae hyn yn cynnwys:",
+      "maxVisitors_other": "Gall hyd at {{count}} o bobl ymweld â rhywun yn {{prisonName}}. Mae hyn yn cynnwys:",
+      "maxAdults_one": "{{count}} unigolyn {{adultAgeYears}} oed neu'n hŷn",
+      "maxAdults_other": "{{count}} o bobl {{adultAgeYears}} oed neu'n hŷn",
+      "maxChildren_one": "{{count}} unigolyn o dan {{adultAgeYears}} oed",
+      "maxChildren_other": "{{count}} o bobl o dan {{adultAgeYears}} oed",
+      "atLeastOneAdult": "Rhaid i o leiaf un ymwelydd fod yn 18 oed neu'n hŷn."
+    },
+    "selectVisitorsHeading": "Dewis ymwelwyr",
+    "banDateHint": "Os cânt eu dewis fel ymwelydd, rhaid i'r ymweliad fod ar neu ar ôl y dyddiad hwn.",
+    "unavailableVisitorsHeading": "Ymwelwyr nad ydynt ar gael",
+    "cannotBookForVisitor": "Ni allwch archebu ymweliad ar gyfer yr ymwelydd hwn ar hyn o bryd.",
+    "bookForSomeoneElse": {
+      "detailsHeading": "Eisiau archebu ar gyfer rhywun arall?",
+      "linkVisitorAction": "Gwneud cais i gysylltu ymwelydd i'ch cyfrif"
+    }
+  },
+  "closedVisit": {
+    "title": "Bydd hwn yn ymweliad caeedig.",
+    "description": "Ar ymweliad caeedig, ni all y carcharor a'r ymwelwyr gael cyswllt corfforol na phasio unrhyw eitemau.",
+    "continueToBook": "Parhau i archebu",
+    "cancelAndReturnHome": "Canslo a dychwelyd i’r dudalen gartref"
+  },
+  "chooseVisitTime": {
+    "alert": {
+      "sessionUnavailable": {
+        "title": "Nid yw amser eich ymweliad ar gael mwyach.",
+        "text": "Dewiswch amser newydd."
+      }
+    },
+    "title": "Dewis yr amser i ymweld",
+    "reservationTime": "Dewiswch un amser ymweld. Bydd yn cael ei gadw am 10 munud.",
+    "prisonerVisitTimes": "Dim on yr amseroedd pan fydd {{name}} yn cael ymweld sy’n cael eu dangos.",
+    "availableTimesForDate_zero": "{{date}} - dim amseroedd ymweld ar gael",
+    "availableTimesForDate_one": "{{date}} - {{count}} amser ymweld ar gael",
+    "availableTimesForDate_other": "{{date}} - {{count}} amser ymweld ar gael",
+    "onlyAfterDate": "Dim ond amseroedd ymweld ar, neu ar ôl, y dyddiad hwn a ddangosir.",
+    "calendarAriaLabel": "Calendr dewis dyddiad ymweld",
+    "chooseOneOption": "Dim ond un opsiwn y gallwch chi ei ddewis",
+    "chooseDifferentDate": "Dewiswch ddyddiad gwahanol uchod"
+  },
+  "chooseVisitTimeNoSessions": {
+    "title": "Ni ellir archebu ymweliad",
+    "noAvailableTimes": "Ar hyn o bryd nid oes amseroedd ymweld ar gael ar gyfer {{name}}.",
+    "tryLater": "Rhowch gynnig arall arni yn nes ymlaen i weld a oes amseroedd ymweld newydd ar gael.",
+    "contactPrison": "Os ydych chi'n credu y dylai'r carcharor fod ag amseroedd ymweld ar gael, gallwch <link>gysylltu â'r carchar yn uniongyrchol</link>."
+  },
+  "additionalSupport": {
+    "title": "A yw unrhyw un o’r ymwelwyr angen unrhyw gymorth ychwanegol?",
+    "description": "Dywedwch wrthym am unrhyw gymorth y bydd ymwelwyr ei angen oherwydd cyflwr iechyd neu anabledd. Er enghraiffy, mynediad i gadair olwyn.",
+    "prisonSupport": "Bydd {{prisonName}} yn gwneud addasiadau rhesymol ar gyfer yr ymweliad, ond efallai ni fydd yn gallu bodloni eich cais.",
+    "provideDetails": "Rhowch fanylion y cais"
+  },
+  "mainContact": {
+    "title": "Pwy yw’r prif gyswllt ar gyfer yr ymweliad hwn?"
+  },
+  "contactDetails": {
+    "title": "Manylion cyswllt",
+    "titleForContact": "Manylion cyswllt ar gyfer {{name}}",
+    "description1": "Rydym yn defnyddio manylion cyswllt i anfon diweddariadau am yr ymweliad.",
+    "description2": "Gall y prif gyswllt dderbyn negeseuon e-bost a negeseuon testun.",
+    "getUpdatesByEmail": "Cael diweddariadau drwy e-bost",
+    "getUpdatesByText": "Cael diweddariadau drwy neges destun",
+    "ukMobileHint": "Os yw hwn yn rif ffôn symudol yn y DU, byddwn yn anfon neges destun i gadarnhau’r ymweliad",
+    "updatesInWelsh": "Ticiwch i dderbyn diweddariadau yn y Gymraeg"
+  },
+  "checkVisitDetails": {
+    "title": "Gwirio manylion yr ymweliad",
+    "prisonerAtPrison": "{{name}} yn {{prisonName}}",
+    "changeVisitors": "ymwelwyr",
+    "changeDateAndTime": "dyddiad ac amser",
+    "changeAdditionalSupport": "ceisiadau am gymorth ychwanegol",
+    "changeMainContact": "prif gyswllt",
+    "changeContactDetails": "manylion cyswllt"
+  },
+  "visitBooked": {
+    "title": "Ymweliad wedi’i archebu",
+    "yourReference": "Cyfeirnod eich ymweliad yw",
+    "confirmByText": "Bydd neges destun i gadarnhau’r ymweliad yn cael ei hanfon i’r prif gyswllt.",
+    "confirmByEmail": "Bydd e-bost i gadarnhau’r ymweliad yn cael ei anfon i’r prif gyswllt.",
+    "confirmByEmailAndText": "Bydd neges destun ac e-bost i gadarnhau’r ymweliad yn cael eu hanfon i’r prif gyswllt.",
+    "withReference": "Bydd hyn yn cynnwys cyfeirnod yr ymweliad."
+  },
+  "visitRequested": {
+    "title": "Mae cais wedi'i wneud am ymweliad",
+    "requestReviewBy": "Bydd {{prisonName}} yn ei adolygu nawr.",
+    "detailsByText": "Rydym wedi anfon neges destun gyda manylion eich cais at y prif gyswllt.",
+    "detailsByEmail": "Rydym wedi anfon e-bost gyda manylion eich cais at y prif gyswllt.",
+    "detailsByEmailAndText": "Rydym wedi anfon e-bost a neges destun gyda manylion eich cais at y prif gyswllt.",
+    "notBookedYet": "Nid yw eich ymweliad wedi'i archebu eto. Mae angen ei wirio.",
+    "confirmOrReject": "Bydd {{prisonName}} yn cadarnhau neu'n gwrthod eich cais.",
+    "responseByText": "Bydd neges destun gyda phenderfyniad y carchar yn cael ei hanfon at y prif gyswllt.",
+    "responseByEmail": "Bydd e-bost gyda phenderfyniad y carchar yn cael ei anfon at y prif gyswllt.",
+    "responseByEmailAndText": "Bydd neges destun ac e-bost gyda phenderfyniad y carchar yn cael eu hanfon at y prif gyswllt.",
+    "upcomingVisitsStatus": "Mae <link>eich tudalen ymweliadau</link> hefyd yn dangos statws ymweliadau sydd ar ddod."
+  }
+}

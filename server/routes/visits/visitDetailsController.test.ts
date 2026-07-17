@@ -96,7 +96,7 @@ describe('View a single visit', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Updates in Welsh and English')
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe("Diweddariadau yn y Gymraeg a'r Saesneg")
         })
     })
 
@@ -110,7 +110,7 @@ describe('View a single visit', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Updates in English')
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Diweddariadau yn Saesneg')
         })
     })
 

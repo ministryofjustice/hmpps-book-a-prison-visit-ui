@@ -1,1 +1,14 @@
-{}
+{
+  "availability": {
+    "canBook": "Gallaf",
+    "banned": "Na allaf, maent wedi'u gwahardd",
+    "bannedUntil": "Na allaf, maent wedi'u gwahardd tan {{date}}.",
+    "notApproved": "Na allaf, ymwelydd heb ei gymeradwyo"
+  },
+  "visitors": {
+    "title": "Ymwelwyr",
+    "visitorsOf": "Ymwelwyr {{name}}",
+    "linkedVisitorsHeading": "Ymwelwyr wedi'u cysylltu i'ch cyfrif",
+    "bookVisitForThem": "Allwch chi archebu ymweliad iddynt?"
+  }
+}

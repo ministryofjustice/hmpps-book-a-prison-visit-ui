@@ -1,1 +1,26 @@
-{}
+{
+  "howToChangeVisit": {
+    "title": "Sut i newid eich ymweliad",
+    "contactPrisonPhone": "I ddiweddaru eich ymweliad, ffoniwch {{prisonName}} ar {{phoneNumber}}.",
+    "contactPrisonWebsite": "I ddiweddaru eich ymweliad, <link>cysylltwch â {{prisonName}} yn uniongyrchol</link>.",
+    "visitReference": "Bydd arnoch angen cyfeirnod yr ymweliad i wneud newidiadau. Cyfeirnod eich ymweliad yw {{visitReference}}.",
+    "cancelVisit": "Neu gallwch ganslo eich ymweliad o'r <link>dudalen ymweliadau</link>."
+  },
+  "howToUpdateRequest": {
+    "title": "Sut i ddiweddaru eich cais",
+    "contactPrisonPhone": "I ddiweddaru eich cais, ffoniwch {{prisonName}} ar {{phoneNumber}}.",
+    "contactPrisonWebsite": "I ddiweddaru eich cais, <link>cysylltwch â {{prisonName}} yn uniongyrchol</link>.",
+    "visitReference": "Bydd arnoch angen cyfeirnod yr ymweliad i wneud newidiadau. Cyfeirnod eich cais yw {{visitReference}}."
+  },
+  "visitingInfo": {
+    "title": "Paratoi ar gyfer ymweld â {{prisonName}}",
+    "acceptableId": "Rhaid i bob ymwelydd dros 16 oed ddangos <link>ffurf derbyniol o ID i ddod i mewn i’r carchar</link>.",
+    "arriveEarly": "Dylai ymwelwyr gyrraedd 45 munud cyn i’r ymweliad ddigwydd.",
+    "moreVisitsInfo": "Gallwch ddarllen mwy am ymweliadau <link> yn {{prisonName}}</link>. Mae hyn yn cynnwys gwybodaeth am gyrraedd y carchar a chyfleusterau ymweld.",
+    "expectationsHeading": "Beth i’w ddisgwyl pan fyddwch yn ymweld â charchar",
+    "search1": "Bydd ymwelwyr yn cael eu chwilio cyn dod i mewn i ystafell ymweliadau’r carchar.",
+    "search2": "Gall staff y carchar wirio pocedi ymwelwyr, patio eu corff a gofyn iddynt fynd trwy synhwyrydd metel. Gellir defnyddio cŵn hefyd i synhwyro sylweddau anghyfreithlon.",
+    "helpWithCostHeading": "Cael cymorth gyda chostau ymweld â’r carchar",
+    "helpWithCostDetails": "Efallai y gallwch <link>gael cymorth gyda chostau ymweld â’r carchar</link> os ydych yn derbyn budd-daliadau penodol neu os oes gennych dystysgrif iechyd."
+  }
+}
