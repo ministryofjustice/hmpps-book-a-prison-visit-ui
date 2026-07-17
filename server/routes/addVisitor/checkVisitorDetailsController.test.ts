@@ -65,7 +65,7 @@ describe('Check visitor request details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('No')
+          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('Na')
         })
     })
 
@@ -78,7 +78,7 @@ describe('Check visitor request details', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('Yes')
+          expect($('[data-test=updates-in-welsh]').text().trim()).toBe('Oes')
         })
     })
 
