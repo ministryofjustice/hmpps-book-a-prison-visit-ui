@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID, type UUID } from 'crypto'
 import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
 import { type BookVisitJourney } from '../@types/bapv'
@@ -13,8 +13,9 @@ import { getMainContactName } from '../utils/utils'
 import { Visitor } from './bookerService'
 
 export interface VisitDetails extends OrchestrationVisitDto {
-  visitDisplayId: string
+  visitDisplayId: UUID
 }
+
 export default class VisitService {
   constructor(
     private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,

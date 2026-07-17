@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, body, validationResult } from 'express-validator'
+import { type UUID } from 'crypto'
 import { VisitService } from '../../../services'
 import paths from '../../../constants/paths'
 import { isMobilePhoneNumber } from '../../../utils/utils'
@@ -17,7 +18,7 @@ export default class CancelVisitController {
         return res.redirect(paths.VISITS.HOME)
       }
 
-      const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
+      const { visitDisplayId } = matchedData<{ visitDisplayId: UUID }>(req)
 
       const visit = bookedVisits.visits.find(v => v.visitDisplayId === visitDisplayId)!
 
@@ -34,7 +35,7 @@ export default class CancelVisitController {
     return async (req, res, next) => {
       const { cancelVisit, visitDisplayId } = matchedData<{
         cancelVisit: 'yes' | 'no'
-        visitDisplayId: string
+        visitDisplayId: UUID
       }>(req)
 
       const errors = validationResult(req)

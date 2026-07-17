@@ -8,7 +8,7 @@ const token = 'some token'
 
 jest.mock('crypto', () => {
   return {
-    randomUUID: () => 'uuidv4-1',
+    randomUUID: () => 'uuidv4-1-1-1-1',
   }
 })
 
