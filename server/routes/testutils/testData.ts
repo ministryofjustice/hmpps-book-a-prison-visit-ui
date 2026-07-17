@@ -279,7 +279,7 @@ export default class TestData {
   } = {}): PrisonNameDto[] => prisons
 
   static visitDetails = ({
-    visitDisplayId = 'uuidv4-1',
+    visitDisplayId = 'uuidv4-1-1-1-1',
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
     prisonerFirstName = 'JOHN',
