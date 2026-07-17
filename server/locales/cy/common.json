@@ -1,3 +1,134 @@
 {
-  "applicationName": "Ymweld â rhywun yn y carchar"
+  "applicationName": "Ymweld â rhywun yn y carchar",
+  "navigation": {
+    "visits": "Ymweliadau",
+    "visitors": "Ymwelwyr"
+  },
+  "phase": {
+    "beta": "Beta",
+    "feedback": "Mae hwn yn wasanaeth newydd - bydd <link>eich adborth (agor mewn ffenestr newydd)</link> yn ein helpu ni i'w wella."
+  },
+  "links": {
+    "back": "Yn ôl",
+    "contactPrisonLink": "Neu gallwch gysylltu â'r carchar yn uniongyrchol"
+  },
+  "footer": {
+    "accessibility": "Hygyrchedd",
+    "cookies": "Cwcis",
+    "privacy": "Preifatrwydd",
+    "terms": "Telerau ac amodau"
+  },
+  "cookieBanner": {
+    "cookiesOn": "Cwcis ar {{serviceName}}",
+    "essential": "Rydym yn defnyddio rhai cwcis hanfodol i wneud i’r gwasanaeth hwn weithio.",
+    "analytics": "Hoffwn hefyd ddefnyddio cwcis dadansoddol fel y gallwn ddeall sut rydych chi’n defnyddio’r gwasanaeth ac i wneud gwelliannau.",
+    "acceptButton": "Derbyn cwcis dadansoddol",
+    "rejectButton": "Gwrthod cwcis dadansoddol",
+    "viewButton": "Gweld cwcis",
+    "acceptedAnalytics": "Rydych wedi derbyn cwcis dadansoddol.",
+    "rejectedAnalytics": "Rydych wedi gwrthod cwcis dadansoddol.",
+    "changeSettings": "Gallwch <link>newid eich gosodiadau cwcis</link> ar unrhyw adeg.",
+    "hideCookieMessage": "Cuddio neges cwci"
+  },
+  "buttons": {
+    "addVisitors": "Ychwanegu ymwelwyr",
+    "acceptAndSend": "Derbyn ac anfon",
+    "bookAVisit": "Trefnu ymweliad",
+    "change": "Newid",
+    "confirmAndSend": "Cadarnhau ac anfon",
+    "continue": "Parhau",
+    "linkAnotherVisitor": "Ychwanegu ymwelydd arall",
+    "linkNewVisitor": "Ychwanegu ymwelydd newydd"
+  },
+  "dateTime": {
+    "timeRange": "{{startTime}} tan {{endTime}}"
+  },
+  "postBooking": {
+    "whatHappensNext": "Beth fydd yn digwydd nesaf",
+    "checkVisitDetails": "Pan fyddwch wedi mewngofnodi i GOV.UK One Login, gallwch <link>wirio manylion eich ymweliadau</link>.",
+    "feedback": "Gallwch ein helpu i wella'r gwasanaeth hwn drwy roi <link>adborth</link>."
+  },
+  "days": {
+    "short": {
+      "monday": "Dydd Llun",
+      "tuesday": "Dydd Mawrth",
+      "wednesday": "Dydd Mercher",
+      "thursday": "Dydd Iau",
+      "friday": "Dydd Gwener",
+      "saturday": "Dydd Sadwrn",
+      "sunday": "Dydd Sul"
+    },
+    "singleLetter": {
+      "monday": "Ll",
+      "tuesday": "Ma",
+      "wednesday": "Me",
+      "thursday": "I",
+      "friday": "G",
+      "saturday": "Sa",
+      "sunday": "Su"
+    }
+  },
+  "labels": {
+    "additionalSupport": "Ceisiadau am gymorth ychwanegol",
+    "cancelVisit": "Canslo ymweliad",
+    "contactDetails": "Manylion cyswllt",
+    "dateAndTime": "Dyddiad ac amser",
+    "dateOfBirth": "Dyddiad geni",
+    "emailAddress": "Cyfeiriad e-bost",
+    "firstName": "Enw cyntaf",
+    "lastName": "Cyfenw",
+    "mainContact": "Prif gyswllt",
+    "name": "Enw",
+    "no": "Na",
+    "noContactDetails": "Dim manylion cyswllt wedi'u darparu",
+    "none": "Dim",
+    "phoneNumber": "Rhif ffôn",
+    "prisoner": "Carcharor",
+    "prisonNumber": "Rhif Carcharor",
+    "someoneElse": "Rhywun arall",
+    "updatesInEnglish": "Diweddariadau yn Saesneg",
+    "updatesInWelsh": "Diweddariadau i'w hanfon yn y Gymraeg",
+    "updatesInWelshAndEnglish": "Diweddariadau yn y Gymraeg a'r Saesneg",
+    "visitCancelled": "Ymweliad wedi'i ganslo",
+    "visitReference": "Cyfeirnod yr ymweliad",
+    "visitors": "Ymwelwyr",
+    "warning": "Rhybudd",
+    "yes": "Oes",
+    "yesDetails": "Os oes, rhowch fanylion",
+    "welshLanguage": "Gwasanaeth Cymraeg"
+  },
+  "hints": {
+    "alsoInEnglish": "Byddant yn cael ei anfon atoch yn Saesneg hefyd.",
+    "dateOfBirth": "Er enghraifft, 27 3 1977",
+    "prisonNumber": "Er enghraifft, A1234BC"
+  },
+  "plurals": {
+    "ageMonths_one": "{{count}} mis",
+    "ageMonths_other": "{{count}} fis/mis",
+    "ageYears_one": "{{count}} oed",
+    "ageYears_other": "{{count}} oed",
+    "minute_one": "{{count}} munud",
+    "minute_other": "{{count}} funud/munud",
+    "person_one": "{{count}} person",
+    "person_other": "{{count}} o bobl",
+    "visitor_one": "{{count}} ymwelydd",
+    "visitor_other": "{{count}} ymwelydd",
+    "visitTime_zero": "dim amseroedd ymweld",
+    "visitTime_one": "{{count}} amser ymweld",
+    "visitTime_other": "{{count}} amser ymweld",
+    "year_one": "{{count}} flwyddyn",
+    "year_other": "{{count}} flynedd/blynedd/mlynedd"
+  },
+  "visitors": {
+    "banned": "Wedi'i wahardd",
+    "bannedUntil": "Mae {{name}} wedi'i wahardd tan {{date}}.",
+    "notApproved": "Heb ei gymeradwyo",
+    "noVisitorsLinked": "Nid oes unrhyw ymwelwyr wedi'u cysylltu i'ch cyfrif.",
+    "visitorRequestsHeading": "Ymwelwyr sy'n aros am adolygiad",
+    "reviewedByPrison": "Mae ceisiadau i gysylltu ymwelwyr i'ch cyfrif yn cael eu hadolygu gan y carchar.",
+    "linkingNewVisitorsHeading": "Ychwanegu ymwelwyr newydd i'ch cyfrif",
+    "linkedVisitorsOnly": "Dim ond ymweliadau ar gyfer pobl sydd wedi'u cysylltu i'ch cyfrif y gallwch eu harchebu.",
+    "mustBeOnVisitorList": "Rhaid i ymwelwyr fod ar restr ymwelwyr y carcharor.",
+    "requestResponseTime": "Byddwn yn ymateb i’ch cais o fewn 5 diwrnod gwaith."
+  }
 }

@@ -1,1 +1,51 @@
-{}
+{
+  "actions": {
+    "viewLinkedAndRequestedVisitors": "Gweld ymwelwyr cysylltiedig a'r rhai y gwnaethpwyd gais amdanynt"
+  },
+  "addVisitorStart": {
+    "title": "Darparu gwybodaeth ymwelwyr",
+    "identityRequirement": "Mae'n ofynnol i bob ymwelydd â charchardai yng Nghymru a Lloegr, ac eithrio plant dan 16 oed, brofi eu hunaniaeth cyn mynd i mewn.",
+    "acceptableId": "Rhaid i'r wybodaeth ymwelwyr a ddarperir gennych gyd-fynd â'r ffurfiau <link>derbyniol o ID</link> y bydd yr ymwelydd yn ei ddangos pan fyddant yn ymweld â rhywun yn y carchar.",
+    "visitorList": "Rhaid i ymwelwyr hefyd fod ar restr ymwelwyr y carcharor. Gall gymryd sawl wythnos i ymwelwyr newydd gael eu hychwanegu at restr ymwelwyr y carcharor.",
+    "incorrectInfoRejected": "Bydd ceisiadau gyda gwybodaeth anghywir am ymwelwyr yn cael eu gwrthod."
+  },
+  "visitorDetails": {
+    "title": "Gwybodaeth i ymwelwyr",
+    "updatesInWelsh": "Ticiwch am ddiweddariadau am y cais hwn i'w anfon yn Gymraeg"
+  },
+  "checkVisitorDetails": {
+    "title": "Gwiriwch eich cais",
+    "description": "Mae angen i'ch atebion gyd-fynd â'r wybodaeth ar restr ymwelwyr y carcharor.",
+    "visitorInformationHeading": "Gwybodaeth i ymwelwyr",
+    "changeVisitorInformation": "gwybodaeth i ymwelwyr",
+    "confirmInformation": "Drwy gyflwyno’r cais hwn rydych yn cadarnhau, hyd eithaf eich gwybodaeth, bod y manylion rydych yn eu darparu yn gywir. Rhaid i ymwelwyr fod ar restr ymwelwyr y carcharor.",
+    "acceptableId": "Gwnewch yn siŵr bod yr wybodaeth ymwelwyr rydych chi'n ei darparu yn cyfateb i'r ffurfiau <link>derbyniol o ID</link> y bydd yr ymwelydd yn eu defnyddio pan fyddant yn ymweld â rhywun yn y carchar."
+  },
+  "visitorApproved": {
+    "title": "Ymwelydd wedi'i gysylltu",
+    "visitorLinked": "Mae {{visitorName}} wedi'i gysylltu â'ch cyfrif",
+    "approvedMessage": "Bydd {{visitorName}} yn ymddangos fel ymwelydd pan fyddwch chi'n archebu ymweliadau ar gyfer {{prisonerName}}."
+  },
+  "visitorRequested": {
+    "title": "Cais wedi’i gyflwyno",
+    "requestReview": "Byddwn yn adolygu eich cais ac yn ymateb o fewn 5 diwrnod gwaith.",
+    "approvedOrRejected": "Byddwch yn cael e-bost i ddweud a yw'ch cais wedi'i gymeradwyo neu ei wrthod.",
+    "statusOnVisitorsPage": "Gallwch hefyd weld statws eich ceisiadau ar <link>y dudalen i ymwelwyr</link>."
+  },
+  "visitorRequestFailAlreadyLinked": {
+    "title": "Ymwelydd eisoes wedi'i gysylltu",
+    "visitorAlreadyLinked": "Rydym eisoes wedi cysylltu {{visitorName}} â'ch cyfrif.",
+    "noNeedToSubmit": "Nid oes angen i chi gyflwyno cais newydd ar gyfer yr ymwelydd hwn."
+  },
+  "visitorRequestFailAlreadyRequested": {
+    "title": "Gwnaethpwyd gais eisoes am ymwelydd",
+    "visitorAlreadyRequested": "Rydych wedi cyflwyno cais am {{visitorName}} o'r blaen.",
+    "waitingToBeReviewed": "Mae'n aros i gael ei adolygu gan y carchar."
+  },
+  "visitorRequestFailTooManyRequests": {
+    "title": "Ni ellir cyflwyno cais ymwelydd",
+    "limitReached": "Rydych wedi cyrraedd y terfyn ar gyfer ceisiadau ymwelwyr.",
+    "cannotMakeAnotherRequest": "Ni allwch wneud cais arall nes bod un o'ch ceisiadau yn cael ei adolygu. Byddwch yn cael e-bost i ddweud a yw'ch cais wedi'i gymeradwyo neu ei wrthod.",
+    "viewLinkedAndRequestedVisitors": "Gallwch <link>weld eich ymwelwyr cysylltiedig a'r rhai y gwnaethpwyd gais amdanynt</link>."
+  }
+}

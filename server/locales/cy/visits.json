@@ -1,1 +1,64 @@
-{}
+{
+  "shared": {
+    "viewDetailsLink": "Gweld manylion",
+    "viewDetailsLinkHidden": "o'ch ymweliad ar gyfer {{startTime}} ar {{date}}",
+    "onlyGovukBookings": "Dim ond ceisiadau ac ymweliadau a archebwyd gan ddefnyddio GOV.UK One Login sy'n cael eu dangos."
+  },
+  "alerts": {
+    "cancelled": {
+      "title": "Ymweliad wedi'i ganslo",
+      "byBooker": "Fe wnaethoch chi ganslo'r ymweliad hwn.",
+      "byPrisoner": "Cafodd yr ymweliad hwn ei ganslo gan y carcharor.",
+      "byVisitor": "Cafodd yr ymweliad hwn ei ganslo gan ymwelydd.",
+      "byPrison": "Cafodd yr ymweliad hwn ei ganslo gan y carchar."
+    },
+    "requested": {
+      "title": "Mae angen adolygu eich cais",
+      "text": "Nid yw eich ymweliad wedi'i archebu eto. Mae angen i {{prisonName}} ei wirio."
+    },
+    "rejected": {
+      "title": "Cafodd eich cais ei wrthod",
+      "text": "Gwrthodwyd y cais hwn gan {{prisonName}}."
+    },
+    "withdrawn": {
+      "title": "Cais am ymweliad wedi'i ganslo",
+      "text": "Fe wnaethoch chi ganslo'r cais hwn am ymweliad."
+    }
+  },
+  "future": {
+    "title": "Ymweliadau",
+    "onlyGovukBookings": "Dim ond ymweliadau a archebwyd gan ddefnyddio GOV.UK One Login sy'n cael eu dangos.",
+    "prisonerAtLocation": "{{prisonerName}} yn {{prisonName}}",
+    "awaitingReview": "Aros am adolygiad",
+    "cancelLinkHidden": "ar gyfer {{startTime}} ar {{date}}",
+    "noFutureVisits": "Nid oes unrhyw ymweliadau na cheisiadau wedi'u archebu ar gyfer y dyfodol.",
+    "viewPastVisits": "Gweld ymweliadau blaenorol",
+    "viewCancelledVisits": "Gweld ymweliadau a wrthodwyd ac a ganslwyd",
+    "noPrisonerError": "Mae angen i chi ychwanegu carcharor i archebu ymweliad.P",
+    "addPrisoner": "Ychwanegu carcharor"
+  },
+  "past": {
+    "title": "Ymweliadau blaenorol",
+    "noPastVisits": "Nid oes gennych unrhyw ymweliadau blaenorol"
+  },
+  "cancelled": {
+    "title": "Ymweliadau a wrthodwyd ac a ganslwyd",
+    "noCancelledVisits": "Nid oes gennych unrhyw ymweliadau  wrthodwyd ac a ganslwyd"
+  },
+  "visit": {
+    "title": "Manylion yr ymweliad",
+    "noSupport": "Dim"
+  },
+  "cancel": {
+    "title": "Canslo eich ymweliad",
+    "heading": "Ydych chi’n siŵr eich bod eisiau canslo eich ymweliad?",
+    "yesCancelOption": "Ydw, canslo'r ymweliad hwn",
+    "noCancelOption": "Nac ydw, cadw'r ymweliad hwn",
+    "confirmButton": "Cadarnhau"
+  },
+  "cancelConfirmed": {
+    "textMessageConfirmation": "Anfonir neges destun at y prif gyswllt i gadarnhau bod yr ymweliad wedi'i ganslo.",
+    "emailAndTextConfirmation": "Anfonir e-bost a neges destun at y prif gyswllt i gadarnhau bod yr ymweliad wedi'i ganslo.",
+    "emailConfirmation": "Anfonir e-bost at y prif gyswllt i gadarnhau bod yr ymweliad wedi'i ganslo."
+  }
+}
