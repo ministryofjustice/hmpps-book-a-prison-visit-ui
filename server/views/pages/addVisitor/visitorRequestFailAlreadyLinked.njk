@@ -11,8 +11,8 @@
 
       <p data-test="visitor-already-linked">
         {{- t("addVisitor:visitorRequestFailAlreadyLinked.visitorAlreadyLinked", {
-          visitorName: visitorDetails.firstName + " " + visitorDetails.lastName
-        }) | safe -}}
+          visitorName: firstName + " " + lastName
+        }) -}}
       </p>
 
       <p>{{ t("addVisitor:visitorRequestFailAlreadyLinked.noNeedToSubmit") }}</p>

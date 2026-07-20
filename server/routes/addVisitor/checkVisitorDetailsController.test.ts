@@ -6,6 +6,7 @@ import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import { BookerService } from '../../services'
+import type { AddVisitorJourneyResult } from '../../@types/bapv'
 
 let app: Express
 
@@ -82,9 +83,9 @@ describe('Check visitor request details', () => {
         })
     })
 
-    it('should return to visitor details page if no visitor request in session', () => {
+    it('should return to visitors page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.ADD_VISITOR.DETAILS)
+      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
     })
   })
 
@@ -107,7 +108,12 @@ describe('Check visitor request details', () => {
           .expect(302)
           .expect('Location', redirectPath)
           .expect(() => {
-            expect(sessionData.addVisitorJourney!.result).toBe(apiResponse)
+            expect(sessionData.addVisitorJourney).toBeUndefined()
+            expect(sessionData.addVisitorJourneyResult).toStrictEqual<AddVisitorJourneyResult>({
+              firstName: 'first',
+              lastName: 'last',
+              result: apiResponse as unknown as AddVisitorJourneyResult['result'],
+            })
             expect(bookerService.addVisitorRequest).toHaveBeenCalledWith({
               bookerReference: 'aaaa-bbbb-cccc',
               prisonerId: 'A1234BC',

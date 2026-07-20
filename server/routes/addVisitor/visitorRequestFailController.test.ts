@@ -10,15 +10,9 @@ let sessionData: SessionData
 
 beforeEach(() => {
   sessionData = {
-    addVisitorJourney: {
-      visitorDetails: {
-        firstName: 'first',
-        lastName: 'last',
-        'visitorDob-day': '1',
-        'visitorDob-month': '2',
-        'visitorDob-year': '2000',
-        visitorDob: '2000-02-01',
-      },
+    addVisitorJourneyResult: {
+      firstName: 'first',
+      lastName: 'last',
     },
   } as SessionData
   app = appWithAllRoutes({ sessionData })
@@ -31,7 +25,7 @@ afterEach(() => {
 describe('Add visitor request failure pages', () => {
   describe(`GET ${paths.ADD_VISITOR.SUCCESS}`, () => {
     it('should render add visitor journey request failure page - visitor already requested', () => {
-      sessionData.addVisitorJourney!.result = 'REQUEST_ALREADY_EXISTS'
+      sessionData.addVisitorJourneyResult!.result = 'REQUEST_ALREADY_EXISTS'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
@@ -47,13 +41,11 @@ describe('Add visitor request failure pages', () => {
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
-
-          expect(sessionData.addVisitorJourney).toBeUndefined()
         })
     })
 
     it('should render add visitor journey request failure page - visitor already linked', () => {
-      sessionData.addVisitorJourney!.result = 'VISITOR_ALREADY_EXISTS'
+      sessionData.addVisitorJourneyResult!.result = 'VISITOR_ALREADY_EXISTS'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_ALREADY_LINKED)
@@ -69,13 +61,11 @@ describe('Add visitor request failure pages', () => {
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
-
-          expect(sessionData.addVisitorJourney).toBeUndefined()
         })
     })
 
     it('should render add visitor journey request failure page - too many requests', () => {
-      sessionData.addVisitorJourney!.result = 'MAX_IN_PROGRESS_REQUESTS_REACHED'
+      sessionData.addVisitorJourneyResult!.result = 'MAX_IN_PROGRESS_REQUESTS_REACHED'
 
       return request(app)
         .get(paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS)
@@ -86,17 +76,11 @@ describe('Add visitor request failure pages', () => {
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visitor request cannot be submitted')
-
-          expect(sessionData.addVisitorJourney).toBeUndefined()
         })
     })
 
-    it('should redirect to visitors page if add visitor request journey not in session', () => {
-      delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
-    })
-
     it('should redirect to visitors page if add visitor request journey result not in session', () => {
+      delete sessionData.addVisitorJourneyResult
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
   })
