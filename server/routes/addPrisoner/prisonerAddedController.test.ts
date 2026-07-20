@@ -8,11 +8,8 @@ import paths from '../../constants/paths'
 let app: Express
 let sessionData: SessionData
 
-const selectedPrisonId = 'HEI'
-const supportedPrisonIds = [selectedPrisonId]
-
 beforeEach(() => {
-  sessionData = { addPrisonerJourney: { supportedPrisonIds, selectedPrisonId } } as SessionData
+  sessionData = {} as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })
@@ -27,8 +24,11 @@ describe('Prisoner added', () => {
       return request(app).get(paths.ADD_PRISONER.SUCCESS).expect(302).expect('Location', paths.RETURN_HOME)
     })
 
-    it('should clear add prisoner journey session data and render the success page', () => {
-      sessionData.addPrisonerJourney!.result = true
+    it('should render the success page', () => {
+      sessionData.addPrisonerJourneyResult = {
+        selectedPrisonId: 'some-prison-id',
+        result: true,
+      }
 
       return request(app)
         .get(paths.ADD_PRISONER.SUCCESS)

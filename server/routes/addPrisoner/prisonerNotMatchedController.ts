@@ -6,13 +6,13 @@ export default class PrisonerNotMatchedController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addPrisonerJourney } = req.session
-      if (addPrisonerJourney?.result !== false) {
+      const { addPrisonerJourneyResult } = req.session
+      if (addPrisonerJourneyResult?.result !== false) {
         return res.redirect(paths.RETURN_HOME)
       }
       return res.render('pages/addPrisoner/prisonerNotMatched', {
         showOLServiceNav: true,
-        prisonId: addPrisonerJourney.selectedPrisonId,
+        prisonId: addPrisonerJourneyResult.selectedPrisonId,
       })
     }
   }

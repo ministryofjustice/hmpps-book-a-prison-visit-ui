@@ -62,9 +62,13 @@ export default class PrisonerDetailsController {
         prisonId: addPrisonerJourney.selectedPrisonId,
       })
 
-      addPrisonerJourney.result = result
+      req.session.addPrisonerJourneyResult = {
+        selectedPrisonId: addPrisonerJourney.selectedPrisonId,
+        result,
+      }
 
       if (result) {
+        delete req.session.addPrisonerJourney
         return res.redirect(paths.ADD_PRISONER.SUCCESS)
       }
 

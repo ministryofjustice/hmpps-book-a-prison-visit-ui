@@ -1,6 +1,7 @@
 import type { ValidationError } from 'express-validator'
 import type {
   AddPrisonerJourney,
+  AddPrisonerJourneyResult,
   AddVisitorJourney,
   AddVisitorJourneyResult,
   Booker,
@@ -24,6 +25,7 @@ declare module 'express-session' {
     booker?: Booker
 
     addPrisonerJourney?: AddPrisonerJourney
+    addPrisonerJourneyResult?: AddPrisonerJourneyResult
 
     addVisitorJourney?: AddVisitorJourney
     addVisitorJourneyResult?: AddVisitorJourneyResult

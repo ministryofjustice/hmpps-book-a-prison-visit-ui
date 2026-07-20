@@ -26,7 +26,11 @@ export type AddPrisonerJourney = {
     'prisonerDob-year': string
     prisonNumber: string
   }
-  result?: boolean
+}
+
+export type AddPrisonerJourneyResult = {
+  selectedPrisonId: string
+  result: boolean
 }
 
 // data that is built up during an add visitor request journey
