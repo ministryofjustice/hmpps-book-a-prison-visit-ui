@@ -21,8 +21,19 @@ generic-service:
     PVB_URL: "https://dev.prisonvisits.prison.service.justice.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: dev
+    NODE_USE_ENV_PROXY: "1"
+    APPLICATION_INSIGHTS_NO_STATSBEAT: "true"
 
     FEATURE_WELSH_LANGUAGE: "true"
+
+  namespace_secrets:
+    hmpps-envoy-https-proxy-env:
+      HTTP_PROXY: "HTTP_PROXY"
+      HTTPS_PROXY: "HTTPS_PROXY"
+      NO_PROXY: "NO_PROXY"
+      http_proxy: "HTTP_PROXY"
+      https_proxy: "HTTPS_PROXY"
+      no_proxy: "NO_PROXY"
 
   allowlist:
     groups:

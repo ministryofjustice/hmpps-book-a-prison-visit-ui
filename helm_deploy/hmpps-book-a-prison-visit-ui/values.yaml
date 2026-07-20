@@ -63,8 +63,6 @@ generic-service:
     MAINTENANCE_MODE: "false"
     # Optional maintenance end date (in ISO format, YYYY-MM-DDTHH:MM)
     MAINTENANCE_MODE_END_DATE_TIME: ""
-    NODE_USE_ENV_PROXY: "1"
-    APPLICATION_INSIGHTS_NO_STATSBEAT: "true"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -83,13 +81,6 @@ generic-service:
     elasticache-redis-public:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
-    hmpps-envoy-https-proxy-env:
-      HTTP_PROXY: "HTTP_PROXY"
-      HTTPS_PROXY: "HTTPS_PROXY"
-      NO_PROXY: "NO_PROXY"
-      http_proxy: "HTTP_PROXY"
-      https_proxy: "HTTPS_PROXY"
-      no_proxy: "NO_PROXY"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-book-a-prison-visit-ui
