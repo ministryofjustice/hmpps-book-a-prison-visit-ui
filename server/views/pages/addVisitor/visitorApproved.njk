@@ -14,7 +14,7 @@
 
       <p data-test="visitor-approved">
         {{- t("addVisitor:visitorApproved.approvedMessage", {
-          visitorName: visitorName,
+          visitorName: firstName + " " + lastName,
           prisonerName: prisoner | prisonerNameFirstLast
         }) -}}
       </p>

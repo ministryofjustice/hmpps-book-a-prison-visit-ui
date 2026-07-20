@@ -26,7 +26,11 @@ export type AddPrisonerJourney = {
     'prisonerDob-year': string
     prisonNumber: string
   }
-  result?: boolean
+}
+
+export type AddPrisonerJourneyResult = {
+  selectedPrisonId: string
+  result: boolean
 }
 
 // data that is built up during an add visitor request journey
@@ -40,7 +44,12 @@ export type AddVisitorJourney = {
     visitorDob: string
     languagePreference: Locale
   }
-  result?: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
+}
+
+export type AddVisitorJourneyResult = {
+  firstName: string
+  lastName: string
+  result: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
 }
 
 // data that is built up during a visit booking journey

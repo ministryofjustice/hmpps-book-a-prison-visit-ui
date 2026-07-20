@@ -8,7 +8,7 @@ import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetu
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { createMockBookerService } from '../../services/testutils/mocks'
-import { AddPrisonerJourney, FlashFormValues } from '../../@types/bapv'
+import { AddPrisonerJourney, AddPrisonerJourneyResult, FlashFormValues } from '../../@types/bapv'
 
 let app: Express
 
@@ -146,7 +146,7 @@ describe('Prisoner details', () => {
       return request(app).post(paths.ADD_PRISONER.DETAILS).expect(302).expect('Location', paths.ADD_PRISONER.LOCATION)
     })
 
-    it('should call service to register prisoner, store result in session and redirect to success page - success', () => {
+    it('should call service to register prisoner, store result in session, clear other data and redirect to success page - success', () => {
       bookerService.registerPrisoner.mockResolvedValue(true)
 
       return request(app)
@@ -156,8 +156,11 @@ describe('Prisoner details', () => {
         .expect('Location', paths.ADD_PRISONER.SUCCESS)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
-          expect(sessionData.addPrisonerJourney!.prisonerDetails).toBeUndefined()
-          expect(sessionData.addPrisonerJourney!.result).toBe(true)
+          expect(sessionData.addPrisonerJourney).toBeUndefined()
+          expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
+            selectedPrisonId,
+            result: true,
+          })
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -173,7 +176,10 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney!.prisonerDetails).toStrictEqual(prisonerDetails)
-          expect(sessionData.addPrisonerJourney!.result).toBe(false)
+          expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
+            selectedPrisonId,
+            result: false,
+          })
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })
@@ -188,7 +194,7 @@ describe('Prisoner details', () => {
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addPrisonerJourney!.prisonerDetails).toBeUndefined()
-          expect(sessionData.addPrisonerJourney!.result).toBeUndefined()
+          expect(sessionData.addPrisonerJourneyResult).toBeUndefined()
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
     })

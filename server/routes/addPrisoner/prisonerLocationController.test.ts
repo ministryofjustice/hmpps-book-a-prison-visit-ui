@@ -34,7 +34,9 @@ describe('Prisoner location', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
-    it('should render prisoner location page with list of supported prisons and store supported prison in session', () => {
+    it('should render prisoner location page with list of supported prisons, store supported prison in session and clear any old session data', () => {
+      sessionData.addPrisonerJourneyResult = { selectedPrisonId: 'some-prison-id', result: true }
+
       return request(app)
         .get(paths.ADD_PRISONER.LOCATION)
         .expect('Content-Type', /html/)
@@ -52,6 +54,7 @@ describe('Prisoner location', () => {
           expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
+          expect(sessionData.addPrisonerJourneyResult).toBeUndefined()
           expect(sessionData.addPrisonerJourney!.supportedPrisonIds).toStrictEqual(supportedPrisonIds)
         })
     })

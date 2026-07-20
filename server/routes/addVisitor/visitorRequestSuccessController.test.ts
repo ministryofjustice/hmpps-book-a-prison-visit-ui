@@ -10,15 +10,9 @@ let sessionData: SessionData
 
 beforeEach(() => {
   sessionData = {
-    addVisitorJourney: {
-      visitorDetails: {
-        firstName: 'First',
-        lastName: 'Last',
-        'visitorDob-day': '1',
-        'visitorDob-month': '2',
-        'visitorDob-year': '2000',
-        visitorDob: '2000-02-01',
-      },
+    addVisitorJourneyResult: {
+      firstName: 'First',
+      lastName: 'Last',
       result: 'REQUESTED',
     },
   } as SessionData
@@ -31,7 +25,7 @@ afterEach(() => {
 
 describe('Add visitor request success page', () => {
   describe(`GET ${paths.ADD_VISITOR.SUCCESS}`, () => {
-    it('should render add visitor journey request success page and clear session data', () => {
+    it('should render add visitor journey request success page', () => {
       return request(app)
         .get(paths.ADD_VISITOR.SUCCESS)
         .expect('Content-Type', /html/)
@@ -43,12 +37,10 @@ describe('Add visitor request success page', () => {
           expect($('h1').text().trim()).toBe('Request submitted')
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
-
-          expect(sessionData.addVisitorJourney).toBeUndefined()
         })
     })
 
-    it('should render add visitor journey auto approved page and clear session data', () => {
+    it('should render add visitor journey auto approved page', () => {
       return request(app)
         .get(paths.ADD_VISITOR.AUTO_APPROVED)
         .expect('Content-Type', /html/)
@@ -65,13 +57,11 @@ describe('Add visitor request success page', () => {
           expect($('[data-test="visitor-approved"]').text()).toStrictEqual(
             'First Last will appear as a visitor when you book visits for John Smith.',
           )
-
-          expect(sessionData.addVisitorJourney).toBeUndefined()
         })
     })
 
     it('should redirect to visitors page if add visitor request result not in session', () => {
-      delete sessionData.addVisitorJourney!.result
+      delete sessionData.addVisitorJourneyResult
 
       return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
     })

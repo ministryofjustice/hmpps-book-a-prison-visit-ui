@@ -4,11 +4,9 @@ import paths from '../../constants/paths'
 export default class VisitorRequestSuccessController {
   public viewRequested(): RequestHandler {
     return async (req, res) => {
-      if (req.session.addVisitorJourney?.result === undefined) {
+      if (req.session.addVisitorJourneyResult === undefined) {
         return res.redirect(paths.VISITORS)
       }
-
-      delete req.session.addVisitorJourney
 
       return res.render('pages/addVisitor/visitorRequested', { showOLServiceNav: true })
     }
@@ -16,16 +14,14 @@ export default class VisitorRequestSuccessController {
 
   public viewApproved(): RequestHandler {
     return async (req, res) => {
-      if (req.session.addVisitorJourney?.result === undefined) {
+      if (req.session.addVisitorJourneyResult === undefined) {
         return res.redirect(paths.VISITORS)
       }
 
-      const visitorName = `${req.session.addVisitorJourney.visitorDetails.firstName} ${req.session.addVisitorJourney.visitorDetails.lastName}`
+      const { firstName, lastName } = req.session.addVisitorJourneyResult
       const prisoner = req.session.booker!.prisoners[0]
 
-      delete req.session.addVisitorJourney
-
-      return res.render('pages/addVisitor/visitorApproved', { showOLServiceNav: true, visitorName, prisoner })
+      return res.render('pages/addVisitor/visitorApproved', { showOLServiceNav: true, firstName, lastName, prisoner })
     }
   }
 }

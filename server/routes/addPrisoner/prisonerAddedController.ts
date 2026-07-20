@@ -6,11 +6,9 @@ export default class PrisonerAddedController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      if (req.session.addPrisonerJourney?.result !== true) {
+      if (req.session.addPrisonerJourneyResult?.result !== true) {
         return res.redirect(paths.RETURN_HOME)
       }
-
-      delete req.session.addPrisonerJourney
 
       return res.render('pages/addPrisoner/prisonerAdded', { showOLServiceNav: true })
     }

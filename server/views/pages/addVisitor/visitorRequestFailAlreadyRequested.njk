@@ -11,8 +11,8 @@
 
       <p data-test="visitor-already-requested">
         {{- t("addVisitor:visitorRequestFailAlreadyRequested.visitorAlreadyRequested", {
-          visitorName: visitorDetails.firstName + " " + visitorDetails.lastName
-        }) | safe -}}
+          visitorName: firstName + " " + lastName
+        }) -}}
       </p>
 
       <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.waitingToBeReviewed") }}</p>

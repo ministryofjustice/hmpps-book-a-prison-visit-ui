@@ -4,14 +4,14 @@ import paths from '../../constants/paths'
 export default class VisitorRequestFailController {
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addVisitorJourney } = req.session
+      const { addVisitorJourneyResult } = req.session
 
-      if (addVisitorJourney?.result === undefined) {
+      if (!addVisitorJourneyResult) {
         return res.redirect(paths.VISITORS)
       }
 
       let pageTemplate
-      switch (addVisitorJourney.result) {
+      switch (addVisitorJourneyResult.result) {
         case 'MAX_IN_PROGRESS_REQUESTS_REACHED':
           pageTemplate = 'visitorRequestFailTooManyRequests'
           break
@@ -28,11 +28,10 @@ export default class VisitorRequestFailController {
           return res.redirect(paths.VISITORS)
       }
 
-      delete req.session.addVisitorJourney
-
       return res.render(`pages/addVisitor/${pageTemplate}`, {
         showOLServiceNav: true,
-        visitorDetails: addVisitorJourney.visitorDetails,
+        firstName: addVisitorJourneyResult.firstName,
+        lastName: addVisitorJourneyResult.lastName,
       })
     }
   }
