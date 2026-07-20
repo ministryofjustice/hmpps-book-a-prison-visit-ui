@@ -151,8 +151,13 @@ describe('Clear session data', () => {
     const sessionData: Partial<Record<keyof SessionData, string>> = {
       booker: 'BOOKER DATA',
       addPrisonerJourney: 'ADD PRISONER JOURNEY DATA',
+      addPrisonerJourneyResult: 'ADD PRISONER JOURNEY RESULT DATA',
+      addVisitorJourney: 'ADD VISITOR JOURNEY DATA',
+      addVisitorJourneyResult: 'ADD VISITOR JOURNEY RESULT DATA',
       bookVisitJourney: 'BOOK VISIT JOURNEY DATA',
       bookVisitConfirmed: 'BOOK VISIT CONFIRMATION DATA',
+      bookedVisits: 'BOOKED VISITS DATA',
+      visitCancelled: 'VISIT CANCELLED DATA',
     }
     const req = { session: sessionData } as unknown as Request
 

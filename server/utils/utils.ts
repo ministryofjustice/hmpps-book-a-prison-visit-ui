@@ -97,7 +97,18 @@ export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: D
 }
 
 export const clearSession = (req: Request): void => {
-  ;(['addPrisonerJourney', 'bookVisitJourney', 'bookVisitConfirmed'] as const).forEach(sessionItem => {
+  ;(
+    [
+      'addPrisonerJourney',
+      'addPrisonerJourneyResult',
+      'addVisitorJourney',
+      'addVisitorJourneyResult',
+      'bookVisitJourney',
+      'bookVisitConfirmed',
+      'bookedVisits',
+      'visitCancelled',
+    ] as const
+  ).forEach(sessionItem => {
     delete req.session[sessionItem]
   })
 }
