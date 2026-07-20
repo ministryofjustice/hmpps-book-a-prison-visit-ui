@@ -19,6 +19,6 @@ export default function createErrorHandler(production: boolean) {
 
     res.status(error.status || 500)
 
-    return res.render('pages/error', { showOLServiceNav: !!req.session.booker })
+    return res.render('pages/error', { showOLServiceNav: !!req.session?.booker })
   }
 }

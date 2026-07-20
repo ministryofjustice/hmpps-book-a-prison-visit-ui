@@ -1,7 +1,8 @@
-import { ValidationError } from 'express-validator'
-import {
+import type { ValidationError } from 'express-validator'
+import type {
   AddPrisonerJourney,
   AddVisitorJourney,
+  AddVisitorJourneyResult,
   Booker,
   VisitCancelled,
   BookVisitConfirmed,
@@ -10,7 +11,7 @@ import {
   MoJAlert,
   BookedVisits,
 } from '../bapv'
-import { PrisonNames } from '../../services/prisonService'
+import type { PrisonNames } from '../../services/prisonService'
 
 export default {}
 
@@ -25,6 +26,7 @@ declare module 'express-session' {
     addPrisonerJourney?: AddPrisonerJourney
 
     addVisitorJourney?: AddVisitorJourney
+    addVisitorJourneyResult?: AddVisitorJourneyResult
 
     bookVisitJourney?: BookVisitJourney
     bookVisitConfirmed?: BookVisitConfirmed

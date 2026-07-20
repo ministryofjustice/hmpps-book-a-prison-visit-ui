@@ -10,7 +10,7 @@ export default class CheckVisitorDetailsController {
       const { addVisitorJourney } = req.session
 
       if (!addVisitorJourney) {
-        return res.redirect(paths.ADD_VISITOR.DETAILS)
+        return res.redirect(paths.VISITORS)
       }
 
       return res.render('pages/addVisitor/checkVisitorDetails', {
@@ -40,7 +40,12 @@ export default class CheckVisitorDetailsController {
         },
       })
 
-      addVisitorJourney.result = result
+      req.session.addVisitorJourneyResult = {
+        firstName: visitorDetails.firstName,
+        lastName: visitorDetails.lastName,
+        result,
+      }
+      delete req.session.addVisitorJourney
 
       switch (result) {
         case 'REQUESTED':
