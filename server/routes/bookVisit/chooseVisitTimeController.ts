@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { VisitService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
 import { MoJAlert } from '../../@types/bapv'
 import { Visitor } from '../../services/bookerService'
-import { SanitisedError } from '../../sanitisedError'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -126,7 +126,7 @@ export default class ChooseVisitTimeController {
         }
       } catch (error) {
         // HTTP 400 Bad Request is the response when a session is no longer available
-        if ((error as SanitisedError).status === 400) {
+        if ((error as SanitisedError).responseStatus === 400) {
           req.flash('messages', {
             variant: 'error',
             title: req.t('bookVisit:chooseVisitTime.alert.sessionUnavailable.title'),

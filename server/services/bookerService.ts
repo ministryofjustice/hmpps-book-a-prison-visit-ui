@@ -1,6 +1,7 @@
 import { randomUUID, UUID } from 'crypto'
 import { TooManyRequests } from 'http-errors'
 import { differenceInDays } from 'date-fns'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
 import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
 import {
@@ -13,7 +14,6 @@ import {
   CreateVisitorRequestResponseDto,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
 
 import { isAdult } from '../utils/utils'
@@ -170,7 +170,7 @@ export default class BookerService {
       return true
     } catch (error) {
       const sanitisedError = error as SanitisedError<BookerPrisonerValidationErrorResponse>
-      if (sanitisedError.status === 422 && sanitisedError.data?.validationError) {
+      if (sanitisedError.responseStatus === 422 && sanitisedError.data?.validationError) {
         return sanitisedError.data.validationError
       }
       throw error

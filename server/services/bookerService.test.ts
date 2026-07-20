@@ -1,10 +1,10 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
 import { UUID } from 'crypto'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import logger from '../../logger'
 import { createMockRateLimitService } from './testutils/mocks'
 
@@ -273,7 +273,7 @@ describe('Booker service', () => {
     it('should return validationError if API returns an HTTP 422 response', async () => {
       const prisonerReleasedException: SanitisedError<BookerPrisonerValidationErrorResponse> = {
         name: 'Error',
-        status: 422,
+        responseStatus: 422,
         message: '',
         stack: '',
         data: { status: 422, validationError: 'PRISONER_RELEASED' },

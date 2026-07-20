@@ -3,6 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { InternalServerError } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookVisitConfirmed, MoJAlert } from '../../@types/bapv'
@@ -10,7 +11,6 @@ import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
-import { SanitisedError } from '../../sanitisedError'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
@@ -277,7 +277,7 @@ describe('Check visit details', () => {
         it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISONER_NOT_FOUND'] },
@@ -298,7 +298,7 @@ describe('Check visit details', () => {
         it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_PRISON_PRISONER_MISMATCH', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'] },
@@ -327,7 +327,7 @@ describe('Check visit details', () => {
         it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_NO_VO_BALANCE', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_VO_BALANCE'] },
@@ -356,7 +356,7 @@ describe('Check visit details', () => {
         it('should set flash message and redirect to choose visit time page for error APPLICATION_INVALID_NO_SLOT_CAPACITY', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_SLOT_CAPACITY'] },
@@ -385,7 +385,7 @@ describe('Check visit details', () => {
         it('should set flash message and redirect to choose visit time page for any other error set', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: {
