@@ -18,17 +18,14 @@ jest.mock('../../applicationInfo', () => {
   return jest.fn(() => testAppInfo)
 })
 
-import { DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient } from '..'
-import TokenStore from '../tokenStore/tokenStore'
+import { DataCache, OrchestrationApiClient, PrisonRegisterApiClient } from '..'
 
 jest.mock('..')
 
 export const createMockDataCache = () => ({ set: jest.fn(), get: jest.fn() }) as jest.Mocked<DataCache>
 
-export const createMockHmppsAuthClient = () => new HmppsAuthClient({} as TokenStore) as jest.Mocked<HmppsAuthClient>
-
 export const createMockOrchestrationApiClient = () =>
-  new OrchestrationApiClient('token') as jest.Mocked<OrchestrationApiClient>
+  new OrchestrationApiClient(null) as jest.Mocked<OrchestrationApiClient>
 
 export const createMockPrisonRegisterApiClient = () =>
-  new PrisonRegisterApiClient('token') as jest.Mocked<PrisonRegisterApiClient>
+  new PrisonRegisterApiClient(null) as jest.Mocked<PrisonRegisterApiClient>

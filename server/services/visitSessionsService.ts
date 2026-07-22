@@ -1,5 +1,5 @@
 import { addDays, eachDayOfInterval, format } from 'date-fns'
-import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
+import { OrchestrationApiClient } from '../data'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
 import { SessionRestriction } from '../data/orchestrationApiClient'
@@ -10,10 +10,7 @@ type VisitSession = { reference: string; startTime: string; endTime: string }
 export type VisitSessionsCalendar = Record<string, Record<string, VisitSession[]>>
 
 export default class VisitSessionsService {
-  constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly orchestrationApiClient: OrchestrationApiClient) {}
 
   async getVisitSessionsCalendar({
     prisonId,
@@ -93,10 +90,7 @@ export default class VisitSessionsService {
     bookerReference: string,
     excludedApplicationReference?: string,
   ): Promise<AvailableVisitSessionDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    return orchestrationApiClient.getVisitSessions({
+    return this.orchestrationApiClient.getVisitSessions({
       prisonId,
       prisonerId,
       visitorIds,
@@ -112,9 +106,6 @@ export default class VisitSessionsService {
     prisonerId: string
     visitorIds: number[]
   }): Promise<SessionRestriction> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    return orchestrationApiClient.getSessionRestriction({ prisonerId, visitorIds })
+    return this.orchestrationApiClient.getSessionRestriction({ prisonerId, visitorIds })
   }
 }

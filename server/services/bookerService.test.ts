@@ -1,16 +1,14 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
 import { UUID } from 'crypto'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import BookerService, { Prisoner, Visitor } from './bookerService'
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import logger from '../../logger'
 import { createMockRateLimitService } from './testutils/mocks'
 
 jest.mock('../../logger')
-
-const token = 'some token'
 
 let uuidCount: number
 jest.mock('crypto', () => {
@@ -23,10 +21,7 @@ jest.mock('crypto', () => {
 })
 
 describe('Booker service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let bookerService: BookerService
   const bookerRateLimit = createMockRateLimitService()
@@ -35,16 +30,7 @@ describe('Booker service', () => {
 
   beforeEach(() => {
     uuidCount = 0
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    bookerService = new BookerService(
-      orchestrationApiClientFactory,
-      hmppsAuthClient,
-      bookerRateLimit,
-      prisonerRateLimit,
-      visitorRateLimit,
-    )
+    bookerService = new BookerService(orchestrationApiClient, bookerRateLimit, prisonerRateLimit, visitorRateLimit)
   })
 
   afterEach(() => {
@@ -273,13 +259,12 @@ describe('Booker service', () => {
     it('should return validationError if API returns an HTTP 422 response', async () => {
       const prisonerReleasedException: SanitisedError<BookerPrisonerValidationErrorResponse> = {
         name: 'Error',
-        status: 422,
+        responseStatus: 422,
         message: '',
         stack: '',
         data: { status: 422, validationError: 'PRISONER_RELEASED' },
       }
       orchestrationApiClient.validatePrisoner.mockRejectedValue(prisonerReleasedException)
-
       const result = await bookerService.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
 
       expect(result).toBe('PRISONER_RELEASED')

@@ -1,4 +1,5 @@
 import nock from 'nock'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import OrchestrationApiClient, { SessionRestriction } from './orchestrationApiClient'
 import TestData from '../routes/testutils/testData'
@@ -17,12 +18,16 @@ import {
 describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
   let orchestrationApiClient: OrchestrationApiClient
+  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
   const token = 'token-1'
   const bookerReference = TestData.bookerReference()
 
   beforeEach(() => {
     fakeOrchestrationApi = nock(config.apis.orchestration.url)
-    orchestrationApiClient = new OrchestrationApiClient(token)
+    mockAuthenticationClient = {
+      getToken: jest.fn().mockResolvedValue(token),
+    } as unknown as jest.Mocked<AuthenticationClient>
+    orchestrationApiClient = new OrchestrationApiClient(mockAuthenticationClient)
   })
 
   afterEach(() => {
@@ -407,7 +412,7 @@ describe('orchestrationApiClient', () => {
     const excludedApplicationReference = 'aaa-bbb-ccc'
 
     it('should get available visit sessions for prison / prisoner / visitors', async () => {
-      orchestrationApiClient = new OrchestrationApiClient(token)
+      orchestrationApiClient = new OrchestrationApiClient(mockAuthenticationClient)
       fakeOrchestrationApi
         .get('/visit-sessions/public/available')
         .query({
