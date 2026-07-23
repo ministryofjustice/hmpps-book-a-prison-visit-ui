@@ -239,7 +239,7 @@ export default class OrchestrationApiClien extends RestClient {
   }
 
   async getPrisoners(bookerReference: string): Promise<BookerPrisonerInfoDto[]> {
-    return this.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` })
+    return this.get({ path: `/public/booker/${bookerReference}/permitted/prisoners` }, asSystem())
   }
 
   async validatePrisoner(bookerReference: string, prisonerNumber: string): Promise<true> {
@@ -254,9 +254,12 @@ export default class OrchestrationApiClien extends RestClient {
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {
-    return this.get({
-      path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerNumber}/permitted/visitors`,
-    })
+    return this.get(
+      {
+        path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerNumber}/permitted/visitors`,
+      },
+      asSystem(),
+    )
   }
 
   // orchestration-sessions-controller
