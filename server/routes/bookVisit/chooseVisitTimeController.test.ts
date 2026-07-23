@@ -3,7 +3,8 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { BadRequest, InternalServerError } from 'http-errors'
+import { InternalServerError } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import { createMockVisitService, createMockVisitSessionsService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
@@ -438,7 +439,14 @@ describe('Choose visit time', () => {
       }
 
       it('should set message in flash and redirect to current page when create application returns 400 Bad Request', () => {
-        visitService.createVisitApplication.mockRejectedValue(new BadRequest())
+        const error: SanitisedError = {
+          name: 'Error',
+          responseStatus: 400,
+          message: 'Bad Request',
+          stack: 'Error: Bad Request',
+          data: { status: 400 },
+        }
+        visitService.createVisitApplication.mockRejectedValue(error)
 
         return request(app)
           .post(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -462,7 +470,14 @@ describe('Choose visit time', () => {
         bookVisitJourney.selectedVisitSession = visitSessionA
         bookVisitJourney.applicationReference = application.reference
 
-        visitService.changeVisitApplication.mockRejectedValue(new BadRequest())
+        const error: SanitisedError = {
+          name: 'Error',
+          responseStatus: 400,
+          message: 'Bad Request',
+          stack: 'Error: Bad Request',
+          data: { status: 400 },
+        }
+        visitService.changeVisitApplication.mockRejectedValue(error)
 
         return request(app)
           .post(paths.BOOK_VISIT.CHOOSE_TIME)

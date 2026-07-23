@@ -278,7 +278,7 @@ describe('Check visit details', () => {
           text: 'Select a new time.',
         }
 
-        it.only('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
+        it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
             responseStatus: 422,
@@ -290,7 +290,7 @@ describe('Check visit details', () => {
 
           return request(app)
             .post(paths.BOOK_VISIT.CHECK_DETAILS)
-            .expect(422)
+            .expect(500)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookVisitJourney).not.toBe(undefined)

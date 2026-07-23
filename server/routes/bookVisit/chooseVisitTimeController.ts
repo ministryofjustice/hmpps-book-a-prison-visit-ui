@@ -125,7 +125,7 @@ export default class ChooseVisitTimeController {
           await this.visitService.changeVisitApplication({ bookVisitJourney })
         }
       } catch (error) {
-        // HTTP 400 Bad Request is the response when a session is no longer available
+        // HTTP 400 Bad Request is the response when a session is no longer available)
         if ((error as SanitisedError).responseStatus === 400) {
           req.flash('messages', {
             variant: 'error',

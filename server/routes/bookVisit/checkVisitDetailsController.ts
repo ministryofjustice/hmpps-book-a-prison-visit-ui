@@ -59,7 +59,6 @@ export default class CheckVisitDetailsController {
           const validationErrors = sanitisedError?.data?.validationErrors ?? []
 
           if (validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND')) {
-            console.log(error)
             return next(error)
           }
 
