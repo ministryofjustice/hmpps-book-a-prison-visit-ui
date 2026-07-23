@@ -360,7 +360,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('validatePrisoner', () => {
-    it('should retrieve prisoners associated with a booker', async () => {
+    it('should call validate endpoint for given prisoner and booker reference', async () => {
       const { prisoner } = TestData.bookerPrisonerInfoDto()
 
       fakeOrchestrationApi
@@ -375,7 +375,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getPrisoners', () => {
-    it('should call validate endpoint for given prisoner and booker reference', async () => {
+    it('should retrieve prisoners associated with a booker', async () => {
       const prisoners = [TestData.bookerPrisonerInfoDto()]
 
       fakeOrchestrationApi
