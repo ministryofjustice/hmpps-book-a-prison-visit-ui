@@ -1,37 +1,20 @@
 import TestData from '../routes/testutils/testData'
 import {
   createMockDataCache,
-  createMockHmppsAuthClient,
   createMockOrchestrationApiClient,
   createMockPrisonRegisterApiClient,
 } from '../data/testutils/mocks'
 import PrisonService from './prisonService'
 
-const token = 'some token'
-
 describe('Prison service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const dataCache = createMockDataCache()
   const orchestrationApiClient = createMockOrchestrationApiClient()
   const prisonRegisterApiClient = createMockPrisonRegisterApiClient()
-  const orchestrationApiClientFactory = jest.fn()
-  const prisonRegisterApiClientFactory = jest.fn()
 
   let prisonService: PrisonService
 
   beforeEach(() => {
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    prisonRegisterApiClientFactory.mockReturnValue(prisonRegisterApiClient)
-
-    prisonService = new PrisonService(
-      orchestrationApiClientFactory,
-      prisonRegisterApiClientFactory,
-      hmppsAuthClient,
-      dataCache,
-    )
+    prisonService = new PrisonService(orchestrationApiClient, prisonRegisterApiClient, dataCache)
   })
 
   afterEach(() => {

@@ -1,10 +1,8 @@
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
 import { BookVisitJourney } from '../@types/bapv'
 import { Visitor } from './bookerService'
-
-const token = 'some token'
 
 jest.mock('crypto', () => {
   return {
@@ -13,18 +11,12 @@ jest.mock('crypto', () => {
 })
 
 describe('Visit service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let visitService: VisitService
 
   beforeEach(() => {
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    visitService = new VisitService(orchestrationApiClientFactory, hmppsAuthClient)
+    visitService = new VisitService(orchestrationApiClient)
   })
 
   afterEach(() => {

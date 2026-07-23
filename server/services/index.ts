@@ -7,33 +7,20 @@ import VisitService from './visitService'
 import VisitSessionsService from './visitSessionsService'
 
 export const services = () => {
-  const {
-    applicationInfo,
-    dataCache,
-    hmppsAuthClient,
-    orchestrationApiClientBuilder,
-    prisonRegisterApiClientBuilder,
-    rateLimitStore,
-  } = dataAccess()
+  const { applicationInfo, dataCache, orchestrationApiClient, prisonRegisterApiClient, rateLimitStore } = dataAccess()
 
   const bookerService = new BookerService(
-    orchestrationApiClientBuilder,
-    hmppsAuthClient,
+    orchestrationApiClient,
     new RateLimitService(rateLimitStore, config.rateLimit.booker),
     new RateLimitService(rateLimitStore, config.rateLimit.prisoner),
     new RateLimitService(rateLimitStore, config.rateLimit.visitor),
   )
 
-  const prisonService = new PrisonService(
-    orchestrationApiClientBuilder,
-    prisonRegisterApiClientBuilder,
-    hmppsAuthClient,
-    dataCache,
-  )
+  const prisonService = new PrisonService(orchestrationApiClient, prisonRegisterApiClient, dataCache)
 
-  const visitService = new VisitService(orchestrationApiClientBuilder, hmppsAuthClient)
+  const visitService = new VisitService(orchestrationApiClient)
 
-  const visitSessionsService = new VisitSessionsService(orchestrationApiClientBuilder, hmppsAuthClient)
+  const visitSessionsService = new VisitSessionsService(orchestrationApiClient)
 
   return {
     applicationInfo,

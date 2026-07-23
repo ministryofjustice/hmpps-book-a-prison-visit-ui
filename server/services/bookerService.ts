@@ -1,8 +1,9 @@
 import { randomUUID, UUID } from 'crypto'
 import { TooManyRequests } from 'http-errors'
 import { differenceInDays } from 'date-fns'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
-import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
+import { OrchestrationApiClient } from '../data'
 import {
   AddVisitorToBookerPrisonerRequestDto,
   AuthDetailDto,
@@ -13,7 +14,6 @@ import {
   CreateVisitorRequestResponseDto,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
 
 import { isAdult } from '../utils/utils'
@@ -49,18 +49,14 @@ export type VisitorsByEligibility = {
 
 export default class BookerService {
   constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
+    private readonly orchestrationApiClient: OrchestrationApiClient,
     private readonly bookerRateLimit: RateLimitService,
     private readonly prisonerRateLimit: RateLimitService,
     private readonly visitorRateLimit: RateLimitService,
   ) {}
 
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const bookerReference = (await orchestrationApiClient.getBookerReference(authDetailDto)).value
+    const bookerReference = (await this.orchestrationApiClient.getBookerReference(authDetailDto)).value
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
@@ -73,10 +69,7 @@ export default class BookerService {
     bookerReference: string
     prisonerNumber: string
   }): Promise<BookerPrisonerVisitorRequestDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const allVisitorRequests = await orchestrationApiClient.getVisitorRequests(bookerReference)
+    const allVisitorRequests = await this.orchestrationApiClient.getVisitorRequests(bookerReference)
 
     return allVisitorRequests.filter(request => request.prisonerId === prisonerNumber)
   }
@@ -99,10 +92,11 @@ export default class BookerService {
       throw new TooManyRequests()
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const result = await orchestrationApiClient.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
+    const result = await this.orchestrationApiClient.addVisitorRequest({
+      bookerReference,
+      prisonerId,
+      addVisitorRequest,
+    })
 
     logger.info(`Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: ${result}`)
     return result
@@ -125,10 +119,7 @@ export default class BookerService {
       throw new TooManyRequests()
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const result = await orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
+    const result = await this.orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
 
     const logMessage = result ? 'Registered' : 'Failed to register'
     logger.info(`${logMessage} prisoner ${prisoner.prisonerId} for booker ${bookerReference}`)
@@ -136,10 +127,7 @@ export default class BookerService {
   }
 
   async getPrisoners(bookerReference: string): Promise<Prisoner[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
+    const prisoners = await this.orchestrationApiClient.getPrisoners(bookerReference)
 
     return prisoners.map(bookerPrisonerInfo => {
       const { prisoner, availableVos, nextAvailableVoDate, registeredPrison } = bookerPrisonerInfo
@@ -162,15 +150,12 @@ export default class BookerService {
     bookerReference: string,
     prisonerNumber: string,
   ): Promise<true | BookerPrisonerValidationErrorResponse['validationError']> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
     try {
-      await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
+      await this.orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
       return true
     } catch (error) {
       const sanitisedError = error as SanitisedError<BookerPrisonerValidationErrorResponse>
-      if (sanitisedError.status === 422 && sanitisedError.data?.validationError) {
+      if (sanitisedError.responseStatus === 422 && sanitisedError.data?.validationError) {
         return sanitisedError.data.validationError
       }
       throw error
@@ -178,9 +163,7 @@ export default class BookerService {
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-    const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
+    const visitors = await this.orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map(visitor => {
       return {

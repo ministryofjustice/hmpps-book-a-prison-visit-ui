@@ -1,25 +1,18 @@
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsService'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 
-const token = 'some token'
 const bookerReference = TestData.bookerReference().value
 
 describe('Visit sessions service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let visitSessionsService: VisitSessionsService
 
   beforeEach(() => {
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    visitSessionsService = new VisitSessionsService(orchestrationApiClientFactory, hmppsAuthClient)
+    visitSessionsService = new VisitSessionsService(orchestrationApiClient)
   })
 
   afterEach(() => {

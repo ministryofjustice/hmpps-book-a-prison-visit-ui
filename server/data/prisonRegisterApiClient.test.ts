@@ -1,4 +1,5 @@
 import nock from 'nock'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import TestData from '../routes/testutils/testData'
@@ -6,11 +7,15 @@ import TestData from '../routes/testutils/testData'
 describe('prisonRegisterApiClient', () => {
   let fakePrisonRegisterApi: nock.Scope
   let prisonRegisterApiClient: PrisonRegisterApiClient
+  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
   const token = 'token-1'
 
   beforeEach(() => {
     fakePrisonRegisterApi = nock(config.apis.prisonRegister.url)
-    prisonRegisterApiClient = new PrisonRegisterApiClient(token)
+    mockAuthenticationClient = {
+      getToken: jest.fn().mockResolvedValue(token),
+    } as unknown as jest.Mocked<AuthenticationClient>
+    prisonRegisterApiClient = new PrisonRegisterApiClient(mockAuthenticationClient)
   })
 
   afterEach(() => {
