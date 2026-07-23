@@ -25,7 +25,7 @@ jest.mock('..')
 export const createMockDataCache = () => ({ set: jest.fn(), get: jest.fn() }) as jest.Mocked<DataCache>
 
 export const createMockOrchestrationApiClient = () =>
-  new OrchestrationApiClient(null) as jest.Mocked<OrchestrationApiClient>
+  new OrchestrationApiClient(undefined) as jest.Mocked<OrchestrationApiClient>
 
 export const createMockPrisonRegisterApiClient = () =>
-  new PrisonRegisterApiClient(null) as jest.Mocked<PrisonRegisterApiClient>
+  new PrisonRegisterApiClient(undefined) as jest.Mocked<PrisonRegisterApiClient>

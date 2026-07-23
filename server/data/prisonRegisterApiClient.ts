@@ -5,7 +5,7 @@ import logger from '../../logger'
 import { PrisonNameDto } from './prisonRegisterApiTypes'
 
 export default class PrisonRegisterApiClient extends RestClient {
-  constructor(authenticationClient: AuthenticationClient) {
+  constructor(authenticationClient: AuthenticationClient | undefined) {
     super('prisonRegisterApiClient', config.apis.prisonRegister, logger, authenticationClient)
   }
 
