@@ -27,7 +27,7 @@ import {
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
 
-export default class OrchestrationApiClien extends RestClient {
+export default class OrchestrationApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient | undefined) {
     super('orchestrationApiClient', config.apis.orchestration, logger, authenticationClient)
   }
