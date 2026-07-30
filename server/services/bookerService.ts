@@ -42,6 +42,10 @@ export type Visitor = {
   approved: boolean
 }
 
+export interface BookerPrisonerVisitorRequestDetail extends BookerPrisonerVisitorRequestDto {
+  visitorDisplayId: UUID
+}
+
 export type VisitorsByEligibility = {
   eligibleVisitors: Visitor[]
   ineligibleVisitors: Visitor[]
@@ -68,10 +72,11 @@ export default class BookerService {
   }: {
     bookerReference: string
     prisonerNumber: string
-  }): Promise<BookerPrisonerVisitorRequestDto[]> {
+  }): Promise<BookerPrisonerVisitorRequestDetail[]> {
     const allVisitorRequests = await this.orchestrationApiClient.getVisitorRequests(bookerReference)
 
     return allVisitorRequests.filter(request => request.prisonerId === prisonerNumber)
+      .map( p => ({ ...p, visitorDisplayId: randomUUID()}))
   }
 
   async addVisitorRequest({

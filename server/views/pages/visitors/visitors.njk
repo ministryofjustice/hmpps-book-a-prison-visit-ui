@@ -53,20 +53,22 @@
         <p>{{ t("common:visitors.reviewedByPrison") }}</p>
 
         {{ govukTable({
-          classes: "govuk-!-width-two-thirds",
           head: [
             {
               text: t("common:labels.name")
             },
             {
               text: t("common:labels.dateOfBirth")
+            },
+            {
+              text: t("visitors:visitors.cancelLinking.linkText")
             }
           ],
           rows: visitorRequestsTableRows
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
+      <h2 class="govuk-heading-m">{{ t("visitors:visitors.cancelLinking.heading") }}</h2>
 
       <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
       <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>

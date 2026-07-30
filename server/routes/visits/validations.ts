@@ -11,3 +11,14 @@ export const validateVisitDisplayId = param('visitDisplayId')
 
     return visits.some(visit => visit.visitDisplayId === visitDisplayId)
   })
+
+export const validatePendingVisitorDisplayId = param('visitorDisplayId')
+  .isUUID()
+  .bail()
+  .custom((visitorDisplayId: string, { req }) => {
+    const { pendingVisitors } = req.session as SessionData
+    const visitors = pendingVisitors ?? []
+
+    return visitors.some(visitor => visitor.visitorDisplayId === visitorDisplayId)
+  })
+

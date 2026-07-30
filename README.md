@@ -12,23 +12,7 @@ Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --
 
 Using your personal client credentials, create a `.env` local settings file
 ```bash
-HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-NODE_ENV=development
-
-SYSTEM_CLIENT_ID="<system_client_id>"
-SYSTEM_CLIENT_SECRET="<system_client_secret>"
-
-ORCHESTRATION_API_URL="https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk"
-
-PRISON_REGISTER_API_URL="https://prison-register-dev.hmpps.service.justice.gov.uk"
-
-GOVUK_ONE_LOGIN_URL=https://oidc.integration.account.gov.uk
-GOVUK_ONE_LOGIN_HOME_URL=https://home.integration.account.gov.uk
-GOVUK_ONE_LOGIN_VTR=LOW # LOW will skip the OTP verification during sign-in
-GOVUK_ONE_LOGIN_CLIENT_ID="<govuk_one_login_client_id>"
-GOVUK_ONE_LOGIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
-<private key contents>
------END PRIVATE KEY-----"
+cp example.env .env
 ```
 
 To get some of these values, you will need to speak to a team member or look within the `hmpps-book-a-prison-visit-ui` and `govuk-one-login` secrets in the `visit-someone-in-prison-frontend-svc-dev` namespace.
