@@ -12,7 +12,6 @@ import type {
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
-  BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'

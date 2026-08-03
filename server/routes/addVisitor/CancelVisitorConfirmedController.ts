@@ -1,5 +1,4 @@
 import type { RequestHandler } from 'express'
-import paths from '../../constants/paths'
 
 export default class CancelVisitorConfirmedController {
   public constructor() {}
