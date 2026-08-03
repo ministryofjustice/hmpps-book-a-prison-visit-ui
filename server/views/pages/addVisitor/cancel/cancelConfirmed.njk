@@ -1,0 +1,45 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = t("common:labels.visitCancelled") %}
+
+{% if not visitCancelled.hasEmail and visitCancelled.hasMobile %}
+  {% set confirmationMessage =
+    t("visits:cancelConfirmed.textMessageConfirmation") %}
+{% endif %}
+{% if visitCancelled.hasEmail and visitCancelled.hasMobile %}
+  {% set confirmationMessage =
+    t("visits:cancelConfirmed.emailAndTextConfirmation") %}
+{% endif %}
+{% if visitCancelled.hasEmail and not visitCancelled.hasMobile %}
+  {% set confirmationMessage =
+    t("visits:cancelConfirmed.emailConfirmation") %}
+{% endif %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukPanel({
+        titleText: pageTitle
+      }) }}
+
+      <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
+
+      {% if confirmationMessage %}
+        <p data-test="confirmation-notification-message">{{ confirmationMessage }}</p>
+      {% endif %}
+
+      <p class="no-visited-state">
+        {{- t("visitors:visitors.cancelLinking.checkVisitorDetails") | renderLinkTag(paths.VISITORS) | safe -}}
+      </p>
+
+      <p>
+        {{- t("common:postBooking.feedback")
+          | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/")
+          | safe -}}
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

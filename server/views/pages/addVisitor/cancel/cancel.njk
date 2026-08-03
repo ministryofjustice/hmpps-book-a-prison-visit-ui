@@ -1,0 +1,71 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% set pageTitle = t("visits:cancel.title") %}
+
+{% set backLinkHref = paths.VISITORS %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ t("visitors:visitors.cancelLinking.confirmationHeading") }}</h1>
+
+      <h2 class="govuk-heading-m">{{ visitor.firstName | capitalize }} {{ visitor.lastName | capitalize }}</h2>
+
+
+
+      <p>{{t("visitors:visitors.cancelLinking.bodyText")  }}</p>
+
+
+{#    {{ visitor | dump }}#}
+{#    reference: string;#}
+{#    prisonerId: string;#}
+{#    firstName: string;#}
+{#    lastName: string;#}
+{#    dateOfBirth: string;#}
+{#    requestedOn: string;#}
+{#    languagePreference: "en" | "cy";#}
+
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.ADD_VISITOR.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukRadios({
+          name: "cancelVisitor",
+          items: [
+            {
+              value: "yes",
+              text: t("visitors:visitors.cancelLinking.yesCancelOption"),
+              attributes: {
+                'data-test': 'cancel-visitor-yes'
+              }
+            },
+            {
+              value: "no",
+              text: t("visitors:visitors.cancelLinking.noCancelOption"),
+              attributes: {
+                'data-test': 'cancel-visitor-no'
+              }
+            }
+          ],
+          errorMessage: errors | findError('cancelVisit')
+        }) }}
+
+        {{ govukButton({
+          text: t("visits:cancel.confirmButton"),
+          attributes: {
+            "data-test": "confirm-button"
+          },
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/disableButtonOnSubmit.js"></script>
+{% endblock %}
