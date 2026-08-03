@@ -128,3 +128,11 @@ Welsh translations are managed via an Excel workbook (`npm run i18n:export-xlsx`
 ---
 
 This project is tested with BrowserStack
+
+## Generating types
+
+You can re-generate the hmpps-contacts-api types with
+
+```bash
+/scripts/generate-orchestration-api-types.sh
+```
