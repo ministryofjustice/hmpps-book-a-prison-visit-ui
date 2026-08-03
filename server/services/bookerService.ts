@@ -108,6 +108,18 @@ export default class BookerService {
     return result
   }
 
+  async withdrawVisitorRequest({
+    visitorReference,
+    bookerReference,
+  }: {
+    visitorReference: string
+    bookerReference: string
+  }): Promise<void> {
+    await this.orchestrationApiClient.withdrawVisitorRequest({ visitorReference, bookerReference })
+
+    logger.info(`Visit '${visitorReference}' has been cancelled by booker '${bookerReference}'`)
+  }
+
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
     const [withinBookerLimit, withinPrisonerLimit] = await Promise.all([
       this.bookerRateLimit.incrementAndCheckLimit(bookerReference),
