@@ -23,6 +23,7 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
+  WithdrawVisitorRequestDto,
 } from './orchestrationApiTypes'
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
@@ -218,6 +219,25 @@ export default class OrchestrationApiClient extends RestClient {
       throw error
     }
   }
+
+  async withdrawVisitorRequest({
+    visitorReference,
+    bookerReference,
+}: {
+    visitorReference: string,
+    bookerReference: string
+}): Promise<void> {
+  await this.put(
+    {
+      path: `/visitor-requests/${visitorReference}/withdraw`,
+      data: <WithdrawVisitorRequestDto>{
+        bookerReference,
+      },
+    },
+    asSystem(),
+  )
+}
+
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
     try {

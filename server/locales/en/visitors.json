@@ -18,9 +18,9 @@
       "linkText": "Cancel",
       "confirmationHeading": "Are you sure you want to cancel this request?",
       "bodyText": "This will withdraw the request to link the visitor. It can be resubmitted in the future if required.",
-      "yesCancelOption" : "Yes, cancel this request",
-      "noCancelOption": "No, keep this request"
-
+      "yesCancelOption": "Yes, cancel this request",
+      "noCancelOption": "No, keep this request",
+      "checkVisitorDetails": "When signed in to GOV.UK One Login, you can <link>check the details of your visitors</link>."
     }
   }
 }

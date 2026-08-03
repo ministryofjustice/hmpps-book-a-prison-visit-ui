@@ -7,6 +7,7 @@ import CheckVisitorDetailsController from './checkVisitorDetailsController'
 import VisitorRequestSuccessController from './visitorRequestSuccessController'
 import VisitorRequestFailController from './visitorRequestFailController'
 import CancelVisitorRequestController from './cancelVisitorRequestController'
+import CancelVisitorConfirmedController from './CancelVisitorConfirmedController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -17,6 +18,7 @@ export default function routes(services: Services): Router {
   const visitorRequestSuccessController = new VisitorRequestSuccessController()
   const visitorRequestFailController = new VisitorRequestFailController()
   const cancelVisitorRequestController = new CancelVisitorRequestController(services.bookerService)
+  const cancelVisitorConfirmedController = new CancelVisitorConfirmedController()
 
   router.get(paths.ADD_VISITOR.START, addVisitorStartController.view())
 
@@ -30,10 +32,14 @@ export default function routes(services: Services): Router {
   )
 
   router.post(
-    `${paths.VISITS.CANCEL_VISIT}/:visitDisplayId`,
+    `${paths.ADD_VISITOR.CANCEL}/:visitorDisplayId`,
     cancelVisitorRequestController.validateCancelChoice(),
+    cancelVisitorRequestController.validateDisplayId(),
     cancelVisitorRequestController.submit(),
   )
+
+  router.get(`${paths.ADD_VISITOR.CANCEL_CONFIRMATION}`, cancelVisitorConfirmedController.view())
+
   //
   // router.get(
   //   `${paths.VISITS.CANCEL_VISIT}/:visitDisplayId`,

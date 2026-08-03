@@ -29,8 +29,8 @@ const paths = {
     FAIL_ALREADY_REQUESTED: '/visitor-already-requested',
     FAIL_ALREADY_LINKED: '/visitor-already-linked',
     FAIL_TOO_MANY_REQUESTS: '/too-many-visitor-requests',
-    CANCEL: '/visitor/cancel',
-    CANCEL_CONFIRMATION: '/visitor/visit-cancelled',
+    CANCEL: '/cancel',
+    CANCEL_CONFIRMATION: '/visit-cancelled',
   },
 
   BOOK_VISIT: {

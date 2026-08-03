@@ -44,48 +44,34 @@ export default class CancelVisitorRequestController {
 
   public submit(): RequestHandler {
      return async (req, res, next) => {
-  //     const { cancelVisit, visitDisplayId } = matchedData<{
-  //       cancelVisit: 'yes' | 'no'
-  //       visitDisplayId: UUID
-  //     }>(req)
-  //
-  //     const errors = validationResult(req)
-  //     if (!errors.isEmpty()) {
-  //       req.flash('errors', errors.array())
-  //
-  //       if (!visitDisplayId) {
-  //         return res.redirect(paths.VISITS.HOME)
-  //       }
-  //
-  //       return res.redirect(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
-  //     }
-  //
-  //     if (cancelVisit === 'no') {
-  //       return res.redirect(`${paths.VISITS.DETAILS}/${visitDisplayId}`)
-  //     }
-  //
-  //     const { booker, pendingVisitors } = req.session
-  //     const { visits } = pendingVisitors!
-  //     const visit = visits.find(v => v.visitDisplayId === visitDisplayId)!
-  //
-  //     // Redirect to 'Past Visits' page, if visit start time has already passed
-  //     const nowTimestamp = new Date()
-  //     const visitStartTimestamp = new Date(visit.startTimestamp)
-  //     if (nowTimestamp > visitStartTimestamp) {
-  //       return res.redirect(paths.VISITS.PAST)
-  //     }
-  //
-  //     await this.visitService.cancelVisit({
-  //       applicationReference: visit.reference,
-  //       actionedBy: booker!.reference,
-  //       language: req.language,
-  //     })
-  //
-  //     req.session.visitCancelled = {
-  //       hasEmail: !!visit.visitContact?.email,
-  //       hasMobile: isMobilePhoneNumber(visit.visitContact?.telephone),
-  //     }
-  //
+      const { cancelVisitor, visitorDisplayId } = matchedData<{
+        cancelVisitor: 'yes' | 'no'
+        visitorDisplayId: UUID
+      }>(req)
+
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+
+        if (!visitorDisplayId) {
+          return res.redirect(paths.VISITORS)
+        }
+
+        return res.redirect(`${paths.ADD_VISITOR.CANCEL}/${visitorDisplayId}`)
+      }
+
+      if (cancelVisitor === 'no') {
+        return res.redirect(`${paths.VISITORS}`)
+      }
+
+      const { booker, pendingVisitors } = req.session
+      const visitor = pendingVisitors?.find(v => v.visitorDisplayId === visitorDisplayId)!
+
+       await this.bookerService.withdrawVisitorRequest({
+        bookerReference: booker!.reference,
+        visitorReference: visitor.reference
+      })
+
       return res.redirect(paths.ADD_VISITOR.CANCEL_CONFIRMATION)
     }
   }
@@ -96,7 +82,7 @@ export default class CancelVisitorRequestController {
 
   public validateCancelChoice(): ValidationChain[] {
     return [
-      body('cancelVisit')
+      body('cancelVisitor')
         .isIn(['yes', 'no'])
         .withMessage((_value, { req }) => req.t('validation:noAnswerSelected'))
     ]
