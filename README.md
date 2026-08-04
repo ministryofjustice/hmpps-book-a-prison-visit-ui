@@ -131,8 +131,8 @@ This project is tested with BrowserStack
 
 ## Generating types
 
-You can re-generate the hmpps-contacts-api types with
+You can re-generate the hmpps-orchestration-api types with
 
 ```bash
-/scripts/generate-orchestration-api-types.sh
+./scripts/generate-orchestration-api-types.sh
 ```

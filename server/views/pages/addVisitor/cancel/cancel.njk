@@ -16,19 +16,7 @@
 
       <h2 class="govuk-heading-m">{{ visitor.firstName | capitalize }} {{ visitor.lastName | capitalize }}</h2>
 
-
-
       <p>{{t("visitors:visitors.cancelLinking.bodyText")  }}</p>
-
-
-{#    {{ visitor | dump }}#}
-{#    reference: string;#}
-{#    prisonerId: string;#}
-{#    firstName: string;#}
-{#    lastName: string;#}
-{#    dateOfBirth: string;#}
-{#    requestedOn: string;#}
-{#    languagePreference: "en" | "cy";#}
 
       <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.ADD_VISITOR.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">

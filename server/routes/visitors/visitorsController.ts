@@ -40,6 +40,7 @@ export default class VisitorsController {
         prisoner: booker.prisoners[0],
         visitorsTableRows,
         visitorRequestsTableRows,
+        bookerWithdrawEnabled: config.features.bookerWithdrawEnabled,
         showOLServiceNav: true,
       })
     }
