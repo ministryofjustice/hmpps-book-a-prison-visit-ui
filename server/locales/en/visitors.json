@@ -9,18 +9,19 @@
   "visitors": {
     "title": "Visitors",
     "visitorsOf": "{{name}}’s visitors",
+    "visitor": "Visitor",
 
     "linkedVisitorsHeading": "Visitors linked to your account",
     "bookVisitForThem": "Can you book a visit for them?",
 
     "cancelLinking": {
-      "heading": "Cancel visitor link request.",
-      "linkText": "Cancel",
+      "tableHeading": "Cancel visitor link request",
+      "tableLinkText": "Cancel request",
       "confirmationHeading": "Are you sure you want to cancel this request?",
-      "bodyText": "This will withdraw the request to link the visitor. It can be resubmitted in the future if required.",
       "yesCancelOption": "Yes, cancel this request",
       "noCancelOption": "No, keep this request",
-      "checkVisitorDetails": "When signed in to GOV.UK One Login, you can <link>check the details of your visitors</link>."
+      "visitorLinkRequestCancelled": "Visitor link request cancelled",
+      "linkAnotherPrisoner": "You can <link>link another visitor</link> for the prison to review."
     }
   }
 }
