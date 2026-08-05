@@ -127,6 +127,7 @@ export default {
   },
   features: {
     welshLanguageEnabled: get('FEATURE_WELSH_LANGUAGE', 'false') === 'true',
+    bookerWithdrawEnabled: get('FEATURE_BOOKER_WITHDRAW', 'false') === 'true',
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),

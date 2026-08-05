@@ -23,6 +23,7 @@ generic-service:
     ENVIRONMENT_NAME: dev
 
     FEATURE_WELSH_LANGUAGE: "true"
+    FEATURE_BOOKER_WITHDRAW: "true"
 
   allowlist:
     groups:

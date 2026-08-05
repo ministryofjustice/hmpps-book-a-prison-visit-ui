@@ -1,10 +1,12 @@
 import type { TFunction } from 'i18next'
+import { UUID } from 'crypto'
 import { formatDate } from '../../utils/utils'
-import type { Visitor } from '../../services/bookerService'
+import type { BookerPrisonerVisitorRequestDetail, Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
 import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 import type { Locale } from '../../constants/locales'
 import { DateFormats } from '../../constants/dateFormats'
+import paths from '../../constants/paths'
 
 export const buildVisitorsTableRows = ({
   visitors,
@@ -69,4 +71,38 @@ export const buildVisitorRequestsTableRows = ({
       },
     ]
   })
+}
+
+export const buildVisitorRequestsTableRowsWithCancellationLink = ({
+  visitors,
+  t,
+  lng,
+}: {
+  visitors: BookerPrisonerVisitorRequestDetail[]
+  t: TFunction
+  lng: Locale
+}): GOVUKTableRow[] => {
+  return visitors.map((visitor, index) => {
+    return [
+      // Visitor name
+      {
+        text: `${visitor.firstName} ${visitor.lastName}`,
+        attributes: { 'data-test': `visitor-request-name-${index}` },
+      },
+      // Visitor DoB
+      {
+        text: formatDate(visitor.dateOfBirth ?? '', DateFormats.DISPLAY_DATE, lng),
+        attributes: { 'data-test': `visitor-request-dob-${index}` },
+      },
+      // Visitor withdraw linking request
+      {
+        html: buildUrl(visitor.visitorDisplayId, t),
+        attributes: { 'data-test': `visitor-request-link-${index}` },
+      },
+    ]
+  })
+}
+
+function buildUrl(ref: UUID, t: TFunction): string {
+  return `<a href='${paths.ADD_VISITOR.CANCEL}/${ref}'>${t('visitors:visitors.cancelLinking.tableLinkText')}</a>`
 }

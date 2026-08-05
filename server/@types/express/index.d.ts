@@ -11,6 +11,7 @@ import type {
   FlashFormValues,
   MoJAlert,
   BookedVisits,
+  PendingVisitors,
 } from '../bapv'
 import type { PrisonNames } from '../../services/prisonService'
 
@@ -34,6 +35,7 @@ declare module 'express-session' {
     bookVisitConfirmed?: BookVisitConfirmed
 
     bookedVisits?: BookedVisits
+    pendingVisitors?: PendingVisitors
 
     visitCancelled?: VisitCancelled
 

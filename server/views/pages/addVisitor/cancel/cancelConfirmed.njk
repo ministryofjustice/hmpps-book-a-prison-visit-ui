@@ -1,0 +1,38 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("visitors:visitors.cancelLinking.visitorLinkRequestCancelled") %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukPanel({
+        titleText: pageTitle
+      }) }}
+
+      <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
+
+      <p class="no-visited-state">
+        {{- t("visitors:visitors.cancelLinking.linkAnotherPrisoner") | renderLinkTag(paths.VISITORS) | safe -}}
+      </p>
+
+      <p>
+        {{- t("common:postBooking.feedback")
+          | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/")
+          | safe -}}
+      </p>
+
+      <p>
+        {{ govukButton({
+          text: t("common:buttons.linkNewVisitor"),
+          href: paths.ADD_VISITOR.START,
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

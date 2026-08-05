@@ -42,6 +42,10 @@ export type Visitor = {
   approved: boolean
 }
 
+export interface BookerPrisonerVisitorRequestDetail extends BookerPrisonerVisitorRequestDto {
+  visitorDisplayId: UUID
+}
+
 export type VisitorsByEligibility = {
   eligibleVisitors: Visitor[]
   ineligibleVisitors: Visitor[]
@@ -68,10 +72,12 @@ export default class BookerService {
   }: {
     bookerReference: string
     prisonerNumber: string
-  }): Promise<BookerPrisonerVisitorRequestDto[]> {
+  }): Promise<BookerPrisonerVisitorRequestDetail[]> {
     const allVisitorRequests = await this.orchestrationApiClient.getVisitorRequests(bookerReference)
 
-    return allVisitorRequests.filter(request => request.prisonerId === prisonerNumber)
+    return allVisitorRequests
+      .filter(request => request.prisonerId === prisonerNumber)
+      .map(prisoner => ({ ...prisoner, visitorDisplayId: randomUUID() }))
   }
 
   async addVisitorRequest({
@@ -100,6 +106,18 @@ export default class BookerService {
 
     logger.info(`Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: ${result}`)
     return result
+  }
+
+  async withdrawVisitorRequest({
+    visitorReference,
+    bookerReference,
+  }: {
+    visitorReference: string
+    bookerReference: string
+  }): Promise<void> {
+    await this.orchestrationApiClient.withdrawVisitorRequest({ visitorReference, bookerReference })
+
+    logger.info(`Visit '${visitorReference}' has been cancelled by booker '${bookerReference}'`)
   }
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
