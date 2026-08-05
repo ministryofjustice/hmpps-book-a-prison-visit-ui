@@ -9,8 +9,19 @@
   "visitors": {
     "title": "Visitors",
     "visitorsOf": "{{name}}’s visitors",
+    "visitor": "Visitor",
 
     "linkedVisitorsHeading": "Visitors linked to your account",
-    "bookVisitForThem": "Can you book a visit for them?"
+    "bookVisitForThem": "Can you book a visit for them?",
+
+    "cancelLinking": {
+      "tableHeading": "Cancel visitor link request",
+      "tableLinkText": "Cancel request",
+      "confirmationHeading": "Are you sure you want to cancel this request?",
+      "yesCancelOption": "Yes, cancel this request",
+      "noCancelOption": "No, keep this request",
+      "visitorLinkRequestCancelled": "Visitor link request cancelled",
+      "linkAnotherPrisoner": "You can <link>link another visitor</link> for the prison to review."
+    }
   }
 }
