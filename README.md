@@ -129,10 +129,27 @@ Welsh translations are managed via an Excel workbook (`npm run i18n:export-xlsx`
 
 This project is tested with BrowserStack
 
-## Generating types
+## Imported types
 
-You can re-generate the hmpps-orchestration-api types with
+Some TypeScript types are imported via the Open API (Swagger) docs, e.g. from the Orchestration service, etc.
 
-```bash
-./scripts/generate-orchestration-api-types.sh
+These are stored in [`./server/@types/`](./server/@types/), for example [`./server/@types/orchestration-api.d.ts`](./server/@types/orchestration-api.d.ts). There are also some corresponding files such as [`./server/data/orchestrationApiTypes.ts`](./server/data/orchestrationApiTypes.ts) that contain the particular imported types that are actually used in the project.
+
+For example, to update types for the Visit Scheduler use the [API docs URL](https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk/v3/api-docs) from [Swagger](https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk/swagger-ui/index.html) and the appropriate output filename:
+
+```
+npx openapi-typescript https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk/v3/api-docs --output ./server/@types/orchestration-api.d.ts
+```
+
+The downloaded file will need tidying (e.g. single rather than double quotes, etc):
+* `npm run lint-fix` should tidy most of the formatting
+* there may be some remaining errors about empty interfaces; these can be fixed be either removing the line or putting `// eslint-disable-next-line @typescript-eslint/no-empty-interface` before.
+
+After updating the types, running the TypeScript complier across the project (`npx tsc`) will show any issues that have been caused by the change.
+
+### Import all types
+To download and update all the API types and tidy up the files, run:
+
+```
+./bin/update-types.sh
 ```
