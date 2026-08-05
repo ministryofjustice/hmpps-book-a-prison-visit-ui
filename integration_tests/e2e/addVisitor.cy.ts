@@ -8,6 +8,8 @@ import VisitorRequestedPage from '../pages/addVisitor/visitorRequested'
 import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import VisitorsPage from '../pages/visitors/visitors'
+import CancelVisitorPage from '../pages/addVisitor/cancel/cancelVisitor'
+import CancelVisitorConfirmedPage from '../pages/addVisitor/cancel/cancelVisitorConfirmed'
 
 const bookerReference = TestData.bookerReference().value
 
@@ -146,6 +148,65 @@ context('Add a visitor', () => {
     checkVisitorDetailsPage.submit()
     const visitorRequestFailAlreadyRequestedPage = Page.verifyOnPage(VisitorRequestFailAlreadyRequestedPage)
     visitorRequestFailAlreadyRequestedPage.getVisitorName().contains('Joan Phillips')
+  })
+
+  it('should be able to abandon the cancel a visitor request journey', () => {
+    cy.task('stubGetVisitorRequests', { visitorRequests: [TestData.visitorRequest()] })
+
+    // Visits home page
+    cy.signIn()
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+
+    // Navigate to Visitors page
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.visitorRequests().should('exist')
+
+    // Start cancellation journey
+    visitorsPage.cancelAVisitor(0)
+    const cancelVisitorPage = Page.verifyOnPage(CancelVisitorPage)
+
+    cancelVisitorPage.visitorName().contains('Joan Phillips')
+    cancelVisitorPage.visitorDateOfBirth().contains('21 February 1980')
+
+    // Abandon cancellation; return to Visitors page
+    cancelVisitorPage.cancelVisitNo().click()
+    cancelVisitorPage.confirmButton()
+
+    Page.verifyOnPage(VisitorsPage)
+  })
+
+  it('should complete the cancel a visitor request journey', () => {
+    const visitorRequest = TestData.visitorRequest()
+
+    cy.task('stubGetVisitorRequests', { visitorRequests: [visitorRequest] })
+
+    // Visits home page
+    cy.signIn()
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+
+    // Navigate to Visitors page
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.visitorRequests().should('exist')
+
+    // Start cancellation journey
+    visitorsPage.cancelAVisitor(0)
+    const cancelVisitorPage = Page.verifyOnPage(CancelVisitorPage)
+
+    cancelVisitorPage.visitorName().contains('Joan Phillips')
+    cancelVisitorPage.visitorDateOfBirth().contains('21 February 1980')
+
+    // Confirm cancellation
+    cancelVisitorPage.cancelVisitYes().click()
+
+    cy.task('stubCancelVisitorRequest', {
+      requestReference: visitorRequest.reference,
+      bookerReference: TestData.bookerReference().value,
+    })
+
+    cancelVisitorPage.confirmButton()
+    Page.verifyOnPage(CancelVisitorConfirmedPage)
   })
 
   describe('Rate limiting', () => {

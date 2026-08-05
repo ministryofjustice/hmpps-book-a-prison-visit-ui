@@ -326,6 +326,32 @@ export default {
       },
     }),
 
+  stubCancelVisitorRequest: ({
+    requestReference,
+    bookerReference,
+  }: {
+    requestReference: string
+    bookerReference: string
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/visitor-requests/${requestReference}/withdraw`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              bookerReference,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
+
   stubRegisterPrisoner: ({
     bookerReference = TestData.bookerReference(),
     prisoner = TestData.registerPrisonerForBookerDto(),

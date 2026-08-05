@@ -15,10 +15,10 @@
       <h1 class="govuk-heading-l">{{ t("visitors:visitors.cancelLinking.confirmationHeading") }}</h1>
 
       <h2 class="govuk-heading-m"> {{ t("visitors:visitors.visitor") }} </h2>
-      <p> {{ visitor.firstName | capitalize }} {{ visitor.lastName | capitalize }} </p>
+      <p data-test="visitor-name"> {{ visitor.firstName | capitalize }} {{ visitor.lastName | capitalize }} </p>
 
       <h2 class="govuk-heading-m"> {{ t("common:labels.dateOfBirth") }} </h2>
-      <p> {{ visitor.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
+      <p data-test="visitor-date-of-birth"> {{ visitor.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
 
       <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.ADD_VISITOR.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
