@@ -77,7 +77,7 @@ export default class BookerService {
 
     return allVisitorRequests
       .filter(request => request.prisonerId === prisonerNumber)
-      .map(p => ({ ...p, visitorDisplayId: randomUUID() }))
+      .map(prisoner => ({ ...prisoner, visitorDisplayId: randomUUID() }))
   }
 
   async addVisitorRequest({

@@ -24,7 +24,7 @@ export default class CancelVisitorRequestController {
       const { visitorDisplayId } = matchedData<{ visitorDisplayId: UUID }>(req)
 
       const visitor: BookerPrisonerVisitorRequestDetail = pendingVisitors.find(
-        v => v.visitorDisplayId === visitorDisplayId,
+        pendingVisitor => pendingVisitor.visitorDisplayId === visitorDisplayId,
       )!
 
       return res.render('pages/addVisitor/cancel/cancel', {
@@ -61,7 +61,7 @@ export default class CancelVisitorRequestController {
       }
 
       const { booker, pendingVisitors } = req.session
-      const visitor = pendingVisitors!.find(v => v.visitorDisplayId === visitorDisplayId)
+      const visitor = pendingVisitors!.find(pendingVisitor => pendingVisitor.visitorDisplayId === visitorDisplayId)
 
       await this.bookerService.withdrawVisitorRequest({
         bookerReference: booker!.reference,
