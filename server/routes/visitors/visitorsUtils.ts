@@ -96,13 +96,12 @@ export const buildVisitorRequestsTableRowsWithCancellationLink = ({
       },
       // Visitor withdraw linking request
       {
-        html: buildUrl(visitor.visitorDisplayId, t),
-        attributes: { 'data-test': `visitor-request-link-${index}` },
+        html: buildUrl(visitor.visitorDisplayId, index, t),
       },
     ]
   })
 }
 
-function buildUrl(ref: UUID, t: TFunction): string {
-  return `<a href='${paths.ADD_VISITOR.CANCEL}/${ref}'>${t('visitors:visitors.cancelLinking.tableLinkText')}</a>`
+function buildUrl(ref: UUID, index: number, t: TFunction): string {
+  return `<a href='${paths.ADD_VISITOR.CANCEL}/${ref}' data-test="cancel-visitor-request-${index}">${t('visitors:visitors.cancelLinking.tableLinkText')}</a>`
 }
