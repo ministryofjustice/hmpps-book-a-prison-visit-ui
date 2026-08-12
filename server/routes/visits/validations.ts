@@ -1,7 +1,6 @@
 import { SessionData } from 'express-session'
 import { param } from 'express-validator'
 
-// eslint-disable-next-line import/prefer-default-export
 export const validateVisitDisplayId = param('visitDisplayId')
   .isUUID()
   .bail()
@@ -10,4 +9,14 @@ export const validateVisitDisplayId = param('visitDisplayId')
     const visits = bookedVisits?.visits ?? []
 
     return visits.some(visit => visit.visitDisplayId === visitDisplayId)
+  })
+
+export const validatePendingVisitorDisplayId = param('visitorDisplayId')
+  .isUUID()
+  .bail()
+  .custom((visitorDisplayId: string, { req }) => {
+    const { pendingVisitors } = req.session as SessionData
+    const visitors = pendingVisitors ?? []
+
+    return visitors.some(visitor => visitor.visitorDisplayId === visitorDisplayId)
   })

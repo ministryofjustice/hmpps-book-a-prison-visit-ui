@@ -22,4 +22,8 @@ export default class VisitorsPage extends Page {
   linkANewVisitor = (): void => {
     cy.get('[data-test=link-a-visitor]').click()
   }
+
+  cancelAVisitor = (index: number): void => {
+    cy.get(`[data-test=cancel-visitor-request-${index}]`).click()
+  }
 }

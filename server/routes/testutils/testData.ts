@@ -12,12 +12,11 @@ import type {
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
-  BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
   PermittedPrisonerForBookerDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
-import { Prisoner, Visitor } from '../../services/bookerService'
+import { BookerPrisonerVisitorRequestDetail, Prisoner, Visitor } from '../../services/bookerService'
 import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
 
@@ -405,14 +404,16 @@ export default class TestData {
 
   static visitorRequest = ({
     reference = 'dddd-eeee-ffff',
+    visitorDisplayId = 'uuidv4-1-1-1-1',
     prisonerId = 'A1234BC',
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
     requestedOn = '2026-05-01',
     languagePreference = 'en',
-  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+  }: Partial<BookerPrisonerVisitorRequestDetail> = {}): BookerPrisonerVisitorRequestDetail => ({
     reference,
+    visitorDisplayId,
     prisonerId,
     firstName,
     lastName,

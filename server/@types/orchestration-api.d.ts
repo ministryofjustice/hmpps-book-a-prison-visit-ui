@@ -1591,9 +1591,11 @@ export interface components {
       endTimestamp: string
       /** @description Visit Notes */
       visitNotes?: components['schemas']['VisitNoteDto'][] | null
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto'] | null
       /** @description List of visitors associated with the visit */
       visitors?: components['schemas']['VisitorDto'][] | null
+      /** @description Additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /**
        * Format: date-time
@@ -1613,6 +1615,7 @@ export interface components {
        * @example 2018-12-01T13:45:00
        */
       firstBookedDateTime?: string | null
+      /** @description External system details associated with the visit */
       visitExternalSystemDetails?: components['schemas']['VisitExternalSystemDetails'] | null
     }
     VisitExternalSystemDetails: {
@@ -1776,9 +1779,11 @@ export interface components {
        * @example 2018-12-01
        */
       sessionDate: string
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][] | null
+      /** @description additional support associated with the visit, if null support will not be updated */
       visitorSupport?: components['schemas']['ApplicationSupportDto'] | null
       /** @description allow over booking */
       allowOverBooking: boolean
@@ -1831,9 +1836,11 @@ export interface components {
       endTimestamp: string
       /** @description Visit Notes */
       visitNotes: components['schemas']['VisitNoteDto'][]
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
+      /** @description Additional support associated with the application */
       visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /**
        * Format: date-time
@@ -1888,9 +1895,11 @@ export interface components {
        * @enum {string}
        */
       applicationRestriction: 'OPEN' | 'CLOSED'
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['ContactDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['VisitorDto'][]
+      /** @description additional support associated with the visit, if null support will not be updated */
       visitorSupport?: components['schemas']['ApplicationSupportDto'] | null
       /**
        * @description User type
@@ -2497,6 +2506,7 @@ export interface components {
        * @example 2000-01-01
        */
       dateOfBirth?: string | null
+      /** @description Address associated with the contact */
       address?: components['schemas']['AddressDto'] | null
     }
     /** @description AlertDto returned from orchestration, made of fields from AlertResponseDto from Alerts API call */
@@ -2834,7 +2844,9 @@ export interface components {
       sessionTemplateReference?: string | null
       /** @description Visit Notes */
       visitNotes?: components['schemas']['VisitNoteDto'][] | null
+      /** @description Contact associated with the visit */
       visitContact?: components['schemas']['VisitContactDto'] | null
+      /** @description Additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto'] | null
       /** @description Prison code and name */
       prison: components['schemas']['PrisonRegisterPrisonDto']
@@ -2847,7 +2859,7 @@ export interface components {
       /** @description Notifications tied to visit booking */
       notifications: components['schemas']['VisitNotificationDto'][]
       /**
-       * @description Enum denoting why alerts and restrictions were skipped; absent if not skipped
+       * @description Enum denoting why alerts and restrictions were skipped absent if not skipped
        * @enum {string|null}
        */
       skipAlertsAndRestrictionReason?: 'PRISONER_RELEASED' | 'PRISONER_TRANSFERRED' | 'VISIT_IN_PAST' | null
@@ -2961,6 +2973,7 @@ export interface components {
       relationshipDescription?: string | null
       /** @description List of restrictions associated with the contact */
       restrictions: components['schemas']['RestrictionDto'][]
+      /** @description Primary address for the contact or the first address if no primary address available, null if address list is empty */
       primaryAddress?: components['schemas']['AddressDto'] | null
     }
     /**
@@ -3043,38 +3056,38 @@ export interface components {
         'APPROVED' | 'AUTO_APPROVED' | 'REQUESTED' | 'REJECTED' | 'AUTO_REJECTED' | 'WITHDRAWN' | 'CANCELLED'
     }
     PageVisitDto: {
-      /** Format: int64 */
-      totalElements?: number
       /** Format: int32 */
       totalPages?: number
+      /** Format: int64 */
+      totalElements?: number
       /** Format: int32 */
       size?: number
       content?: components['schemas']['VisitDto'][]
       /** Format: int32 */
       number?: number
-      first?: boolean
-      last?: boolean
       sort?: components['schemas']['SortObject']
+      pageable?: components['schemas']['PageableObject']
       /** Format: int32 */
       numberOfElements?: number
-      pageable?: components['schemas']['PageableObject']
+      first?: boolean
+      last?: boolean
       empty?: boolean
     }
     PageableObject: {
-      /** Format: int64 */
-      offset?: number
-      sort?: components['schemas']['SortObject']
+      paged?: boolean
+      unpaged?: boolean
       /** Format: int32 */
       pageSize?: number
       /** Format: int32 */
       pageNumber?: number
-      paged?: boolean
-      unpaged?: boolean
+      sort?: components['schemas']['SortObject']
+      /** Format: int64 */
+      offset?: number
     }
     SortObject: {
-      empty?: boolean
-      sorted?: boolean
       unsorted?: boolean
+      sorted?: boolean
+      empty?: boolean
     }
     OrchestrationVisitRequestSummaryDto: {
       /** @description Visit reference */
@@ -3761,6 +3774,7 @@ export interface components {
        * @example A-1-002
        */
       cellLocation?: string | null
+      /** @description Incentive level */
       currentIncentive?: components['schemas']['CurrentIncentive'] | null
       /**
        * @description current prison or outside with last movement information.
@@ -3883,9 +3897,11 @@ export interface components {
        * @example 2018-12-01T13:45:00
        */
       endTimestamp: string
+      /** @description Contact associated with the visit */
       visitContact: components['schemas']['ContactDto'] | null
       /** @description List of visitors associated with the visit */
       visitors: components['schemas']['OrchestrationVisitorDto'][]
+      /** @description Additional support associated with the visit */
       visitorSupport?: components['schemas']['VisitorSupportDto'] | null
     }
     /** @description Visitor */
@@ -4095,6 +4111,7 @@ export interface components {
       incentiveLevel?: string | null
       /** @description Alert */
       alerts?: components['schemas']['AlertDto'][] | null
+      /** @description Balances of visit orders and privilege visit orders */
       visitBalances?: components['schemas']['VisitBalancesDto'] | null
       /** @description Past and future visits for the prisoner based on configured duration. */
       visits: components['schemas']['VisitSummaryDto'][]
@@ -8757,8 +8774,8 @@ export interface operations {
         content: {
           /**
            * @example [
-           *       "HEI",
-           *       "MDI"
+           *       'HEI',
+           *       'MDI'
            *     ]
            */
           'application/json': string[]
