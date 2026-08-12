@@ -12,6 +12,7 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   ConvictedStatus,
   CreateVisitorRequestResponseDto,
+  PermittedPrisonerForBookerDto,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
 import RateLimitService from './rateLimitService'
@@ -160,6 +161,18 @@ export default class BookerService {
       }
       throw error
     }
+  }
+
+  async updatePrisonersRegisteredPrison({
+    bookerReference,
+    prisonerId,
+    prisonId,
+  }: {
+    bookerReference: string
+    prisonerId: string
+    prisonId: string
+  }): Promise<PermittedPrisonerForBookerDto> {
+    return this.orchestrationApiClient.updatePrisonersRegisteredPrison({ bookerReference, prisonerId, prisonId })
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {

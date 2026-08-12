@@ -146,6 +146,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/visitor-requests/{requestReference}/withdraw': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Withdraw visitor request.
+     * @description Withdraw a pending visitor request.
+     */
+    put: operations['withdrawVisitorRequest']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/visitor-requests/{requestReference}/reject': {
     parameters: {
       query?: never
@@ -227,6 +247,26 @@ export interface paths {
     }
     get?: never
     put: operations['purgeQueue']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/public/booker/{bookerReference}/permitted/prisoners/{prisonerId}/prison': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update a permitted prisoner's registered prison code
+     * @description Update a permitted prisoner's registered prison code
+     */
+    put: operations['updatePermittedPrisonerPrison']
     post?: never
     delete?: never
     options?: never
@@ -917,6 +957,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/v2/prisons/{prisonCode}/config/exclude-dates/future': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all current or future exclude dates for a given prison and current or future excluded dates by session (if includeSessions is true)
+     * @description Get current or future exclude dates for a given prison and current or future excluded dates by session (if includeSessions is true).
+     */
+    get: operations['getFullDateAndSessionExclusionDatesForPrison']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/get-dlq-messages/{dlqName}': {
     parameters: {
       query?: never
@@ -1333,26 +1393,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/config/prisons/prison/{prisonCode}/exclude-date/future': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Get all current or future exclude dates for a given prison
-     * @description Get current or future exclude dates for a given prison
-     */
-    get: operations['getFutureExcludeDatesForPrison']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -1684,6 +1724,11 @@ export interface components {
       visitReference: string
       /** @description Username for user who actioned this request */
       actionedBy: string
+      /**
+       * @description Reason for rejecting a visit request
+       * @enum {string|null}
+       */
+      visitRequestRejectionReason?: 'NO_VISIT_ALLOWANCE' | 'ALERT_OR_RESTRICTION' | null
     }
     OrchestrationApproveRejectVisitRequestResponseDto: {
       /** @description Reference of the approved visit */
@@ -1861,18 +1906,12 @@ export interface components {
       /** @description allow over booking */
       allowOverBooking: boolean
     }
-    RejectVisitorRequestDto: {
+    WithdrawVisitorRequestDto: {
       /**
-       * @description Rejection Reason type
-       * @example ALREADY_LINKED
-       * @enum {string}
+       * @description Reference of booker who rejected the visitor
+       * @example ab-cd-ef-gh
        */
-      rejectionReason: 'ALREADY_LINKED' | 'REJECT'
-      /**
-       * @description STAFF username who rejected the visitor
-       * @example ABC123D
-       */
-      actionedBy: string
+      bookerReference: string
     }
     PrisonVisitorRequestDto: {
       /**
@@ -1922,12 +1961,25 @@ export interface components {
        * @example REQUESTED
        * @enum {string}
        */
-      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
       /**
        * @description The language in which your correspondence will be sent
        * @enum {string}
        */
       languagePreference: 'en' | 'cy'
+    }
+    RejectVisitorRequestDto: {
+      /**
+       * @description Rejection Reason type
+       * @example ALREADY_LINKED
+       * @enum {string}
+       */
+      rejectionReason: 'ALREADY_LINKED' | 'REJECT'
+      /**
+       * @description STAFF username who rejected the visitor
+       * @example ABC123D
+       */
+      actionedBy: string
     }
     ApproveVisitorRequestDto: {
       /**
@@ -1949,6 +2001,38 @@ export interface components {
     PurgeQueueResult: {
       /** Format: int32 */
       messagesFoundCount: number
+    }
+    /** @description Update a booker prisoner's prison code. */
+    UpdateRegisteredPrisonerPrisonDto: {
+      /**
+       * @description Prison Id
+       * @example MDI
+       */
+      prisonId: string
+    }
+    /** @description Permitted prisoner associated with the booker. */
+    PermittedPrisonerForBookerDto: {
+      /**
+       * @description Prisoner Id
+       * @example A1234AA
+       */
+      prisonerId: string
+      /**
+       * @description prison code
+       * @example MDI
+       */
+      prisonCode: string
+      /** @description Permitted visitors */
+      permittedVisitors: components['schemas']['PermittedVisitorsForPermittedPrisonerBookerDto'][]
+    }
+    /** @description Permitted visitor associated with the permitted prisoner. */
+    PermittedVisitorsForPermittedPrisonerBookerDto: {
+      /**
+       * Format: int64
+       * @description Identifier for this contact (Person in NOMIS)
+       * @example 5871791
+       */
+      visitorId: number
     }
     /** @description Auth detail Dto */
     AuthDetailDto: {
@@ -2062,6 +2146,18 @@ export interface components {
        */
       userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
       /**
+       * Format: int32
+       * @description minimum number of days notice from the current date to book a visit
+       * @example 2
+       */
+      policyNoticeDaysMin: number
+      /**
+       * Format: int32
+       * @description maximum number of days notice from the current date to book a visit
+       * @example 28
+       */
+      policyNoticeDaysMax: number
+      /**
        * @description is prison user client active
        * @example true
        */
@@ -2143,15 +2239,6 @@ export interface components {
        */
       actionedBy: string
     }
-    /** @description Permitted visitor associated with the permitted prisoner. */
-    PermittedVisitorsForPermittedPrisonerBookerDto: {
-      /**
-       * Format: int64
-       * @description Identifier for this contact (Person in NOMIS)
-       * @example 5871791
-       */
-      visitorId: number
-    }
     /** @description Visit Pass request details. */
     StaffUsernameDto: {
       /**
@@ -2202,7 +2289,7 @@ export interface components {
        * @example REQUESTED or AUTO_APPROVED
        * @enum {string}
        */
-      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
       /**
        * @description Reference of booker who submitted the request
        * @example abc-def-ghi
@@ -2493,6 +2580,7 @@ export interface components {
         | 'PRISONER_ALERTS_UPDATED_EVENT'
         | 'PRISONER_ALERT_CREATED_EVENT'
         | 'PRISONER_ALERT_UPDATED_EVENT'
+        | 'PRISONER_ALERT_DELETED_EVENT'
         | 'PRISON_VISITS_BLOCKED_FOR_DATE'
         | 'SESSION_VISITS_BLOCKED_FOR_DATE'
         | 'IGNORE_VISIT_NOTIFICATIONS_EVENT'
@@ -2504,6 +2592,7 @@ export interface components {
         | 'IGNORED_NON_ASSOCIATION_VISIT_NOTIFICATIONS_EVENT'
         | 'PAIRED_VISIT_CANCELLED_IGNORED_OR_UPDATED_EVENT'
         | 'COURT_VIDEO_APPOINTMENT_CREATED_OR_UPDATED_EVENT'
+        | 'PRISONER_MERGED'
       /**
        * @description What was the application method for this event
        * @enum {string}
@@ -3138,7 +3227,7 @@ export interface components {
        * @example REQUESTED
        * @enum {string}
        */
-      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED'
+      status: 'REQUESTED' | 'APPROVED' | 'AUTO_APPROVED' | 'REJECTED' | 'WITHDRAWN'
       /**
        * @description Date request was submitted
        * @example 2025-10-28
@@ -3158,6 +3247,12 @@ export interface components {
        * @example 5871791
        */
       visitorId: number
+      /**
+       * Format: int64
+       * @description Key of specific relationship
+       * @example 1234567
+       */
+      relationshipId: number
       /**
        * @description First name
        * @example John
@@ -3475,6 +3570,66 @@ export interface components {
       /** @description List of visit sessions and prisoner schedules */
       sessionsAndSchedule: components['schemas']['SessionsAndScheduleDto'][]
     }
+    PrisonAndSessionsExcludeDatesDto: {
+      /** @description Dates excluded for visits (full day exclusions), empty if none. */
+      fullDateExclusions: components['schemas']['ExcludeDateDto'][]
+      /** @description List of sessions that have future exclusions, empty if none. */
+      sessionExclusions: components['schemas']['SessionExcludeDateDto'][]
+    }
+    SessionExcludeDateDto: {
+      /** @description Exclude date details */
+      excludeDate: components['schemas']['ExcludeDateDto']
+      /**
+       * @description Session Template Reference
+       * @example v9d.7ed.7u
+       */
+      sessionTemplateReference: string
+      /** @description The time slot of the generated visit session(s) */
+      sessionTimeSlot: components['schemas']['SessionTimeSlotDto']
+      /**
+       * @description visit type
+       * @example Social
+       * @enum {string}
+       */
+      visitType: 'SOCIAL'
+      /** @description Determines behaviour of location groups. True will mean the location groups are inclusive, false means they are exclusive. */
+      areLocationGroupsInclusive: boolean
+      /**
+       * @description prisoner location group
+       * @example Wing C
+       */
+      prisonerLocationGroupNames: string[]
+      /** @description Determines behaviour of category groups. True will mean the category groups are inclusive, false means they are exclusive. */
+      areCategoryGroupsInclusive: boolean
+      /**
+       * @description prisoner category groups
+       * @example Category A Prisoners
+       */
+      prisonerCategoryGroupNames: string[]
+      /** @description Determines behaviour of incentive groups. True will mean the incentive groups are inclusive, false means they are exclusive. */
+      areIncentiveGroupsInclusive: boolean
+      /**
+       * @description prisoner incentive level groups
+       * @example Enhanced Incentive Level Prisoners
+       */
+      prisonerIncentiveLevelGroupNames: string[]
+      /**
+       * Format: int32
+       * @description number of weeks until the weekly day is repeated
+       * @example 1
+       */
+      weeklyFrequency: number
+      /**
+       * @description visit room name
+       * @example Visits Room
+       */
+      visitRoom: string
+      /**
+       * @description Session vo restriction
+       * @enum {string}
+       */
+      visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+    }
     DlqMessage: {
       body: {
         [key: string]: unknown
@@ -3529,6 +3684,12 @@ export interface components {
        * @example 2000-01-31
        */
       dateOfBirth?: string | null
+      /**
+       * Format: int64
+       * @description Relationship ID
+       * @example 2000-01-31
+       */
+      relationshipId?: number | null
       /**
        * @description Description of relationship to Prisoner
        * @example Mother
@@ -4863,6 +5024,68 @@ export interface operations {
       }
     }
   }
+  withdrawVisitorRequest: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        requestReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WithdrawVisitorRequestDto']
+      }
+    }
+    responses: {
+      /** @description Visit request withdrawn, no visitor will be linked to booker's prisoner */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PrisonVisitorRequestDto']
+        }
+      }
+      /** @description Incorrect request to withdraw a pending visitor request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to withdraw visitor request */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Pending visitor request not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   rejectVisitorRequest: {
     parameters: {
       query?: never
@@ -5047,6 +5270,69 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PurgeQueueResult']
+        }
+      }
+    }
+  }
+  updatePermittedPrisonerPrison: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        bookerReference: string
+        prisonerId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRegisteredPrisonerPrisonDto']
+      }
+    }
+    responses: {
+      /** @description Permitted prisoner's registered prison code was updated successfully */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PermittedPrisonerForBookerDto']
+        }
+      }
+      /** @description Validation failure, incorrect request to update permitted prisoner's registered prison code */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions for this action */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Booker / prisoner not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
@@ -7517,6 +7803,61 @@ export interface operations {
       }
     }
   }
+  getFullDateAndSessionExclusionDatesForPrison: {
+    parameters: {
+      query?: {
+        includeSessions?: boolean
+      }
+      header?: never
+      path: {
+        /**
+         * @description prison code
+         * @example HEI
+         */
+        prisonCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Exclude dates successfully returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PrisonAndSessionsExcludeDatesDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to view exclude dates */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Prison not found on visit-scheduler */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getDlqMessages: {
     parameters: {
       query?: {
@@ -8546,59 +8887,6 @@ export interface operations {
     }
   }
   getPastExcludeDatesForPrison: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /**
-         * @description prison code
-         * @example HEI
-         */
-        prisonCode: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Exclude dates successfully returned */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ExcludeDateDto'][]
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Incorrect permissions to view exclude dates */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Prison not found on visit-scheduler */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  getFutureExcludeDatesForPrison: {
     parameters: {
       query?: never
       header?: never

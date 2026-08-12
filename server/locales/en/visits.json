@@ -33,7 +33,7 @@
   "future": {
     "title": "Visits",
     "onlyGovukBookings": "Only visits made using GOV.UK One Login are shown.",
-    "prisonerAtLocation": "{{prisonerName}} at {{prisonName}}",
+    "futureVisits": "Future visits",
     "awaitingReview": "Awaiting review",
     "cancelLinkHidden": "for {{startTime}} on {{date}}",
     "noFutureVisits": "There are no future visits or requests.",

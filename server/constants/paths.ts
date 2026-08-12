@@ -61,6 +61,12 @@ const paths = {
 
   VISITORS: '/visitors',
 
+  CONFIRM_LOCATION: '/prisoner-moved',
+  LOCATION_UPDATED: '/location-updated',
+  INCORRECT_LOCATION: '/incorrect-location',
+  PVB_PRISON: '/another-service',
+  UNSUPPORTED_PRISON: '/unsupported-prison',
+
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies',
   PRIVACY: '/privacy-notice',

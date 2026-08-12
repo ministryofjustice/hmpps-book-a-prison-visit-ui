@@ -12,6 +12,7 @@ import {
   CancelVisitOrchestrationDto,
   ChangeApplicationDto,
   CreateApplicationDto,
+  PermittedPrisonerForBookerDto,
   VisitDto,
 } from './orchestrationApiTypes'
 
@@ -386,6 +387,27 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getPrisoners(bookerReference.value)
 
       expect(result).toEqual(prisoners)
+    })
+  })
+
+  describe('updatePrisonersRegisteredPrison', () => {
+    it('should update and return a prisonerForBookerDto', async () => {
+      const resultDto = TestData.permittedPrisonerForBookerDto()
+      const prisonerId = 'A1234BC'
+      const prisonId = 'HEI'
+
+      fakeOrchestrationApi
+        .post(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/prison`, { prisonId })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, resultDto)
+
+      const output = await orchestrationApiClient.updatePrisonersRegisteredPrison({
+        bookerReference: bookerReference.value,
+        prisonerId,
+        prisonId,
+      })
+
+      expect(output).toStrictEqual(resultDto)
     })
   })
 

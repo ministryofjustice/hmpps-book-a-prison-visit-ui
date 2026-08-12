@@ -23,6 +23,7 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
+  PermittedPrisonerForBookerDto,
 } from './orchestrationApiTypes'
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
@@ -251,6 +252,24 @@ export default class OrchestrationApiClient extends RestClient {
       asSystem(),
     )
     return true // API will return HTTP 422 for invalid prisoner, which will be caught in service layer
+  }
+
+  async updatePrisonersRegisteredPrison({
+    bookerReference,
+    prisonerId,
+    prisonId,
+  }: {
+    bookerReference: string
+    prisonerId: string
+    prisonId: string
+  }): Promise<PermittedPrisonerForBookerDto> {
+    return this.post(
+      {
+        path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/prison`,
+        data: { prisonId },
+      },
+      asSystem(),
+    )
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<VisitorInfoDto[]> {

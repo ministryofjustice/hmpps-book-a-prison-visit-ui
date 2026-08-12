@@ -14,6 +14,7 @@ import type {
   AddVisitorToBookerPrisonerRequestDto,
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
+  PermittedPrisonerForBookerDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { Prisoner, Visitor } from '../../services/bookerService'
@@ -202,6 +203,16 @@ export default class TestData {
       visitors,
       visitorSupport,
     }) as OrchestrationVisitDto
+
+  static permittedPrisonerForBookerDto = ({
+    prisonerId = 'A1234BC',
+    prisonCode = 'HEI',
+    permittedVisitors = [{ visitorId: 1234 }],
+  }: Partial<PermittedPrisonerForBookerDto> = {}): PermittedPrisonerForBookerDto => ({
+    prisonerId,
+    prisonCode,
+    permittedVisitors,
+  })
 
   static prisonDto = ({
     code = 'HEI',

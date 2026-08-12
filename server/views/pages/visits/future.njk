@@ -16,12 +16,7 @@
 
         <p>{{ t("visits:future.onlyGovukBookings") }}</p>
 
-        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">
-          {{- t("visits:future.prisonerAtLocation", {
-            prisonerName: prisoner | prisonerNameFirstLast,
-            prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
-          }) -}}
-        </h2>
+        <h2 class="govuk-heading-m">{{ t("visits:future.futureVisits") }}</h2>
 
         {% if visits | length %}
           {% for visit in visits %}
@@ -41,12 +36,32 @@
                 }) }}
                 </li>
               {% endif %}
+              {% if isIncorrectPrison %}
+              <li>
+                  {{ govukTag({
+                  text: t("visits:confirmLocation.movedPrison", {
+                    prisonerFirstName: prisoner.firstName | capitalize
+                  }),
+                  classes: "govuk-tag--orange govuk-!-margin-bottom-2",
+                  attributes: { "data-test": "tag-" + loop.index  }
+                }) }}
+                </li>
+              {% endif %}
               <li data-test="visit-start-end-time-{{ loop.index }}">
                 {{- t("common:dateTime.timeRange", {
                   startTime: visit.startTimestamp | formatTimeFromDateTime(language),
                   endTime: visit.endTimestamp | formatTimeFromDateTime(language)
                 }) -}}
               </li>
+
+              <li data-test="visit-prisoner-name-{{ loop.index }}">
+                {{ prisoner | prisonerNameFirstLast}}
+              </li>
+
+              <li data-test="visit-prison-name-{{ loop.index }}">
+                {{ visit.prisonId | getPrisonName(prisonNames, language) }}
+              </li>
+
               <li>
                 {{ t("common:labels.visitReference") }}:
                 <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
@@ -114,7 +129,7 @@
         }) }}
 
       {% endif %}
-      
+
     </div>
   </div>
 

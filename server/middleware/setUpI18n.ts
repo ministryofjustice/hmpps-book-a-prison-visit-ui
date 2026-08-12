@@ -38,6 +38,7 @@ export default function setUpI18n({
           'addPrisoner',
           'addVisitor',
           'bookVisit',
+          'confirmLocation',
           'selectPrison',
           'shared',
           'visitors',
