@@ -28,7 +28,6 @@ export default class MovedPrisonController {
       const prisoner = booker.prisoners[0]
 
       const { prisonId } = matchedData<{ prisonId: string }>(req)
-
       if (prisoner.prisonId !== prisonId) {
         return res.redirect(paths.INCORRECT_LOCATION)
       }
@@ -56,7 +55,9 @@ export default class MovedPrisonController {
 
   public updated(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/confirmLocation/prisonUpdated')
+      const booker = req.session.booker!
+      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
+      return res.render('pages/confirmLocation/prisonUpdated', { prisoner })
     }
   }
 
@@ -68,7 +69,9 @@ export default class MovedPrisonController {
 
   public pvbPrison(): RequestHandler {
     return async (req, res) => {
-      return res.render('pages/confirmLocation/pvbPrison')
+      const booker = req.session.booker!
+      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
+      return res.render('pages/confirmLocation/pvbPrison', { prisoner, pvbUrl: config.pvbUrl })
     }
   }
 

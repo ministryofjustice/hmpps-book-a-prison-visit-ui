@@ -282,7 +282,7 @@ export default class OrchestrationApiClient extends RestClient {
     prisonerId: string
     prisonId: string
   }): Promise<PermittedPrisonerForBookerDto> {
-    return this.post(
+    return this.put(
       {
         path: `/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/prison`,
         data: { prisonId },

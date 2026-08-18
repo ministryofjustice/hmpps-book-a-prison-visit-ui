@@ -12,7 +12,6 @@ import {
   CancelVisitOrchestrationDto,
   ChangeApplicationDto,
   CreateApplicationDto,
-  PermittedPrisonerForBookerDto,
   VisitDto,
 } from './orchestrationApiTypes'
 
@@ -397,7 +396,7 @@ describe('orchestrationApiClient', () => {
       const prisonId = 'HEI'
 
       fakeOrchestrationApi
-        .post(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/prison`, { prisonId })
+        .put(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/prison`, { prisonId })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, resultDto)
 

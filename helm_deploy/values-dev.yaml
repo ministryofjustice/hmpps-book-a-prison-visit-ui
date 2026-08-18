@@ -24,6 +24,7 @@ generic-service:
 
     FEATURE_WELSH_LANGUAGE: "true"
     FEATURE_BOOKER_WITHDRAW: "true"
+    FEATURE_CONFIRM_PRISONER_LOCATION: "true"
 
   allowlist:
     groups:

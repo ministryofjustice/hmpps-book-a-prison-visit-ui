@@ -39,7 +39,7 @@
               {% if isIncorrectPrison %}
               <li>
                   {{ govukTag({
-                  text: t("visits:confirmLocation.movedPrison", {
+                  text: t("visits:future.notAtPrisonTag", {
                     prisonerFirstName: prisoner.firstName | capitalize
                   }),
                   classes: "govuk-tag--orange govuk-!-margin-bottom-2",
@@ -55,11 +55,11 @@
               </li>
 
               <li data-test="visit-prisoner-name-{{ loop.index }}">
-                {{ prisoner | prisonerNameFirstLast}}
+                {{- prisoner | prisonerNameFirstLast -}}
               </li>
 
               <li data-test="visit-prison-name-{{ loop.index }}">
-                {{ visit.prisonId | getPrisonName(prisonNames, language) }}
+                {{- visit.prisonId | getPrisonName(prisonNames, language) -}}
               </li>
 
               <li>

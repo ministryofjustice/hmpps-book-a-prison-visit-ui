@@ -33,10 +33,9 @@ export default function routes(services: Services): Router {
 
   router.post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
 
-  router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
-  router.get(paths.CONFIRM_LOCATION, movedPrisonController.submit())
-
   // TODO Rework
+  router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
+  router.post(paths.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())
   router.get(paths.LOCATION_UPDATED, movedPrisonController.updated())
   router.get(paths.INCORRECT_LOCATION, movedPrisonController.incorrectLocation())
   router.get(paths.PVB_PRISON, movedPrisonController.pvbPrison())

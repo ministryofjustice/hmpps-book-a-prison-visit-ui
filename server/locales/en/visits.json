@@ -40,7 +40,8 @@
     "viewPastVisits": "View past visits",
     "viewCancelledVisits": "View rejected and cancelled visits",
     "noPrisonerError": "You need to add a prisoner to book a visit.",
-    "addPrisoner": "Add a prisoner"
+    "addPrisoner": "Add a prisoner",
+    "notAtPrisonTag": "{{prisonerFirstName}} has moved prison"
   },
   "past": {
     "title": "Past visits",
