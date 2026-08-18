@@ -26,6 +26,7 @@ export default class SelectPrisonerController {
 
       req.session.bookVisitJourney = bookVisitJourney
 
+      // if prisoner is not currently in registered prison, send to confirm location route
       if (config.features.confirmPrisonerLocation) {
         if (prisoner.prisonId !== prisoner.registeredPrisonId) {
           return res.redirect(paths.CONFIRM_LOCATION)

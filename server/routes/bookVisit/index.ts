@@ -13,6 +13,7 @@ import CannotBookController from './cannotBookController'
 import ClosedVisitController from './closedVisitController'
 import ContactDetailsController from './contactDetailsController'
 import MovedPrisonController from '../confirmLocation/movedPrison'
+import config from '../../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -33,13 +34,15 @@ export default function routes(services: Services): Router {
 
   router.post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
 
-  // TODO Rework
-  router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
-  router.post(paths.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())
-  router.get(paths.LOCATION_UPDATED, movedPrisonController.updated())
-  router.get(paths.INCORRECT_LOCATION, movedPrisonController.incorrectLocation())
-  router.get(paths.PVB_PRISON, movedPrisonController.pvbPrison())
-  router.get(paths.UNSUPPORTED_PRISON, movedPrisonController.unsupportedPrison())
+  // TODO rework
+  if (config.features.confirmPrisonerLocation) {
+    router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
+    router.post(paths.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())
+    router.get(paths.LOCATION_UPDATED, movedPrisonController.updated())
+    router.get(paths.INCORRECT_LOCATION, movedPrisonController.incorrectLocation())
+    router.get(paths.PVB_PRISON, movedPrisonController.pvbPrison())
+    router.get(paths.UNSUPPORTED_PRISON, movedPrisonController.unsupportedPrison())
+  }
 
   router.get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
 

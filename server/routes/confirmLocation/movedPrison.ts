@@ -53,6 +53,7 @@ export default class MovedPrisonController {
     }
   }
 
+  // TODO - rework in to single function?
   public updated(): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!

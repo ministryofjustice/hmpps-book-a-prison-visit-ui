@@ -36,11 +36,19 @@ export default class VisitorsController {
 
       const visitorsTableRows = buildVisitorsTableRows({ visitors, t: req.t, lng: req.language as Locale })
 
+      const hideLinkVisitors =
+        config.features.confirmPrisonerLocation &&
+        prisoner.prisonId !== prisoner.registeredPrisonId &&
+        prisoner.prisonId !== undefined &&
+        prisoner.prisonId !== null &&
+        config.noDigitalServicePrisonIds.includes(prisoner.prisonId)
+
       return res.render('pages/visitors/visitors', {
         prisoner: booker.prisoners[0],
         visitorsTableRows,
         visitorRequestsTableRows,
         bookerWithdrawEnabled: config.features.bookerWithdrawEnabled,
+        hideLinkVisitors,
         showOLServiceNav: true,
       })
     }

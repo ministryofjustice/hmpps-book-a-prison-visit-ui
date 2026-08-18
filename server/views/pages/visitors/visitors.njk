@@ -82,18 +82,20 @@
         {% endif %}
       {% endif %}
 
-      <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
+      {% if not hideLinkVisitors %}
+        <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
 
-      <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
-      <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
-      <p>{{ t("common:visitors.requestResponseTime") }}</p>
+        <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
+        <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
+        <p>{{ t("common:visitors.requestResponseTime") }}</p>
 
-      {{ govukButton({
-        text: t("common:buttons.linkNewVisitor"),
-        href: paths.ADD_VISITOR.START,
-        attributes: { "data-test": "link-a-visitor" },
-        preventDoubleClick: true
-      }) }}
+        {{ govukButton({
+          text: t("common:buttons.linkNewVisitor"),
+          href: paths.ADD_VISITOR.START,
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      {% endif %}
 
 
     </div>

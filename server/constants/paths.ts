@@ -63,6 +63,7 @@ const paths = {
 
   VISITORS: '/visitors',
 
+  // confirm location routes
   CONFIRM_LOCATION: '/prisoner-moved',
   LOCATION_UPDATED: '/location-updated',
   INCORRECT_LOCATION: '/incorrect-location',
