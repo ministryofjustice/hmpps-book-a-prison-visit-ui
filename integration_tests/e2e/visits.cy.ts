@@ -55,6 +55,8 @@ context('Visits home page', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.visitDate(1).contains(tomorrowDisplayDate)
     visitsPage.visitStartEndTime(1).contains('10am to 11:30am')
+    visitsPage.visitPrisonerName(1).contains('John Smith')
+    visitsPage.visitPrisonName(1).contains('Hewell (HMP & YOI)')
     visitsPage.visitReference(1).contains('ab-cd-ef-gh')
 
     visitsPage.visitLink(1).click()
