@@ -20,10 +20,8 @@ export default class VisitsController {
       const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
       req.session.bookedVisits = { type: 'future', visits }
 
-      // if prisoner is not currently in registered prison
-      // boolean is used on page to show 'not at prison' tag
-      const isIncorrectPrison = prisoner?.prisonId !== prisoner?.registeredPrisonId
-      return res.render(`pages/visits/future`, { prisoner, visits, isIncorrectPrison, showOLServiceNav: true })
+      const notAtRegisteredPrison = prisoner?.prisonId !== prisoner?.registeredPrisonId
+      return res.render(`pages/visits/future`, { prisoner, visits, notAtRegisteredPrison, showOLServiceNav: true })
     }
   }
 

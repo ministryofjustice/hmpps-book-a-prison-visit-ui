@@ -1,5 +1,5 @@
 import type { RequestHandler } from 'express'
-import { body, matchedData, ValidationChain } from 'express-validator'
+import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import { BookerService, PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import config from '../../config'
@@ -27,7 +27,15 @@ export default class MovedPrisonController {
       const booker = req.session.booker!
       const prisoner = booker.prisoners[0]
 
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        return res.redirect(paths.CONFIRM_LOCATION)
+      }
+
       const { prisonId } = matchedData<{ prisonId: string }>(req)
+      req.session.confirmLocationSelectedPrison = prisonId
+
       if (prisoner.prisonId !== prisonId) {
         return res.redirect(paths.INCORRECT_LOCATION)
       }
@@ -53,40 +61,30 @@ export default class MovedPrisonController {
     }
   }
 
-  // TODO - rework in to single function?
-  public updated(): RequestHandler {
+  public viewResult(result: 'prisonUpdated' | 'incorrectLocation' | 'pvbPrison' | 'unsupportedPrison'): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!
       const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
-      return res.render('pages/confirmLocation/prisonUpdated', { prisoner })
-    }
-  }
+      const { confirmLocationSelectedPrison } = req.session
 
-  public incorrectLocation(): RequestHandler {
-    return async (req, res) => {
-      return res.render('pages/confirmLocation/incorrectLocation')
-    }
-  }
+      if (!confirmLocationSelectedPrison) {
+        return res.redirect(paths.CONFIRM_LOCATION)
+      }
 
-  public pvbPrison(): RequestHandler {
-    return async (req, res) => {
-      const booker = req.session.booker!
-      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
-      return res.render('pages/confirmLocation/pvbPrison', { prisoner, pvbUrl: config.pvbUrl })
-    }
-  }
-
-  public unsupportedPrison(): RequestHandler {
-    return async (req, res) => {
-      return res.render('pages/confirmLocation/unsupportedPrison')
+      return res.render(`pages/confirmLocation/${result}`, {
+        confirmLocationSelectedPrison,
+        prisoner,
+        pvbUrl: config.pvbUrl,
+      })
     }
   }
 
   public validate(): ValidationChain[] {
     return [
-      body('prisonId')
+      body('prisonId', (_value, { req }) => req.t('validation:prisonSelectNone'))
         .isLength({ min: 3, max: 3 })
-        .withMessage((_value, { req }) => req.t('validation:prisonSelectNone')),
+        .bail()
+        .isAlpha(),
     ]
   }
 }

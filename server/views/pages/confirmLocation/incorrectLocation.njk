@@ -18,7 +18,7 @@
 
       <h1 class="govuk-heading-l">{{- t("confirmLocation:incorrectLocation.prisonerNotAtPrison", {
         prisonerFirstName: prisoner.firstName | capitalize,
-        prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
+        prisonName: confirmLocationSelectedPrison | getPrisonName(prisonNames, language)
       }) -}}</h1>
 
       <p>{{- t("confirmLocation:incorrectLocation.needToKnow")-}}</p>

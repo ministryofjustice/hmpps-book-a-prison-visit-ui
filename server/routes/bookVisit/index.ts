@@ -38,10 +38,10 @@ export default function routes(services: Services): Router {
   if (config.features.confirmPrisonerLocation) {
     router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
     router.post(paths.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())
-    router.get(paths.LOCATION_UPDATED, movedPrisonController.updated())
-    router.get(paths.INCORRECT_LOCATION, movedPrisonController.incorrectLocation())
-    router.get(paths.PVB_PRISON, movedPrisonController.pvbPrison())
-    router.get(paths.UNSUPPORTED_PRISON, movedPrisonController.unsupportedPrison())
+    router.get(paths.LOCATION_UPDATED, movedPrisonController.viewResult('prisonUpdated'))
+    router.get(paths.INCORRECT_LOCATION, movedPrisonController.viewResult('incorrectLocation'))
+    router.get(paths.PVB_PRISON, movedPrisonController.viewResult('pvbPrison'))
+    router.get(paths.UNSUPPORTED_PRISON, movedPrisonController.viewResult('unsupportedPrison'))
   }
 
   router.get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
