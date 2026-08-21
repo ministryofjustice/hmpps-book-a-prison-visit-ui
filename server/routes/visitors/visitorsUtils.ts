@@ -103,5 +103,5 @@ export const buildVisitorRequestsTableRowsWithCancellationLink = ({
 }
 
 function buildUrl(ref: UUID, index: number, t: TFunction): string {
-  return `<a href='${paths.ADD_VISITOR.CANCEL}/${ref}' data-test="cancel-visitor-request-${index}">${t('visitors:visitors.cancelLinking.tableLinkText')}</a>`
+  return `<a href='${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${ref}' data-test="cancel-visitor-request-${index}">${t('visitors:visitors.cancelLinking.tableLinkText')}</a>`
 }

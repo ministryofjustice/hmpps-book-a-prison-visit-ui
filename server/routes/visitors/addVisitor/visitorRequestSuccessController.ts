@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import paths from '../../constants/paths'
+import paths from '../../../constants/paths'
 
 export default class VisitorRequestSuccessController {
   public viewRequested(): RequestHandler {
@@ -8,7 +8,7 @@ export default class VisitorRequestSuccessController {
         return res.redirect(paths.VISITORS)
       }
 
-      return res.render('pages/addVisitor/visitorRequested', { showOLServiceNav: true })
+      return res.render('pages/visitors/addVisitor/visitorRequested', { showOLServiceNav: true })
     }
   }
 
@@ -21,7 +21,12 @@ export default class VisitorRequestSuccessController {
       const { firstName, lastName } = req.session.addVisitorJourneyResult
       const prisoner = req.session.booker!.prisoners[0]
 
-      return res.render('pages/addVisitor/visitorApproved', { showOLServiceNav: true, firstName, lastName, prisoner })
+      return res.render('pages/visitors/addVisitor/visitorApproved', {
+        showOLServiceNav: true,
+        firstName,
+        lastName,
+        prisoner,
+      })
     }
   }
 }
