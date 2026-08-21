@@ -8,7 +8,6 @@ import VisitorRequestSuccessController from './visitorRequestSuccessController'
 import VisitorRequestFailController from './visitorRequestFailController'
 import CancelVisitorRequestController from './cancelVisitorRequestController'
 import CancelVisitorConfirmedController from './cancelVisitorConfirmedController'
-import config from '../../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -26,22 +25,20 @@ export default function routes(services: Services): Router {
   router.get(paths.ADD_VISITOR.DETAILS, visitorDetailsController.view())
   router.post(paths.ADD_VISITOR.DETAILS, visitorDetailsController.validate(), visitorDetailsController.submit())
 
-  if (config.features.bookerWithdrawEnabled) {
-    router.get(
-      `${paths.ADD_VISITOR.CANCEL}/:visitorDisplayId`,
-      cancelVisitorRequestController.validateDisplayId(),
-      cancelVisitorRequestController.view(),
-    )
+  router.get(
+    `${paths.ADD_VISITOR.CANCEL}/:visitorDisplayId`,
+    cancelVisitorRequestController.validateDisplayId(),
+    cancelVisitorRequestController.view(),
+  )
 
-    router.post(
-      `${paths.ADD_VISITOR.CANCEL}/:visitorDisplayId`,
-      cancelVisitorRequestController.validateCancelChoice(),
-      cancelVisitorRequestController.validateDisplayId(),
-      cancelVisitorRequestController.submit(),
-    )
+  router.post(
+    `${paths.ADD_VISITOR.CANCEL}/:visitorDisplayId`,
+    cancelVisitorRequestController.validateCancelChoice(),
+    cancelVisitorRequestController.validateDisplayId(),
+    cancelVisitorRequestController.submit(),
+  )
 
-    router.get(`${paths.ADD_VISITOR.CANCEL_CONFIRMATION}`, cancelVisitorConfirmedController.view())
-  }
+  router.get(`${paths.ADD_VISITOR.CANCEL_CONFIRMATION}`, cancelVisitorConfirmedController.view())
 
   router.get(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.view())
   router.post(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.submit())

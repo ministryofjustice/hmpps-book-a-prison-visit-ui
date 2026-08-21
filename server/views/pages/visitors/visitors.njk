@@ -52,34 +52,20 @@
 
         <p>{{ t("common:visitors.reviewedByPrison") }}</p>
 
-        {% if bookerWithdrawEnabled %}
-          {{ govukTable({
-            head: [
-              {
-                text: t("common:labels.name")
-              },
-              {
-                text: t("common:labels.dateOfBirth")
-              },
-              {
-                text: t("visitors:visitors.cancelLinking.tableHeading")
-              }
-            ],
-            rows: visitorRequestsTableRows
-          }) }}
-        {% else %}
-          {{ govukTable({
-            head: [
-              {
-                text: t("common:labels.name")
-              },
-              {
-                text: t("common:labels.dateOfBirth")
-              }
-            ],
-            rows: visitorRequestsTableRows
-          }) }}
-        {% endif %}
+        {{ govukTable({
+          head: [
+            {
+              text: t("common:labels.name")
+            },
+            {
+              text: t("common:labels.dateOfBirth")
+            },
+            {
+              text: t("visitors:visitors.cancelLinking.tableHeading")
+            }
+          ],
+          rows: visitorRequestsTableRows
+        }) }}
       {% endif %}
 
       <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
