@@ -67,16 +67,16 @@
     "libphonenumber-js": "^1.13.10",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
-    "openid-client": "6.8.4",
+    "openid-client": "6.8.5",
     "passport": "^0.7.0",
-    "redis": "^6.2.0",
+    "redis": "^6.2.1",
     "superagent": "^10.3.0",
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.6",
-    "@ministryofjustice/hmpps-precommit-hooks": "3.0.1",
+    "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "@tsconfig/node24": "^24.0.4",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -93,10 +93,10 @@
     "@types/superagent": "^8.1.11",
     "@types/supertest": "^7.2.1",
     "audit-ci": "^7.1.0",
-    "axe-core": "^4.12.1",
+    "axe-core": "^4.13.0",
     "cheerio": "^1.2.0",
     "concurrently": "^10.0.4",
-    "cypress": "^15.19.0",
+    "cypress": "^15.20.1",
     "cypress-axe": "^1.7.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.4.2",
@@ -110,7 +110,7 @@
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6",
     "prettier-plugin-jinja-template": "^2.2.0",
-    "read-excel-file": "9.3.5",
+    "read-excel-file": "9.3.10",
     "sass": "^1.102.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.12",
@@ -120,10 +120,10 @@
   "overrides": {
     "@opentelemetry/core": "2.10.0",
     "brace-expansion": "5.0.9",
-    "js-yaml": "3.15.1",
+    "js-yaml": "5.2.3",
     "mocha": {
       "diff": "^8.0.4",
-      "serialize-javascript": "^7.0.7"
+      "serialize-javascript": "^7.1.0"
     },
     "shell-quote": "1.10.0"
   }

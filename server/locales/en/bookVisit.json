@@ -90,6 +90,8 @@
     "description": "Tell us about any support that visitors will need because of a health condition or disability. For example, wheelchair access.",
     "prisonSupport": "{{prisonName}} will make reasonable adjustments for the visit, but may not be able to fulfil your request.",
 
+    "requiredYes": "Yes",
+    "requiredNo": "No",
     "provideDetails": "Provide details of the request"
   },
 

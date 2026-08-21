@@ -60,3 +60,63 @@ export function unFlattenLocale(entries: LocaleEntry[]): LocaleObject {
 
   return result
 }
+
+// Welsh (cy) uses all 6 CLDR plural categories; English only uses 'one' and 'other'.
+export const CY_PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other']
+const PLURAL_SUFFIX_PATTERN = new RegExp(`_(${CY_PLURAL_CATEGORIES.join('|')})$`)
+
+// Splits a key like "selectVisitors.visitorLimits.maxAdults_two" into its plural
+// base ("selectVisitors.visitorLimits.maxAdults") and suffix ("two"), or returns
+// null if the key is not a pluralised key.
+export function pluralKeySplit(key: string): { base: string; suffix: string } | null {
+  const match = key.match(PLURAL_SUFFIX_PATTERN)
+  if (!match) {
+    return null
+  }
+  return { base: key.slice(0, -match[0].length), suffix: match[1] }
+}
+
+// Groups pluralised keys ("foo_one", "foo_other", ...) by their base key, mapping
+// each base to the set of plural suffixes present.
+export function pluralGroups(keys: string[]): Map<string, Set<string>> {
+  const groups = new Map<string, Set<string>>()
+  keys.forEach(key => {
+    const split = pluralKeySplit(key)
+    if (!split) {
+      return
+    }
+    if (!groups.has(split.base)) {
+      groups.set(split.base, new Set())
+    }
+    groups.get(split.base)!.add(split.suffix)
+  })
+  return groups
+}
+
+// Orders keys so that: non-plural keys stay in their original en/cy order, and each
+// plural group's suffixed keys (english order + any Welsh-only suffixes) sit together
+// in canonical zero/one/two/few/many/other order, in the position of their first occurrence.
+export function orderKeysWithPluralGroups(enKeys: string[], cyKeys: string[]): string[] {
+  const combinedGroups = pluralGroups([...enKeys, ...cyKeys])
+
+  const orderedKeys: string[] = []
+  const emittedBases = new Set<string>()
+
+  ;[...enKeys, ...cyKeys.filter(key => !enKeys.includes(key))].forEach(key => {
+    const split = pluralKeySplit(key)
+    if (!split) {
+      orderedKeys.push(key)
+      return
+    }
+    if (emittedBases.has(split.base)) {
+      return
+    }
+    emittedBases.add(split.base)
+    const suffixesPresent = combinedGroups.get(split.base)!
+    CY_PLURAL_CATEGORIES.filter(category => suffixesPresent.has(category)).forEach(category =>
+      orderedKeys.push(`${split.base}_${category}`),
+    )
+  })
+
+  return orderedKeys
+}

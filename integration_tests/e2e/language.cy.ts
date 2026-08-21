@@ -5,6 +5,7 @@ import AccessibilityStatementPage from '../pages/staticPages/accessibilityStatem
 context('Change language English / Welsh', () => {
   beforeEach(() => {
     cy.task('reset')
+    cy.task('stubHmppsAuthToken')
     cy.task('stubPrisonNames')
 
     cy.hideCookieBanner()

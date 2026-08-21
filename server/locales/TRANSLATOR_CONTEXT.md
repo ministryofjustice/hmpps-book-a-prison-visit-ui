@@ -46,6 +46,34 @@ Use i18next interpolation style with no spaces inside braces, for example `{{pri
 - For links, use a `<link>...</link>` token in locale values. Templates render this with the `renderLinkTag` filter.
 - Some short labels intentionally repeat across screens (for example "Visitors", "Date and time").
 
+### Welsh plurals need more forms than English
+
+English only has two plural categories: `_one` (exactly 1) and `_other` (everything else,
+including 0). Welsh (`cy`) has six CLDR plural categories, selected by count:
+
+| Suffix | Welsh rule | Example counts |
+|---|---|---|
+| `_zero` | n == 0 | 0 |
+| `_one` | n == 1 | 1 |
+| `_two` | n == 2 | 2 |
+| `_few` | n == 3 | 3 |
+| `_many` | n == 6 | 6 |
+| `_other` | anything else | 4, 5, 7, 8, 9, 10... |
+
+If `cy/*.json` only defines `_one`/`_other` for a pluralised key, i18next has no
+Welsh translation for counts that map to `_zero`/`_two`/`_few`/`_many` and silently
+falls back to the English string for those counts. **Every pluralised key in `cy`
+must define all six suffixes** - `_two`/`_few`/`_many`/`_zero` can reuse the same
+wording as `_other` where the Welsh phrasing doesn't change with the count.
+
+Do not add these extra suffixes (`_zero`/`_two`/`_few`/`_many`) to the English
+locale files - i18next only ever looks up `_one`/`_other` for `en`, so they would
+be unused, dead keys there.
+
+Run `npm run i18n:locale-compare` to check for missing Welsh plural forms (as well
+as missing keys/files between `en` and `cy`).
+
+
 ## 4) Quick QA Checklist Before Submitting Translations
 
 - JSON remains valid.

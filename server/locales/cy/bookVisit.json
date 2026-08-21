@@ -16,7 +16,7 @@
   "selectVisitors": {
     "title": "Pwy sy’n mynd ar yr ymweliad?",
     "visitorLimits": {
-      "maxVisitors_one": "Gall hyd at {{count}} unigolyn ymweld â rhywun yn {{prisonName}}.  Mae hyn yn cynnwys:",
+      "maxVisitors_one": "Gall hyd at {{count}} unigolyn ymweld â rhywun yn {{prisonName}}. Mae hyn yn cynnwys:",
       "maxVisitors_other": "Gall hyd at {{count}} o bobl ymweld â rhywun yn {{prisonName}}. Mae hyn yn cynnwys:",
       "maxAdults_one": "{{count}} unigolyn {{adultAgeYears}} oed neu'n hŷn",
       "maxAdults_other": "{{count}} o bobl {{adultAgeYears}} oed neu'n hŷn",
@@ -65,8 +65,10 @@
   },
   "additionalSupport": {
     "title": "A yw unrhyw un o’r ymwelwyr angen unrhyw gymorth ychwanegol?",
-    "description": "Dywedwch wrthym am unrhyw gymorth y bydd ymwelwyr ei angen oherwydd cyflwr iechyd neu anabledd. Er enghraiffy, mynediad i gadair olwyn.",
+    "description": "Dywedwch wrthym am unrhyw gymorth y bydd ymwelwyr ei angen oherwydd cyflwr iechyd neu anabledd. Er enghraifft, mynediad i gadair olwyn.",
     "prisonSupport": "Bydd {{prisonName}} yn gwneud addasiadau rhesymol ar gyfer yr ymweliad, ond efallai ni fydd yn gallu bodloni eich cais.",
+    "requiredYes": "Ydyn",
+    "requiredNo": "Nac ydyn",
     "provideDetails": "Rhowch fanylion y cais"
   },
   "mainContact": {
