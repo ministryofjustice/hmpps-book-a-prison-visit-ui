@@ -3,9 +3,9 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import paths from '../../constants/paths'
-import { AddVisitorJourney, FlashFormValues } from '../../@types/bapv'
+import { FlashData, appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
+import paths from '../../../constants/paths'
+import { AddVisitorJourney, FlashFormValues } from '../../../@types/bapv'
 
 let app: Express
 

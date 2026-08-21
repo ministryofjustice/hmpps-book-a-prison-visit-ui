@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
-import paths from '../../constants/paths'
-import { dateOfBirthValidationChain } from '../../utils/validations'
+import paths from '../../../constants/paths'
+import { dateOfBirthValidationChain } from '../../../utils/validations'
 
 export default class VisitorDetailsController {
   public view(): RequestHandler {
@@ -18,7 +18,7 @@ export default class VisitorDetailsController {
         formValues.languagePreference = 'cy'
       }
 
-      return res.render('pages/addVisitor/visitorDetails', {
+      return res.render('pages/visitors/addVisitor/visitorDetails', {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,

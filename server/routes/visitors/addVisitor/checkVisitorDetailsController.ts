@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
-import paths from '../../constants/paths'
-import { BookerService } from '../../services'
+import paths from '../../../constants/paths'
+import { BookerService } from '../../../services'
 
 export default class CheckVisitorDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -13,7 +13,7 @@ export default class CheckVisitorDetailsController {
         return res.redirect(paths.VISITORS)
       }
 
-      return res.render('pages/addVisitor/checkVisitorDetails', {
+      return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
         showOLServiceNav: true,
         visitorDetails: addVisitorJourney.visitorDetails,
       })

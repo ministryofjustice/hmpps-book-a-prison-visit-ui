@@ -54,7 +54,7 @@ export default function routes(services: Services): Router {
     cancelVisitController.submit(),
   )
 
-  router.get(`${paths.VISITS.CANCEL_CONFIRMATION}`, cancelVisitConfirmedController.view())
+  router.get(paths.VISITS.CANCEL_CONFIRMATION, cancelVisitConfirmedController.view())
 
   return router
 }

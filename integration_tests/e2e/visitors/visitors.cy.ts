@@ -1,8 +1,8 @@
-import TestData from '../../server/routes/testutils/testData'
-import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
-import VisitsPage from '../pages/visits/visits'
-import Page from '../pages/page'
-import VisitorsPage from '../pages/visitors/visitors'
+import TestData from '../../../server/routes/testutils/testData'
+import SelectVisitorsPage from '../../pages/bookVisit/selectVisitors'
+import VisitsPage from '../../pages/visits/visits'
+import Page from '../../pages/page'
+import VisitorsPage from '../../pages/visitors/visitors'
 
 context('Visitors page', () => {
   const visitors = [

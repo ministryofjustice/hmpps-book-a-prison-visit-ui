@@ -2,10 +2,10 @@ import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, body, validationResult } from 'express-validator'
 import { type UUID } from 'crypto'
 import { SessionData } from 'express-session'
-import { BookerService } from '../../services'
-import paths from '../../constants/paths'
-import { BookerPrisonerVisitorRequestDetail } from '../../services/bookerService'
-import { validatePendingVisitorDisplayId } from '../visits/validations'
+import { BookerService } from '../../../services'
+import paths from '../../../constants/paths'
+import { BookerPrisonerVisitorRequestDetail } from '../../../services/bookerService'
+import { validatePendingVisitorDisplayId } from '../../visits/validations'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -24,7 +24,7 @@ export default class CancelVisitorRequestController {
         pendingVisitor => pendingVisitor.visitorDisplayId === visitorDisplayId,
       )!
 
-      return res.render('pages/addVisitor/cancel/cancel', {
+      return res.render('pages/visitors/cancelVisitorRequest/cancel', {
         errors: req.flash('errors'),
         visitor,
         visitorDisplayId,
@@ -48,7 +48,7 @@ export default class CancelVisitorRequestController {
           return res.redirect(paths.VISITORS)
         }
 
-        return res.redirect(`${paths.ADD_VISITOR.CANCEL}/${visitorDisplayId}`)
+        return res.redirect(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorDisplayId}`)
       }
 
       if (cancelVisitor === 'no') {
@@ -63,7 +63,7 @@ export default class CancelVisitorRequestController {
         visitorReference: visitor.reference,
       })
 
-      return res.redirect(paths.ADD_VISITOR.CANCEL_CONFIRMATION)
+      return res.redirect(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
     }
   }
 

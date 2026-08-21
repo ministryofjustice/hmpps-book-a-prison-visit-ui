@@ -2,11 +2,11 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from '../testutils/appSetup'
-import paths from '../../constants/paths'
-import { createMockBookerService } from '../../services/testutils/mocks'
-import { BookerService } from '../../services'
-import type { AddVisitorJourneyResult } from '../../@types/bapv'
+import { appWithAllRoutes } from '../../testutils/appSetup'
+import paths from '../../../constants/paths'
+import { createMockBookerService } from '../../../services/testutils/mocks'
+import { BookerService } from '../../../services'
+import type { AddVisitorJourneyResult } from '../../../@types/bapv'
 
 let app: Express
 
