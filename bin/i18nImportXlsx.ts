@@ -7,7 +7,9 @@
  * corresponding server/locales/cy/*.json files.
  *
  * Only keys with a non-empty Welsh translation are written, so that i18next continues to
- * fall back to the English text for any keys not yet translated.
+ * fall back to the English text for any keys not yet translated. This includes Welsh-only
+ * plural forms (e.g. `_two`/`_few`/`_many`) that have no English equivalent, since Welsh
+ * needs more CLDR plural categories than English - see server/locales/TRANSLATOR_CONTEXT.md.
  *
  * Usage: npm run i18n:import-xlsx
  *
@@ -18,7 +20,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 import readXlsxFile from 'read-excel-file/node'
 
-import { flattenLocale, readLocaleJson, unFlattenLocale, type LocaleEntry } from './i18nLocaleFlatten.ts'
+import {
+  flattenLocale,
+  orderKeysWithPluralGroups,
+  pluralGroups,
+  pluralKeySplit,
+  readLocaleJson,
+  unFlattenLocale,
+  type LocaleEntry,
+} from './i18nLocaleFlatten.ts'
 
 const EN_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'en')
 const CY_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'cy')
@@ -38,16 +48,28 @@ function cellToString(cellValue: unknown): string {
 function importSheet(namespace: string, rows: unknown[][]): number {
   const englishEntries = flattenLocale(readLocaleJson(path.join(EN_LOCALES_DIR, `${namespace}.json`)))
   const englishKeys = new Set(englishEntries.map(entry => entry.key))
+  const englishPluralGroups = pluralGroups([...englishKeys])
+
+  // A key not in English is still valid if it's an extra Welsh plural form (e.g.
+  // "plurals.visitTime_two") of a base key that's pluralised in English.
+  const isExpectedWelshOnlyKey = (key: string): boolean => {
+    const split = pluralKeySplit(key)
+    return split !== null && englishPluralGroups.has(split.base)
+  }
 
   const welshByKey = new Map<string, string>()
+  const orderedKeys: string[] = []
   rows.slice(HEADER_ROW_COUNT).forEach(row => {
     const key = cellToString(row[KEY_COLUMN_INDEX])
     if (!key) {
       return
     }
+    if (!welshByKey.has(key)) {
+      orderedKeys.push(key)
+    }
     welshByKey.set(key, cellToString(row[WELSH_COLUMN_INDEX]))
 
-    if (!englishKeys.has(key)) {
+    if (!englishKeys.has(key) && !isExpectedWelshOnlyKey(key)) {
       console.warn(`[${namespace}] key "${key}" found in spreadsheet but not in server/locales/en/${namespace}.json`)
     }
   })
@@ -57,10 +79,17 @@ function importSheet(namespace: string, rows: unknown[][]): number {
     console.warn(`[${namespace}] key "${entry.key}" is missing from the spreadsheet`)
   })
 
-  // Preserve the English key order; only include keys that have a non-empty Welsh translation.
-  const translatedEntries: LocaleEntry[] = englishEntries
-    .filter(entry => welshByKey.get(entry.key))
-    .map(entry => ({ key: entry.key, value: welshByKey.get(entry.key) as string }))
+  // Preserve English key order first, and place any Welsh-only keys (e.g. extra plural
+  // forms) alongside their `_one`/`_other` siblings rather than at the end of the file.
+  // Only include keys that have a non-empty Welsh translation.
+  const allKeys = orderKeysWithPluralGroups(
+    englishEntries.map(entry => entry.key),
+    orderedKeys,
+  )
+
+  const translatedEntries: LocaleEntry[] = allKeys
+    .filter(key => welshByKey.get(key))
+    .map(key => ({ key, value: welshByKey.get(key) as string }))
 
   const cyObject = unFlattenLocale(translatedEntries)
   fs.writeFileSync(path.join(CY_LOCALES_DIR, `${namespace}.json`), `${JSON.stringify(cyObject, null, 2)}\n`)

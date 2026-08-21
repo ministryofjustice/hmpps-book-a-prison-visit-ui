@@ -17,14 +17,16 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { flattenLocale, readLocaleJson } from './i18nLocaleFlatten.ts'
+import {
+  CY_PLURAL_CATEGORIES,
+  flattenLocale,
+  pluralGroups,
+  pluralKeySplit,
+  readLocaleJson,
+} from './i18nLocaleFlatten.ts'
 
 const EN_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'en')
 const CY_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'cy')
-
-// Welsh (cy) uses all 6 CLDR plural categories; English only uses 'one' and 'other'.
-const CY_PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other']
-const PLURAL_SUFFIX_PATTERN = new RegExp(`_(${CY_PLURAL_CATEGORIES.join('|')})$`)
 
 function jsonFileNames(dir: string): string[] {
   return fs
@@ -35,34 +37,6 @@ function jsonFileNames(dir: string): string[] {
 
 function entriesOf(filePath: string): Map<string, string> {
   return new Map(flattenLocale(readLocaleJson(filePath)).map(entry => [entry.key, entry.value]))
-}
-
-// Splits a key like "selectVisitors.visitorLimits.maxAdults_two" into its plural
-// base ("selectVisitors.visitorLimits.maxAdults") and suffix ("two"), or returns
-// null if the key is not a pluralised key.
-function pluralKeySplit(key: string): { base: string; suffix: string } | null {
-  const match = key.match(PLURAL_SUFFIX_PATTERN)
-  if (!match) {
-    return null
-  }
-  return { base: key.slice(0, -match[0].length), suffix: match[1] }
-}
-
-// Groups pluralised keys ("foo_one", "foo_other", ...) by their base key, mapping
-// each base to the set of plural suffixes present.
-function pluralGroups(keys: string[]): Map<string, Set<string>> {
-  const groups = new Map<string, Set<string>>()
-  keys.forEach(key => {
-    const split = pluralKeySplit(key)
-    if (!split) {
-      return
-    }
-    if (!groups.has(split.base)) {
-      groups.set(split.base, new Set())
-    }
-    groups.get(split.base)!.add(split.suffix)
-  })
-  return groups
 }
 
 function main() {
