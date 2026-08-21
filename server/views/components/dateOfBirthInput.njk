@@ -16,18 +16,21 @@
     items: [
       {
         name: "day",
+        label: t("common:labels.day"),
         classes: "govuk-input--width-2" + (" govuk-input--error" if errorMessage),
         autocomplete: "off",
         value: formValues[dobFieldBaseName + "-day"]
       },
       {
         name: "month",
+        label: t("common:labels.month"),
         classes: "govuk-input--width-2" + (" govuk-input--error" if errorMessage),
         autocomplete: "off",
         value: formValues[dobFieldBaseName + "-month"]
       },
       {
         name: "year",
+        label: t("common:labels.year"),
         classes: "govuk-input--width-4" + (" govuk-input--error" if errorMessage),
         autocomplete: "off",
         value: formValues[dobFieldBaseName + "-year"]

@@ -51,3 +51,8 @@
 .secondary-text {
   color: $govuk-secondary-text-colour
 }
+
+// Remove GDS default tag max-width
+.govuk-tag {
+  max-width: unset;
+}

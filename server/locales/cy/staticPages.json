@@ -37,7 +37,7 @@
     "tableHeaders": {
       "name": "Enw",
       "purpose": "Pwrpas",
-      "expires": "Daw i ben ar"
+      "expires": "Daw i ben ar ôl"
     },
     "sessionCookiePurpose": "Defnyddir i’ch cadw wedi’ch mewngofnodi",
     "consentCookiePurpose": "Cadw eich gosodiadau caniatâu cwcis",
@@ -49,11 +49,13 @@
     "analyticsItems": {
       "howYouArrived": "sut y daethoch o hyd i’r gwasanaeth",
       "pagesVisited": "y tudalennau rydych chi'n ymweld â nhw ar y gwasanaeth a pha mor hir rydych chi'n ei dreulio arnyn nhw",
-      "errors": "*unrhyw gamgymeriadau a welwch wrth ddefnyddio'r gwasanaeth"
+      "errors": "unrhyw gamgymeriadau a welwch wrth ddefnyddio’r gwasanaeth"
     },
     "gaCookiePurpose": "Gwirio os ydych wedi ymweld â’r gwasanaeth hwn o’r blaen. Mae hyn yn ein helpu i gyfrif faint o bobl sy'n ymweld â'n gwefan.",
     "gaIdCookiePurpose": "Defnyddir gan Google Analytics i ddod o hyd i sesiwn unigol gyda'ch dyfais a'i olrhain.",
     "acceptQuestion": "Ydych chi eisiau derbyn cwcis dadansoddeg?",
+    "acceptYes": "Ydw",
+    "acceptNo": "Nac ydw",
     "saveSettings": "Cadw gosodiadau cwcis"
   },
   "maintenance": {

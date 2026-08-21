@@ -63,6 +63,8 @@
     "gaIdCookiePurpose": "Used by Google Analytics to find and track an individual session with your device.",
 
     "acceptQuestion": "Do you want to accept analytics cookies?",
+    "acceptYes": "Yes",
+    "acceptNo": "No",
     "saveSettings": "Save cookie settings"
   },
 

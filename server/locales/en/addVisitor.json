@@ -18,6 +18,8 @@
     "description": "Your answers need to match the information on the prisoner’s visitor list.",
     "visitorInformationHeading": "Visitor information",
     "changeVisitorInformation": "visitor information",
+    "updatesInWelshYes": "Yes",
+    "updatesInWelshNo": "No",
     "confirmInformation": "By submitting this request you confirm that, to the best of your knowledge, the details you are providing are correct. Visitors must be on the prisoner’s visitor list.",
     "acceptableId": "Make sure the visitor information you provide matches the <link>acceptable forms of ID</link> that the visitor will use when they visit someone in prison."
   },
