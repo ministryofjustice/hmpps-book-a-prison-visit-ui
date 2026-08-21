@@ -6,15 +6,12 @@ import { BookerService } from '../../services'
 import paths from '../../constants/paths'
 import { BookerPrisonerVisitorRequestDetail } from '../../services/bookerService'
 import { validatePendingVisitorDisplayId } from '../visits/validations'
-import config from '../../config'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      if (!config.features.bookerWithdrawEnabled) return res.redirect(paths.VISITORS)
-
       const { pendingVisitors } = req.session as SessionData
       const errors = validationResult(req)
       if (!errors.isEmpty() || pendingVisitors === undefined) {
@@ -37,9 +34,7 @@ export default class CancelVisitorRequestController {
   }
 
   public submit(): RequestHandler {
-    return async (req, res, next) => {
-      if (!config.features.bookerWithdrawEnabled) return res.redirect(paths.VISITORS)
-
+    return async (req, res) => {
       const { cancelVisitor, visitorDisplayId } = matchedData<{
         cancelVisitor: 'yes' | 'no'
         visitorDisplayId: UUID

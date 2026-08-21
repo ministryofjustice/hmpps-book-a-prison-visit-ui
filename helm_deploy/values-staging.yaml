@@ -9,7 +9,7 @@ generic-service:
 
   scheduledDowntime:
     enabled: true
-  
+
   env:
     INGRESS_URL: "https://visit-staging.prison.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
@@ -21,8 +21,6 @@ generic-service:
     PVB_URL: "https://dev.prisonvisits.prison.service.justice.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: staging
-
-    FEATURE_BOOKER_WITHDRAW: "true"
 
     APPLICATIONINSIGHTS_CONNECTION_STRING: null # disable App Insights for staging
 
