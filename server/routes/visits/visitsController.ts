@@ -20,7 +20,8 @@ export default class VisitsController {
       const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
       req.session.bookedVisits = { type: 'future', visits }
 
-      return res.render(`pages/visits/future`, { prisoner, visits, showOLServiceNav: true })
+      const notAtRegisteredPrison = prisoner?.prisonId !== prisoner?.registeredPrisonId
+      return res.render(`pages/visits/future`, { prisoner, visits, notAtRegisteredPrison, showOLServiceNav: true })
     }
   }
 

@@ -37,6 +37,9 @@ declare module 'express-session' {
     bookedVisits?: BookedVisits
     pendingVisitors?: PendingVisitors
 
+    // Prisoner moved - reconfirm location journey
+    confirmLocationSelectedPrison?: string
+
     visitCancelled?: VisitCancelled
 
     selectedPrison?: { prisonId: string; hasDigitalService: boolean }

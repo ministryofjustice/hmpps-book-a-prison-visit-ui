@@ -12,11 +12,14 @@ import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidato
 import CannotBookController from './cannotBookController'
 import ClosedVisitController from './closedVisitController'
 import ContactDetailsController from './contactDetailsController'
+import MovedPrisonController from '../confirmLocation/movedPrison'
+import config from '../../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
 
   const selectPrisonerController = new SelectPrisonerController(services.bookerService, services.prisonService)
+  const movedPrisonController = new MovedPrisonController(services.bookerService, services.prisonService)
   const cannotBookController = new CannotBookController()
   const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.visitSessionsService)
   const closedVisitController = new ClosedVisitController()
@@ -30,6 +33,16 @@ export default function routes(services: Services): Router {
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
   router.post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
+
+  // TODO rework
+  if (config.features.confirmPrisonerLocation) {
+    router.get(paths.CONFIRM_LOCATION, movedPrisonController.view())
+    router.post(paths.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())
+    router.get(paths.LOCATION_UPDATED, movedPrisonController.viewResult('prisonUpdated'))
+    router.get(paths.INCORRECT_LOCATION, movedPrisonController.viewResult('incorrectLocation'))
+    router.get(paths.PVB_PRISON, movedPrisonController.viewResult('pvbPrison'))
+    router.get(paths.UNSUPPORTED_PRISON, movedPrisonController.viewResult('unsupportedPrison'))
+  }
 
   router.get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
 

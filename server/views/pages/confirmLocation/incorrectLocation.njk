@@ -1,0 +1,39 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+
+{% set pageTitle = t("confirmLocation:incorrectLocation.title") %}
+
+{% set backLinkHref = paths.VISITS.HOME %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{- t("confirmLocation:incorrectLocation.prisonerNotAtPrison", {
+        prisonerFirstName: prisoner.firstName | capitalize,
+        prisonName: confirmLocationSelectedPrison | getPrisonName(prisonNames, language)
+      }) -}}</h1>
+
+      <p>{{- t("confirmLocation:incorrectLocation.needToKnow")-}}</p>
+
+      <h2 class="govuk-heading-m">{{- t("confirmLocation:incorrectLocation.questionHeading") -}}</h2>
+
+      <p>{{- t("confirmLocation:incorrectLocation.findPrisonerLink") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}</p>
+
+      {{ govukButton({
+        text: t("common:buttons.continue"),
+        href: paths.VISITS.HOME,
+        attributes: { "data-test": "book-a-visit" },
+        preventDoubleClick: true
+      }) }}
+
+    </div>
+  </div>
+{% endblock %}

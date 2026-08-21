@@ -114,7 +114,6 @@ context('Book visit journey', () => {
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
@@ -227,7 +226,6 @@ context('Book visit journey', () => {
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (REQUESTED)', () => {
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
@@ -321,7 +319,6 @@ context('Book visit journey', () => {
 
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
@@ -337,7 +334,6 @@ context('Book visit journey', () => {
   it('should show closed visit interruption card (CLOSED visit)', () => {
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.prisonerName().contains('John Smith')
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)

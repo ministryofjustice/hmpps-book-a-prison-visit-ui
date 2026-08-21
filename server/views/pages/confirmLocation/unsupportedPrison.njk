@@ -1,0 +1,31 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+
+{% set pageTitle = t("confirmLocation:unsupportedPrison.title") %}
+
+{% set backLinkHref = paths.VISITS.HOME %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{- t("confirmLocation:unsupportedPrison.cannotBook", {
+        prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
+      }) -}}</h1>
+
+      <p>
+        {{ t("confirmLocation:unsupportedPrison.noDigitalService")
+        | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
+        | safe -}}
+      </p>
+
+    </div>
+  </div>
+{% endblock %}

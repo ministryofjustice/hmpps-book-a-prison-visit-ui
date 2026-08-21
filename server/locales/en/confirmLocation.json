@@ -1,0 +1,31 @@
+{
+  "selectPrison": {
+    "title": "Prisoner is not at this prison",
+    "prisonerNotAtPrison": "{{prisonerFirstName}} is no longer at {{prisonName}}",
+    "newLocationText": "You need to know the prisoner’s new location before you can book a visit.",
+    "selectLocation": "Select the prisoner's location",
+    "findPrisonerLink": "You can ask the prisoner, or you can <link>apply to find the prisoner’s location</link>."
+  },
+  "prisonUpdated": {
+    "title": "Prisoner's location updated",
+    "prisonerAtPrison": "{{prisonerFirstName}} is at {{prisonName}}",
+    "youCanUseService": "You can use this service to book a visit at the prisoner’s new location."
+  },
+  "incorrectLocation": {
+    "title": "Prisoner is not at this prison",
+    "prisonerNotAtPrison": "{{prisonerFirstName}} is not at {{prisonName}}",
+    "needToKnow": "You need to know the prisoner’s new location before you can book a visit.",
+    "questionHeading": "You need to know the prisoner’s new location before you can book a visit.",
+    "findPrisonerLink": "You can <link>apply to find the prisoner’s location</link>."
+  },
+  "pvbPrison": {
+    "title": "Prisoner’s new location uses another service",
+    "notUsingService": "{{prisonName}} does not use this service",
+    "pvbLinkText": "You need to <link>use another service to request a visit</link> to this prison.  "
+  },
+  "unsupportedPrison": {
+    "title": "Prisoner’s new location does not use this service",
+    "cannotBook": "You cannot book visits to {{prisonName}} using this service",
+    "noDigitalService": "You need to <link>contact this prison directly to book visits</link>."
+  }
+}
