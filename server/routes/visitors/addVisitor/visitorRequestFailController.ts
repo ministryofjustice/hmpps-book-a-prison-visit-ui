@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express'
-import paths from '../../constants/paths'
+import paths from '../../../constants/paths'
 
 export default class VisitorRequestFailController {
   public view(): RequestHandler {
@@ -28,7 +28,7 @@ export default class VisitorRequestFailController {
           return res.redirect(paths.VISITORS)
       }
 
-      return res.render(`pages/addVisitor/${pageTemplate}`, {
+      return res.render(`pages/visitors/addVisitor/${pageTemplate}`, {
         showOLServiceNav: true,
         firstName: addVisitorJourneyResult.firstName,
         lastName: addVisitorJourneyResult.lastName,
