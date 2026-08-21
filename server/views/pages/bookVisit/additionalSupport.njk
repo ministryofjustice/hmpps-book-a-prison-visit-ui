@@ -57,7 +57,7 @@
           items: [
             {
               value: "yes",
-              html: t("common:labels.yes") + ' <span class="govuk-visually-hidden">' + t("common:labels.yesDetails") + '</span>',
+              text: t("bookVisit:additionalSupport.requiredYes"),
               attributes: {
                 'data-test': 'support-required-yes'
               },
@@ -68,7 +68,7 @@
             },
             {
               value: "no",
-              text: t("common:labels.no"),
+              text: t("bookVisit:additionalSupport.requiredNo"),
               attributes: {
                 'data-test': 'support-required-no'
               },
@@ -77,7 +77,7 @@
           ],
           errorMessage: errors | findError('additionalSupportRequired')
         }) }}
-          
+
         {{ govukButton({
           text: t("common:buttons.continue"),
           attributes: {
@@ -85,7 +85,7 @@
             "data-test-app-ref": applicationReference if showExtraTestAttrs
           },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

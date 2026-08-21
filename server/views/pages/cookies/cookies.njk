@@ -12,7 +12,7 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-  <p>{{ t("staticPages:cookies.policyAppliesTo") | renderLinkTag("https://www.gov.uk/help/cookies") | safe }}</p>
+      <p>{{ t("staticPages:cookies.policyAppliesTo") | renderLinkTag("https://www.gov.uk/help/cookies") | safe }}</p>
       <p>{{ t("staticPages:cookies.whatAreCookies") }}</p>
       <p>{{ t("staticPages:cookies.mayUseAnalytics") }}</p>
       <p>{{ t("staticPages:cookies.notUsedToIdentify") }}</p>
@@ -137,12 +137,12 @@
             items: [
               {
                 value: "yes",
-                text: t("common:labels.yes"),
+                text: t("staticPages:cookies.acceptYes"),
                 checked: analyticsEnabled == true
               },
               {
                 value: "no",
-                text: t("common:labels.no"),
+                text: t("staticPages:cookies.acceptNo"),
                 checked: analyticsEnabled == false
               }
             ],

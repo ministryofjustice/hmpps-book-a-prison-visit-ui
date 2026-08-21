@@ -11,13 +11,15 @@
   },
   "visitorDetails": {
     "title": "Gwybodaeth i ymwelwyr",
-    "updatesInWelsh": "Ticiwch am ddiweddariadau am y cais hwn i'w anfon yn Gymraeg"
+    "updatesInWelsh": "Ticiwch i dderbyn diweddariadau am y cais hwn yn Gymraeg"
   },
   "checkVisitorDetails": {
     "title": "Gwiriwch eich cais",
     "description": "Mae angen i'ch atebion gyd-fynd â'r wybodaeth ar restr ymwelwyr y carcharor.",
     "visitorInformationHeading": "Gwybodaeth i ymwelwyr",
     "changeVisitorInformation": "gwybodaeth i ymwelwyr",
+    "updatesInWelshYes": "Ie",
+    "updatesInWelshNo": "Nage",
     "confirmInformation": "Drwy gyflwyno’r cais hwn rydych yn cadarnhau, hyd eithaf eich gwybodaeth, bod y manylion rydych yn eu darparu yn gywir. Rhaid i ymwelwyr fod ar restr ymwelwyr y carcharor.",
     "acceptableId": "Gwnewch yn siŵr bod yr wybodaeth ymwelwyr rydych chi'n ei darparu yn cyfateb i'r ffurfiau <link>derbyniol o ID</link> y bydd yr ymwelydd yn eu defnyddio pan fyddant yn ymweld â rhywun yn y carchar."
   },
