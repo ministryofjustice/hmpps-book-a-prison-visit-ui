@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../../page'
 
-export default class CancelVisitorPage extends Page {
+export default class CancelVisitorRequestPage extends Page {
   constructor() {
     super('Are you sure you want to cancel this request?')
   }

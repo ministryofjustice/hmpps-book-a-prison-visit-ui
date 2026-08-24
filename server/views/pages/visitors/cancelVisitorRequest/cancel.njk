@@ -20,7 +20,7 @@
       <h2 class="govuk-heading-m"> {{ t("common:labels.dateOfBirth") }} </h2>
       <p data-test="visitor-date-of-birth"> {{ visitor.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
 
-      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.ADD_VISITOR.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.CANCEL_VISITOR_REQUEST.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({
