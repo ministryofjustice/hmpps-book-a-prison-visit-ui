@@ -30,14 +30,14 @@ export default class MovedPrisonController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
-        return res.redirect(paths.CONFIRM_LOCATION)
+        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
       }
 
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       req.session.confirmLocationSelectedPrison = prisonId
 
       if (prisoner.prisonId !== prisonId) {
-        return res.redirect(paths.INCORRECT_LOCATION)
+        return res.redirect(paths.PRISONER_MOVED.INCORRECT_LOCATION)
       }
 
       const isSupportedPrison = await this.prisonService.isSupportedPrison(prisonId)
@@ -48,16 +48,16 @@ export default class MovedPrisonController {
           prisonerId: prisoner.prisonerNumber,
           prisonId,
         })
-        return res.redirect(paths.LOCATION_UPDATED)
+        return res.redirect(paths.PRISONER_MOVED.LOCATION_UPDATED)
       }
 
       const hasNoDigitalService = config.noDigitalServicePrisonIds.includes(prisonId)
 
       if (hasNoDigitalService) {
-        return res.redirect(paths.UNSUPPORTED_PRISON)
+        return res.redirect(paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
       }
 
-      return res.redirect(paths.PVB_PRISON)
+      return res.redirect(paths.PRISONER_MOVED.PVB_PRISON)
     }
   }
 
@@ -68,7 +68,7 @@ export default class MovedPrisonController {
       const { confirmLocationSelectedPrison } = req.session
 
       if (!confirmLocationSelectedPrison) {
-        return res.redirect(paths.CONFIRM_LOCATION)
+        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
       }
 
       return res.render(`pages/confirmLocation/${result}`, {

@@ -27,7 +27,7 @@
 
       <p>{{- t("confirmLocation:selectPrison.newLocationText")-}}</p>
 
-      <form action="{{ paths.CONFIRM_LOCATION }}" method="POST" novalidate>
+      <form action="{{ paths.PRISONER_MOVED.CONFIRM_LOCATION }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         <h2 class="govuk-heading-m">{{ t("confirmLocation:selectPrison.selectLocation") }}</h2>
@@ -47,7 +47,7 @@
         }) }}
 
         <h2 class="govuk-heading-m">{{ t("selectPrison:selectPrison.unknownLocationHeading") }}</h2>
-        <p>
+        <p data-test="find-prisoner-link">
           {{- t("confirmLocation:selectPrison.findPrisonerLink") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}
         </p>
 

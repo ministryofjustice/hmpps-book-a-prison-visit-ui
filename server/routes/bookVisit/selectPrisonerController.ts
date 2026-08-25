@@ -4,7 +4,6 @@ import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
 import { BookerService, PrisonService } from '../../services'
 import { BookVisitJourney } from '../../@types/bapv'
-import config from '../../config'
 
 export default class SelectPrisonerController {
   public constructor(
@@ -27,10 +26,8 @@ export default class SelectPrisonerController {
       req.session.bookVisitJourney = bookVisitJourney
 
       // if prisoner is not currently in registered prison, send to confirm location route
-      if (config.features.confirmPrisonerLocation) {
-        if (prisoner.prisonId !== prisoner.registeredPrisonId) {
-          return res.redirect(paths.CONFIRM_LOCATION)
-        }
+      if (prisoner.prisonId !== prisoner.registeredPrisonId) {
+        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
       }
 
       const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
