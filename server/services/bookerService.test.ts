@@ -54,8 +54,8 @@ describe('Booker service', () => {
     it('should get visitor requests for provided booker reference filtered for given prisoner', async () => {
       const bookerReference = TestData.bookerReference().value
       const prisonerNumber = 'A1234BC'
-      const visitorRequest1 = TestData.visitorRequestDto({ prisonerId: prisonerNumber })
-      const visitorRequest2 = TestData.visitorRequestDto({ prisonerId: 'another prisoner' })
+      const visitorRequest1 = TestData.bookerPrisonerVisitorRequestDto({ prisonerId: prisonerNumber })
+      const visitorRequest2 = TestData.bookerPrisonerVisitorRequestDto({ prisonerId: 'another prisoner' })
       const expectedVisitorRequest = TestData.visitorRequest({ ...visitorRequest1 })
 
       orchestrationApiClient.getVisitorRequests.mockResolvedValue([visitorRequest1, visitorRequest2])

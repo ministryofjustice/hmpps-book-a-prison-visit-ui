@@ -242,7 +242,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getVisitorRequests', () => {
     it('should retrieve all visitor requests for a booker', async () => {
-      const requests = [TestData.visitorRequestDto()]
+      const requests = [TestData.bookerPrisonerVisitorRequestDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/permitted/visitors/requests`)

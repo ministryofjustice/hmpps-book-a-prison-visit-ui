@@ -123,6 +123,24 @@ export default class TestData {
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
   })
 
+  static bookerPrisonerVisitorRequestDto = ({
+    reference = 'dddd-eeee-ffff',
+    prisonerId = 'A1234BC',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+    requestedOn = '2026-05-01',
+    languagePreference = 'en',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    requestedOn,
+    languagePreference,
+  })
+
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static bookVisitConfirmed = ({
@@ -392,7 +410,6 @@ export default class TestData {
     approved,
   })
 
-  // visitor request defined in this service; annotated with a unique display ID
   static visitorRequest = ({
     visitorRequestDisplayId = 'uuidv4-1-1-1-1',
     reference = 'dddd-eeee-ffff',
@@ -404,25 +421,6 @@ export default class TestData {
     languagePreference = 'en',
   }: Partial<VisitorRequest> = {}): VisitorRequest => ({
     visitorRequestDisplayId,
-    reference,
-    prisonerId,
-    firstName,
-    lastName,
-    dateOfBirth,
-    requestedOn,
-    languagePreference,
-  })
-
-  // 'raw' active visitor request from API
-  static visitorRequestDto = ({
-    reference = 'dddd-eeee-ffff',
-    prisonerId = 'A1234BC',
-    firstName = 'Joan',
-    lastName = 'Phillips',
-    dateOfBirth = '1980-02-21',
-    requestedOn = '2026-05-01',
-    languagePreference = 'en',
-  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
     reference,
     prisonerId,
     firstName,

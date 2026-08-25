@@ -49,7 +49,7 @@ context('Cancel a visitor request', () => {
   })
 
   it('should complete the cancel a visitor request journey', () => {
-    const visitorRequest = TestData.visitorRequestDto()
+    const visitorRequest = TestData.bookerPrisonerVisitorRequestDto()
 
     cy.task('stubGetVisitorRequests', { visitorRequests: [visitorRequest] })
 
