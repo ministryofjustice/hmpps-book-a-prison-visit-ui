@@ -58,8 +58,7 @@
     "title": "Cancel your visit",
     "heading": "Are you sure you want to cancel your visit?",
     "yesCancelOption": "Yes, cancel this visit",
-    "noCancelOption": "No, keep this visit",
-    "confirmButton": "Confirm"
+    "noCancelOption": "No, keep this visit"
   },
   "cancelConfirmed": {
     "textMessageConfirmation": "A text message will be sent to the main contact to confirm the visit has been cancelled.",

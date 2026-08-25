@@ -2,7 +2,7 @@ import Page, { PageElement } from '../../page'
 
 export default class CancelVisitorRequestPage extends Page {
   constructor() {
-    super('Are you sure you want to cancel this request?')
+    super('Are you sure you want to cancel your request?')
   }
 
   visitorName = (): PageElement => cy.get(`[data-test=visitor-name]`)

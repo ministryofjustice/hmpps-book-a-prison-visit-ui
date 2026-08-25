@@ -65,14 +65,14 @@
           ],
           errorMessage: errors | findError('cancelVisit')
         }) }}
-          
+
         {{ govukButton({
-          text: t("visits:cancel.confirmButton"),
+          text: t("common:buttons.confirm"),
           attributes: {
             "data-test": "confirm-button"
           },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

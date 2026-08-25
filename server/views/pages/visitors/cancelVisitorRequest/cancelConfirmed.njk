@@ -2,7 +2,7 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set pageTitle = t("visitors:visitors.cancelLinking.visitorLinkRequestCancelled") %}
+{% set pageTitle = t("visitors:cancelVisitorRequestConfirmed.heading") %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -15,7 +15,7 @@
       <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
 
       <p class="no-visited-state">
-        {{- t("visitors:visitors.cancelLinking.linkAnotherPrisoner") | renderLinkTag(paths.ADD_VISITOR.START) | safe -}}
+        {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag(paths.ADD_VISITOR.START) | safe -}}
       </p>
 
       <p>
