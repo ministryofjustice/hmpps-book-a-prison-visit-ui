@@ -14,11 +14,11 @@
 
       <h1 class="govuk-heading-l">{{ t("visitors:cancelVisitorRequest.heading") }}</h1>
 
-      <h2 class="govuk-heading-m"> {{ t("common:labels.visitor") }} </h2>
-      <p data-test="visitor-name"> {{ visitorRequest.firstName | capitalize }} {{ visitorRequest.lastName | capitalize }} </p>
+      <h2 class="govuk-heading-m">{{ t("common:labels.visitor") }}</h2>
+      <p data-test="visitor-name">{{ visitorRequest.firstName | capitalize }} {{ visitorRequest.lastName | capitalize }}</p>
 
-      <h2 class="govuk-heading-m"> {{ t("common:labels.dateOfBirth") }} </h2>
-      <p data-test="visitor-date-of-birth"> {{ visitorRequest.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
+      <h2 class="govuk-heading-m">{{ t("common:labels.dateOfBirth") }}</h2>
+      <p data-test="visitor-date-of-birth">{{ visitorRequest.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }}</p>
 
       <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.CANCEL_VISITOR_REQUEST.CANCEL }}/{{ visitorRequestDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">

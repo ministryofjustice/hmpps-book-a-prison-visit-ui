@@ -116,6 +116,12 @@ describe('Visitors page', () => {
         expect($('[data-test=visitor-requests]').length).toBe(1)
         expect($('[data-test=visitor-request-name-0]').text()).toBe('Joan Phillips')
         expect($('[data-test=visitor-request-dob-0]').text()).toBe('21 February 1980')
+        expect($('[data-test=visitor-request-cancel-0]').text()).toBe(
+          'Cancel request to link Joan Phillips to your account',
+        )
+        expect($('[data-test=visitor-request-cancel-0] a').prop('href')).toBe(
+          `${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequests[0].visitorRequestDisplayId}`,
+        )
 
         expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
 

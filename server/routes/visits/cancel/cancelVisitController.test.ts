@@ -15,8 +15,6 @@ let app: Express
 
 const visitService = createMockVisitService()
 
-const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner()
 const visitDisplayId = randomUUID()
 
 let sessionData: SessionData
@@ -28,10 +26,6 @@ beforeEach(() => {
   visits = { type: 'future', visits: [visitDetails] }
 
   sessionData = {
-    booker: {
-      reference: bookerReference,
-      prisoners: [prisoner],
-    },
     bookedVisits: visits,
   } as SessionData
 
