@@ -148,16 +148,12 @@ export default class VisitService {
       const { visitorId } = visitor
 
       let visitorAge: number | null
-      try {
-        const visitorDoB = parseISO(visitor.dateOfBirth ?? '')
+      const visitorDoB = parseISO(visitor.dateOfBirth ?? '')
 
-        if (isValid(visitorDoB)) {
-          const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
-          visitorAge = ageAsDuration?.years ?? 0
-        } else {
-          visitorAge = null
-        }
-      } catch {
+      if (isValid(visitorDoB)) {
+        const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
+        visitorAge = ageAsDuration?.years ?? 0
+      } else {
         visitorAge = null
       }
 

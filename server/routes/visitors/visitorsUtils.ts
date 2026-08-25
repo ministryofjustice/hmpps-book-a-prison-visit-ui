@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next'
 import { UUID } from 'crypto'
 import { formatDate } from '../../utils/utils'
-import type { BookerPrisonerVisitorRequestDetail, Visitor } from '../../services/bookerService'
+import type { VisitorRequest, Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
 import { BookerPrisonerVisitorRequestDto } from '../../data/orchestrationApiTypes'
 import type { Locale } from '../../constants/locales'
@@ -73,12 +73,13 @@ export const buildVisitorRequestsTableRows = ({
   })
 }
 
+// TODO needs tests
 export const buildVisitorRequestsTableRowsWithCancellationLink = ({
   visitors,
   t,
   lng,
 }: {
-  visitors: BookerPrisonerVisitorRequestDetail[]
+  visitors: VisitorRequest[]
   t: TFunction
   lng: Locale
 }): GOVUKTableRow[] => {
@@ -96,7 +97,7 @@ export const buildVisitorRequestsTableRowsWithCancellationLink = ({
       },
       // Visitor withdraw linking request
       {
-        html: buildUrl(visitor.visitorDisplayId, index, t),
+        html: buildUrl(visitor.visitorRequestDisplayId, index, t),
       },
     ]
   })

@@ -54,15 +54,16 @@ describe('Booker service', () => {
     it('should get visitor requests for provided booker reference filtered for given prisoner', async () => {
       const bookerReference = TestData.bookerReference().value
       const prisonerNumber = 'A1234BC'
-      const visitorRequest1 = TestData.visitorRequest({ prisonerId: prisonerNumber })
-      const visitorRequest2 = TestData.visitorRequest({ prisonerId: 'another prisoner' })
+      const visitorRequest1 = TestData.visitorRequestDto({ prisonerId: prisonerNumber })
+      const visitorRequest2 = TestData.visitorRequestDto({ prisonerId: 'another prisoner' })
+      const expectedVisitorRequest = TestData.visitorRequest({ ...visitorRequest1 })
 
       orchestrationApiClient.getVisitorRequests.mockResolvedValue([visitorRequest1, visitorRequest2])
 
       const result = await bookerService.getVisitorRequests({ bookerReference, prisonerNumber })
 
       expect(orchestrationApiClient.getVisitorRequests).toHaveBeenCalledWith(bookerReference)
-      expect(result).toStrictEqual([visitorRequest1])
+      expect(result).toStrictEqual([expectedVisitorRequest])
     })
   })
 
@@ -105,6 +106,19 @@ describe('Booker service', () => {
       expect(logger.info).toHaveBeenCalledWith(
         `Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: REQUEST_ALREADY_EXISTS`,
       )
+    })
+
+    describe('withdrawVisitorRequest', () => {
+      it('should send a request to withdraw a visitor request', async () => {
+        const requestReference = 'request-ref-123'
+
+        await bookerService.withdrawVisitorRequest({ requestReference, bookerReference })
+
+        expect(orchestrationApiClient.withdrawVisitorRequest).toHaveBeenCalledWith({
+          requestReference,
+          bookerReference,
+        })
+      })
     })
 
     describe('Rate limiting', () => {

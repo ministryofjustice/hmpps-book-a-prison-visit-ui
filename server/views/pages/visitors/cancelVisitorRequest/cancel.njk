@@ -15,33 +15,33 @@
       <h1 class="govuk-heading-l">{{ t("visitors:visitors.cancelLinking.confirmationHeading") }}</h1>
 
       <h2 class="govuk-heading-m"> {{ t("visitors:visitors.visitor") }} </h2>
-      <p data-test="visitor-name"> {{ visitor.firstName | capitalize }} {{ visitor.lastName | capitalize }} </p>
+      <p data-test="visitor-name"> {{ visitorRequest.firstName | capitalize }} {{ visitorRequest.lastName | capitalize }} </p>
 
       <h2 class="govuk-heading-m"> {{ t("common:labels.dateOfBirth") }} </h2>
-      <p data-test="visitor-date-of-birth"> {{ visitor.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
+      <p data-test="visitor-date-of-birth"> {{ visitorRequest.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }} </p>
 
-      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.CANCEL_VISITOR_REQUEST.CANCEL }}/{{ visitorDisplayId }}" method="POST" novalidate>
+      <form class="govuk-!-margin-top-7 disable-button-on-submit" action="{{ paths.CANCEL_VISITOR_REQUEST.CANCEL }}/{{ visitorRequestDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukRadios({
-          name: "cancelVisitor",
+          name: "cancelVisitorRequest",
           items: [
             {
               value: "yes",
               text: t("visitors:visitors.cancelLinking.yesCancelOption"),
               attributes: {
-                'data-test': 'cancel-visitor-yes'
+                'data-test': 'cancel-visitor-request-yes'
               }
             },
             {
               value: "no",
               text: t("visitors:visitors.cancelLinking.noCancelOption"),
               attributes: {
-                'data-test': 'cancel-visitor-no'
+                'data-test': 'cancel-visitor-request-no'
               }
             }
           ],
-          errorMessage: errors | findError('cancelVisit')
+          errorMessage: errors | findError('cancelVisitorRequest')
         }) }}
 
         {{ govukButton({

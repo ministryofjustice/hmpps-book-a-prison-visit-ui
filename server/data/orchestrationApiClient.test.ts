@@ -242,7 +242,7 @@ describe('orchestrationApiClient', () => {
 
   describe('getVisitorRequests', () => {
     it('should retrieve all visitor requests for a booker', async () => {
-      const requests = [TestData.visitorRequest()]
+      const requests = [TestData.visitorRequestDto()]
 
       fakeOrchestrationApi
         .get(`/public/booker/${bookerReference.value}/permitted/visitors/requests`)
@@ -315,6 +315,24 @@ describe('orchestrationApiClient', () => {
           addVisitorRequest,
         }),
       ).rejects.toThrow('Bad Request')
+    })
+  })
+
+  describe('withdrawVisitorRequest', () => {
+    it('should send a request to withdraw a visitor request', async () => {
+      const requestReference = 'aaa-bbb-ccc'
+
+      fakeOrchestrationApi
+        .put(`/visitor-requests/${requestReference}/withdraw`, { bookerReference: bookerReference.value })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200)
+
+      await orchestrationApiClient.withdrawVisitorRequest({
+        requestReference,
+        bookerReference: bookerReference.value,
+      })
+
+      expect(fakeOrchestrationApi.isDone()).toBe(true)
     })
   })
 

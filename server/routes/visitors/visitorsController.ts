@@ -25,7 +25,7 @@ export default class VisitorsController {
         }),
       ])
 
-      req.session.pendingVisitors = visitorRequests
+      req.session.visitorRequests = visitorRequests
 
       const visitorsTableRows = buildVisitorsTableRows({ visitors, t: req.t, lng: req.language as Locale })
       const visitorRequestsTableRows = buildVisitorRequestsTableRowsWithCancellationLink({

@@ -13,9 +13,10 @@ import type {
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
   CreateVisitorRequestResponseDto,
+  BookerPrisonerVisitorRequestDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
-import { BookerPrisonerVisitorRequestDetail, Prisoner, Visitor } from '../../services/bookerService'
+import { VisitorRequest, Prisoner, Visitor } from '../../services/bookerService'
 import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
 
@@ -391,18 +392,38 @@ export default class TestData {
     approved,
   })
 
+  // visitor request defined in this service; annotated with a unique display ID
   static visitorRequest = ({
+    visitorRequestDisplayId = 'uuidv4-1-1-1-1',
     reference = 'dddd-eeee-ffff',
-    visitorDisplayId = 'uuidv4-1-1-1-1',
     prisonerId = 'A1234BC',
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
     requestedOn = '2026-05-01',
     languagePreference = 'en',
-  }: Partial<BookerPrisonerVisitorRequestDetail> = {}): BookerPrisonerVisitorRequestDetail => ({
+  }: Partial<VisitorRequest> = {}): VisitorRequest => ({
+    visitorRequestDisplayId,
     reference,
-    visitorDisplayId,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    requestedOn,
+    languagePreference,
+  })
+
+  // 'raw' active visitor request from API
+  static visitorRequestDto = ({
+    reference = 'dddd-eeee-ffff',
+    prisonerId = 'A1234BC',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+    requestedOn = '2026-05-01',
+    languagePreference = 'en',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
     prisonerId,
     firstName,
     lastName,

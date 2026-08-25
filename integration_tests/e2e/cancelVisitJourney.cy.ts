@@ -54,7 +54,7 @@ context('Cancel visit journey', () => {
     cancelVisitPage.prisonerName().contains('John Smith')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
     cancelVisitPage.cancelVisitNo().click()
-    cancelVisitPage.confirmButton()
+    cancelVisitPage.confirm()
 
     Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.cancelVisitButton().click()
@@ -67,7 +67,7 @@ context('Cancel visit journey', () => {
       bookerReference: bookerReference.value,
     })
 
-    cancelVisitPage.confirmButton()
+    cancelVisitPage.confirm()
 
     const cancelConfirmedPage = Page.verifyOnPage(CancelConfirmedPage)
     cancelConfirmedPage.confirmationNotificationMessage().contains('An email and a text message will be sent')

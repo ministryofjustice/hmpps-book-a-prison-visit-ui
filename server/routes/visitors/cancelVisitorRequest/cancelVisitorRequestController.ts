@@ -4,30 +4,30 @@ import { type UUID } from 'crypto'
 import { SessionData } from 'express-session'
 import { BookerService } from '../../../services'
 import paths from '../../../constants/paths'
-import { BookerPrisonerVisitorRequestDetail } from '../../../services/bookerService'
-import { validatePendingVisitorDisplayId } from '../../visits/validations'
+import { validateVisitorRequestDisplayId } from '../validations'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { pendingVisitors } = req.session as SessionData
+      const { visitorRequests } = req.session as SessionData
+
       const errors = validationResult(req)
-      if (!errors.isEmpty() || pendingVisitors === undefined) {
+      if (!errors.isEmpty() || visitorRequests === undefined) {
         return res.redirect(paths.VISITS.HOME)
       }
 
-      const { visitorDisplayId } = matchedData<{ visitorDisplayId: UUID }>(req)
+      const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)
 
-      const visitor: BookerPrisonerVisitorRequestDetail = pendingVisitors.find(
-        pendingVisitor => pendingVisitor.visitorDisplayId === visitorDisplayId,
-      )!
+      const visitorRequest = visitorRequests.find(
+        request => request.visitorRequestDisplayId === visitorRequestDisplayId,
+      )
 
       return res.render('pages/visitors/cancelVisitorRequest/cancel', {
         errors: req.flash('errors'),
-        visitor,
-        visitorDisplayId,
+        visitorRequest,
+        visitorRequestDisplayId,
         showOLServiceNav: true,
       })
     }
@@ -35,45 +35,46 @@ export default class CancelVisitorRequestController {
 
   public submit(): RequestHandler {
     return async (req, res) => {
-      const { cancelVisitor, visitorDisplayId } = matchedData<{
-        cancelVisitor: 'yes' | 'no'
-        visitorDisplayId: UUID
+      const { cancelVisitorRequest, visitorRequestDisplayId } = matchedData<{
+        cancelVisitorRequest: 'yes' | 'no'
+        visitorRequestDisplayId: UUID
       }>(req)
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
-
-        if (!visitorDisplayId) {
+        if (!visitorRequestDisplayId) {
           return res.redirect(paths.VISITORS)
         }
 
-        return res.redirect(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorDisplayId}`)
+        req.flash('errors', errors.array())
+        return res.redirect(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequestDisplayId}`)
       }
 
-      if (cancelVisitor === 'no') {
+      if (cancelVisitorRequest === 'no') {
         return res.redirect(`${paths.VISITORS}`)
       }
 
-      const { booker, pendingVisitors } = req.session
-      const visitor = pendingVisitors!.find(pendingVisitor => pendingVisitor.visitorDisplayId === visitorDisplayId)
+      const { booker, visitorRequests } = req.session // validation middleware ensures visitor requests defined
+      const visitorRequest = visitorRequests!.find(
+        request => request.visitorRequestDisplayId === visitorRequestDisplayId,
+      )!
 
       await this.bookerService.withdrawVisitorRequest({
         bookerReference: booker!.reference,
-        visitorReference: visitor.reference,
+        requestReference: visitorRequest.reference,
       })
 
       return res.redirect(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
     }
   }
 
-  public validateDisplayId(): ValidationChain[] {
-    return [validatePendingVisitorDisplayId]
+  public validateVisitorRequestDisplayId(): ValidationChain[] {
+    return [validateVisitorRequestDisplayId]
   }
 
   public validateCancelChoice(): ValidationChain[] {
     return [
-      body('cancelVisitor')
+      body('cancelVisitorRequest')
         .isIn(['yes', 'no'])
         .withMessage((_value, { req }) => req.t('validation:noAnswerSelected')),
     ]
