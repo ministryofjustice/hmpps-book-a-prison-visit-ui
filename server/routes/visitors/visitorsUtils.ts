@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next'
-import { formatDate } from '../../utils/utils'
+import { escapeHtml, formatDate } from '../../utils/utils'
 import type { VisitorRequest, Visitor } from '../../services/bookerService'
 import { GOVUKTableRow } from '../../@types/bapv'
 import type { Locale } from '../../constants/locales'
@@ -80,7 +80,9 @@ export const buildVisitorRequestsTableRows = ({
               html:
                 `<a href="${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitor.visitorRequestDisplayId}">${t('visitors:visitors.cancelVisitorRequestLink')}` +
                 '<span class="govuk-visually-hidden">' +
-                ` ${t('visitors:visitors.cancelVisitorRequestLinkHidden', { visitorName: `${visitor.firstName} ${visitor.lastName}` })}` +
+                ` ${t('visitors:visitors.cancelVisitorRequestLinkHidden', {
+                  visitorName: escapeHtml(`${visitor.firstName} ${visitor.lastName}`),
+                })}` +
                 '</span></a>',
               attributes: { 'data-test': `visitor-request-cancel-${index}` },
             },

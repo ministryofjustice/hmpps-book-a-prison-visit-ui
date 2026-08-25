@@ -17,7 +17,7 @@ export default class CancelVisitorRequestController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
-        return res.redirect(paths.VISITS.HOME)
+        return res.redirect(paths.VISITORS)
       }
 
       const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)

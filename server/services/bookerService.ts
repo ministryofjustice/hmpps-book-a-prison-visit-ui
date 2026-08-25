@@ -76,8 +76,8 @@ export default class BookerService {
     const allVisitorRequests = await this.orchestrationApiClient.getVisitorRequests(bookerReference)
 
     return allVisitorRequests
-      .filter(request => request.prisonerId === prisonerNumber)
-      .map(prisoner => ({ ...prisoner, visitorRequestDisplayId: randomUUID() }))
+      .filter(request => request.prisonerId === prisonerNumber) // get just this prisoner's visitor requests
+      .map(request => ({ ...request, visitorRequestDisplayId: randomUUID() }))
   }
 
   async addVisitorRequest({
