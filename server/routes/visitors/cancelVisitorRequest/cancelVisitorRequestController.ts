@@ -5,6 +5,8 @@ import { SessionData } from 'express-session'
 import { BookerService } from '../../../services'
 import paths from '../../../constants/paths'
 import { validateVisitorRequestDisplayId } from '../validations'
+import { getPrisonName } from '../../../utils/utils'
+import type { Locale } from '../../../constants/locales'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -50,14 +52,26 @@ export default class CancelVisitorRequestController {
         return res.redirect(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequestDisplayId}`)
       }
 
-      if (cancelVisitorRequest === 'no') {
-        return res.redirect(`${paths.VISITORS}`)
-      }
-
-      const { booker, visitorRequests } = req.session // validation middleware ensures visitor requests defined
+      const { booker, visitorRequests } = req.session // validation middleware ensures these are defined
       const visitorRequest = visitorRequests!.find(
         request => request.visitorRequestDisplayId === visitorRequestDisplayId,
       )!
+
+      if (cancelVisitorRequest === 'no') {
+        const prisonId = booker!.prisoners.find(
+          prisoner => prisoner.prisonerNumber === visitorRequest.prisonerId,
+        )?.registeredPrisonId
+        const prisonName = getPrisonName(prisonId ?? '', res.locals.prisonNames!, req.language as Locale)
+
+        req.flash('messages', {
+          variant: 'information',
+          title: req.t('visitors:visitors.alert.visitorRequestReview.title'),
+          showTitleAsHeading: true,
+          text: req.t('visitors:visitors.alert.visitorRequestReview.text', { prisonName }),
+        })
+
+        return res.redirect(`${paths.VISITORS}`)
+      }
 
       await this.bookerService.withdrawVisitorRequest({
         bookerReference: booker!.reference,

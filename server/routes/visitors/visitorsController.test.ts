@@ -2,15 +2,17 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from '../testutils/appSetup'
+import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
+import { MoJAlert } from '../../@types/bapv'
 
 let app: Express
 
 const bookerService = createMockBookerService()
 let sessionData: SessionData
+let flashData: FlashData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
@@ -18,6 +20,9 @@ const visitor = TestData.visitor()
 
 beforeEach(() => {
   bookerService.getVisitorRequests.mockResolvedValue([])
+
+  flashData = {}
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   sessionData = {
     booker: {
@@ -54,6 +59,7 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
         expect($('h1').text()).toBe('Visitors')
+        expect($('.moj-alert').length).toBe(0)
 
         expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
         expect($('[data-test="visitor-name-0"]').text()).toBe('Joan Phillips')
@@ -118,6 +124,27 @@ describe('Visitors page', () => {
           bookerReference,
           prisonerNumber: prisoner.prisonerNumber,
         })
+      })
+  })
+
+  it('should render alert message if set in flash', () => {
+    const alert: MoJAlert = {
+      variant: 'information',
+      title: 'Alert title',
+      showTitleAsHeading: true,
+      text: 'Alert text',
+    }
+    flashData = { messages: [alert] }
+
+    bookerService.getVisitors.mockResolvedValue([])
+
+    return request(app)
+      .get(paths.VISITORS)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('.moj-alert').eq(0).text()).toContain(alert.title)
+        expect($('.moj-alert').eq(0).text()).toContain(alert.text)
       })
   })
 })

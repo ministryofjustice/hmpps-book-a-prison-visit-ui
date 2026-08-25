@@ -36,6 +36,7 @@ export default class VisitorsController {
       })
 
       return res.render('pages/visitors/visitors', {
+        messages: req.flash('messages') ?? [],
         prisoner: booker.prisoners[0],
         visitorsTableRows,
         visitorRequestsTableRows,

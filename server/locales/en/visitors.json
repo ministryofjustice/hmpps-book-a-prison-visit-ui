@@ -7,6 +7,13 @@
   },
 
   "visitors": {
+    "alert": {
+      "visitorRequestReview": {
+        "title": "Your request needs to be reviewed.",
+        "text": "Your visitor needs to be checked by {{prisonName}}."
+      }
+    },
+
     "title": "Visitors",
     "visitorsOf": "{{name}}’s visitors",
 
