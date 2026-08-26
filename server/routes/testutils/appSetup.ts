@@ -32,7 +32,7 @@ import type { Services } from '../../services'
 import TestData from './testData'
 import analyticsConsent from '../../middleware/analyticsConsent'
 import { FlashFormValues, MoJAlert } from '../../@types/bapv'
-import { type Locale, LOCALE } from '../../constants/locales'
+import { type Locale } from '../../constants/locales'
 
 export const user: Express.User = {
   // Default values from GOV.UK One Login Simulator
@@ -71,8 +71,7 @@ function appSetup(
     next()
   })
 
-  // TODO remove explicit setting of supportedLngs once Welsh feature flag is removed
-  app.use(setUpI18n({ production, supportedLngs: [LOCALE.EN, LOCALE.CY] }))
+  app.use(setUpI18n({ production }))
 
   app.set('view engine', 'njk')
 
