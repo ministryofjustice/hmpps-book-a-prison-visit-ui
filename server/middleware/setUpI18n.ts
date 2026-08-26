@@ -7,14 +7,7 @@ import path from 'path'
 import { LOCALE, SUPPORTED_LOCALES } from '../constants/locales'
 import config from '../config'
 
-// TODO remove setting of supportedLngs once Welsh feature flag is removed
-export default function setUpI18n({
-  production,
-  supportedLngs = SUPPORTED_LOCALES,
-}: {
-  production: boolean
-  supportedLngs?: typeof SUPPORTED_LOCALES
-}): Router {
+export default function setUpI18n({ production }: { production: boolean }): Router {
   const router = express.Router()
 
   if (!i18next.isInitialized) {
@@ -28,8 +21,8 @@ export default function setUpI18n({
       .init<FsBackendOptions>({
         initAsync: false,
         fallbackLng: LOCALE.EN,
-        supportedLngs,
-        preload: supportedLngs,
+        supportedLngs: SUPPORTED_LOCALES,
+        preload: SUPPORTED_LOCALES,
 
         ns: [
           'common',

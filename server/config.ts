@@ -126,7 +126,7 @@ export default {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },
   features: {
-    welshLanguageEnabled: get('FEATURE_WELSH_LANGUAGE', 'true') === 'true',
+    //
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
