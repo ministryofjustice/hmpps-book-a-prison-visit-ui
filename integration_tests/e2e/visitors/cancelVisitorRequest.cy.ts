@@ -16,7 +16,6 @@ context('Cancel a visitor request', () => {
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
     cy.task('stubGetVisitors')
-    cy.task('stubGetVisitorRequests', { visitorRequests: [] })
     cy.task('stubGetFuturePublicVisits', {
       bookerReference,
       visits: [],
@@ -24,7 +23,7 @@ context('Cancel a visitor request', () => {
   })
 
   it('should be able to abandon the cancel a visitor request journey', () => {
-    cy.task('stubGetVisitorRequests', { visitorRequests: [TestData.visitorRequest()] })
+    cy.task('stubGetVisitorRequests')
 
     // Visits home page
     cy.signIn()
@@ -44,13 +43,13 @@ context('Cancel a visitor request', () => {
 
     // Abandon cancellation; return to Visitors page
     cancelVisitorRequestPage.cancelVisitNo().click()
-    cancelVisitorRequestPage.confirmButton()
+    cancelVisitorRequestPage.confirm()
 
     Page.verifyOnPage(VisitorsPage)
   })
 
   it('should complete the cancel a visitor request journey', () => {
-    const visitorRequest = TestData.visitorRequest()
+    const visitorRequest = TestData.bookerPrisonerVisitorRequestDto()
 
     cy.task('stubGetVisitorRequests', { visitorRequests: [visitorRequest] })
 
@@ -78,7 +77,7 @@ context('Cancel a visitor request', () => {
       bookerReference: TestData.bookerReference().value,
     })
 
-    cancelVisitorRequestPage.confirmButton()
+    cancelVisitorRequestPage.confirm()
     Page.verifyOnPage(CancelVisitorRequestConfirmedPage)
   })
 })

@@ -221,15 +221,15 @@ export default class OrchestrationApiClient extends RestClient {
   }
 
   async withdrawVisitorRequest({
-    visitorReference,
+    requestReference,
     bookerReference,
   }: {
-    visitorReference: string
+    requestReference: string
     bookerReference: string
   }): Promise<void> {
     await this.put(
       {
-        path: `/visitor-requests/${visitorReference}/withdraw`,
+        path: `/visitor-requests/${requestReference}/withdraw`,
         data: <WithdrawVisitorRequestDto>{
           bookerReference,
         },

@@ -13,9 +13,10 @@ import type {
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
   CreateVisitorRequestResponseDto,
+  BookerPrisonerVisitorRequestDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
-import { BookerPrisonerVisitorRequestDetail, Prisoner, Visitor } from '../../services/bookerService'
+import { VisitorRequest, Prisoner, Visitor } from '../../services/bookerService'
 import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
 
@@ -120,6 +121,24 @@ export default class TestData {
     availableVos,
     nextAvailableVoDate,
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
+  })
+
+  static bookerPrisonerVisitorRequestDto = ({
+    reference = 'dddd-eeee-ffff',
+    prisonerId = 'A1234BC',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+    requestedOn = '2026-05-01',
+    languagePreference = 'en',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    requestedOn,
+    languagePreference,
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
@@ -392,17 +411,17 @@ export default class TestData {
   })
 
   static visitorRequest = ({
+    visitorRequestDisplayId = 'uuidv4-1-1-1-1',
     reference = 'dddd-eeee-ffff',
-    visitorDisplayId = 'uuidv4-1-1-1-1',
     prisonerId = 'A1234BC',
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
     requestedOn = '2026-05-01',
     languagePreference = 'en',
-  }: Partial<BookerPrisonerVisitorRequestDetail> = {}): BookerPrisonerVisitorRequestDetail => ({
+  }: Partial<VisitorRequest> = {}): VisitorRequest => ({
+    visitorRequestDisplayId,
     reference,
-    visitorDisplayId,
     prisonerId,
     firstName,
     lastName,

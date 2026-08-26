@@ -53,6 +53,7 @@ export default class SelectVisitorsController {
         })
         visitorRequestsTableRows = buildVisitorRequestsTableRows({
           visitors: visitorRequests,
+          t: req.t,
           lng: req.language as Locale,
         })
       }

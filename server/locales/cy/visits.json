@@ -53,8 +53,7 @@
     "title": "Canslo eich ymweliad",
     "heading": "Ydych chi’n siŵr eich bod eisiau canslo eich ymweliad?",
     "yesCancelOption": "Ydw, canslo'r ymweliad hwn",
-    "noCancelOption": "Nac ydw, cadw'r ymweliad hwn",
-    "confirmButton": "Cadarnhau"
+    "noCancelOption": "Nac ydw, cadw'r ymweliad hwn"
   },
   "cancelConfirmed": {
     "textMessageConfirmation": "Anfonir neges destun at y prif gyswllt i gadarnhau bod yr ymweliad wedi'i ganslo.",

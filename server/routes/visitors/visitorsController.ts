@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
-import { buildVisitorRequestsTableRowsWithCancellationLink, buildVisitorsTableRows } from './visitorsUtils'
+import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
 import type { Locale } from '../../constants/locales'
 
 export default class VisitorsController {
@@ -25,16 +25,18 @@ export default class VisitorsController {
         }),
       ])
 
-      req.session.pendingVisitors = visitorRequests
+      req.session.visitorRequests = visitorRequests
 
       const visitorsTableRows = buildVisitorsTableRows({ visitors, t: req.t, lng: req.language as Locale })
-      const visitorRequestsTableRows = buildVisitorRequestsTableRowsWithCancellationLink({
+      const visitorRequestsTableRows = buildVisitorRequestsTableRows({
         visitors: visitorRequests,
         t: req.t,
         lng: req.language as Locale,
+        includeCancelLink: true,
       })
 
       return res.render('pages/visitors/visitors', {
+        messages: req.flash('messages') ?? [],
         prisoner: booker.prisoners[0],
         visitorsTableRows,
         visitorRequestsTableRows,

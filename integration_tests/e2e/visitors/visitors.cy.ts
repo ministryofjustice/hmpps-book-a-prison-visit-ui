@@ -24,7 +24,7 @@ context('Visitors page', () => {
   ]
 
   const visitorRequests = [
-    TestData.visitorRequest({
+    TestData.bookerPrisonerVisitorRequestDto({
       firstName: 'Jack',
       lastName: 'Rogers',
       dateOfBirth: '1990-01-15',
