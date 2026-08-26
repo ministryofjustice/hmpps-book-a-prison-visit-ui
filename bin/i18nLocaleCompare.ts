@@ -131,8 +131,9 @@ function main() {
     const currentHashes = buildTranslationHashes(enEntryList)
     const cyTrackingKeys = [...new Set([...cyEntries.keys()].map(trackingKeyFor))]
     const staleTrackingKeys = cyTrackingKeys
-      .filter(trackingKey => currentHashes.has(trackingKey))
-      .filter(trackingKey => namespaceState[trackingKey] !== currentHashes.get(trackingKey))
+      .filter(
+        trackingKey => currentHashes.has(trackingKey) && namespaceState[trackingKey] !== currentHashes.get(trackingKey),
+      )
       .sort()
 
     if (staleTrackingKeys.length) {
