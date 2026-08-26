@@ -11,6 +11,10 @@
  * plural forms (e.g. `_two`/`_few`/`_many`) that have no English equivalent, since Welsh
  * needs more CLDR plural categories than English - see server/locales/TRANSLATOR_CONTEXT.md.
  *
+ * Also updates server/locales/translation-state.json, recording the current English hash
+ * for every key/plural-group just (re)translated, so `npm run i18n:locale-compare` can later
+ * detect if the English text changes again without a matching Welsh update.
+ *
  * Usage: npm run i18n:import-xlsx
  *
  * (Code from Copilot)
@@ -29,6 +33,12 @@ import {
   unFlattenLocale,
   type LocaleEntry,
 } from './i18nLocaleFlatten.ts'
+import {
+  buildTranslationHashes,
+  loadTranslationState,
+  saveTranslationState,
+  trackingKeyFor,
+} from './i18nTranslationState.ts'
 
 const EN_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'en')
 const CY_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'cy')
@@ -45,7 +55,11 @@ function cellToString(cellValue: unknown): string {
   return String(cellValue).trim()
 }
 
-function importSheet(namespace: string, rows: unknown[][]): number {
+function importSheet(
+  namespace: string,
+  rows: unknown[][],
+  existingNamespaceState: { [trackingKey: string]: string },
+): { translatedCount: number; namespaceState: { [trackingKey: string]: string } } {
   const englishEntries = flattenLocale(readLocaleJson(path.join(EN_LOCALES_DIR, `${namespace}.json`)))
   const englishKeys = new Set(englishEntries.map(entry => entry.key))
   const englishPluralGroups = pluralGroups([...englishKeys])
@@ -94,7 +108,19 @@ function importSheet(namespace: string, rows: unknown[][]): number {
   const cyObject = unFlattenLocale(translatedEntries)
   fs.writeFileSync(path.join(CY_LOCALES_DIR, `${namespace}.json`), `${JSON.stringify(cyObject, null, 2)}\n`)
 
-  return translatedEntries.length
+  // Record that these translations now match the current English text, so a future English
+  // edit (and only that) will be flagged by `npm run i18n:locale-compare`.
+  const currentHashes = buildTranslationHashes(englishEntries)
+  const namespaceState = { ...existingNamespaceState }
+  translatedEntries.forEach(({ key }) => {
+    const trackingKey = trackingKeyFor(key)
+    const hash = currentHashes.get(trackingKey)
+    if (hash) {
+      namespaceState[trackingKey] = hash
+    }
+  })
+
+  return { translatedCount: translatedEntries.length, namespaceState }
 }
 
 async function main() {
@@ -103,6 +129,7 @@ async function main() {
   }
 
   const sheets = await readXlsxFile(INPUT_FILE)
+  const translationState = loadTranslationState()
 
   sheets.forEach(({ sheet: namespace, data: rows }) => {
     const englishJsonPath = path.join(EN_LOCALES_DIR, `${namespace}.json`)
@@ -111,10 +138,13 @@ async function main() {
       return
     }
 
-    const translatedCount = importSheet(namespace, rows)
+    const { translatedCount, namespaceState } = importSheet(namespace, rows, translationState[namespace] ?? {})
+    translationState[namespace] = namespaceState
     const totalCount = flattenLocale(readLocaleJson(englishJsonPath)).length
     console.log(`${namespace}: wrote ${translatedCount}/${totalCount} translated keys`)
   })
+
+  saveTranslationState(translationState)
 }
 
 main().catch(error => {

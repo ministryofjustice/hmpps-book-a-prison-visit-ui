@@ -29,6 +29,7 @@
     "i18n:export-xlsx": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nExportXlsx.ts",
     "i18n:import-xlsx": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nImportXlsx.ts",
     "i18n:locale-compare": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nLocaleCompare.ts",
+    "i18n:reset-translation-state": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nResetTranslationState.ts",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
     "clean": "rm -rf dist build node_modules stylesheets",
