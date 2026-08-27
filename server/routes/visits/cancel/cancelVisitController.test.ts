@@ -52,7 +52,7 @@ describe('Cancel a visit - Are you sure page', () => {
 
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
-          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
           expect($('[data-test="visitor-name-1"]').text()).toContain('Keith Phillips')
           expect($('form[method=POST]').attr('action')).toBe(
             `${paths.VISITS.CANCEL_VISIT}/${visitDetails.visitDisplayId}`,
