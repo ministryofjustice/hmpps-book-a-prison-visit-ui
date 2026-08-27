@@ -140,6 +140,10 @@
     "year_other": "{{count}} years"
   },
 
+  "prisoner": {
+    "prisonerAtPrison": "{{prisonerName}} at {{prisonName}}"
+  },
+
   "visitors": {
     "banned": "Banned",
     "bannedUntil": "{{name}} is banned until {{date}}.",

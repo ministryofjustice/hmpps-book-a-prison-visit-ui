@@ -101,7 +101,6 @@
   },
   "checkVisitDetails": {
     "title": "Gwirio manylion yr ymweliad",
-    "prisonerAtPrison": "{{name}} yn {{prisonName}}",
     "changeVisitors": "ymwelwyr",
     "changeDateAndTime": "dyddiad ac amser",
     "changeAdditionalSupport": "ceisiadau am gymorth ychwanegol",

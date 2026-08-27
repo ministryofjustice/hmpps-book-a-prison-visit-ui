@@ -15,7 +15,7 @@
       <h1 class="govuk-heading-l">{{ t("visitors:cancelVisitorRequest.heading") }}</h1>
 
       <h2 class="govuk-heading-m">{{ t("common:labels.visitor") }}</h2>
-      <p data-test="visitor-name">{{ visitorRequest.firstName | capitalize }} {{ visitorRequest.lastName | capitalize }}</p>
+      <p data-test="visitor-name">{{ visitorRequest.firstName }} {{ visitorRequest.lastName }}</p>
 
       <h2 class="govuk-heading-m">{{ t("common:labels.dateOfBirth") }}</h2>
       <p data-test="visitor-date-of-birth">{{ visitorRequest.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }}</p>

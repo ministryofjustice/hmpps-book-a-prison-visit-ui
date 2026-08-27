@@ -114,7 +114,6 @@
 
   "checkVisitDetails": {
     "title": "Check the visit details",
-    "prisonerAtPrison": "{{name}} at {{prisonName}}",
     "changeVisitors": "visitors",
     "changeDateAndTime": "date and time",
     "changeAdditionalSupport": "additional support requests",
