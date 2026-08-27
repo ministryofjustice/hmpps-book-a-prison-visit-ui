@@ -19,6 +19,12 @@
             {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
           </h2>
           <ul class="govuk-list">
+            <li data-test="visit-prisoner-name-{{ loop.index }}">
+              {{- t("common:prisoner.prisonerAtPrison", {
+                prisonerName: visit | prisonerNameFirstLast,
+                prisonName: visit.prisonId | getPrisonName(prisonNames, language)
+              }) -}}
+            </li>
             <li data-test="visit-start-end-time-{{ loop.index }}">
               {{- t("common:dateTime.timeRange", {
                 startTime: visit.startTimestamp | formatTimeFromDateTime(language),
@@ -42,7 +48,7 @@
       {% else %}
         <p data-test="no-visits">{{ t("visits:past.noPastVisits") }}</p>
       {% endif %}
-      
+
     </div>
   </div>
 
