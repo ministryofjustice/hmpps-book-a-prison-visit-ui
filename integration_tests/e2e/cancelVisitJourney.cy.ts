@@ -51,7 +51,7 @@ context('Cancel visit journey', () => {
     const cancelVisitPage = Page.verifyOnPage(CancelVisitPage)
     cancelVisitPage.visitDate().contains(tomorrowDisplayDate)
     cancelVisitPage.visitStartEndTime().contains('10am to 11:30am')
-    cancelVisitPage.prisonerName().contains('John Smith')
+    cancelVisitPage.prisonerName().contains('John Smith at Hewell (HMP & YOI)')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
     cancelVisitPage.cancelVisitNo().click()
     cancelVisitPage.confirm()

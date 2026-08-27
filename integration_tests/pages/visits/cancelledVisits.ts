@@ -1,4 +1,4 @@
-import Page, { PageElement } from '../../page'
+import Page, { PageElement } from '../page'
 
 export default class CancelledVisitsPage extends Page {
   constructor() {
@@ -6,6 +6,8 @@ export default class CancelledVisitsPage extends Page {
   }
 
   visitDate = (index: number): PageElement => cy.get(`[data-test=visit-date-${index}]`)
+
+  prisonerName = (index: number): PageElement => cy.get(`[data-test=visit-prisoner-name-${index}]`)
 
   visitStartEndTime = (index: number): PageElement => cy.get(`[data-test=visit-start-end-time-${index}]`)
 
