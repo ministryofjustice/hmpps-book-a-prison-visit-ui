@@ -26,8 +26,8 @@
             },
             value: {
               html: '<span data-test="prisoner-details">' +
-                t("bookVisit:checkVisitDetails.prisonerAtPrison", {
-                  name: prisoner | prisonerNameFirstLast,
+                t("common:prisoner.prisonerAtPrison", {
+                  prisonerName: prisoner | prisonerNameFirstLast,
                   prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
                 }) + "</span>"
             }
