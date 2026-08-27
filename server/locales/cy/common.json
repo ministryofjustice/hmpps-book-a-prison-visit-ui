@@ -147,6 +147,9 @@
     "year_many": "{{count}} flynedd/blynedd/mlynedd",
     "year_other": "{{count}} flynedd/blynedd/mlynedd"
   },
+  "prisoner": {
+    "prisonerAtPrison": "{{prisonerName}} yn {{prisonName}}"
+  },
   "visitors": {
     "banned": "Wedi'i wahardd",
     "bannedUntil": "Mae {{name}} wedi'i wahardd tan {{date}}.",

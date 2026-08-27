@@ -29,7 +29,7 @@
 
       <h2 class="govuk-heading-m">{{ t("common:labels.prisoner") }}</h2>
       <ul class="govuk-list">
-        <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
+        <li data-test="prisoner-name">{{ visit | prisonerNameFirstLast }}</li>
       </ul>
 
 
