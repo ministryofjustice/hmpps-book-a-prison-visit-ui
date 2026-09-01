@@ -28,7 +28,6 @@
   "future": {
     "title": "Ymweliadau",
     "onlyGovukBookings": "Dim ond ymweliadau a archebwyd gan ddefnyddio GOV.UK One Login sy'n cael eu dangos.",
-    "futureVisits": "TODO Future visits",
     "awaitingReview": "Aros am adolygiad",
     "cancelLinkHidden": "ar gyfer {{startTime}} ar {{date}}",
     "noFutureVisits": "Nid oes unrhyw ymweliadau na cheisiadau wedi'u archebu ar gyfer y dyfodol.",
@@ -53,8 +52,7 @@
     "title": "Canslo eich ymweliad",
     "heading": "Ydych chi’n siŵr eich bod eisiau canslo eich ymweliad?",
     "yesCancelOption": "Ydw, canslo'r ymweliad hwn",
-    "noCancelOption": "Nac ydw, cadw'r ymweliad hwn",
-    "confirmButton": "Cadarnhau"
+    "noCancelOption": "Nac ydw, cadw'r ymweliad hwn"
   },
   "cancelConfirmed": {
     "textMessageConfirmation": "Anfonir neges destun at y prif gyswllt i gadarnhau bod yr ymweliad wedi'i ganslo.",

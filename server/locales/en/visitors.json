@@ -7,21 +7,32 @@
   },
 
   "visitors": {
+    "alert": {
+      "visitorRequestReview": {
+        "title": "Your request needs to be reviewed.",
+        "text": "Your visitor needs to be checked by {{prisonName}}."
+      }
+    },
+
     "title": "Visitors",
     "visitorsOf": "{{name}}’s visitors",
-    "visitor": "Visitor",
 
     "linkedVisitorsHeading": "Visitors linked to your account",
     "bookVisitForThem": "Can you book a visit for them?",
+    "cancelVisitorLinkHeading": "Cancel visitor link request",
+    "cancelVisitorRequestLink": "Cancel request",
+    "cancelVisitorRequestLinkHidden": "to link {{visitorName}} to your account"
+  },
 
-    "cancelLinking": {
-      "tableHeading": "Cancel visitor link request",
-      "tableLinkText": "Cancel request",
-      "confirmationHeading": "Are you sure you want to cancel this request?",
-      "yesCancelOption": "Yes, cancel this request",
-      "noCancelOption": "No, keep this request",
-      "visitorLinkRequestCancelled": "Visitor link request cancelled",
-      "linkAnotherPrisoner": "You can <link>link another visitor</link> for the prison to review."
-    }
+  "cancelVisitorRequest": {
+    "title": "Cancel your visitor link request",
+    "heading": "Are you sure you want to cancel your request?",
+    "yesCancelOption": "Yes, cancel this visitor link request",
+    "noCancelOption": "No, keep this visitor link request"
+  },
+
+  "cancelVisitorRequestConfirmed": {
+    "heading": "Visitor link request cancelled",
+    "linkAnotherVisitor": "You can <link>link another visitor</link> for the prison to review."
   }
 }

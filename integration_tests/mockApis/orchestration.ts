@@ -279,7 +279,7 @@ export default {
 
   stubGetVisitorRequests: ({
     bookerReference = TestData.bookerReference(),
-    visitorRequests = [TestData.visitorRequest()],
+    visitorRequests = [TestData.bookerPrisonerVisitorRequestDto()],
   }: {
     bookerReference?: BookerReference
     visitorRequests?: BookerPrisonerVisitorRequestDto[]

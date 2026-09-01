@@ -29,8 +29,6 @@ const paths = {
     FAIL_ALREADY_REQUESTED: '/visitor-already-requested',
     FAIL_ALREADY_LINKED: '/visitor-already-linked',
     FAIL_TOO_MANY_REQUESTS: '/too-many-visitor-requests',
-    CANCEL: '/cancel',
-    CANCEL_CONFIRMATION: '/visitor-request-cancelled',
   },
 
   BOOK_VISIT: {
@@ -48,7 +46,11 @@ const paths = {
     REQUESTED: '/book-visit/visit-requested',
   },
 
-  // confirm location routes
+  CANCEL_VISITOR_REQUEST: {
+    CANCEL: '/cancel-visitor-request',
+    CANCEL_CONFIRMATION: '/visitor-request-cancelled',
+  },
+
   PRISONER_MOVED: {
     CONFIRM_LOCATION: '/prisoner-moved',
     LOCATION_UPDATED: '/location-updated',

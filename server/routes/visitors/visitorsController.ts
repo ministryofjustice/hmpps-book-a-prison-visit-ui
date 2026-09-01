@@ -1,15 +1,8 @@
-import { Request, RequestHandler } from 'express'
+import { RequestHandler } from 'express'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
-import {
-  buildVisitorRequestsTableRows,
-  buildVisitorRequestsTableRowsWithCancellationLink,
-  buildVisitorsTableRows,
-} from './visitorsUtils'
+import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
 import type { Locale } from '../../constants/locales'
-import config from '../../config'
-import { GOVUKTableRow } from '../../@types/bapv'
-import { BookerPrisonerVisitorRequestDetail } from '../../services/bookerService'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -32,34 +25,23 @@ export default class VisitorsController {
         }),
       ])
 
-      const visitorRequestsTableRows = this.buildVisitorRequestsTableRows(req, visitorRequests)
+      req.session.visitorRequests = visitorRequests
 
       const visitorsTableRows = buildVisitorsTableRows({ visitors, t: req.t, lng: req.language as Locale })
-
-      return res.render('pages/visitors/visitors', {
-        prisoner: booker.prisoners[0],
-        visitorsTableRows,
-        visitorRequestsTableRows,
-        bookerWithdrawEnabled: config.features.bookerWithdrawEnabled,
-        showOLServiceNav: true,
-      })
-    }
-  }
-
-  private buildVisitorRequestsTableRows(
-    req: Request,
-    visitorRequests: BookerPrisonerVisitorRequestDetail[],
-  ): GOVUKTableRow[] {
-    if (config.features.bookerWithdrawEnabled) {
-      req.session.pendingVisitors = visitorRequests
-
-      return buildVisitorRequestsTableRowsWithCancellationLink({
+      const visitorRequestsTableRows = buildVisitorRequestsTableRows({
         visitors: visitorRequests,
         t: req.t,
         lng: req.language as Locale,
+        includeCancelLink: true,
+      })
+
+      return res.render('pages/visitors/visitors', {
+        messages: req.flash('messages') ?? [],
+        prisoner: booker.prisoners[0],
+        visitorsTableRows,
+        visitorRequestsTableRows,
+        showOLServiceNav: true,
       })
     }
-
-    return buildVisitorRequestsTableRows({ visitors: visitorRequests, lng: req.language as Locale })
   }
 }

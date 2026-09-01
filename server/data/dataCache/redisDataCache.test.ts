@@ -34,6 +34,14 @@ describe('redisDataCache', () => {
       expect(redisClient.get).toHaveBeenCalledWith('dataCache_local:key')
     })
 
+    it('Returns null if data is not valid JSON', async () => {
+      redisClient.get.mockResolvedValue('not valid JSON')
+
+      await expect(dataCache.get('key')).resolves.toBeNull()
+
+      expect(redisClient.get).toHaveBeenCalledWith('dataCache_local:key')
+    })
+
     it('Connects when no connection calling get data', async () => {
       ;(redisClient as unknown as Record<string, boolean>).isOpen = false
 

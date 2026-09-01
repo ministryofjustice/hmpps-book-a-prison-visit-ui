@@ -51,10 +51,10 @@ context('Cancel visit journey', () => {
     const cancelVisitPage = Page.verifyOnPage(CancelVisitPage)
     cancelVisitPage.visitDate().contains(tomorrowDisplayDate)
     cancelVisitPage.visitStartEndTime().contains('10am to 11:30am')
-    cancelVisitPage.prisonerName().contains('John Smith')
+    cancelVisitPage.prisonerName().contains('John Smith at Hewell (HMP & YOI)')
     cancelVisitPage.visitorName(1).contains('Keith Phillips')
     cancelVisitPage.cancelVisitNo().click()
-    cancelVisitPage.confirmButton()
+    cancelVisitPage.confirm()
 
     Page.verifyOnPage(VisitDetailsPage)
     visitDetailsPage.cancelVisitButton().click()
@@ -67,7 +67,7 @@ context('Cancel visit journey', () => {
       bookerReference: bookerReference.value,
     })
 
-    cancelVisitPage.confirmButton()
+    cancelVisitPage.confirm()
 
     const cancelConfirmedPage = Page.verifyOnPage(CancelConfirmedPage)
     cancelConfirmedPage.confirmationNotificationMessage().contains('An email and a text message will be sent')

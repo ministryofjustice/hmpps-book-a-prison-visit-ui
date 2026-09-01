@@ -2,7 +2,7 @@ import { addDays, format, subDays } from 'date-fns'
 import paths from '../../server/constants/paths'
 import TestData from '../../server/routes/testutils/testData'
 import VisitsPage from '../pages/visits/visits'
-import CancelledVisitsPage from '../pages/visits/cancel/cancelledVisits'
+import CancelledVisitsPage from '../pages/visits/cancelledVisits'
 import PastVisitsPage from '../pages/visits/pastVisits'
 import VisitDetailsPage from '../pages/visits/visitDetails'
 import Page from '../pages/page'
@@ -64,7 +64,7 @@ context('Visits home page', () => {
     visitDetailsPage.backLink().should('have.attr', 'href', paths.VISITS.HOME)
     visitDetailsPage.visitDate().contains(tomorrowDisplayDate)
     visitDetailsPage.visitStartEndTime().contains('10am to 11:30am')
-    visitDetailsPage.prisonerName().contains('John Smith')
+    visitDetailsPage.prisonerName().contains('John Smith at Hewell (HMP & YOI)')
     visitDetailsPage.visitorName(1).contains('Keith Phillips')
     visitDetailsPage.additionalSupport().contains('Wheelchair access requested')
     visitDetailsPage.mainContactName().contains('Joan Phillips')
@@ -86,6 +86,7 @@ context('Visits home page', () => {
 
     const pastVisitsPage = Page.verifyOnPage(PastVisitsPage)
     pastVisitsPage.visitDate(1).contains(yesterdayDisplayDate)
+    pastVisitsPage.prisonerName(1).contains('John Smith at Hewell (HMP & YOI)')
     pastVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     pastVisitsPage.visitLink(1).click()
 
@@ -107,6 +108,7 @@ context('Visits home page', () => {
 
     const cancelledVisitsPage = Page.verifyOnPage(CancelledVisitsPage)
     cancelledVisitsPage.visitDate(1).contains(yesterdayDisplayDate)
+    cancelledVisitsPage.prisonerName(1).contains('John Smith at Hewell (HMP & YOI)')
     cancelledVisitsPage.visitStartEndTime(1).contains('10am to 11:30am')
     cancelledVisitsPage.visitLink(1).click()
 

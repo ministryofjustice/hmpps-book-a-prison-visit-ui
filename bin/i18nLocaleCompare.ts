@@ -8,6 +8,8 @@
  *   2. Any key present in one locale's file but not the corresponding file in the other locale.
  *   3. Any pluralised Welsh key that is missing one of Welsh's 6 CLDR plural categories
  *      (zero/one/two/few/many/other) - see server/locales/TRANSLATOR_CONTEXT.md.
+ *   4. Any Welsh translation that may be stale because its English source text has changed
+ *      since it was last translated - see server/locales/translation-state.json.
  *
  * Usage: npm run i18n:locale-compare
  *
@@ -23,7 +25,9 @@ import {
   pluralGroups,
   pluralKeySplit,
   readLocaleJson,
+  type LocaleEntry,
 } from './i18nLocaleFlatten.ts'
+import { buildTranslationHashes, loadTranslationState, trackingKeyFor } from './i18nTranslationState.ts'
 
 const EN_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'en')
 const CY_LOCALES_DIR = path.join(process.cwd(), 'server', 'locales', 'cy')
@@ -35,12 +39,17 @@ function jsonFileNames(dir: string): string[] {
     .sort()
 }
 
-function entriesOf(filePath: string): Map<string, string> {
-  return new Map(flattenLocale(readLocaleJson(filePath)).map(entry => [entry.key, entry.value]))
+function flattenEntries(filePath: string): LocaleEntry[] {
+  return flattenLocale(readLocaleJson(filePath))
+}
+
+function entriesOf(entries: LocaleEntry[]): Map<string, string> {
+  return new Map(entries.map(entry => [entry.key, entry.value]))
 }
 
 function main() {
   let problemsFound = false
+  const translationState = loadTranslationState()
 
   const enFileNames = new Set(jsonFileNames(EN_LOCALES_DIR))
   const cyFileNames = new Set(jsonFileNames(CY_LOCALES_DIR))
@@ -61,8 +70,9 @@ function main() {
 
   commonFileNames.forEach(fileName => {
     const namespace = path.basename(fileName, '.json')
-    const enEntries = entriesOf(path.join(EN_LOCALES_DIR, fileName))
-    const cyEntries = entriesOf(path.join(CY_LOCALES_DIR, fileName))
+    const enEntryList = flattenEntries(path.join(EN_LOCALES_DIR, fileName))
+    const enEntries = entriesOf(enEntryList)
+    const cyEntries = entriesOf(flattenEntries(path.join(CY_LOCALES_DIR, fileName)))
 
     const enGroups = pluralGroups([...enEntries.keys()])
     const cyGroups = pluralGroups([...cyEntries.keys()])
@@ -113,6 +123,30 @@ function main() {
       missingCyPluralForms.forEach(({ base, missing }) =>
         console.log(`    [\x1b[31m${namespace}:${base}\x1b[0m] missing: \x1b[34m${missing.join(', ')}\x1b[0m`),
       )
+    }
+
+    // A missing stored hash (never confirmed) or a mismatch (English edited since) both
+    // mean the Welsh translation(s) for this base/key need a translator's review.
+    const namespaceState = translationState[namespace] ?? {}
+    const currentHashes = buildTranslationHashes(enEntryList)
+    const cyTrackingKeys = [...new Set([...cyEntries.keys()].map(trackingKeyFor))]
+    const staleTrackingKeys = cyTrackingKeys
+      .filter(
+        trackingKey => currentHashes.has(trackingKey) && namespaceState[trackingKey] !== currentHashes.get(trackingKey),
+      )
+      .sort()
+
+    if (staleTrackingKeys.length) {
+      problemsFound = true
+      console.log(`\n${fileName}:`)
+      console.log(`  Welsh translations that may be stale (English text changed since last translated):`)
+      staleTrackingKeys.forEach(trackingKey => {
+        // A pluralised base has no direct English value of its own - list its cy forms instead.
+        const cyKeysForBase = [...cyEntries.keys()].filter(key => trackingKeyFor(key) === trackingKey).sort()
+        console.log(
+          `    [\x1b[31m${namespace}:${trackingKey}\x1b[0m] affects: \x1b[34m${cyKeysForBase.join(', ')}\x1b[0m`,
+        )
+      })
     }
   })
 

@@ -52,8 +52,6 @@ export type AddVisitorJourneyResult = {
   result: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
 }
 
-export type PendingVisitors = BookerPrisonerVisitorRequestDetail[]
-
 // data that is built up during a visit booking journey
 export type BookVisitJourney = {
   // selected prisoner for this visit

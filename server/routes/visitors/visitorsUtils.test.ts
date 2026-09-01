@@ -1,4 +1,4 @@
-import { GOVUKTableRow } from '../../@types/bapv'
+import { GOVUKTableRow, GOVUKTableRowItem } from '../../@types/bapv'
 import { mockTFunction } from '../../data/testutils/mockI18n'
 import TestData from '../testutils/testData'
 import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
@@ -85,16 +85,30 @@ describe('buildVisitorsTableRows', () => {
 })
 
 describe('buildVisitorRequestsTableRows', () => {
-  it('should build visitor requests table rows for visitors listing page', () => {
-    const visitorRequests = [TestData.visitorRequest()]
+  const visitorRequests = [TestData.visitorRequest()]
 
-    const expectedTableRows: GOVUKTableRow[] = [
-      [
-        { text: 'Joan Phillips', attributes: { 'data-test': 'visitor-request-name-0' } },
-        { text: '21 February 1980', attributes: { 'data-test': 'visitor-request-dob-0' } },
-      ],
-    ]
+  const expectedTableRow: GOVUKTableRow = [
+    { text: 'Joan Phillips', attributes: { 'data-test': 'visitor-request-name-0' } },
+    { text: '21 February 1980', attributes: { 'data-test': 'visitor-request-dob-0' } },
+  ]
 
-    expect(buildVisitorRequestsTableRows({ visitors: visitorRequests, lng: 'en' })).toStrictEqual(expectedTableRows)
+  it('should build visitor requests table rows', () => {
+    const result = buildVisitorRequestsTableRows({ visitors: visitorRequests, t: mockTFunction, lng: 'en' })
+    expect(result).toStrictEqual([expectedTableRow])
+  })
+
+  it('should build visitor requests table rows with cancel request link', () => {
+    const expectedCancelLink: GOVUKTableRowItem = {
+      html: '<a href="/cancel-visitor-request/uuidv4-1-1-1-1">visitors:visitors.cancelVisitorRequestLink<span class="govuk-visually-hidden"> visitors:visitors.cancelVisitorRequestLinkHidden|visitorName:Joan Phillips</span></a>',
+      attributes: { 'data-test': 'visitor-request-cancel-0' },
+    }
+
+    const result = buildVisitorRequestsTableRows({
+      visitors: visitorRequests,
+      t: mockTFunction,
+      lng: 'en',
+      includeCancelLink: true,
+    })
+    expect(result).toStrictEqual([[...expectedTableRow, expectedCancelLink]])
   })
 })

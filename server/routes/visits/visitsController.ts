@@ -11,7 +11,7 @@ export default class VisitsController {
   ) {}
 
   public home(): RequestHandler {
-    return async (req, res, next) => {
+    return async (req, res) => {
       const booker = req.session.booker!
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 

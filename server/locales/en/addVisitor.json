@@ -32,7 +32,7 @@
     "title": "Request submitted",
     "requestReview": "We will review your request and reply within 5 working days",
     "approvedOrRejected": "You will get an email to say if your request has been approved or rejected.",
-    "statusOnVisitorsPage": "You can also view the status of your requests on <link>the visitors page</link>."
+    "statusOnVisitorsPage": "You can view or cancel your requests on <link>the visitors page</link>."
   },
   "visitorRequestFailAlreadyLinked": {
     "title": "Visitor already linked",

@@ -13,7 +13,11 @@ export default class MovedPrisonController {
   public view(): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!
-      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
+      const prisoner = booker.prisoners[0]
+
+      if (!prisoner || prisoner.prisonId === prisoner.registeredPrisonId) {
+        return res.redirect(paths.VISITS.HOME)
+      }
 
       return res.render('pages/confirmLocation/selectPrison', {
         errors: req.flash('errors'),

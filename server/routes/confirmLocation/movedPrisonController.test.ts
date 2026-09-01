@@ -17,7 +17,10 @@ let sessionData: SessionData
 const prisonNames = TestData.prisonNameDtos()
 
 beforeEach(() => {
-  app = appWithAllRoutes({ services: { bookerService, prisonService } })
+  sessionData = {
+    booker: { reference: TestData.bookerReference().value, prisoners: [TestData.prisoner({ prisonId: 'DHI' })] },
+  } as SessionData
+  app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 })
 
 afterEach(() => {
@@ -51,6 +54,11 @@ describe('Confirm location', () => {
           expect($('[data-test="find-prisoner-link"] a').attr('href')).toBe('https://www.gov.uk/find-prisoner')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
         })
+    })
+
+    it('should redirect to visits home if prisoner has NOT moved location', () => {
+      sessionData.booker!.prisoners = [TestData.prisoner()]
+      return request(app).get(paths.PRISONER_MOVED.CONFIRM_LOCATION).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should render validation errors', () => {

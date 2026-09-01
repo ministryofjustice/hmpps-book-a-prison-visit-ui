@@ -81,8 +81,10 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     }
   })
 
-  njkEnv.addFilter('prisonerNameFirstLast', prisoner => {
-    return convertToTitleCase(`${prisoner?.firstName} ${prisoner?.lastName}`)
+  njkEnv.addFilter('prisonerNameFirstLast', data => {
+    const firstName = data?.firstName ?? data?.prisonerFirstName
+    const lastName = data?.lastName ?? data?.prisonerLastName
+    return firstName && lastName ? convertToTitleCase(`${firstName} ${lastName}`) : ''
   })
 
   njkEnv.addFilter('displayAge', displayAge)
