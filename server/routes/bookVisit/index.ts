@@ -12,7 +12,7 @@ import bookVisitSessionValidator from '../../middleware/bookVisitSessionValidato
 import CannotBookController from './cannotBookController'
 import ClosedVisitController from './closedVisitController'
 import ContactDetailsController from './contactDetailsController'
-import MovedPrisonController from '../confirmLocation/movedPrison'
+import MovedPrisonController from '../confirmLocation/movedPrisonController'
 
 export default function routes(services: Services): Router {
   const router = Router()

@@ -17,10 +17,10 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{- t("confirmLocation:unsupportedPrison.cannotBook", {
-        prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
+        prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
       }) -}}</h1>
 
-      <p>
+      <p data-test="prison-directory-link">
         {{ t("confirmLocation:unsupportedPrison.noDigitalService")
         | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
         | safe -}}

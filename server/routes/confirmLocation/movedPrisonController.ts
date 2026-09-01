@@ -48,11 +48,12 @@ export default class MovedPrisonController {
           prisonerId: prisoner.prisonerNumber,
           prisonId,
         })
+        delete req.session.booker
+        // TODO
         return res.redirect(paths.PRISONER_MOVED.LOCATION_UPDATED)
       }
 
       const hasNoDigitalService = config.noDigitalServicePrisonIds.includes(prisonId)
-
       if (hasNoDigitalService) {
         return res.redirect(paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
       }

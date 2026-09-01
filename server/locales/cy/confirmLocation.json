@@ -1,9 +1,0 @@
-{
-  "selectPrison": {
-    "title": "Prisoner is not at this prison",
-    "prisonerNotAtPrison": "{{prisonerFirstName}} is no longer at {{prisonName}}",
-    "newLocationText": "You need to know the prisoner’s new location before you can book a visit.",
-    "selectLocation": "Select the prisoner's location",
-    "findPrisonerLink": "You can ask the prisoner, or you can <link>apply to find the prisoner’s location</link>."
-  }
-}

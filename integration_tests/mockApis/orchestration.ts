@@ -16,6 +16,7 @@ import {
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
   AuthDetailDto,
+  PermittedPrisonerForBookerDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -244,6 +245,37 @@ export default {
         jsonBody: bookerReference,
       },
     }),
+
+  stubUpdatePrisonersRegisteredPrison: ({
+    bookerReference = 'aaaa-bbbb-cccc',
+    prisonerId = 'A1234BC',
+    prisonId = 'HEI',
+    permittedPrisonerForBookerDto = TestData.permittedPrisonerForBookerDto(),
+  }: {
+    bookerReference: string
+    prisonerId: string
+    prisonId: string
+    permittedPrisonerForBookerDto: PermittedPrisonerForBookerDto
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/prison`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              prisonId,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: permittedPrisonerForBookerDto,
+      },
+    })
+  },
 
   stubGetVisitorRequests: ({
     bookerReference = TestData.bookerReference(),

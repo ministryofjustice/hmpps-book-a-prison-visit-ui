@@ -95,6 +95,9 @@ describe('Confirm location', () => {
         .send({ prisonId: 'HEI' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.LOCATION_UPDATED)
+        .expect(() => {
+          expect(sessionData.booker?.prisoners).toBeUndefined()
+        })
     })
 
     it('should redirect to incorrect location page if wrong prison is selected', () => {

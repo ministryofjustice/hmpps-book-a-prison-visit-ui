@@ -23,12 +23,18 @@
 
       <p>{{- t("confirmLocation:prisonUpdated.youCanUseService")-}}</p>
 
+      <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
+
         {{ govukButton({
-          text: t("common:buttons.continue"),
-          href: paths.VISITS.HOME,
-          attributes: { "data-test": "book-a-visit" },
-          preventDoubleClick: true
+          text: t("common:buttons.bookAVisit"),
+          classes: "govuk-!-margin-top-3",
+          preventDoubleClick: true,
+          attributes: { "data-test": "book-a-visit" }
         }) }}
+      </form>
 
     </div>
   </div>

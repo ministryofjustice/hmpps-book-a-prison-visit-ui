@@ -15,7 +15,7 @@
     "title": "Prisoner is not at this prison",
     "prisonerNotAtPrison": "{{prisonerFirstName}} is not at {{prisonName}}",
     "needToKnow": "You need to know the prisoner’s new location before you can book a visit.",
-    "questionHeading": "You need to know the prisoner’s new location before you can book a visit.",
+    "questionHeading": "What if I don’t know the prisoner’s location?",
     "findPrisonerLink": "You can <link>apply to find the prisoner’s location</link>."
   },
   "pvbPrison": {
