@@ -1,6 +1,6 @@
 import Page, { PageElement } from '../page'
 
-export default class IncorrectLocationPage extends Page {
+export default class SelectLocationPage extends Page {
   constructor(private readonly pageTitle: string) {
     super(pageTitle)
   }

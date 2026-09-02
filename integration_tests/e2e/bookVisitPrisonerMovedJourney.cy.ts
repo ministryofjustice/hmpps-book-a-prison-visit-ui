@@ -9,6 +9,7 @@ import UnsupportedPrisonPage from '../pages/confirmLocation/unsupportedPrison.cy
 import PvbPrisonPage from '../pages/confirmLocation/pvbPrisonPage.cy'
 import PrisonUpdatedPage from '../pages/confirmLocation/prisonUpdatedPage.cy'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
+import config from '../../server/config'
 
 context('Book visit journey - prisoner moved prison', () => {
   const today = new Date()
@@ -182,7 +183,8 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubGetSupportedPrisonIds', ['HEI']) // (Selected prison not supported)
       confirmLocationSelectPrisonPage.continueButton()
 
-      Page.verifyOnPage(PvbPrisonPage, 'Foston Hall (HMP & YOI)')
+      const pvbPrisonPage = Page.verifyOnPage(PvbPrisonPage, 'Foston Hall (HMP & YOI)')
+      pvbPrisonPage.pvbLink().should('have.attr', 'href', config.pvbUrl)
     })
   })
 })

@@ -32,18 +32,18 @@
                   {{ govukTag({
                   text: t("visits:future.awaitingReview"),
                   classes: "govuk-tag--orange govuk-!-margin-bottom-2",
-                  attributes: { "data-test": "tag-" + loop.index  }
+                  attributes: { "data-test": "awaiting-review-tag-" + loop.index  }
                 }) }}
                 </li>
               {% endif %}
               {% if notAtRegisteredPrison %}
-              <li>
+                <li>
                   {{ govukTag({
                   text: t("visits:future.notAtPrisonTag", {
                     prisonerFirstName: prisoner.firstName | capitalize
                   }),
                   classes: "govuk-tag--orange govuk-!-margin-top-1 govuk-!-margin-bottom-1",
-                  attributes: { "data-test": "tag-" + loop.index  }
+                  attributes: { "data-test": "moved-prison-tag-" + loop.index  }
                 }) }}
                 </li>
               {% endif %}
