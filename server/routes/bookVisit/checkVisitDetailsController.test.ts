@@ -75,7 +75,7 @@ describe('Check visit details', () => {
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })

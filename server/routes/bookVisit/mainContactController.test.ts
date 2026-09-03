@@ -70,7 +70,7 @@ describe('Main contact', () => {
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })

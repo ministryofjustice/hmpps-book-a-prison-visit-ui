@@ -44,7 +44,7 @@ describe('Visitors page', () => {
       .get(paths.VISITORS)
       .expect(302)
       .expect('location', paths.VISITS.HOME)
-      .expect(res => {
+      .expect(() => {
         expect(bookerService.getVisitors).not.toHaveBeenCalled()
       })
   })

@@ -39,7 +39,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     app.locals.version = applicationInfo.gitShortHash
   } else {
     // Version changes every request
-    app.use((req, res, next) => {
+    app.use((_req, res, next) => {
       res.locals.version = Date.now().toString()
       return next()
     })
