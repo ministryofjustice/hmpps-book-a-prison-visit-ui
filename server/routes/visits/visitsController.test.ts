@@ -97,7 +97,7 @@ describe('Visits home page (future visits list)', () => {
   })
 
   it('should render the Visits home page - with prisoner moved tag, when prisoner is registered to different prison', () => {
-    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner({ prisonId: 'DHI' })])
+    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner({ registeredPrisonId: 'DHI' })])
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
