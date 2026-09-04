@@ -42,12 +42,12 @@ describe('Confirm location', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Prisoner is not at this prison -/)
+          expect($('title').text()).toMatch(/^Prisoner has moved -/)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('h1').text().trim()).toBe('John is no longer at Hewell (HMP & YOI)')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.PRISONER_MOVED.CONFIRM_LOCATION)
-          expect($('h2').text().trim()).toContain("Select the prisoner's location")
+          expect($('h2').text().trim()).toContain('Select the prisoner’s location')
           expect($('.govuk-hint').text().trim()).toContain('For example, Cardiff (HMP)')
           expect($('select#prisonId option').length).toBe(prisonNames.length + 1) // all prisons and default empty option
           expect($('select#prisonId option[value="HEI"]').text()).toBe('Hewell (HMP & YOI)')
@@ -87,7 +87,7 @@ describe('Confirm location', () => {
     const prisoner = TestData.prisoner()
     beforeEach(() => {
       sessionData = {
-        booker: { prisoners: [prisoner] },
+        booker: { prisoners: [prisoner], reference: 'aaaa-bbbb-cccc' },
       } as SessionData
       app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
     })
@@ -105,6 +105,11 @@ describe('Confirm location', () => {
         .expect('Location', paths.PRISONER_MOVED.LOCATION_UPDATED)
         .expect(() => {
           expect(sessionData.booker?.prisoners).toBeUndefined()
+          expect(bookerService.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
+            bookerReference: 'aaaa-bbbb-cccc',
+            prisonerId: 'A1234BC',
+            prisonId: 'HEI',
+          })
         })
     })
 
@@ -114,6 +119,9 @@ describe('Confirm location', () => {
         .send({ prisonId: 'ABC' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.INCORRECT_LOCATION)
+        .expect(() => {
+          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+        })
     })
 
     it('should redirect to unsupported prison page if correct prison is selected, but they do not use a digital service', () => {
@@ -124,6 +132,9 @@ describe('Confirm location', () => {
         .send({ prisonId: 'ACI' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
+        .expect(() => {
+          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+        })
     })
 
     it('should redirect to PVB prison page if correct prison is selected, but they use PVB', () => {
@@ -133,6 +144,9 @@ describe('Confirm location', () => {
         .send({ prisonId: 'ZZZ' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.PVB_PRISON)
+        .expect(() => {
+          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+        })
     })
 
     describe('Validation errors', () => {

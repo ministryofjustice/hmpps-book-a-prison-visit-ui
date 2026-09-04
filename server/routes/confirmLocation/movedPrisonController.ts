@@ -52,8 +52,9 @@ export default class MovedPrisonController {
           prisonerId: prisoner.prisonerNumber,
           prisonId,
         })
+        // Delete booker from session data after updating prisoner to force reload of data via populateCurrentBooker() middleware
         delete req.session.booker
-        // TODO
+
         return res.redirect(paths.PRISONER_MOVED.LOCATION_UPDATED)
       }
 

@@ -36,7 +36,7 @@
                 }) }}
                 </li>
               {% endif %}
-              {% if notAtRegisteredPrison %}
+              {% if visit.prisonId === prisoner.registeredPrisonId %}
                 <li>
                   {{ govukTag({
                   text: t("visits:future.notAtPrisonTag", {
