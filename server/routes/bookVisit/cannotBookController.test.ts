@@ -44,7 +44,7 @@ describe('A visit cannot be booked', () => {
         .get(paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })

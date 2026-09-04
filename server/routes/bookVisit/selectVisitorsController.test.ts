@@ -165,7 +165,7 @@ describe('Select visitors', () => {
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })
