@@ -27,7 +27,6 @@
   },
   "future": {
     "title": "Ymweliadau",
-    "onlyGovukBookings": "Dim ond ymweliadau a archebwyd gan ddefnyddio GOV.UK One Login sy'n cael eu dangos.",
     "awaitingReview": "Aros am adolygiad",
     "cancelLinkHidden": "ar gyfer {{startTime}} ar {{date}}",
     "noFutureVisits": "Nid oes unrhyw ymweliadau na cheisiadau wedi'u archebu ar gyfer y dyfodol.",
