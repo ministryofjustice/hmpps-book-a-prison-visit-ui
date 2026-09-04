@@ -303,6 +303,29 @@ describe('Booker service', () => {
     })
   })
 
+  describe('updatePrisonersRegisteredPrison', () => {
+    const bookerReference = TestData.bookerReference().value
+
+    const permittedPrisonerForBookerDto = TestData.permittedPrisonerForBookerDto()
+
+    it('should update prisoners registered prison', async () => {
+      orchestrationApiClient.updatePrisonersRegisteredPrison.mockResolvedValue(permittedPrisonerForBookerDto)
+
+      const result = await bookerService.updatePrisonersRegisteredPrison({
+        bookerReference,
+        prisonerId: 'A1234BC',
+        prisonId: 'HEI',
+      })
+
+      expect(result).toBe(permittedPrisonerForBookerDto)
+      expect(orchestrationApiClient.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
+        bookerReference,
+        prisonerId: 'A1234BC',
+        prisonId: 'HEI',
+      })
+    })
+  })
+
   describe('getVisitors', () => {
     it('should return visitors for the given booker reference and prisoner number, with sequential display ID', async () => {
       const bookerReference = TestData.bookerReference()

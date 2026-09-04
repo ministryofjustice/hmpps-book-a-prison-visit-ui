@@ -25,6 +25,11 @@ export default class SelectPrisonerController {
 
       req.session.bookVisitJourney = bookVisitJourney
 
+      // if prisoner is not currently in registered prison, send to confirm location route
+      if (prisoner.prisonId !== prisoner.registeredPrisonId) {
+        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+      }
+
       const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
 

@@ -43,11 +43,14 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
-        expect($('[data-test="tag-1"]').length).toBe(0)
+        expect($('[data-test="moved-prison-tag-1"]').length).toBe(0)
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
         expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith')
+        expect($('[data-test="visit-prison-name-1"]').text()).toBe('Hewell (HMP & YOI)')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
+
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
         )
@@ -55,7 +58,7 @@ describe('Visits home page (future visits list)', () => {
           `${paths.VISITS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
 
-        expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
+        expect($('[data-test="awaiting-review-tag-2"]').text()).toContain(`Awaiting review`)
 
         expect($('[data-test=change-visit-heading]').length).toBeFalsy()
 
@@ -80,10 +83,10 @@ describe('Visits home page (future visits list)', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
         expect($('[data-test=change-visit-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
+        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1-1-1-1')
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
@@ -91,6 +94,24 @@ describe('Visits home page (future visits list)', () => {
           type: 'future',
           visits: [],
         } as SessionData['bookedVisits'])
+      })
+  })
+
+  it('should render the Visits home page - with prisoner moved tag, when prisoner is registered to different prison', () => {
+    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner({ registeredPrisonId: 'DHI' })])
+    visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
+
+    return request(app)
+      .get(paths.VISITS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visits -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="moved-prison-tag-1"]').text()).toContain('John has moved prison')
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
       })
   })
 
@@ -105,7 +126,6 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
         expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1-1-1-1')
         expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')

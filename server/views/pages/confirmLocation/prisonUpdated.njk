@@ -1,0 +1,36 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("confirmLocation:prisonUpdated.title") %}
+
+{% set backLinkHref = paths.VISITS.HOME %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{- t("confirmLocation:prisonUpdated.prisonerAtPrison", {
+        prisonerFirstName: prisoner.firstName | capitalize,
+        prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
+      }) -}}</h1>
+
+      <p>{{- t("confirmLocation:prisonUpdated.youCanUseService")-}}</p>
+
+      <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
+
+        {{ govukButton({
+          text: t("common:buttons.bookAVisit"),
+          classes: "govuk-!-margin-top-3",
+          preventDoubleClick: true,
+          attributes: { "data-test": "book-a-visit" }
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

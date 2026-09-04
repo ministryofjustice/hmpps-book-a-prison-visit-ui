@@ -407,6 +407,27 @@ describe('orchestrationApiClient', () => {
     })
   })
 
+  describe('updatePrisonersRegisteredPrison', () => {
+    it('should update and return a prisonerForBookerDto', async () => {
+      const resultDto = TestData.permittedPrisonerForBookerDto()
+      const prisonerId = 'A1234BC'
+      const prisonId = 'HEI'
+
+      fakeOrchestrationApi
+        .put(`/public/booker/${bookerReference.value}/permitted/prisoners/${prisonerId}/prison`, { prisonId })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, resultDto)
+
+      const output = await orchestrationApiClient.updatePrisonersRegisteredPrison({
+        bookerReference: bookerReference.value,
+        prisonerId,
+        prisonId,
+      })
+
+      expect(output).toStrictEqual(resultDto)
+    })
+  })
+
   describe('getVisitors', () => {
     it('should retrieve visitors associated with a booker and prisoner', async () => {
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner

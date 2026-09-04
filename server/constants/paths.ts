@@ -51,6 +51,14 @@ const paths = {
     CANCEL_CONFIRMATION: '/visitor-request-cancelled',
   },
 
+  PRISONER_MOVED: {
+    CONFIRM_LOCATION: '/prisoner-moved',
+    LOCATION_UPDATED: '/location-updated',
+    INCORRECT_LOCATION: '/incorrect-location',
+    PVB_PRISON: '/another-service',
+    UNSUPPORTED_PRISON: '/unsupported-prison',
+  },
+
   VISITS: {
     HOME: '/visits',
     PAST: '/visits/past-visits',

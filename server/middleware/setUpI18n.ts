@@ -31,6 +31,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           'addPrisoner',
           'addVisitor',
           'bookVisit',
+          'confirmLocation',
           'selectPrison',
           'shared',
           'visitors',

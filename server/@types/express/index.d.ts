@@ -36,6 +36,9 @@ declare module 'express-session' {
 
     bookedVisits?: BookedVisits
 
+    // Prisoner moved - reconfirm location journey
+    confirmLocationSelectedPrison?: string
+
     visitCancelled?: VisitCancelled
 
     visitorRequests?: VisitorRequest[]

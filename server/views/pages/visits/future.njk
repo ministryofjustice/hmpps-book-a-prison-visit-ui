@@ -16,12 +16,7 @@
 
         <p>{{ t("visits:future.onlyGovukBookings") }}</p>
 
-        <h2 class="govuk-heading-m" data-test="prisoner-name-at-location">
-          {{- t("common:prisoner.prisonerAtPrison", {
-            prisonerName: prisoner | prisonerNameFirstLast,
-            prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
-          }) -}}
-        </h2>
+        <h2 class="govuk-heading-m">{{ t("visits:future.futureVisits") }}</h2>
 
         {% if visits | length %}
           {% for visit in visits %}
@@ -37,7 +32,18 @@
                   {{ govukTag({
                   text: t("visits:future.awaitingReview"),
                   classes: "govuk-tag--orange govuk-!-margin-bottom-2",
-                  attributes: { "data-test": "tag-" + loop.index  }
+                  attributes: { "data-test": "awaiting-review-tag-" + loop.index  }
+                }) }}
+                </li>
+              {% endif %}
+              {% if visit.prisonId !== prisoner.registeredPrisonId %}
+                <li>
+                  {{ govukTag({
+                  text: t("visits:future.notAtPrisonTag", {
+                    prisonerFirstName: prisoner.firstName | capitalize
+                  }),
+                  classes: "govuk-tag--orange govuk-!-margin-top-1 govuk-!-margin-bottom-1",
+                  attributes: { "data-test": "moved-prison-tag-" + loop.index  }
                 }) }}
                 </li>
               {% endif %}
@@ -47,6 +53,15 @@
                   endTime: visit.endTimestamp | formatTimeFromDateTime(language)
                 }) -}}
               </li>
+
+              <li data-test="visit-prisoner-name-{{ loop.index }}">
+                {{- prisoner | prisonerNameFirstLast -}}
+              </li>
+
+              <li data-test="visit-prison-name-{{ loop.index }}">
+                {{- visit.prisonId | getPrisonName(prisonNames, language) -}}
+              </li>
+
               <li>
                 {{ t("common:labels.visitReference") }}:
                 <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>

@@ -103,6 +103,27 @@ describe('Select prisoner', () => {
       })
   })
 
+  it('should redirect to confirm location route, if prisoner not in registered prison', () => {
+    sessionData = {
+      booker: {
+        reference: bookerReference,
+        prisoners: [TestData.prisoner({ prisonId: 'HEI', registeredPrisonId: 'DHI' })],
+      },
+    } as SessionData
+
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+
+    return request(app)
+      .post(paths.BOOK_VISIT.SELECT_PRISONER)
+      .send({ prisonerDisplayId: prisoner.prisonerDisplayId.toString() })
+      .expect(302)
+      .expect('location', paths.PRISONER_MOVED.CONFIRM_LOCATION)
+      .expect(() => {
+        expect(bookerService.validatePrisoner).not.toHaveBeenCalled()
+        expect(prisonService.getPrison).not.toHaveBeenCalled()
+      })
+  })
+
   describe('Prisoner validation', () => {
     // testing all these scenarios with no VO balance as validation failures should take precedence
     const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
