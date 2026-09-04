@@ -75,14 +75,10 @@ export default class MovedPrisonController {
     return async (req, res) => {
       const booker = req.session.booker!
       const prisoner = booker.prisoners[0]
-
-      if (!prisoner) {
-        return res.redirect(paths.VISITS.HOME)
-      }
       const { confirmLocationSelectedPrison } = req.session
 
-      if (!confirmLocationSelectedPrison) {
-        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+      if (!prisoner || !confirmLocationSelectedPrison) {
+        return res.redirect(paths.VISITS.HOME)
       }
 
       return res.render(`pages/confirmLocation/${result}`, {

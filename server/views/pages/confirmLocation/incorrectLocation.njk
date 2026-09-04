@@ -1,10 +1,4 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "components/dateOfBirthInput.njk" import dateOfBirthInput with context %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-
 
 {% set pageTitle = t("confirmLocation:incorrectLocation.title") %}
 
@@ -13,8 +7,6 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
-      {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{- t("confirmLocation:incorrectLocation.prisonerNotAtPrison", {
         prisonerFirstName: prisoner.firstName | capitalize,
