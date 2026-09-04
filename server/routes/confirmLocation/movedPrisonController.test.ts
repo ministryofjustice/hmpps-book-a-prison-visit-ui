@@ -84,8 +84,8 @@ describe('Confirm location', () => {
   })
 
   describe(`POST ${paths.PRISONER_MOVED.CONFIRM_LOCATION}`, () => {
-    const prisoner = TestData.prisoner()
     beforeEach(() => {
+      const prisoner = TestData.prisoner({ prisonId: 'DHI', registeredPrisonId: 'HEI' })
       sessionData = {
         booker: { prisoners: [prisoner], reference: 'aaaa-bbbb-cccc' },
       } as SessionData
@@ -100,7 +100,7 @@ describe('Confirm location', () => {
       prisonService.isSupportedPrison.mockResolvedValue(true)
       return request(app)
         .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
-        .send({ prisonId: 'HEI' })
+        .send({ prisonId: 'DHI' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.LOCATION_UPDATED)
         .expect(() => {
@@ -108,7 +108,7 @@ describe('Confirm location', () => {
           expect(bookerService.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
             bookerReference: 'aaaa-bbbb-cccc',
             prisonerId: 'A1234BC',
-            prisonId: 'HEI',
+            prisonId: 'DHI',
           })
         })
     })

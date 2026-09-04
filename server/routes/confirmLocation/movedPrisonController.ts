@@ -31,6 +31,10 @@ export default class MovedPrisonController {
       const booker = req.session.booker!
       const prisoner = booker.prisoners[0]
 
+      if (!prisoner || prisoner.prisonId === prisoner.registeredPrisonId) {
+        return res.redirect(paths.VISITS.HOME)
+      }
+
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
@@ -70,7 +74,11 @@ export default class MovedPrisonController {
   public viewResult(result: 'prisonUpdated' | 'incorrectLocation' | 'pvbPrison' | 'unsupportedPrison'): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!
-      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
+      const prisoner = booker.prisoners[0]
+
+      if (!prisoner) {
+        return res.redirect(paths.VISITS.HOME)
+      }
       const { confirmLocationSelectedPrison } = req.session
 
       if (!confirmLocationSelectedPrison) {
