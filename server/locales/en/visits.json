@@ -32,7 +32,6 @@
 
   "future": {
     "title": "Visits",
-    "onlyGovukBookings": "Only visits made using GOV.UK One Login are shown.",
     "futureVisits": "Future visits",
     "awaitingReview": "Awaiting review",
     "cancelLinkHidden": "for {{startTime}} on {{date}}",
