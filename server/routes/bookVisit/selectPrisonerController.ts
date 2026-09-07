@@ -11,6 +11,9 @@ export default class SelectPrisonerController {
     private readonly prisonService: PrisonService,
   ) {}
 
+  // Transfer and released
+  private readonly EXCLUDED_LOCATIONS = ['TRN', 'OUT']
+
   public selectPrisoner(): RequestHandler {
     return async (req, res) => {
       clearSession(req)
@@ -25,8 +28,11 @@ export default class SelectPrisonerController {
 
       req.session.bookVisitJourney = bookVisitJourney
 
-      // if prisoner is not currently in registered prison, send to confirm location route
-      if (prisoner.prisonId !== prisoner.registeredPrisonId) {
+      // if prisoner is not currently in registered prison or and excluded location, send to confirm location route
+      if (
+        prisoner.prisonId !== prisoner.registeredPrisonId &&
+        !this.EXCLUDED_LOCATIONS.includes(prisoner.prisonId ?? '')
+      ) {
         return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
       }
 
