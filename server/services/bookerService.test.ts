@@ -305,7 +305,6 @@ describe('Booker service', () => {
 
   describe('updatePrisonersRegisteredPrison', () => {
     const bookerReference = TestData.bookerReference().value
-
     const permittedPrisonerForBookerDto = TestData.permittedPrisonerForBookerDto()
 
     it('should update prisoners registered prison', async () => {
@@ -323,6 +322,9 @@ describe('Booker service', () => {
         prisonerId: 'A1234BC',
         prisonId: 'HEI',
       })
+      expect(logger.info).toHaveBeenCalledWith(
+        `Registered prison for prisoner A1234BC updated to HEI by booker ${bookerReference}`,
+      )
     })
   })
 
