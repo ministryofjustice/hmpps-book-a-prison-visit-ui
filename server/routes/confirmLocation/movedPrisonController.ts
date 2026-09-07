@@ -44,21 +44,24 @@ export default class MovedPrisonController {
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       req.session.confirmLocationSelectedPrison = prisonId
 
+      // Booker has chosen wrong location
       if (prisoner.prisonId !== prisonId) {
         return res.redirect(paths.PRISONER_MOVED.INCORRECT_LOCATION)
       }
 
+      // Correct location chosen: update registered prison
+      await this.bookerService.updatePrisonersRegisteredPrison({
+        bookerReference: booker.reference,
+        prisonerId: prisoner.prisonerNumber,
+        prisonId,
+      })
+
+      // Delete booker from session data after updating prisoner to force reload of data via populateCurrentBooker() middleware
+      delete req.session.booker
+
+      // Redirect based on prison status
       const isSupportedPrison = await this.prisonService.isSupportedPrison(prisonId)
-
       if (isSupportedPrison) {
-        await this.bookerService.updatePrisonersRegisteredPrison({
-          bookerReference: booker.reference,
-          prisonerId: prisoner.prisonerNumber,
-          prisonId,
-        })
-        // Delete booker from session data after updating prisoner to force reload of data via populateCurrentBooker() middleware
-        delete req.session.booker
-
         return res.redirect(paths.PRISONER_MOVED.LOCATION_UPDATED)
       }
 
@@ -88,6 +91,8 @@ export default class MovedPrisonController {
       })
     }
   }
+
+  // TODO fix to limit to prison register prisons (to stop TRN etc being selected)
 
   public validate(): ValidationChain[] {
     return [
