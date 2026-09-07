@@ -44,8 +44,8 @@ export default class MovedPrisonController {
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       req.session.confirmLocationSelectedPrison = prisonId
 
-      // Booker has chosen wrong location
-      if (prisoner.prisonId !== prisonId) {
+      // Booker has chosen wrong location or an invalid prison ID
+      if (prisoner.prisonId !== prisonId || !res.locals.prisonNames?.[prisonId]) {
         return res.redirect(paths.PRISONER_MOVED.INCORRECT_LOCATION)
       }
 
@@ -91,8 +91,6 @@ export default class MovedPrisonController {
       })
     }
   }
-
-  // TODO fix to limit to prison register prisons (to stop TRN etc being selected)
 
   public validate(): ValidationChain[] {
     return [
