@@ -5,7 +5,7 @@
     "noVoBalance": "{{name}} has used their allowance of visits for this month.",
     "bookFromDate": "You can book a visit from {{date}}.",
 
-    "transferOrRelease": "{{name}} is no longer at {{prisonName}}. They may have moved to another prison or been released.",
+    "transferOrRelease": "{{name}} is no longer at {{prisonName}}. They may have been released.",
     "findHowToBook": "If they have moved to another prison, <link>find out how to book a visit at their new prison</link>.",
     "findPrisoner": "For help contacting them, you can <link>apply to find a prisoner’s location</link>.",
 
