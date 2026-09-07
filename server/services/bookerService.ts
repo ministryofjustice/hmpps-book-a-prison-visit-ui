@@ -190,7 +190,13 @@ export default class BookerService {
     prisonerId: string
     prisonId: string
   }): Promise<PermittedPrisonerForBookerDto> {
-    return this.orchestrationApiClient.updatePrisonersRegisteredPrison({ bookerReference, prisonerId, prisonId })
+    const response = await this.orchestrationApiClient.updatePrisonersRegisteredPrison({
+      bookerReference,
+      prisonerId,
+      prisonId,
+    })
+    logger.info(`Registered prison for prisoner ${prisonerId} updated to ${prisonId} by booker ${bookerReference}`)
+    return response
   }
 
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
