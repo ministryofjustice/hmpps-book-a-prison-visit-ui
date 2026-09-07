@@ -124,6 +124,17 @@ describe('Confirm location', () => {
         })
     })
 
+    it('should redirect to incorrect location page if an invalid prison code is entered', () => {
+      return request(app)
+        .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+        .send({ prisonId: 'TRN' })
+        .expect(302)
+        .expect('Location', paths.PRISONER_MOVED.INCORRECT_LOCATION)
+        .expect(() => {
+          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+        })
+    })
+
     it('should redirect to unsupported prison page if correct prison is selected, but they do not use a digital service', () => {
       prisonService.isSupportedPrison.mockResolvedValue(false)
       sessionData.booker!.prisoners[0].prisonId = 'ACI'
@@ -133,19 +144,29 @@ describe('Confirm location', () => {
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
         .expect(() => {
-          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+          expect(sessionData.booker?.prisoners).toBeUndefined()
+          expect(bookerService.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
+            bookerReference: 'aaaa-bbbb-cccc',
+            prisonerId: 'A1234BC',
+            prisonId: 'ACI',
+          })
         })
     })
 
     it('should redirect to PVB prison page if correct prison is selected, but they use PVB', () => {
-      sessionData.booker!.prisoners[0].prisonId = 'ZZZ'
+      sessionData.booker!.prisoners[0].prisonId = 'CFI'
       return request(app)
         .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
-        .send({ prisonId: 'ZZZ' })
+        .send({ prisonId: 'CFI' })
         .expect(302)
         .expect('Location', paths.PRISONER_MOVED.PVB_PRISON)
         .expect(() => {
-          expect(bookerService.updatePrisonersRegisteredPrison).not.toHaveBeenCalled()
+          expect(sessionData.booker?.prisoners).toBeUndefined()
+          expect(bookerService.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
+            bookerReference: 'aaaa-bbbb-cccc',
+            prisonerId: 'A1234BC',
+            prisonId: 'CFI',
+          })
         })
     })
 

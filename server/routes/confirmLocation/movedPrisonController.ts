@@ -44,21 +44,24 @@ export default class MovedPrisonController {
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       req.session.confirmLocationSelectedPrison = prisonId
 
-      if (prisoner.prisonId !== prisonId) {
+      // Booker has chosen wrong location or an invalid prison ID
+      if (prisoner.prisonId !== prisonId || !res.locals.prisonNames?.[prisonId]) {
         return res.redirect(paths.PRISONER_MOVED.INCORRECT_LOCATION)
       }
 
+      // Correct location chosen: update registered prison
+      await this.bookerService.updatePrisonersRegisteredPrison({
+        bookerReference: booker.reference,
+        prisonerId: prisoner.prisonerNumber,
+        prisonId,
+      })
+
+      // Delete booker from session data after updating prisoner to force reload of data via populateCurrentBooker() middleware
+      delete req.session.booker
+
+      // Redirect based on prison status
       const isSupportedPrison = await this.prisonService.isSupportedPrison(prisonId)
-
       if (isSupportedPrison) {
-        await this.bookerService.updatePrisonersRegisteredPrison({
-          bookerReference: booker.reference,
-          prisonerId: prisoner.prisonerNumber,
-          prisonId,
-        })
-        // Delete booker from session data after updating prisoner to force reload of data via populateCurrentBooker() middleware
-        delete req.session.booker
-
         return res.redirect(paths.PRISONER_MOVED.LOCATION_UPDATED)
       }
 

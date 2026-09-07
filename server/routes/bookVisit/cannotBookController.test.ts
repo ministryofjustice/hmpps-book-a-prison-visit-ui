@@ -83,7 +83,7 @@ describe('A visit cannot be booked', () => {
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
-            'John Smith is no longer at Cardiff (HMP & YOI). They may have moved to another prison or been released.',
+            'John Smith is no longer at Cardiff (HMP & YOI). They may have been released.',
           )
 
           expect(sessionData.bookVisitJourney).toBe(undefined)

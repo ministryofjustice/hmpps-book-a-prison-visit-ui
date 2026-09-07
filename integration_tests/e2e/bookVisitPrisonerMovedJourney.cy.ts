@@ -71,7 +71,7 @@ context('Book visit journey - prisoner moved prison', () => {
 
       const prisonUpdatedPage = Page.verifyOnPage(PrisonUpdatedPage, 'Hewell (HMP & YOI)')
 
-      prisonUpdatedPage.bookVisit()
+      prisonUpdatedPage.continue()
 
       Page.verifyOnPage(SelectVisitorsPage)
     })
@@ -142,6 +142,7 @@ context('Book visit journey - prisoner moved prison', () => {
         'John is no longer at Hewell (HMP & YOI)',
       )
 
+      cy.task('stubUpdatePrisonersRegisteredPrison', { prisonId: 'ACI' })
       confirmLocationSelectPrisonPage.prisonDropdown('Altcourse (HMP & YOI)')
       confirmLocationSelectPrisonPage.continueButton()
 
@@ -180,6 +181,7 @@ context('Book visit journey - prisoner moved prison', () => {
       confirmLocationSelectPrisonPage.prisonDropdown('Foston Hall (HMP & YOI)')
 
       cy.task('stubGetSupportedPrisonIds', ['HEI']) // (Selected prison not supported)
+      cy.task('stubUpdatePrisonersRegisteredPrison', { prisonId: 'FHI' })
       confirmLocationSelectPrisonPage.continueButton()
 
       Page.verifyOnPage(PvbPrisonPage, 'Foston Hall (HMP & YOI)')

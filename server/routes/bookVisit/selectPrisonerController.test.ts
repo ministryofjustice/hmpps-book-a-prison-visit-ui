@@ -171,6 +171,75 @@ describe('Select prisoner', () => {
       },
     )
 
+    it('should redirect to cannot book page for prisoner in transfer (TRN)', () => {
+      bookerService.validatePrisoner.mockResolvedValue('PRISONER_TRANSFERRED_SUPPORTED_PRISON')
+      prisonService.getPrison.mockResolvedValue(prison)
+      const prisonerInTransfer = TestData.prisoner({ prisonId: 'TRN' })
+
+      sessionData = {
+        booker: { reference: bookerReference, prisoners: [prisonerInTransfer] },
+      } as SessionData
+
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: prisonerInTransfer.prisonerDisplayId.toString() })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect(() => {
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(
+            bookerReference,
+            prisonerInTransfer.prisonerNumber,
+          )
+          expect(prisonService.getPrison).not.toHaveBeenCalled()
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisonerInTransfer],
+            },
+            bookVisitJourney: {
+              prisoner: prisonerInTransfer,
+              cannotBookReason: 'TRANSFER_OR_RELEASE',
+            },
+          } as SessionData)
+        })
+    })
+
+    it('should redirect to cannot book page for a released prisoner (OUT)', () => {
+      bookerService.validatePrisoner.mockResolvedValue('PRISONER_RELEASED')
+      prisonService.getPrison.mockResolvedValue(prison)
+      const releasedPrisoner = TestData.prisoner({ prisonId: 'OUT' })
+
+      sessionData = {
+        booker: { reference: bookerReference, prisoners: [releasedPrisoner] },
+      } as SessionData
+
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: releasedPrisoner.prisonerDisplayId.toString() })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
+        .expect(() => {
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, releasedPrisoner.prisonerNumber)
+          expect(prisonService.getPrison).not.toHaveBeenCalled()
+
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [releasedPrisoner],
+            },
+            bookVisitJourney: {
+              prisoner: releasedPrisoner,
+              cannotBookReason: 'TRANSFER_OR_RELEASE',
+            },
+          } as SessionData)
+        })
+    })
+
     it('should redirect to cannot book page with code NO_VO_BALANCE if prisoner has no VOs', () => {
       bookerService.validatePrisoner.mockResolvedValue(true)
       prisonService.getPrison.mockResolvedValue(prison)
