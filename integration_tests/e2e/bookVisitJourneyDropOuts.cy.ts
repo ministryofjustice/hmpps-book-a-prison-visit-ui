@@ -199,7 +199,7 @@ context('Book visit journey - drop-out points', () => {
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getCannotBookReason().contains('John Smith')
       cannotBookPage.getCannotBookReason().contains(prison.prisonName)
-      cannotBookPage.getCannotBookReason().contains('have moved to another prison or been released')
+      cannotBookPage.getCannotBookReason().contains('have been released')
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()

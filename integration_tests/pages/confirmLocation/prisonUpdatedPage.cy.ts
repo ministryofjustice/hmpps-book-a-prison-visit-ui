@@ -5,7 +5,7 @@ export default class PrisonUpdatedPage extends Page {
     super(`John is at ${prison}`)
   }
 
-  bookVisit = (): void => {
-    cy.get('[data-test=book-a-visit]').click()
+  continue = (): void => {
+    cy.get('[data-test=continue]').click()
   }
 }
