@@ -13,18 +13,15 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       {% if prisoner %}
-
         <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
-
-        <h2 class="govuk-heading-m">{{ t("visits:future.futureVisits") }}</h2>
 
         {% if visits | length %}
           {% for visit in visits %}
             {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
 
-            <h3 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">
+            <h2 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">
               {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
-            </h3>
+            </h2>
 
             <ul class="govuk-list">
               {% if isRequest %}
@@ -36,6 +33,7 @@
                 }) }}
                 </li>
               {% endif %}
+
               {% if visit.prisonId !== prisoner.registeredPrisonId %}
                 <li>
                   {{ govukTag({
@@ -47,6 +45,14 @@
                 }) }}
                 </li>
               {% endif %}
+
+              <li data-test="visit-prisoner-name-{{ loop.index }}">
+                {{- t("common:prisoner.prisonerAtPrison", {
+                  prisonerName: visit | prisonerNameFirstLast,
+                  prisonName: visit.prisonId | getPrisonName(prisonNames, language)
+                }) -}}
+              </li>
+
               <li data-test="visit-start-end-time-{{ loop.index }}">
                 {{- t("common:dateTime.timeRange", {
                   startTime: visit.startTimestamp | formatTimeFromDateTime(language),
@@ -54,18 +60,11 @@
                 }) -}}
               </li>
 
-              <li data-test="visit-prisoner-name-{{ loop.index }}">
-                {{- prisoner | prisonerNameFirstLast -}}
-              </li>
-
-              <li data-test="visit-prison-name-{{ loop.index }}">
-                {{- visit.prisonId | getPrisonName(prisonNames, language) -}}
-              </li>
-
               <li>
                 {{ t("common:labels.visitReference") }}:
                 <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
               </li>
+
               <li>
                 <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
                   {{- t("visits:shared.viewDetailsLink") }}

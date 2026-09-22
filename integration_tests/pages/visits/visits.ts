@@ -11,8 +11,6 @@ export default class VisitsPage extends Page {
 
   visitPrisonerName = (index: number): PageElement => cy.get(`[data-test="visit-prisoner-name-${index}"]`)
 
-  visitPrisonName = (index: number): PageElement => cy.get(`[data-test="visit-prison-name-${index}"]`)
-
   visitReference = (index: number): PageElement => cy.get(`[data-test=visit-reference-${index}]`)
 
   visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-${index}]`)
