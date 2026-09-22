@@ -32,7 +32,6 @@
 
   "future": {
     "title": "Visits",
-    "futureVisits": "Future visits",
     "awaitingReview": "Awaiting review",
     "cancelLinkHidden": "for {{startTime}} on {{date}}",
     "noFutureVisits": "There are no future visits or requests.",
