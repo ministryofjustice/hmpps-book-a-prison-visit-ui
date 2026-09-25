@@ -3,8 +3,11 @@ import logAccessibilityViolations from '../support/logAccessibilityViolations'
 export type PageElement = Cypress.Chainable<JQuery>
 
 export default abstract class Page {
-  static verifyOnPage<T>(constructor: new (title?: string) => T, title?: string): T {
-    return new constructor(title)
+  static verifyOnPage<T>(
+    constructor: new (data?: string | Record<string, string>) => T,
+    data?: string | Record<string, string>,
+  ): T {
+    return new constructor(data)
   }
 
   constructor(
