@@ -55,10 +55,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
-      const confirmLocationSelectPrisonPage = Page.verifyOnPage(
-        ConfirmLocationSelectPrison,
-        'John is no longer at Drake Hall (HMP & YOI)',
-      )
+      const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
+        prisoner: 'John',
+        prisonName: 'Drake Hall (HMP & YOI)',
+      })
 
       confirmLocationSelectPrisonPage.prisonDropdown('Hewell (HMP & YOI)')
 
@@ -100,10 +100,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
-      const confirmLocationSelectPrisonPage = Page.verifyOnPage(
-        ConfirmLocationSelectPrison,
-        'John is no longer at Foston Hall (HMP & YOI)',
-      )
+      const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
+        prisoner: 'John',
+        prisonName: 'Foston Hall (HMP & YOI)',
+      })
       confirmLocationSelectPrisonPage.findPrisonerLink().should('have.attr', 'href', 'https://www.gov.uk/find-prisoner')
       confirmLocationSelectPrisonPage.prisonDropdown('Cardiff (HMP & YOI)')
       confirmLocationSelectPrisonPage.continueButton()
@@ -137,10 +137,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
-      const confirmLocationSelectPrisonPage = Page.verifyOnPage(
-        ConfirmLocationSelectPrison,
-        'John is no longer at Hewell (HMP & YOI)',
-      )
+      const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
+        prisoner: 'John',
+        prisonName: 'Hewell (HMP & YOI)',
+      })
 
       cy.task('stubUpdatePrisonersRegisteredPrison', { prisonId: 'ACI' })
       confirmLocationSelectPrisonPage.prisonDropdown('Altcourse (HMP & YOI)')
@@ -173,10 +173,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
-      const confirmLocationSelectPrisonPage = Page.verifyOnPage(
-        ConfirmLocationSelectPrison,
-        'John is no longer at Drake Hall (HMP & YOI)',
-      )
+      const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
+        prisoner: 'John',
+        prisonName: 'Drake Hall (HMP & YOI)',
+      })
 
       confirmLocationSelectPrisonPage.prisonDropdown('Foston Hall (HMP & YOI)')
 
