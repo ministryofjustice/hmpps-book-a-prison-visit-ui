@@ -100,7 +100,7 @@
     "cypress": "^15.21.1",
     "cypress-axe": "^1.7.0",
     "cypress-multi-reporters": "^2.0.5",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.1",
     "jest": "^30.5.1",
     "jest-html-reporter": "^4.4.2",
     "jest-junit": "^17.0.0",
