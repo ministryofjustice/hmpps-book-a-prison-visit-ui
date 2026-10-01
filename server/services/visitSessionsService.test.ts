@@ -33,7 +33,7 @@ describe('Visit sessions service', () => {
     it('should return a VisitSessionsCalendar with visit sessions for prison / prisoner / visitors', async () => {
       const prisoner = TestData.prisoner()
       const visitorIds = [1, 2]
-      const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison
+      const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison client type
       const visitSessions: AvailableVisitSessionDto[] = [
         // first session after the fake start date to check we get empty dates at start
         TestData.availableVisitSessionDto({

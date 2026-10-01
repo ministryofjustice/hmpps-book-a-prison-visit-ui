@@ -239,7 +239,7 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
@@ -360,7 +360,7 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
@@ -423,7 +423,7 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(sessionData.bookVisitJourney).toStrictEqual({

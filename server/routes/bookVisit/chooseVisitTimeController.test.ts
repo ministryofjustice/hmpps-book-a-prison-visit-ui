@@ -24,7 +24,9 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto({ policyNoticeDaysMax: 6 }) // small booking window for testing
+const prison = TestData.prisonDto({
+  publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 6 }), // small booking window for testing
+})
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const firstSessionDate = '2024-05-30'
@@ -179,7 +181,7 @@ describe('Choose visit time', () => {
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
             bookerReference,
-            daysAhead: prison.policyNoticeDaysMax,
+            daysAhead: prison.publicClient!.policyNoticeDaysMax,
           })
         })
     })
@@ -336,7 +338,7 @@ describe('Choose visit time', () => {
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
             bookerReference,
-            daysAhead: prison.policyNoticeDaysMax,
+            daysAhead: prison.publicClient!.policyNoticeDaysMax,
           })
         })
     })

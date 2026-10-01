@@ -24,6 +24,106 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/probation-offices/id/{probationOfficeId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified probation office
+     * @description Information on a specific probation office
+     */
+    get: operations['getProbationOfficeFromId']
+    /**
+     * Update specified probation office details
+     * @description Updates probation office information, excluding its addresses, email addresses and phone numbers. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateProbationOffice']
+    post?: never
+    /**
+     * Delete specified probation office
+     * @description Deletes a probation office, along with any addresses, email addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteProbationOffice']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified probation office phone number
+     * @description Updates a single phone number for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateProbationOfficePhoneNumber']
+    post?: never
+    /**
+     * Delete specified probation office phone number
+     * @description Deletes a single phone number for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteProbationOfficePhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/email-address/{emailAddressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified probation office email address
+     * @description Updates a single email address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateProbationOfficeEmailAddress']
+    post?: never
+    /**
+     * Delete specified probation office email address
+     * @description Deletes a single email address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteProbationOfficeEmailAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified probation office address
+     * @description Updates a single address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateProbationOfficeAddress']
+    post?: never
+    /**
+     * Delete specified probation office address
+     * @description Deletes a single address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteProbationOfficeAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/prison-maintenance/id/{prisonId}': {
     parameters: {
       query?: never
@@ -84,6 +184,566 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/police-custody-suites/id/{policeCustodySuiteId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified police custody suite
+     * @description Information on a specific police custody suite
+     */
+    get: operations['getPoliceCustodySuiteFromId']
+    /**
+     * Update specified police custody suite details
+     * @description Updates police custody suite information, excluding its addresses, email addresses and phone numbers. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updatePoliceCustodySuite']
+    post?: never
+    /**
+     * Delete specified police custody suite
+     * @description Deletes a police custody suite, along with any addresses, email addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deletePoliceCustodySuite']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified police custody suite phone number
+     * @description Updates a single phone number for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updatePoliceCustodySuitePhoneNumber']
+    post?: never
+    /**
+     * Delete specified police custody suite phone number
+     * @description Deletes a single phone number for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deletePoliceCustodySuitePhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/email-address/{emailAddressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified police custody suite email address
+     * @description Updates a single email address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updatePoliceCustodySuiteEmailAddress']
+    post?: never
+    /**
+     * Delete specified police custody suite email address
+     * @description Deletes a single email address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deletePoliceCustodySuiteEmailAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified police custody suite address
+     * @description Updates a single address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updatePoliceCustodySuiteAddress']
+    post?: never
+    /**
+     * Delete specified police custody suite address
+     * @description Deletes a single address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deletePoliceCustodySuiteAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified agency
+     * @description Information on a specific agency
+     */
+    get: operations['getOtherAgencyFromId']
+    /**
+     * Update specified agency details
+     * @description Updates agency information, excluding its addresses, email addresses and phone numbers. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateOtherAgency']
+    post?: never
+    /**
+     * Delete specified agency
+     * @description Deletes a agency, along with any addresses, email addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteOtherAgency']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified agency phone number
+     * @description Updates a single phone number for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateOtherAgencyPhoneNumber']
+    post?: never
+    /**
+     * Delete specified agency phone number
+     * @description Deletes a single phone number for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteOtherAgencyPhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/email-address/{emailAddressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified agency email address
+     * @description Updates a single email address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateOtherAgencyEmailAddress']
+    post?: never
+    /**
+     * Delete specified agency email address
+     * @description Deletes a single email address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteOtherAgencyEmailAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified agency address
+     * @description Updates a single address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateOtherAgencyAddress']
+    post?: never
+    /**
+     * Delete specified agency address
+     * @description Deletes a single address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteOtherAgencyAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals/id/{hospitalId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified hospital
+     * @description Information on a specific hospital
+     */
+    get: operations['getHospitalFromId']
+    /**
+     * Update specified hospital details
+     * @description Updates hospital information, excluding its addresses and phone numbers. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateHospital']
+    post?: never
+    /**
+     * Delete specified hospital
+     * @description Deletes a hospital, along with any addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteHospital']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals/id/{hospitalId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified hospital phone number
+     * @description Updates a single phone number for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateHospitalPhoneNumber']
+    post?: never
+    /**
+     * Delete specified hospital phone number
+     * @description Deletes a single phone number for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteHospitalPhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals/id/{hospitalId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified hospital address
+     * @description Updates a single address for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateHospitalAddress']
+    post?: never
+    /**
+     * Delete specified hospital address
+     * @description Deletes a single address for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteHospitalAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified court
+     * @description Information on a specific court
+     */
+    get: operations['getCourtFromId']
+    /**
+     * Update specified court details
+     * @description Updates court information, excluding its addresses. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    put: operations['updateCourt']
+    post?: never
+    /**
+     * Delete specified court
+     * @description Deletes a court, along with any addresses, email addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    delete: operations['deleteCourt']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified court phone number
+     * @description Updates a single phone number for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    put: operations['updateCourtPhoneNumber']
+    post?: never
+    /**
+     * Delete specified court phone number
+     * @description Deletes a single phone number for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    delete: operations['deleteCourtPhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/email-address/{emailAddressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified court email address
+     * @description Updates a single email address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    put: operations['updateCourtEmailAddress']
+    post?: never
+    /**
+     * Delete specified court email address
+     * @description Deletes a single email address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    delete: operations['deleteCourtEmailAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified court address
+     * @description Updates a single address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    put: operations['updateCourtAddress']
+    post?: never
+    /**
+     * Delete specified court address
+     * @description Deletes a single address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    delete: operations['deleteCourtAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get specified approved premises
+     * @description Information on a specific approved premises
+     */
+    get: operations['getApprovedPremisesFromId']
+    /**
+     * Update specified approved premises details
+     * @description Updates approved premises information, excluding its addresses, email addresses and phone numbers. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateApprovedPremises']
+    post?: never
+    /**
+     * Delete specified approved premises
+     * @description Deletes a approved premises, along with any addresses, email addresses and phone numbers associated with it. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteApprovedPremises']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/phone-number/{phoneNumberId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified approved premises phone number
+     * @description Updates a single phone number for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateApprovedPremisesPhoneNumber']
+    post?: never
+    /**
+     * Delete specified approved premises phone number
+     * @description Deletes a single phone number for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteApprovedPremisesPhoneNumber']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/email-address/{emailAddressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified approved premises email address
+     * @description Updates a single email address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateApprovedPremisesEmailAddress']
+    post?: never
+    /**
+     * Delete specified approved premises email address
+     * @description Deletes a single email address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteApprovedPremisesEmailAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/address/{addressId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /**
+     * Update specified approved premises address
+     * @description Updates a single address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    put: operations['updateApprovedPremisesAddress']
+    post?: never
+    /**
+     * Delete specified approved premises address
+     * @description Deletes a single address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteApprovedPremisesAddress']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all probation offices
+     * @description Information on all probation offices
+     */
+    get: operations['getProbationOffices']
+    put?: never
+    /**
+     * Create a new probation office
+     * @description Creates a probation office, along with any addresses, email addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createProbationOffice']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a probation office phone number
+     * @description Creates a new phone number for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createProbationOfficePhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/email-address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a probation office email address
+     * @description Creates a new email address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createProbationOfficeEmailAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/probation-offices/id/{probationOfficeId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a probation office address
+     * @description Creates a new address for a probation office. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createProbationOfficeAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/prisons/prisonsByIds': {
     parameters: {
       query?: never
@@ -138,6 +798,446 @@ export interface paths {
      * @description Adds an additional Address to an existing Prison, role required is MAINTAIN_REF_DATA or MAINTAIN_PRISON_DATA
      */
     post: operations['addAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all police custody suites
+     * @description Information on all police custody suites
+     */
+    get: operations['getPoliceCustodySuites']
+    put?: never
+    /**
+     * Create a new police custody suite
+     * @description Creates a police custody suite, along with any addresses, email addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createPoliceCustodySuite']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a police custody suite phone number
+     * @description Creates a new phone number for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createPoliceCustodySuitePhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/email-address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a police custody suite email address
+     * @description Creates a new email address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createPoliceCustodySuiteEmailAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/police-custody-suites/id/{policeCustodySuiteId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a police custody suite address
+     * @description Creates a new address for a police custody suite. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createPoliceCustodySuiteAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all agencies
+     * @description Information on all agencies
+     */
+    get: operations['getOtherAgencies']
+    put?: never
+    /**
+     * Create a new agency
+     * @description Creates a agency, along with any addresses, email addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createOtherAgency']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a agency phone number
+     * @description Creates a new phone number for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createOtherAgencyPhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/email-address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a agency email address
+     * @description Creates a new email address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createOtherAgencyEmailAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/other-agencies/id/{agencyId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a agency address
+     * @description Creates a new address for a agency. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createOtherAgencyAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/legacy/sync/agency/id/{agencyId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Creates or updates an agency of any type
+     * @description Used for synchronising data from NOMIS. This creates an agency, or updates it if it already exists. Role required is ROLE_HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createOrUpdateAgency']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/legacy/migrate/agency/id/{agencyId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Migrates an agency of any type
+     * @description Used for migrating data from NOMIS. This creates an agency, or updates it if it already exists. Role required is ROLE_HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['migrateAgency']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all hospitals
+     * @description Information on all hospitals
+     */
+    get: operations['getHospitals']
+    put?: never
+    /**
+     * Create a new hospital
+     * @description Creates a hospital, along with any addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createHospital']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals/id/{hospitalId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a hospital phone number
+     * @description Creates a new phone number for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createHospitalPhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/hospitals/id/{hospitalId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a hospital address
+     * @description Creates a new address for a hospital. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createHospitalAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all courts
+     * @description Information on all courts
+     */
+    get: operations['getCourts']
+    put?: never
+    /**
+     * Create a new court
+     * @description Creates a court, along with any addresses, email addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    post: operations['createCourt']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a court phone number
+     * @description Creates a new phone number for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    post: operations['createCourtPhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/email-address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a court email address
+     * @description Creates a new email address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    post: operations['createCourtEmailAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/courts/id/{courtId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a court address
+     * @description Creates a new address for a court. Requires role HMPPS_REGISTERS_API__MAINTAIN__RW
+     */
+    post: operations['createCourtAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all approved premises
+     * @description Information on all approved premises
+     */
+    get: operations['getApprovedPremises']
+    put?: never
+    /**
+     * Create a new approved premises
+     * @description Creates a approved premises, along with any addresses, email addresses and phone numbers supplied. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createApprovedPremises']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/phone-number': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a approved premises phone number
+     * @description Creates a new phone number for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createApprovedPremisesPhoneNumber']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/email-address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a approved premises email address
+     * @description Creates a new email address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createApprovedPremisesEmailAddress']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/approved-premises/id/{approvedPremisesId}/address': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Create a approved premises address
+     * @description Creates a new address for a approved premises. Requires role HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    post: operations['createApprovedPremisesAddress']
     delete?: never
     options?: never
     head?: never
@@ -244,6 +1344,146 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/legacy/reconciliation/{agencyId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns details of an agency of any type for reconciliation
+     * @description Returns the details of any agency (court, hospital, probation office, approved premises, police custody suite, or generic agency) as a LegacyAgencyDto. Role required is ROLE_HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    get: operations['getAgencyDetails']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/legacy/reconciliation/ids/all': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Returns IDs of all non-prison agencies for reconciliation
+     * @description Returns the IDs of all courts, hospitals, probation offices, approved premises, police custody suites, and generic agencies. Role required is ROLE_HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    get: operations['getAllAgencyIds']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/agencies': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all agencies
+     * @description Summary information on all agencies, including prisons, probation offices, police custody suites, courts, hospitals and other agencies ordered by agency ID ascending
+     */
+    get: operations['getAgencies']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/agencies/{agencyId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get details of an agency
+     * @description Details of a single agency of any type (court, hospital, police custody suite, probation office, approved premises, prison or other agency)
+     */
+    get: operations['getAgency']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/agencies/type/{type}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all agencies of a type
+     * @description Details of all agencies of the specified type (for example: court, hospital, secure hospital, police custody suite, probation office, approved premises, prison)
+     */
+    get: operations['getAgenciesByType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/agencies/legacy-type/{type}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all agencies using the NOMIS type
+     * @description Details of all agencies of the specified legacy (NOMIS) agency type code, e.g. INST, CRT, HOSPITAL, HSHOSP, COMM, CRC, POLICE, POLSTN, APPR, AIRPORT, HOST, IMDC, OUT, PECS, PSY, SCH, STC, YOT, FNP
+     */
+    get: operations['getAgenciesByLegacyType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/legacy/admin/sync/agency/all': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    /**
+     * Deletes all non-prison agency data
+     * @description Deletes all synchronized agency data except prisons. Role required is ROLE_HMPPS_REGISTERS_API__SYNCHRONISATION__RW
+     */
+    delete: operations['deleteAllAgencies']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -252,10 +1492,10 @@ export interface components {
     ContactDetailsDto: {
       /**
        * @description Department Type
-       * @example SOCIAL_VISIT or PRISON
+       * @example SOCIAL_VISIT, OFFICIAL_VISIT or PRISON
        * @enum {string}
        */
-      type: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
+      type: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT' | 'OFFICIAL_VISIT'
       /**
        * Format: email
        * @description email address
@@ -281,6 +1521,250 @@ export interface components {
       userMessage?: string | null
       developerMessage?: string | null
       moreInfo?: string | null
+    }
+    /** @description Probation Office Update Record */
+    UpdateProbationOfficeDto: {
+      /**
+       * @description Name
+       * @example Sheffield Probation Office
+       */
+      probationOfficeName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Probation Office
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Subarea code
+       * @example SHEFF
+       */
+      subareaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+    }
+    AgencyAddressDto: {
+      /**
+       * Format: int64
+       * @description Unique ID of the address
+       * @example 10000
+       */
+      id: number
+      /**
+       * @description Address line 1
+       * @example Bawtry Road
+       */
+      addressLine1?: string | null
+      /**
+       * @description Address line 2
+       * @example Hatfield Woodhouse
+       */
+      addressLine2?: string | null
+      /**
+       * @description Village/Town/City
+       * @example Doncaster
+       */
+      town?: string | null
+      /**
+       * @description County
+       * @example South Yorkshire
+       */
+      county?: string | null
+      /**
+       * @description Postcode
+       * @example DN7 6BW
+       */
+      postcode?: string | null
+      /**
+       * @description Country
+       * @example England
+       */
+      country?: string | null
+    }
+    AgencyEmailDto: {
+      /**
+       * Format: int64
+       * @description Unique ID of the email address
+       * @example 10000
+       */
+      id: number
+      /**
+       * @description Email address
+       * @example example@example.com
+       */
+      address?: string | null
+    }
+    AgencyPhoneDto: {
+      /**
+       * Format: int64
+       * @description Unique ID of the phone number
+       * @example 10000
+       */
+      id: number
+      /**
+       * @description Phone number
+       * @example 0114 555 9898
+       */
+      number?: string | null
+    }
+    CodeDescription: {
+      code: string
+      description: string
+    }
+    /** @description Probation Office Information */
+    ProbationOfficeDto: {
+      /**
+       * @description Probation Office ID
+       * @example SHEFPB
+       */
+      probationOfficeId: string
+      /**
+       * @description Name
+       * @example Sheffield Probation Office
+       */
+      probationOfficeName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Probation Office
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       */
+      accessibleAccess?: string | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Subarea */
+      subarea?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographical Area */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['AgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Phone Number Update Record */
+    UpdatePhoneNumberDto: {
+      /**
+       * @description Phone number
+       * @example 0114 555 9898
+       */
+      number: string
+    }
+    /** @description Email Address Update Record */
+    UpdateEmailAddressDto: {
+      /**
+       * Format: email
+       * @description Email address
+       * @example example@example.com
+       */
+      address: string
+    }
+    /** @description Address Update Record */
+    UpdateAddressDto: {
+      /**
+       * @description Address line 1
+       * @example Bawtry Road
+       */
+      addressLine1?: string | null
+      /**
+       * @description Address line 2
+       * @example Hatfield Woodhouse
+       */
+      addressLine2?: string | null
+      /**
+       * @description Village/Town/City
+       * @example Doncaster
+       */
+      town: string
+      /**
+       * @description County
+       * @example South Yorkshire
+       */
+      county?: string | null
+      /**
+       * @description Postcode
+       * @example DN7 6BW
+       */
+      postcode: string
+      /**
+       * @description Country
+       * @example England
+       */
+      country: string
     }
     /** @description Prison Update Record */
     UpdatePrisonDto: {
@@ -466,38 +1950,643 @@ export interface components {
        */
       countryInWelsh?: string | null
     }
-    /** @description Address Update Record */
-    UpdateAddressDto: {
+    /** @description Police Custody Suite Update Record */
+    UpdatePoliceCustodySuiteDto: {
       /**
-       * @description Address line 1
-       * @example Bawtry Road
+       * @description Name
+       * @example Sheffield Police Custody Suite
        */
-      addressLine1?: string | null
+      policeCustodySuiteName: string
       /**
-       * @description Address line 2
-       * @example Hatfield Woodhouse
+       * @description Description
+       * @example Sheffield City Centre Police Custody Suite
        */
-      addressLine2?: string | null
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
       /**
-       * @description Village/Town/City
-       * @example Doncaster
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
        */
-      town: string
+      inactiveDate?: string | null
       /**
-       * @description County
-       * @example South Yorkshire
+       * @description CJIT Code
+       * @example 123456789
        */
-      county?: string | null
+      cjitCode?: string | null
       /**
-       * @description Postcode
-       * @example DN7 6BW
+       * @description Area code
+       * @example 52
        */
-      postcode: string
+      areaCode?: string | null
       /**
-       * @description Country
-       * @example England
+       * @description Region code
+       * @example YOHUM
        */
-      country: string
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+    }
+    /** @description Police Custody Suite Information */
+    PoliceCustodySuiteDto: {
+      /**
+       * @description Police Custody Suite ID
+       * @example SHFPCS
+       */
+      policeCustodySuiteId: string
+      /**
+       * @description Name
+       * @example Sheffield Police Custody Suite
+       */
+      policeCustodySuiteName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Police Custody Suite
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /** Format: date */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographical Area */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['AgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Other Agency Update Record */
+    UpdateOtherAgencyDto: {
+      /**
+       * @description Name
+       * @example Sheffield Agency
+       */
+      agencyName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Agency
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * @description Agency type
+       * @example PROBATION_CRC
+       * @enum {string}
+       */
+      otherAgencyType:
+        | 'AIRPORT'
+        | 'PROBATION_CRC'
+        | 'FOREIGN_NATIONAL_PRISON'
+        | 'VOLUNTARY_HOSTEL'
+        | 'IMMIGRATION_DETENTION_CENTRE'
+        | 'OUTSIDE'
+        | 'PECS'
+        | 'PSYCHIATRIC_CARE'
+        | 'CHILDREN_SECURE_HOME'
+        | 'SECURE_TRAINING_CENTRE'
+        | 'YOT'
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+    }
+    /** @description Other Agency Information */
+    OtherAgencyDto: {
+      /**
+       * @description Agency ID
+       * @example SHEFCC
+       */
+      agencyId: string
+      /**
+       * @description Name
+       * @example Sheffield Agency
+       */
+      agencyName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Agency
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       */
+      accessibleAccess?: string | null
+      /**
+       * @description Agency type
+       * @example PROBATION_CRC
+       */
+      agencyType: string
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographical Area */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['AgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Hospital Update Record */
+    UpdateHospitalDto: {
+      /**
+       * @description Name
+       * @example N Staffs Youth Hospital - Newcastle
+       */
+      hospitalName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Hospital - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Is high security restricted hospital */
+      highSecurity: boolean
+    }
+    /** @description Hospital Information */
+    HospitalDto: {
+      /**
+       * @description Hospital ID
+       * @example NWCLYC
+       */
+      hospitalId: string
+      /**
+       * @description Name
+       * @example N Staffs Youth Hospital - Newcastle
+       */
+      hospitalName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Hospital - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographic Region */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description Is high security restricted hospital */
+      highSecurity: boolean
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Court Update Record */
+    UpdateCourtDto: {
+      /**
+       * @description Name
+       * @example N Staffs Youth Court - Newcastle
+       */
+      courtName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Court - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /**
+       * @description Court Type code
+       * @example CC
+       */
+      courtTypeCode: string
+    }
+    /** @description Court Information */
+    CourtDto: {
+      /**
+       * @description Court ID
+       * @example NWCLYC
+       */
+      courtId: string
+      /**
+       * @description Name
+       * @example N Staffs Youth Court - Newcastle
+       */
+      courtName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Court - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       */
+      accessibleAccess?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographical Area */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description courtType */
+      courtType?: components['schemas']['CodeDescription'] | null
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['AgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Approved Premises Update Record */
+    UpdateApprovedPremisesDto: {
+      /**
+       * @description Name
+       * @example Sheffield Approved Premises
+       */
+      approvedPremisesName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Approved Premises
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+    }
+    /** @description Approved Premises Information */
+    ApprovedPremisesDto: {
+      /**
+       * @description Approved Premises ID
+       * @example SHEFAP
+       */
+      approvedPremisesId: string
+      /**
+       * @description Name
+       * @example Sheffield Approved Premises
+       */
+      approvedPremisesName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Approved Premises
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       */
+      accessibleAccess?: string | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+      /** @description Geographical Area */
+      geographicalArea?: components['schemas']['CodeDescription'] | null
+      /** @description Local Authority */
+      localAuthority?: components['schemas']['CodeDescription'] | null
+      /** @description Prisoner Payroll Region */
+      payrollRegion?: components['schemas']['CodeDescription'] | null
+      /** @description addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['AgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['AgencyPhoneDto'][]
+    }
+    /** @description Probation Office Create Record */
+    CreateProbationOfficeDto: {
+      /**
+       * @description Probation Office ID
+       * @example SHEFPB
+       */
+      probationOfficeId: string
+      /**
+       * @description Name
+       * @example Sheffield Probation Office
+       */
+      probationOfficeName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Probation Office
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Subarea code
+       * @example SHEFF
+       */
+      subareaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Email addresses */
+      emailAddresses: components['schemas']['UpdateEmailAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
     }
     PrisonRequest: {
       /** @description List of prison ids */
@@ -545,6 +2634,513 @@ export interface components {
        */
       categories: ('A' | 'B' | 'C' | 'D' | 'OPEN' | 'CLOSED')[]
     }
+    /** @description Police Custody Suite Create Record */
+    CreatePoliceCustodySuiteDto: {
+      /**
+       * @description Police Custody Suite ID
+       * @example SHFPCS
+       */
+      policeCustodySuiteId: string
+      /**
+       * @description Name
+       * @example Sheffield Police Custody Suite
+       */
+      policeCustodySuiteName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Police Custody Suite
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Email addresses */
+      emailAddresses: components['schemas']['UpdateEmailAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
+    }
+    /** @description Other Agency Create Record */
+    CreateOtherAgencyDto: {
+      /**
+       * @description Other Agency ID
+       * @example SHEFCC
+       */
+      agencyId: string
+      /**
+       * @description Name
+       * @example Sheffield Agency
+       */
+      agencyName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Agency
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * @description Agency type
+       * @example PROBATION_CRC
+       * @enum {string}
+       */
+      otherAgencyType:
+        | 'AIRPORT'
+        | 'PROBATION_CRC'
+        | 'FOREIGN_NATIONAL_PRISON'
+        | 'VOLUNTARY_HOSTEL'
+        | 'IMMIGRATION_DETENTION_CENTRE'
+        | 'OUTSIDE'
+        | 'PECS'
+        | 'PSYCHIATRIC_CARE'
+        | 'CHILDREN_SECURE_HOME'
+        | 'SECURE_TRAINING_CENTRE'
+        | 'YOT'
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Email addresses */
+      emailAddresses: components['schemas']['UpdateEmailAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
+    }
+    LegacyAgencyAddressDto: {
+      /**
+       * @description Address line 1
+       * @example Bawtry Road
+       */
+      addressLine1?: string | null
+      /**
+       * @description Address line 2
+       * @example Hatfield Woodhouse
+       */
+      addressLine2?: string | null
+      /**
+       * @description Village/Town/City
+       * @example Doncaster
+       */
+      town?: string | null
+      /**
+       * @description County
+       * @example South Yorkshire
+       */
+      county?: string | null
+      /**
+       * @description Postcode
+       * @example DN7 6BW
+       */
+      postcode?: string | null
+      /**
+       * @description Country
+       * @example England
+       */
+      country?: string | null
+    }
+    /** @description Agency Information */
+    LegacyAgencyDto: {
+      /**
+       * @description Agency Type
+       * @example COURT
+       */
+      agencyType: components['schemas']['LegacyAgencyType']
+      /**
+       * @description Name
+       * @example N Staffs Youth Court - Newcastle
+       */
+      name: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Court - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area Code
+       * @example NW
+       */
+      areaCode?: string | null
+      /**
+       * @description Subarea Code
+       * @example SHEFF
+       */
+      subareaCode?: string | null
+      /**
+       * @description Region Code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographic Region code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example HS
+       */
+      payrollRegionCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Court Type code
+       * @example CC
+       */
+      courtTypeCode?: string | null
+      /**
+       * @description Accessible Access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description addresses */
+      addresses: components['schemas']['LegacyAgencyAddressDto'][]
+      /** @description emailAddresses */
+      emailAddresses: components['schemas']['LegacyAgencyEmailDto'][]
+      /** @description phoneNumbers */
+      phoneNumbers: components['schemas']['LegacyAgencyPhoneDto'][]
+    }
+    LegacyAgencyEmailDto: {
+      /**
+       * @description Email address
+       * @example example@example.com
+       */
+      address: string
+    }
+    LegacyAgencyPhoneDto: {
+      /**
+       * @description Phone number
+       * @example 0114 555 9898
+       */
+      number: string
+    }
+    /** @enum {string} */
+    LegacyAgencyType:
+      | 'PRISON'
+      | 'COURT'
+      | 'HOSPITAL'
+      | 'SECURE_HOSPITAL'
+      | 'PROBATION_OFFICE'
+      | 'POLICE_CUSTODY_SUITE'
+      | 'APPROVED_PREMISES'
+      | 'AIRPORT'
+      | 'PROBATION_CRC'
+      | 'FOREIGN_NATIONAL_PRISON'
+      | 'VOLUNTARY_HOSTEL'
+      | 'IMMIGRATION_DETENTION_CENTRE'
+      | 'OUTSIDE'
+      | 'PECS'
+      | 'PSYCHIATRIC_CARE'
+      | 'CHILDREN_SECURE_HOME'
+      | 'SECURE_TRAINING_CENTRE'
+      | 'YOT'
+    LegacyAgencyResponse: {
+      updated: boolean
+    }
+    /** @description Hospital Create Record */
+    CreateHospitalDto: {
+      /**
+       * @description Hospital ID
+       * @example SHEFCC
+       */
+      hospitalId: string
+      /**
+       * @description Name
+       * @example N Staffs Youth Hospital - Newcastle
+       */
+      hospitalName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Hospital - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Is high security restricted hospital */
+      highSecurity: boolean
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
+    }
+    /** @description Court Create Record */
+    CreateCourtDto: {
+      /**
+       * @description Court ID
+       * @example SHEFCC
+       */
+      courtId: string
+      /**
+       * @description Name
+       * @example N Staffs Youth Court - Newcastle
+       */
+      courtName: string
+      /**
+       * @description Description
+       * @example North Staffordshire Youth Court - Newcastle under Lyme
+       */
+      description?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /**
+       * @description Court Type code
+       * @example CC
+       */
+      courtTypeCode: string
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Email addresses */
+      emailAddresses: components['schemas']['UpdateEmailAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
+    }
+    /** @description Approved Premises Create Record */
+    CreateApprovedPremisesDto: {
+      /**
+       * @description Approved Premises ID
+       * @example SHEFAP
+       */
+      approvedPremisesId: string
+      /**
+       * @description Name
+       * @example Sheffield Approved Premises
+       */
+      approvedPremisesName: string
+      /**
+       * @description Description
+       * @example Sheffield City Centre Approved Premises
+       */
+      description?: string | null
+      /**
+       * @description Contact
+       * @example John Smith
+       */
+      contact?: string | null
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Accessible access
+       * @example ACCESSIBLE
+       * @enum {string|null}
+       */
+      accessibleAccess?: 'NONE' | 'ACCESSIBLE' | 'BY_ARRANGEMENT_ONLY' | 'WHEELCHAIR_ACCESS' | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /**
+       * @description CJIT Code
+       * @example 123456789
+       */
+      cjitCode?: string | null
+      /**
+       * @description Area code
+       * @example 52
+       */
+      areaCode?: string | null
+      /**
+       * @description Region code
+       * @example YOHUM
+       */
+      regionCode?: string | null
+      /**
+       * @description Geographical Area code
+       * @example WYORKS
+       */
+      geographicalAreaCode?: string | null
+      /**
+       * @description Local Authority code
+       * @example 00CG
+       */
+      localAuthorityCode?: string | null
+      /**
+       * @description Prisoner Payroll Region code
+       * @example NEY
+       */
+      payrollRegionCode?: string | null
+      /** @description Addresses */
+      addresses: components['schemas']['UpdateAddressDto'][]
+      /** @description Email addresses */
+      emailAddresses: components['schemas']['UpdateEmailAddressDto'][]
+      /** @description Phone numbers */
+      phoneNumbers: components['schemas']['UpdatePhoneNumberDto'][]
+    }
     /** @description Full name of prison with id */
     PrisonNameDto: {
       /**
@@ -563,6 +3159,121 @@ export interface components {
        */
       prisonNameInWelsh?: string | null
     }
+    AgencyId: {
+      agencyId: string
+    }
+    AgencyIdsResponse: {
+      agencyIds: components['schemas']['AgencyId'][]
+    }
+    /** @description Summary information about an agency */
+    AgencySummaryDto: {
+      /**
+       * @description Agency ID
+       * @example SHEFCC
+       */
+      agencyId: string
+      /**
+       * @description Description
+       * @example Sheffield Central Court
+       */
+      description?: string | null
+      /**
+       * @description Agency type
+       * @example COURT
+       * @enum {string}
+       */
+      agencyType:
+        | 'PRISON'
+        | 'COURT'
+        | 'HOSPITAL'
+        | 'SECURE_HOSPITAL'
+        | 'PROBATION_OFFICE'
+        | 'POLICE_CUSTODY_SUITE'
+        | 'APPROVED_PREMISES'
+        | 'AIRPORT'
+        | 'PROBATION_CRC'
+        | 'FOREIGN_NATIONAL_PRISON'
+        | 'VOLUNTARY_HOSTEL'
+        | 'IMMIGRATION_DETENTION_CENTRE'
+        | 'OUTSIDE'
+        | 'PECS'
+        | 'PSYCHIATRIC_CARE'
+        | 'CHILDREN_SECURE_HOME'
+        | 'SECURE_TRAINING_CENTRE'
+        | 'YOT'
+      /** @description Whether still active */
+      active: boolean
+    }
+    /** @description Details of an agency */
+    AgencyDetailsDto: {
+      /**
+       * @description Agency ID
+       * @example SHEFCC
+       */
+      agencyId: string
+      /**
+       * @description Description
+       * @example Sheffield Crown Court
+       */
+      description?: string | null
+      /**
+       * @description Long description
+       * @example Sheffield Central Court
+       */
+      longDescription?: string | null
+      /**
+       * @description Agency type
+       * @example COURT
+       * @enum {string}
+       */
+      agencyType:
+        | 'PRISON'
+        | 'COURT'
+        | 'HOSPITAL'
+        | 'SECURE_HOSPITAL'
+        | 'PROBATION_OFFICE'
+        | 'POLICE_CUSTODY_SUITE'
+        | 'APPROVED_PREMISES'
+        | 'AIRPORT'
+        | 'PROBATION_CRC'
+        | 'FOREIGN_NATIONAL_PRISON'
+        | 'VOLUNTARY_HOSTEL'
+        | 'IMMIGRATION_DETENTION_CENTRE'
+        | 'OUTSIDE'
+        | 'PECS'
+        | 'PSYCHIATRIC_CARE'
+        | 'CHILDREN_SECURE_HOME'
+        | 'SECURE_TRAINING_CENTRE'
+        | 'YOT'
+      /** @description Whether still active */
+      active: boolean
+      /**
+       * @description Court Type code
+       * @example CC
+       */
+      courtType?: string | null
+      /**
+       * @description Court Type description
+       * @example Crown Court
+       */
+      courtTypeDescription?: string | null
+      /**
+       * Format: date
+       * @description Date made inactive
+       * @example 2023-12-31
+       */
+      inactiveDate?: string | null
+      /** @description Addresses */
+      addresses: components['schemas']['AgencyAddressDto'][]
+      /** @description Phone numbers */
+      phones: components['schemas']['AgencyPhoneDto'][]
+      /** @description Email addresses */
+      emails: components['schemas']['AgencyEmailDto'][]
+      /** @description Area */
+      area?: components['schemas']['CodeDescription'] | null
+      /** @description Region */
+      region?: components['schemas']['CodeDescription'] | null
+    }
   }
   responses: never
   parameters: never
@@ -579,7 +3290,8 @@ export interface operations {
          * @description Department type
          * @example SOCIAL_VISIT
          */
-        departmentType: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
+        departmentType:
+          'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT' | 'OFFICIAL_VISIT'
       }
       header?: never
       path: {
@@ -731,7 +3443,8 @@ export interface operations {
          * @description Department type
          * @example SOCIAL_VISIT
          */
-        departmentType: 'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT'
+        departmentType:
+          'PRISON' | 'SOCIAL_VISIT' | 'VIDEOLINK_CONFERENCING_CENTRE' | 'OFFENDER_MANAGEMENT_UNIT' | 'OFFICIAL_VISIT'
       }
       header?: never
       path: {
@@ -828,6 +3541,530 @@ export interface operations {
         }
       }
       /** @description The contact details for this prison cannot be found. */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getProbationOfficeFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ProbationOfficeDto']
+        }
+      }
+    }
+  }
+  updateProbationOffice: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateProbationOfficeDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ProbationOfficeDto']
+        }
+      }
+      /** @description Bad information provided to update probation office */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make probation office update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteProbationOffice: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Probation Office Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a probation office */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateProbationOfficePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update probation office phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make probation office phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteProbationOfficePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Probation Office Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a probation office phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateProbationOfficeEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Email Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to update probation office email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make probation office email address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteProbationOfficeEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Probation Office Email Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a probation office email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateProbationOfficeAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update probation office address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make probation office address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteProbationOfficeAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Probation Office Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a probation office address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id or Address Id not found */
       404: {
         headers: {
           [name: string]: unknown
@@ -1066,6 +4303,2797 @@ export interface operations {
       }
     }
   }
+  getPoliceCustodySuiteFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PoliceCustodySuiteDto']
+        }
+      }
+    }
+  }
+  updatePoliceCustodySuite: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePoliceCustodySuiteDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PoliceCustodySuiteDto']
+        }
+      }
+      /** @description Bad information provided to update police custody suite */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make police custody suite update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deletePoliceCustodySuite: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Police Custody Suite Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a police custody suite */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updatePoliceCustodySuitePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update police custody suite phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make police custody suite phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deletePoliceCustodySuitePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Police Custody Suite Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a police custody suite phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updatePoliceCustodySuiteEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Email Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to update police custody suite email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make police custody suite email address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deletePoliceCustodySuiteEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Police Custody Suite Email Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a police custody suite email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updatePoliceCustodySuiteAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update police custody suite address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make police custody suite address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deletePoliceCustodySuiteAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Police Custody Suite Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a police custody suite address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getOtherAgencyFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['OtherAgencyDto']
+        }
+      }
+    }
+  }
+  updateOtherAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateOtherAgencyDto']
+      }
+    }
+    responses: {
+      /** @description Agency Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['OtherAgencyDto']
+        }
+      }
+      /** @description Bad information provided to update agency */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make agency update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteOtherAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a agency */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateOtherAgencyPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Agency Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update agency phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make agency phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteOtherAgencyPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a agency phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateOtherAgencyEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Agency Email Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to update agency email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make other agency email address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Other Agency Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteOtherAgencyEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency Email Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a agency email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateOtherAgencyAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Agency Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update agency address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make agency address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteOtherAgencyAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a agency address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getHospitalFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HospitalDto']
+        }
+      }
+    }
+  }
+  updateHospital: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateHospitalDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HospitalDto']
+        }
+      }
+      /** @description Bad information provided to update hospital */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make hospital update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteHospital: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Hospital Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a hospital */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateHospitalPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update hospital phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make hospital phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteHospitalPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Hospital Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a hospital phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateHospitalAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update hospital address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make hospital address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteHospitalAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Hospital Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a hospital address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getCourtFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CourtDto']
+        }
+      }
+    }
+  }
+  updateCourt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateCourtDto']
+      }
+    }
+    responses: {
+      /** @description Court Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CourtDto']
+        }
+      }
+      /** @description Bad information provided to update court */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make court update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteCourt: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Court Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a court */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateCourtPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Court Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update court phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make court phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteCourtPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Court Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a court phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateCourtEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Court Email Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to update court email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make court email address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteCourtEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Court Email Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a court email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateCourtAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Court Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update court address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make court address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteCourtAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Court Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a court address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getApprovedPremisesFromId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApprovedPremisesDto']
+        }
+      }
+    }
+  }
+  updateApprovedPremises: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateApprovedPremisesDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Information Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApprovedPremisesDto']
+        }
+      }
+      /** @description Bad information provided to update approved premises */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make approved premises update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteApprovedPremises: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Approved Premises Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a approved premises */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateApprovedPremisesPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Phone Number Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to update approved premises phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make approved premises phone number update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteApprovedPremisesPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Phone Number Id
+         * @example 234231
+         */
+        phoneNumberId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Approved Premises Phone Number Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a approved premises phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Phone Number Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateApprovedPremisesEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Email Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to update approved premises email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make approved premises email address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteApprovedPremisesEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Email Address Id
+         * @example 234231
+         */
+        emailAddressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Approved Premises Email Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a approved premises email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Email Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  updateApprovedPremisesAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Address Updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to update approved premises address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to make approved premises address update */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteApprovedPremisesAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+        /**
+         * @description Address Id
+         * @example 234231
+         */
+        addressId: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Approved Premises Address Deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete a approved premises address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id or Address Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getProbationOffices: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ProbationOfficeDto'][]
+        }
+      }
+    }
+  }
+  createProbationOffice: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateProbationOfficeDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ProbationOfficeDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a probation office */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createProbationOfficePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create probation office phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a probation office phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createProbationOfficeEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Email Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to create probation office email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a probation office email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Email address already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createProbationOfficeAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Probation Office ID
+         * @example SHEFPB
+         */
+        probationOfficeId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Probation Office Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create probation office address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a probation office address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Probation Office Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getPrisonsByIds: {
     parameters: {
       query?: never
@@ -1197,6 +7225,1562 @@ export interface operations {
         }
       }
       /** @description Prison Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getPoliceCustodySuites: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PoliceCustodySuiteDto'][]
+        }
+      }
+    }
+  }
+  createPoliceCustodySuite: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreatePoliceCustodySuiteDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PoliceCustodySuiteDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a police custody suite */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createPoliceCustodySuitePhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create police custody suite phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a police custody suite phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createPoliceCustodySuiteEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Email Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to create police custody suite email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a police custody suite email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Email address already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createPoliceCustodySuiteAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Police Custody Suite ID
+         * @example SHFPCS
+         */
+        policeCustodySuiteId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Police Custody Suite Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create police custody suite address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a police custody suite address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Police Custody Suite Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getOtherAgencies: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+        /**
+         * @description Agency type codes to filter by
+         * @example AIRPORT, PECS
+         */
+        otherAgencyTypeCodes?: (
+          | 'AIRPORT'
+          | 'PROBATION_CRC'
+          | 'FOREIGN_NATIONAL_PRISON'
+          | 'VOLUNTARY_HOSTEL'
+          | 'IMMIGRATION_DETENTION_CENTRE'
+          | 'OUTSIDE'
+          | 'PECS'
+          | 'PSYCHIATRIC_CARE'
+          | 'CHILDREN_SECURE_HOME'
+          | 'SECURE_TRAINING_CENTRE'
+          | 'YOT'
+        )[]
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['OtherAgencyDto'][]
+        }
+      }
+    }
+  }
+  createOtherAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateOtherAgencyDto']
+      }
+    }
+    responses: {
+      /** @description Agency Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['OtherAgencyDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a agency */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createOtherAgencyPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Agency Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create agency phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a agency phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createOtherAgencyEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Agency Email Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to create agency email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a agency email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Email address already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createOtherAgencyAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Agency Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create agency address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a agency address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createOrUpdateAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description NOMIS Agency Id
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LegacyAgencyDto']
+      }
+    }
+    responses: {
+      /** @description Agency created or updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LegacyAgencyResponse']
+        }
+      }
+      /** @description Bad Information request to create or update agency */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LegacyAgencyResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add or update agency */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  migrateAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description NOMIS Agency Id
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LegacyAgencyDto']
+      }
+    }
+    responses: {
+      /** @description Agency created or updated */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LegacyAgencyResponse']
+        }
+      }
+      /** @description Bad Information request to create or update agency */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LegacyAgencyResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add or update agency */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getHospitals: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+        /**
+         * @description High security
+         * @example true
+         */
+        highSecurity?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HospitalDto'][]
+        }
+      }
+    }
+  }
+  createHospital: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateHospitalDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HospitalDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a hospital */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createHospitalPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create hospital phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a hospital phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createHospitalAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Hospital ID
+         * @example SHEFCC
+         */
+        hospitalId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Hospital Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create hospital address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a hospital address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Hospital Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getCourts: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+        /**
+         * @description Court type codes to filter by
+         * @example CACD, CB
+         */
+        courtTypeCodes?: ('CACD' | 'CB' | 'CC' | 'CO' | 'DCM' | 'GCM' | 'IMM' | 'MC' | 'OTHER' | 'YC')[]
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CourtDto'][]
+        }
+      }
+    }
+  }
+  createCourt: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateCourtDto']
+      }
+    }
+    responses: {
+      /** @description Court Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CourtDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a court */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createCourtPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Court Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create court phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a court phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createCourtEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Court Email Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to create court email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a court email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Email address already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createCourtAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Court ID
+         * @example SHEFCC
+         */
+        courtId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Court Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create court address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a court address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Court Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getApprovedPremises: {
+    parameters: {
+      query?: {
+        /**
+         * @description Active
+         * @example true
+         */
+        active?: boolean
+        /**
+         * @description Text search
+         * @example Sheffield
+         */
+        textSearch?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApprovedPremisesDto'][]
+        }
+      }
+    }
+  }
+  createApprovedPremises: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateApprovedPremisesDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApprovedPremisesDto']
+        }
+      }
+      /** @description Bad request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a approved premises */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createApprovedPremisesPhoneNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePhoneNumberDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Phone Number Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyPhoneDto']
+        }
+      }
+      /** @description Bad information provided to create approved premises phone number */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a approved premises phone number */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Phone number already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createApprovedPremisesEmailAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateEmailAddressDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Email Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyEmailDto']
+        }
+      }
+      /** @description Bad information provided to create approved premises email address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a approved premises email address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Email address already exists */
+      409: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createApprovedPremisesAddress: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Approved Premises ID
+         * @example SHEFAP
+         */
+        approvedPremisesId: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateAddressDto']
+      }
+    }
+    responses: {
+      /** @description Approved Premises Address Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyAddressDto']
+        }
+      }
+      /** @description Bad information provided to create approved premises address */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to create a approved premises address */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Approved Premises Id not found */
       404: {
         headers: {
           [name: string]: unknown
@@ -1357,6 +8941,285 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['AddressDto']
+        }
+      }
+    }
+  }
+  getAgencyDetails: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description NOMIS Agency Id
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency details returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['LegacyAgencyDto']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to retrieve agency details */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Agency not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getAllAgencyIds: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agency IDs returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyIdsResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to retrieve agency IDs */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getAgencies: {
+    parameters: {
+      query?: {
+        /**
+         * @description When true (the default) only active agencies are returned
+         * @example true
+         */
+        activeOnly?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencySummaryDto'][]
+        }
+      }
+    }
+  }
+  getAgency: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /**
+         * @description Agency ID
+         * @example SHEFCC
+         */
+        agencyId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyDetailsDto']
+        }
+      }
+      /** @description Agency not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getAgenciesByType: {
+    parameters: {
+      query?: {
+        /**
+         * @description When true (the default) only active agencies are returned
+         * @example true
+         */
+        activeOnly?: boolean
+      }
+      header?: never
+      path: {
+        /**
+         * @description Agency type
+         * @example COURT
+         */
+        type:
+          | 'PRISON'
+          | 'COURT'
+          | 'HOSPITAL'
+          | 'SECURE_HOSPITAL'
+          | 'PROBATION_OFFICE'
+          | 'POLICE_CUSTODY_SUITE'
+          | 'APPROVED_PREMISES'
+          | 'AIRPORT'
+          | 'PROBATION_CRC'
+          | 'FOREIGN_NATIONAL_PRISON'
+          | 'VOLUNTARY_HOSTEL'
+          | 'IMMIGRATION_DETENTION_CENTRE'
+          | 'OUTSIDE'
+          | 'PECS'
+          | 'PSYCHIATRIC_CARE'
+          | 'CHILDREN_SECURE_HOME'
+          | 'SECURE_TRAINING_CENTRE'
+          | 'YOT'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyDetailsDto'][]
+        }
+      }
+    }
+  }
+  getAgenciesByLegacyType: {
+    parameters: {
+      query?: {
+        /**
+         * @description When true (the default) only active agencies are returned
+         * @example true
+         */
+        activeOnly?: boolean
+      }
+      header?: never
+      path: {
+        /**
+         * @description Legacy agency type
+         * @example CRT
+         */
+        type: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Operation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AgencyDetailsDto'][]
+        }
+      }
+      /** @description Legacy agency type not recognised */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  deleteAllAgencies: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Agencies deleted */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to delete agencies */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
