@@ -15,6 +15,7 @@ import type {
   CreateVisitorRequestResponseDto,
   PermittedPrisonerForBookerDto,
   BookerPrisonerVisitorRequestDto,
+  PrisonUserClientDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { VisitorRequest, Prisoner, Visitor } from '../../services/bookerService'
@@ -77,6 +78,9 @@ export default class TestData {
     sessionRestriction = 'OPEN',
     sessionForReview = false,
     visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = 18,
+    sessionConflicts = [],
   }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({
     sessionDate,
     sessionTemplateReference,
@@ -84,6 +88,9 @@ export default class TestData {
     sessionRestriction,
     sessionForReview,
     visitOrderRestriction,
+    isAgeRestricted,
+    ageRestriction,
+    sessionConflicts,
   })
 
   static bookerPrisonerInfoDto = ({
@@ -245,6 +252,8 @@ export default class TestData {
     emailAddress = 'visits@example.com',
     phoneNumber = '01234 567 890',
     webAddress = 'https://www.example.com/',
+    staffClient = this.prisonUserClientDto({ clientType: 'STAFF' }),
+    publicClient = this.prisonUserClientDto(),
     clients = [],
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
@@ -260,6 +269,8 @@ export default class TestData {
       emailAddress,
       phoneNumber,
       webAddress,
+      staffClient,
+      publicClient,
       clients,
     }) as PrisonDto
 
@@ -306,6 +317,19 @@ export default class TestData {
       { prisonId: 'HEI', prisonName: 'Hewell (HMP & YOI)' },
     ] as PrisonNameDto[],
   } = {}): PrisonNameDto[] => prisons
+
+  static prisonUserClientDto = ({
+    clientType = 'PUBLIC',
+    policyNoticeDaysMin = 2,
+    policyNoticeDaysMax = 28,
+    active = true,
+  }: Partial<PrisonUserClientDto> = {}): PrisonUserClientDto => ({
+    userType: clientType,
+    clientType,
+    policyNoticeDaysMin,
+    policyNoticeDaysMax,
+    active,
+  })
 
   static visitDetails = ({
     visitDisplayId = 'uuidv4-1-1-1-1',

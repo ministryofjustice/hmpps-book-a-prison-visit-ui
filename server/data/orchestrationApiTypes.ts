@@ -45,6 +45,8 @@ export type PermittedPrisonerForBookerDto = components['schemas']['PermittedPris
 
 export type PrisonDto = components['schemas']['PrisonDto']
 
+export type PrisonUserClientDto = components['schemas']['PrisonUserClientDto']
+
 export type VisitDto = components['schemas']['VisitDto']
 
 export type VisitorInfoDto = components['schemas']['VisitorInfoDto']

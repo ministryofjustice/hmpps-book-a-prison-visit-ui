@@ -2149,11 +2149,18 @@ export interface components {
     /** @description Prison user client dto */
     PrisonUserClientDto: {
       /**
+       * @deprecated
        * @description User type
        * @example STAFF
        * @enum {string}
        */
-      userType: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+      userType: 'STAFF' | 'PUBLIC'
+      /**
+       * @description Prison client type (STAFF / PUBLIC)
+       * @example STAFF
+       * @enum {string}
+       */
+      clientType: 'STAFF' | 'PUBLIC'
       /**
        * Format: int32
        * @description minimum number of days notice from the current date to book a visit
@@ -2186,12 +2193,14 @@ export interface components {
       active: boolean
       /**
        * Format: int32
+       * @deprecated
        * @description minimum number of days notice from the current date to booked a visit
        * @example 2
        */
       policyNoticeDaysMin: number
       /**
        * Format: int32
+       * @deprecated
        * @description maximum number of days notice from the current date to booked a visit
        * @example 28
        */
@@ -2859,7 +2868,7 @@ export interface components {
       /** @description Notifications tied to visit booking */
       notifications: components['schemas']['VisitNotificationDto'][]
       /**
-       * @description Enum denoting why alerts and restrictions were skipped absent if not skipped
+       * @description Enum denoting why alerts and restrictions were skipped; absent if not skipped
        * @enum {string|null}
        */
       skipAlertsAndRestrictionReason?: 'PRISONER_RELEASED' | 'PRISONER_TRANSFERRED' | 'VISIT_IN_PAST' | null
@@ -3074,20 +3083,20 @@ export interface components {
       empty?: boolean
     }
     PageableObject: {
-      paged?: boolean
-      unpaged?: boolean
-      /** Format: int32 */
-      pageSize?: number
-      /** Format: int32 */
-      pageNumber?: number
-      sort?: components['schemas']['SortObject']
       /** Format: int64 */
       offset?: number
+      paged?: boolean
+      /** Format: int32 */
+      pageNumber?: number
+      /** Format: int32 */
+      pageSize?: number
+      sort?: components['schemas']['SortObject']
+      unpaged?: boolean
     }
     SortObject: {
-      unsorted?: boolean
-      sorted?: boolean
       empty?: boolean
+      sorted?: boolean
+      unsorted?: boolean
     }
     OrchestrationVisitRequestSummaryDto: {
       /** @description Visit reference */
@@ -3291,6 +3300,34 @@ export interface components {
        */
       lastApprovedForVisitDate?: string | null
     }
+    AdditionalConflictInfoDto: {
+      /**
+       * @description Attribute Name
+       * @enum {string}
+       */
+      attributeName: 'PRISONER_NUMBER' | 'CONFLICT_TYPE' | 'REFERENCE'
+      /** @description Attribute value */
+      attributeValue: string
+    }
+    SessionConflictDto: {
+      /**
+       * @description Session Conflict
+       * @example NON_ASSOCIATION
+       * @enum {string}
+       */
+      sessionConflict:
+        | 'NON_ASSOCIATION'
+        | 'DOUBLE_BOOKING_OR_RESERVATION'
+        | 'SESSION_DATE_BLOCKED'
+        | 'PRISON_DATE_BLOCKED'
+        | 'REMAND_VISITS_LIMIT_REACHED'
+        | 'NO_VO_BALANCE'
+        | 'NO_PVO_BALANCE'
+        | 'NO_VO_OR_PVO_BALANCE'
+        | 'AGE_RESTRICTION'
+      /** @description Session Conflict attributes */
+      additionalAttributes: components['schemas']['AdditionalConflictInfoDto'][][]
+    }
     /** @description Visit Session */
     VisitSessionDto: {
       /**
@@ -3355,8 +3392,19 @@ export interface components {
        * @example 2020-11-01T14:30:00
        */
       endTimestamp: string
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
       /** @description Session conflicts */
-      sessionConflicts?: ('NON_ASSOCIATION' | 'DOUBLE_BOOKING_OR_RESERVATION' | 'REMAND_VISITS_LIMIT_REACHED')[] | null
+      sessionConflicts: components['schemas']['SessionConflictDto'][]
     }
     /** @description Session Capacity */
     SessionCapacityDto: {
@@ -3445,6 +3493,17 @@ export interface components {
       visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
       /** @description Flag to indicate if the session is excluded for the date. True will indicate that the session is excluded. */
       isSessionExcluded: boolean
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
     }
     /** @description Visit Session */
     AvailableVisitSessionDto: {
@@ -3477,6 +3536,19 @@ export interface components {
        * @enum {string}
        */
       visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
+      /** @description Session conflicts */
+      sessionConflicts: 'AGE_RESTRICTION'[]
     }
     /** @description Visit Session restriction type */
     AvailableVisitSessionRestrictionDto: {
@@ -3507,6 +3579,33 @@ export interface components {
        */
       endTime?: string | null
     }
+    SessionConflictV2Dto: {
+      /**
+       * @description Session Conflict
+       * @example DOUBLE_BOOKING_OR_RESERVATION
+       * @enum {string}
+       */
+      sessionConflict:
+        | 'DOUBLE_BOOKING_OR_RESERVATION'
+        | 'SESSION_DATE_BLOCKED'
+        | 'REMAND_VISITS_LIMIT_REACHED'
+        | 'NO_VO_BALANCE'
+        | 'NO_PVO_BALANCE'
+        | 'NO_VO_OR_PVO_BALANCE'
+        | 'AGE_RESTRICTION'
+      /** @description Session Conflict attributes */
+      additionalAttributes: components['schemas']['AdditionalConflictInfoDto'][][]
+    }
+    SessionDateConflictDto: {
+      /**
+       * @description Session Date Conflict
+       * @example NON_ASSOCIATION
+       * @enum {string}
+       */
+      sessionDateConflict: 'NON_ASSOCIATION' | 'PRISON_DATE_BLOCKED' | 'OUTSIDE_BOOKING_WINDOW'
+      /** @description Session Conflict attributes */
+      additionalAttributes: components['schemas']['AdditionalConflictInfoDto'][][]
+    }
     SessionsAndScheduleDto: {
       /**
        * Format: date
@@ -3516,8 +3615,10 @@ export interface components {
       date: string
       /** @description Visit sessions */
       visitSessions: components['schemas']['VisitSessionV2Dto'][]
-      /** @description Visit sessions */
+      /** @description Prisoner's scheduled events (appointments etc.) */
       scheduledEvents: components['schemas']['PrisonerScheduledEventDto'][]
+      /** @description Conflicts for session date */
+      sessionDateConflicts: components['schemas']['SessionDateConflictDto'][]
     }
     VisitSessionV2Dto: {
       /**
@@ -3567,12 +3668,23 @@ export interface components {
        */
       endTime: string
       /** @description Session conflicts */
-      sessionConflicts?: ('NON_ASSOCIATION' | 'DOUBLE_BOOKING_OR_RESERVATION' | 'REMAND_VISITS_LIMIT_REACHED')[] | null
+      sessionConflicts: components['schemas']['SessionConflictV2Dto'][]
       /**
        * @description Session vo restriction
        * @enum {string}
        */
       visitOrderRestriction: 'VO_PVO' | 'VO' | 'PVO' | 'NONE'
+      /**
+       * @description Determines if the age restriction is enabled for this session
+       * @example true
+       */
+      isAgeRestricted: boolean
+      /**
+       * Format: int32
+       * @description Minimum required age for attending the session
+       * @example 18
+       */
+      ageRestriction: number
     }
     VisitSessionsAndScheduleDto: {
       /**
@@ -4471,12 +4583,14 @@ export interface components {
       active: boolean
       /**
        * Format: int32
+       * @deprecated
        * @description minimum number of days notice from the current date to booked a visit
        * @example 2
        */
       policyNoticeDaysMin: number
       /**
        * Format: int32
+       * @deprecated
        * @description maximum number of days notice from the current date to booked a visit
        * @example 28
        */
@@ -4520,7 +4634,14 @@ export interface components {
       phoneNumber?: string | null
       /** @description Web address of prison */
       webAddress?: string | null
-      /** @description prison user client */
+      /** @description Staff Client details */
+      staffClient: components['schemas']['PrisonUserClientDto']
+      /** @description Public Client details (if available) */
+      publicClient?: components['schemas']['PrisonUserClientDto'] | null
+      /**
+       * @deprecated
+       * @description prison user client
+       */
       clients: components['schemas']['PrisonUserClientDto'][]
     }
   }
@@ -7339,7 +7460,12 @@ export interface operations {
          * @description user type for the session
          * @example STAFF
          */
-        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        userType?: 'STAFF' | 'PUBLIC'
+        /**
+         * @description Age of the youngest visitor
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -7525,7 +7651,12 @@ export interface operations {
          * @description user type for the session
          * @example PUBLIC
          */
-        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        userType?: 'STAFF' | 'PUBLIC'
+        /**
+         * @description Age of the youngest visitor
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -7675,7 +7806,12 @@ export interface operations {
          * @description user type for the session
          * @example PUBLIC
          */
-        userType?: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        userType?: 'STAFF' | 'PUBLIC'
+        /**
+         * @description Age of the youngest visitor
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -7784,6 +7920,11 @@ export interface operations {
          * @example user-1
          */
         username?: string
+        /**
+         * @description Age of the youngest visitor
+         * @example 18
+         */
+        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -8760,7 +8901,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }
@@ -8774,8 +8915,8 @@ export interface operations {
         content: {
           /**
            * @example [
-           *       'HEI',
-           *       'MDI'
+           *       "HEI",
+           *       "MDI"
            *     ]
            */
           'application/json': string[]
@@ -8810,7 +8951,7 @@ export interface operations {
          * @description type
          * @example STAFF
          */
-        type: 'STAFF' | 'PUBLIC' | 'SYSTEM' | 'PRISONER'
+        type: 'STAFF' | 'PUBLIC'
       }
       cookie?: never
     }

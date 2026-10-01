@@ -29,7 +29,8 @@ export default class ChooseVisitTimeController {
           visitorIds: selectedVisitorIds,
           bookerReference: booker.reference,
           excludedApplicationReference: applicationReference,
-          daysAhead: prison!.policyNoticeDaysMax,
+          // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
+          daysAhead: prison!.publicClient?.policyNoticeDaysMax ?? prison!.staffClient.policyNoticeDaysMax,
         })
 
       if (allVisitSessionIds.length === 0) {

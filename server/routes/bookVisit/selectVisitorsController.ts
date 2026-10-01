@@ -25,7 +25,8 @@ export default class SelectVisitorsController {
         const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility({
           bookerReference: booker.reference,
           prisonerNumber: prisoner.prisonerNumber,
-          policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
+          policyNoticeDaysMax: prison!.publicClient?.policyNoticeDaysMax ?? prison!.staffClient.policyNoticeDaysMax,
         })
         bookVisitJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
         bookVisitJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors

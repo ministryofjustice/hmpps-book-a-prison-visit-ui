@@ -16,7 +16,9 @@ import VisitRequestedPage from '../pages/bookVisit/visitRequested'
 
 context('Book visit journey', () => {
   const today = new Date()
-  const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
+  const prison = TestData.prisonDto({
+    publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 36 }), // > 31 so always 2 months shown
+  })
   const prisoner = TestData.bookerPrisonerInfoDto()
 
   const banExpiryDate = format(addYears(today, 1), DateFormats.API_DATE)

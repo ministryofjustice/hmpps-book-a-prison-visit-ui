@@ -12,7 +12,9 @@ import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 
 context('Book visit journey - prisoner moved prison', () => {
   const today = new Date()
-  const prison = TestData.prisonDto({ policyNoticeDaysMax: 36 }) // > 31 so always 2 months shown
+  const prison = TestData.prisonDto({
+    publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 36 }), // > 31 so always 2 months shown
+  })
 
   const adultVisitor = TestData.visitorInfoDto({
     visitorId: 1000,
