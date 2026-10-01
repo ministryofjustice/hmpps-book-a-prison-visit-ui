@@ -319,7 +319,7 @@ export default class TestData {
   } = {}): PrisonNameDto[] => prisons
 
   static prisonUserClientDto = ({
-    clientType = 'STAFF',
+    clientType = 'PUBLIC',
     policyNoticeDaysMin = 2,
     policyNoticeDaysMax = 28,
     active = true,
