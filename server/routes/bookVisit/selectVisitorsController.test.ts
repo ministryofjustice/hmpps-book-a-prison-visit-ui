@@ -5,7 +5,11 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { randomUUID } from 'crypto'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitSessionsService } from '../../services/testutils/mocks'
+import {
+  createMockBookerService,
+  createMockPrisonService,
+  createMockVisitSessionsService,
+} from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -17,12 +21,14 @@ jest.mock('../../../logger')
 let app: Express
 
 const bookerService = createMockBookerService()
+const prisonService = createMockPrisonService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
+const prisonId = prison.code
 
 const fakeDate = new Date('2024-05-02')
 
@@ -148,15 +154,16 @@ describe('Select visitors', () => {
     beforeEach(() => {
       bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
       bookerService.getVisitorRequests.mockResolvedValue([])
+      prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        bookVisitJourney: { prisoner, prison },
+        bookVisitJourney: { prisoner, prisonId },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -243,10 +250,10 @@ describe('Select visitors', () => {
           })
 
           expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
-
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookVisitJourney'])
@@ -258,7 +265,7 @@ describe('Select visitors', () => {
       const visitorRequest = TestData.visitorRequest()
       bookerService.getVisitorRequests.mockResolvedValue([visitorRequest])
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -365,7 +372,7 @@ describe('Select visitors', () => {
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [],
             ineligibleVisitors: [],
           } as SessionData['bookVisitJourney'])
@@ -382,7 +389,7 @@ describe('Select visitors', () => {
         .expect(() => {
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [visitor6],
             ineligibleVisitors: [],
             cannotBookReason: 'NO_ELIGIBLE_ADULT_VISITOR',
@@ -428,7 +435,7 @@ describe('Select visitors', () => {
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [],
             ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookVisitJourney'])
@@ -438,13 +445,14 @@ describe('Select visitors', () => {
 
   describe(`POST ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitSessionsService.getSessionRestriction.mockResolvedValue('OPEN')
 
       sessionData = {
-        bookVisitJourney: { prisoner, prison, eligibleVisitors: visitors.eligibleVisitors },
+        bookVisitJourney: { prisoner, prisonId, eligibleVisitors: visitors.eligibleVisitors },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitSessionsService }, sessionData })
     })
 
     it('should should save selected visitors to session and redirect to select date and time page (OPEN visit)', () => {
@@ -457,11 +465,12 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'OPEN',
           } as SessionData['bookVisitJourney'])
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -481,7 +490,7 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'CLOSED',
@@ -510,7 +519,7 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3], // duplicate '1' & unrecognised UUID filtered out
             sessionRestriction: 'OPEN',

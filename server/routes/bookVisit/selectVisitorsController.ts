@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { differenceInYears } from 'date-fns'
 import { UUID } from 'crypto'
-import { BookerService, VisitSessionsService } from '../../services'
+import { BookerService, VisitSessionsService, PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 import type { Locale } from '../../constants/locales'
@@ -10,6 +10,7 @@ import type { Locale } from '../../constants/locales'
 export default class SelectVisitorsController {
   public constructor(
     private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
     private readonly visitSessionService: VisitSessionsService,
   ) {}
 
@@ -17,8 +18,10 @@ export default class SelectVisitorsController {
     return async (req, res) => {
       const booker = req.session.booker!
       const bookVisitJourney = req.session.bookVisitJourney!
-      const prison = bookVisitJourney.prison!
+      const prisonId = bookVisitJourney.prisonId!
       const { prisoner } = bookVisitJourney
+
+      const prison = await this.prisonService.getPrison(prisonId)
 
       // only request visitors once per journey so random visitor UUIDs don't change
       if (!bookVisitJourney.eligibleVisitors) {
@@ -121,10 +124,11 @@ export default class SelectVisitorsController {
         .withMessage((_value, { req }) => req.t('validation:visitorsNoneSelected'))
         .bail()
         // validate visitor totals
-        .custom((visitorDisplayIds: string[], { req }) => {
+        .custom(async (visitorDisplayIds: string[], { req }) => {
           const bookVisitJourney = (req as Express.Request).session.bookVisitJourney!
 
-          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } = bookVisitJourney.prison!
+          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
+            await this.prisonService.getPrison(bookVisitJourney.prisonId!)
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {

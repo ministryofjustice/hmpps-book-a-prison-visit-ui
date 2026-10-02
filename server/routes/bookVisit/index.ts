@@ -17,17 +17,25 @@ import MovedPrisonController from '../confirmLocation/movedPrisonController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const selectPrisonerController = new SelectPrisonerController(services.bookerService, services.prisonService)
+  const selectPrisonerController = new SelectPrisonerController(services.bookerService)
   const movedPrisonController = new MovedPrisonController(services.bookerService, services.prisonService)
   const cannotBookController = new CannotBookController()
-  const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.visitSessionsService)
+  const selectVisitorsController = new SelectVisitorsController(
+    services.bookerService,
+    services.prisonService,
+    services.visitSessionsService,
+  )
   const closedVisitController = new ClosedVisitController()
-  const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
+  const chooseVisitTimeController = new ChooseVisitTimeController(
+    services.prisonService,
+    services.visitService,
+    services.visitSessionsService,
+  )
   const additionalSupportController = new AdditionalSupportController()
   const mainContactController = new MainContactController()
   const contactDetailsController = new ContactDetailsController(services.visitService)
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
-  const bookVisitConfirmedController = new BookVisitConfirmedController()
+  const bookVisitConfirmedController = new BookVisitConfirmedController(services.prisonService)
 
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 

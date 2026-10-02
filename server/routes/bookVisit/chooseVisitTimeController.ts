@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
 import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
+import type { PrisonService } from '../../services'
 import { VisitService, VisitSessionsService } from '../../services'
 import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
@@ -9,6 +10,7 @@ import { Visitor } from '../../services/bookerService'
 
 export default class ChooseVisitTimeController {
   public constructor(
+    private readonly prisonService: PrisonService,
     private readonly visitService: VisitService,
     private readonly visitSessionsService: VisitSessionsService,
   ) {}
@@ -17,20 +19,22 @@ export default class ChooseVisitTimeController {
     return async (req, res) => {
       const booker = req.session.booker!
       const bookVisitJourney = req.session.bookVisitJourney!
-      const { prison, prisoner, selectedVisitors, applicationReference } = bookVisitJourney
+      const { prisonId, prisoner, selectedVisitors, applicationReference } = bookVisitJourney
 
       const selectedVisitorIds = selectedVisitors!.map(visitor => visitor.visitorId)
       const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors!)
 
+      const prison = await this.prisonService.getPrison(prisonId!)
+
       const { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions } =
         await this.visitSessionsService.getVisitSessionsCalendar({
-          prisonId: prison!.code,
+          prisonId: prisonId!,
           prisonerId: prisoner.prisonerNumber,
           visitorIds: selectedVisitorIds,
           bookerReference: booker.reference,
           excludedApplicationReference: applicationReference,
           // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
-          daysAhead: prison!.publicClient?.policyNoticeDaysMax ?? prison!.staffClient.policyNoticeDaysMax,
+          daysAhead: prison.publicClient?.policyNoticeDaysMax ?? prison.staffClient.policyNoticeDaysMax,
         })
 
       if (allVisitSessionIds.length === 0) {

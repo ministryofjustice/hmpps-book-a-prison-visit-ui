@@ -7,7 +7,7 @@ export default class AdditionalSupportController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { applicationReference, prison, visitorSupport } = req.session.bookVisitJourney!
+      const { applicationReference, prisonId, visitorSupport } = req.session.bookVisitJourney!
 
       const selectedAdditionalSupport =
         visitorSupport !== undefined
@@ -25,7 +25,7 @@ export default class AdditionalSupportController {
       res.render('pages/bookVisit/additionalSupport', {
         errors: req.flash('errors'),
         formValues,
-        prisonId: prison!.code,
+        prisonId,
         applicationReference,
       })
     }

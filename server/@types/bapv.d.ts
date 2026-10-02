@@ -4,7 +4,6 @@ import {
   AvailableVisitSessionDto,
   BookerVisitorRequestValidationErrorResponse,
   CreateVisitorRequestResponseDto,
-  PrisonDto,
 } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 import { type VisitDetails } from '../services/visitService'
@@ -58,7 +57,7 @@ export type BookVisitJourney = {
   prisoner: Prisoner
 
   // prison for this visit
-  prison?: PrisonDto
+  prisonId?: string
 
   // may be set during journey to flag why a visit cannot be booked
   cannotBookReason?: CannotBookReason
@@ -97,7 +96,7 @@ export type BookVisitJourney = {
 
 export type BookVisitConfirmed = {
   isARequest: boolean
-  prison: PrisonDto
+  prisonId: string
   visitReference: string
   hasEmail: boolean
   hasMobile: boolean

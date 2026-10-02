@@ -6,7 +6,11 @@ import { FieldValidationError } from 'express-validator'
 import { InternalServerError } from 'http-errors'
 import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockVisitService, createMockVisitSessionsService } from '../../services/testutils/mocks'
+import {
+  createMockPrisonService,
+  createMockVisitService,
+  createMockVisitSessionsService,
+} from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
@@ -18,6 +22,7 @@ jest.mock('../../../logger')
 
 let app: Express
 
+const prisonService = createMockPrisonService()
 const visitService = createMockVisitService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
@@ -72,6 +77,7 @@ describe('Choose visit time', () => {
     let flashData: FlashData
 
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitSessionsService.getVisitSessionsCalendar.mockResolvedValue({
         calendar,
         firstSessionDate,
@@ -89,14 +95,14 @@ describe('Choose visit time', () => {
         },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId: prison.code,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
         },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitSessionsService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -176,6 +182,7 @@ describe('Choose visit time', () => {
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prison.code)
           expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
             prisonId: prison.code,
             prisonerId: prisoner.prisonerNumber,
@@ -368,6 +375,7 @@ describe('Choose visit time', () => {
 
   describe(`POST ${paths.BOOK_VISIT.CHOOSE_TIME}`, () => {
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitService.createVisitApplication.mockResolvedValue(application)
       visitService.changeVisitApplication.mockResolvedValue(application)
 
@@ -375,7 +383,7 @@ describe('Choose visit time', () => {
         booker: { reference: bookerReference, prisoners: [prisoner] },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId: prison.code,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
@@ -384,7 +392,7 @@ describe('Choose visit time', () => {
         },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitService }, sessionData })
     })
 
     it('should create a visit application for the selected date/time and store data in session', () => {
