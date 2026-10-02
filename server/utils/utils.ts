@@ -143,8 +143,12 @@ export const renderLinkTag = (
 ): string => {
   if (!text) return ''
 
+  if (!url) {
+    return escapeHtml(text.replaceAll('<link>', '').replaceAll('</link>', ''))
+  }
+
   const match = text.match(/<link>(.*?)<\/link>/s)
-  if (!url || !match || match.index === undefined) return escapeHtml(text)
+  if (!match || match.index === undefined) return escapeHtml(text)
 
   const escapedUrl = escapeHtml(url)
   const targetAttribute = openInNewTab ? ' target="_blank"' : ''
