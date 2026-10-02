@@ -226,9 +226,9 @@ describe('renderLinkTag', () => {
     ['null input', null, 'https://example.test', ''],
     ['undefined input', undefined, 'https://example.test', ''],
     ['no link tag', 'No link here', 'https://example.test', 'No link here'],
-    ['undefined link', 'undefined link', undefined, 'undefined link'],
-    ['null link', 'null link', null, 'null link'],
-    ['empty link', 'empty link', '', 'empty link'],
+    ['undefined link', '<link>undefined</link> link', undefined, 'undefined link'],
+    ['null link', '<link>null</link> link', null, 'null link'],
+    ['empty link', '<link>empty link</link>', '', 'empty link'],
     [
       'single link tag',
       'Some text <link>link text</link> more text.',
