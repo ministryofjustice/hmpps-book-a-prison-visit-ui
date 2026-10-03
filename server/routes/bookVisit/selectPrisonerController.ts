@@ -2,14 +2,11 @@ import type { RequestHandler } from 'express'
 import { NotFound } from 'http-errors'
 import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
-import { BookerService, PrisonService } from '../../services'
+import { BookerService } from '../../services'
 import { BookVisitJourney } from '../../@types/bapv'
 
 export default class SelectPrisonerController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly prisonService: PrisonService,
-  ) {}
+  public constructor(private readonly bookerService: BookerService) {}
 
   // Transfer and released
   private readonly EXCLUDED_LOCATIONS = ['TRN', 'OUT']
@@ -40,7 +37,7 @@ export default class SelectPrisonerController {
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
 
       if (validationResult === true && prisonerHasVOsOrRemand) {
-        bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId!)
+        bookVisitJourney.prisonId = prisoner.prisonId!
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 

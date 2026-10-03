@@ -43,7 +43,7 @@ export default class CheckVisitDetailsController {
 
         const bookVisitConfirmed: BookVisitConfirmed = {
           isARequest: visit.visitSubStatus === 'REQUESTED',
-          prison: bookVisitJourney.prison!,
+          prisonId: bookVisitJourney.prisonId!,
           visitReference: visit.reference,
           hasEmail: !!bookVisitJourney.mainContactEmail,
           hasMobile: isMobilePhoneNumber(bookVisitJourney.mainContactPhone),

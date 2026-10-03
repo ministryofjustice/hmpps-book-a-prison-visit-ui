@@ -38,7 +38,7 @@ describe('Visit service', () => {
     beforeEach(() => {
       bookVisitJourney = {
         prisoner: TestData.prisoner(),
-        prison: TestData.prisonDto(),
+        prisonId: TestData.prisonDto().code,
         eligibleVisitors: [visitorOne, visitorTwo, visitorThree],
         selectedVisitors: [visitorOne, visitorTwo],
         allVisitSessionIds: ['2024-05-30_a'],

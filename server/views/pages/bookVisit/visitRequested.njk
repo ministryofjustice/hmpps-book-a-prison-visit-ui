@@ -25,7 +25,7 @@
         titleText: pageTitle,
         classes: "visits-request-confirmation",
         text: t("bookVisit:visitRequested.requestReviewBy", {
-          prisonName: bookVisitConfirmed.prison.code | getPrisonName(prisonNames, language)
+          prisonName: bookVisitConfirmed.prisonId | getPrisonName(prisonNames, language)
         }),
         attributes: { "data-test": "visit-requested-panel" }
       }) }}
@@ -46,7 +46,7 @@
 
       <p data-test="confirm-or-reject">
         {{- t("bookVisit:visitRequested.confirmOrReject", {
-          prisonName: bookVisitConfirmed.prison.code | getPrisonName(prisonNames, language)
+          prisonName: bookVisitConfirmed.prisonId | getPrisonName(prisonNames, language)
         }) -}}
       </p>
 

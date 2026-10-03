@@ -22,7 +22,7 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto()
+const prisonId = TestData.prisonDto().code
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const application = TestData.applicationDto()
@@ -33,7 +33,7 @@ beforeEach(() => {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitJourney: {
       prisoner,
-      prison,
+      prisonId,
       eligibleVisitors: [visitor],
       selectedVisitors: [visitor],
       sessionRestriction,
@@ -172,7 +172,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (with contact details)', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
-          prison,
+          prisonId,
           visitReference: visitBooked.reference,
           hasEmail: true,
           hasMobile: true,
@@ -202,7 +202,7 @@ describe('Check visit details', () => {
 
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
-          prison,
+          prisonId,
           visitReference: visitBooked.reference,
           hasEmail: false,
           hasMobile: false,
@@ -240,7 +240,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit requested page', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: true,
-          prison,
+          prisonId,
           visitReference: visitRequested.reference,
           hasEmail: true,
           hasMobile: true,
