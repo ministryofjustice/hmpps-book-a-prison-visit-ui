@@ -51,7 +51,12 @@ export default function routes(services: Services): Router {
   router.get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
 
   router.get(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.view())
-  router.post(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.validate(), selectVisitorsController.submit())
+  router.post(
+    paths.BOOK_VISIT.SELECT_VISITORS,
+    selectVisitorsController.loadVisitorLimits(),
+    selectVisitorsController.validate(),
+    selectVisitorsController.submit(),
+  )
 
   router.get(paths.BOOK_VISIT.CLOSED_VISIT, closedVisitController.view())
 

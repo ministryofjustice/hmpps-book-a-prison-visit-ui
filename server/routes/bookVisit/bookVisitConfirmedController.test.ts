@@ -155,6 +155,8 @@ describe('Visit confirmed (BOOKED - REQUESTED)', () => {
 
           expect($('[data-test="confirm-or-reject"]').text()).toContain(prison.prisonName)
           expect($('[data-test="response-message"]').text()).toContain('An email and a text message')
+
+          expect(prisonService.getPrison).not.toHaveBeenCalled()
         })
     })
 

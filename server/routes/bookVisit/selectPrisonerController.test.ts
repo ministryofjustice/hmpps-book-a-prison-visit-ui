@@ -272,7 +272,7 @@ describe('Select prisoner', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(() => {
-          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, remandPrisoner.prisonerNumber)
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -281,7 +281,7 @@ describe('Select prisoner', () => {
             },
             bookVisitJourney: {
               prisoner: remandPrisoner,
-              prisonId: prisoner.prisonId,
+              prisonId: remandPrisoner.prisonId,
             },
           } as SessionData)
         })

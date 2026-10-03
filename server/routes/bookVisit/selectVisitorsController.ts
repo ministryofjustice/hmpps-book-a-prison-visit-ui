@@ -6,6 +6,12 @@ import { BookerService, VisitSessionsService, PrisonService } from '../../servic
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 import type { Locale } from '../../constants/locales'
+import type { PrisonDto } from '../../data/orchestrationApiTypes'
+
+type VisitorLimits = Pick<PrisonDto, 'maxTotalVisitors' | 'maxAdultVisitors' | 'maxChildVisitors' | 'adultAgeYears'>
+type VisitorLimitsRequest = Express.Request & {
+  visitorLimits?: VisitorLimits
+}
 
 export default class SelectVisitorsController {
   public constructor(
@@ -73,6 +79,23 @@ export default class SelectVisitorsController {
     }
   }
 
+  // Load visitor limits for the current prison into the request object
+  // for POST requests so they are available during validation
+  public loadVisitorLimits(): RequestHandler {
+    return async (req: VisitorLimitsRequest, _res, next) => {
+      const prison = await this.prisonService.getPrison(req.session.bookVisitJourney!.prisonId!)
+
+      req.visitorLimits = {
+        maxTotalVisitors: prison.maxTotalVisitors,
+        maxAdultVisitors: prison.maxAdultVisitors,
+        maxChildVisitors: prison.maxChildVisitors,
+        adultAgeYears: prison.adultAgeYears,
+      }
+
+      next()
+    }
+  }
+
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
@@ -124,11 +147,11 @@ export default class SelectVisitorsController {
         .withMessage((_value, { req }) => req.t('validation:visitorsNoneSelected'))
         .bail()
         // validate visitor totals
-        .custom(async (visitorDisplayIds: string[], { req }) => {
+        .custom((visitorDisplayIds: string[], { req }) => {
           const bookVisitJourney = (req as Express.Request).session.bookVisitJourney!
 
-          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } =
-            await this.prisonService.getPrison(bookVisitJourney.prisonId!)
+          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } = (req as VisitorLimitsRequest)
+            .visitorLimits!
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {

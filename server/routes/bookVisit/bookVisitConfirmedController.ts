@@ -7,9 +7,17 @@ export default class BookVisitConfirmedController {
   public view(): RequestHandler {
     return async (req, res) => {
       const bookVisitConfirmed = req.session.bookVisitConfirmed!
+
+      if (bookVisitConfirmed.isARequest) {
+        return res.render('pages/bookVisit/visitRequested', {
+          bookVisitConfirmed,
+          showOLServiceNav: true,
+        })
+      }
+
       const prison = await this.prisonService.getPrison(bookVisitConfirmed.prisonId)
 
-      res.render(bookVisitConfirmed.isARequest ? 'pages/bookVisit/visitRequested' : 'pages/bookVisit/visitBooked', {
+      return res.render('pages/bookVisit/visitBooked', {
         bookVisitConfirmed,
         prison,
         showOLServiceNav: true,

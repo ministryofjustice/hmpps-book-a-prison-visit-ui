@@ -60,7 +60,7 @@ export default function createApp(services: Services): express.Application {
   app.use(populateCurrentBooker(services.bookerService))
 
   // TODO remove once user sessions no longer using the deprecated prison property
-  app.use(deprecatedSessionDataMapper())
+  app.use(deprecatedSessionDataMapper(services.prisonService))
 
   app.use(authenticatedRoutes(services))
 

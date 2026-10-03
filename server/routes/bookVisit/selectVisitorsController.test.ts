@@ -531,6 +531,21 @@ describe('Select visitors', () => {
         })
     })
 
+    it('should handle failing to load visitor limits with normal error handling', () => {
+      prisonService.getPrison.mockRejectedValue(new Error())
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
+        .send({
+          visitorDisplayIds: [
+            visitor1.visitorDisplayId,
+            visitor1.visitorDisplayId,
+            randomUUID(),
+            visitor3.visitorDisplayId,
+          ],
+        })
+        .expect(500)
+    })
+
     describe('Validation errors', () => {
       // Uses visitor age config in TestData.prisonDto()
       let expectedFlashErrors: FieldValidationError[]
