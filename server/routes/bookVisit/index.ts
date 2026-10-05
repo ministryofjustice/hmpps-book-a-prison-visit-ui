@@ -17,7 +17,7 @@ import MovedPrisonController from '../confirmLocation/movedPrisonController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const selectPrisonerController = new SelectPrisonerController(services.bookerService, services.prisonService)
+  const selectPrisonerController = new SelectPrisonerController(services.bookerService)
   const movedPrisonController = new MovedPrisonController(services.bookerService, services.prisonService)
   const cannotBookController = new CannotBookController()
   const selectVisitorsController = new SelectVisitorsController(

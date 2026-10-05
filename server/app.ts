@@ -24,7 +24,6 @@ import type { Services } from './services'
 import populateCurrentBooker from './middleware/populateCurrentBooker'
 import analyticsConsent from './middleware/analyticsConsent'
 import populatePrisonNames from './middleware/populatePrisonNames'
-import deprecatedSessionDataMapper from './middleware/deprecatedSessionDataMapper'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -58,9 +57,6 @@ export default function createApp(services: Services): express.Application {
 
   app.use(authenticationMiddleware())
   app.use(populateCurrentBooker(services.bookerService))
-
-  // TODO remove once user sessions no longer using the deprecated prison property
-  app.use(deprecatedSessionDataMapper(services.prisonService))
 
   app.use(authenticatedRoutes(services))
 
