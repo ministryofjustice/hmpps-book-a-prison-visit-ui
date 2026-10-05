@@ -2,11 +2,14 @@ import type { RequestHandler } from 'express'
 import { NotFound } from 'http-errors'
 import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
-import { BookerService } from '../../services'
+import { BookerService, PrisonService } from '../../services'
 import { BookVisitJourney } from '../../@types/bapv'
 
 export default class SelectPrisonerController {
-  public constructor(private readonly bookerService: BookerService) {}
+  public constructor(
+    private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
+  ) {}
 
   // Transfer and released
   private readonly EXCLUDED_LOCATIONS = ['TRN', 'OUT']
@@ -38,6 +41,8 @@ export default class SelectPrisonerController {
 
       if (validationResult === true && prisonerHasVOsOrRemand) {
         bookVisitJourney.prisonId = prisoner.prisonId!
+        // TODO remove once user sessions no longer using this property
+        bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId!)
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 

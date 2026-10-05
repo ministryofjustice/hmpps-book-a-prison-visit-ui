@@ -7,13 +7,14 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { Prisoner } from '../../services/bookerService'
-import { createMockBookerService } from '../../services/testutils/mocks'
+import { createMockBookerService, createMockPrisonService } from '../../services/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { CannotBookReason } from '../../@types/bapv'
 
 jest.mock('../../../logger')
 
 let app: Express
+const prisonService = createMockPrisonService()
 const bookerService = createMockBookerService()
 let sessionData: SessionData
 
@@ -23,6 +24,7 @@ afterEach(() => {
 
 describe('Select prisoner', () => {
   const bookerReference = TestData.bookerReference().value
+  const prison = TestData.prisonDto()
   const prisoner = TestData.prisoner()
   const bookVisitConfirmed = TestData.bookVisitConfirmed()
 
@@ -31,7 +33,7 @@ describe('Select prisoner', () => {
       booker: { reference: bookerReference },
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -44,6 +46,7 @@ describe('Select prisoner', () => {
 
   it('should clear any exiting bookVisitJourney session data, populate new data and redirect to select visitors page', () => {
     bookerService.validatePrisoner.mockResolvedValue(true)
+    prisonService.getPrison.mockResolvedValue(prison)
 
     sessionData = {
       booker: { reference: bookerReference, prisoners: [prisoner] },
@@ -51,7 +54,7 @@ describe('Select prisoner', () => {
       bookVisitConfirmed,
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -66,6 +69,7 @@ describe('Select prisoner', () => {
           },
           bookVisitJourney: {
             prisoner,
+            prison,
             prisonId: prisoner.prisonId,
           },
         } as SessionData)
@@ -79,7 +83,7 @@ describe('Select prisoner', () => {
       booker: { reference: bookerReference, prisoners: [prisoner] },
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -105,7 +109,7 @@ describe('Select prisoner', () => {
       },
     } as SessionData
 
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
     return request(app)
       .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -133,12 +137,13 @@ describe('Select prisoner', () => {
       'if prisoner validation fails with $errorCode, redirect to cannot book with code $cannotBookReason',
       ({ errorCode, cannotBookReason }) => {
         bookerService.validatePrisoner.mockResolvedValue(errorCode)
+        prisonService.getPrison.mockResolvedValue(prison)
 
         sessionData = {
           booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
         } as SessionData
 
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -259,12 +264,13 @@ describe('Select prisoner', () => {
 
     it('should allow prisoner on REMAND to book with no VO balance', () => {
       bookerService.validatePrisoner.mockResolvedValue(true)
+      prisonService.getPrison.mockResolvedValue(prison)
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [remandPrisoner] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -282,6 +288,7 @@ describe('Select prisoner', () => {
             bookVisitJourney: {
               prisoner: remandPrisoner,
               prisonId: remandPrisoner.prisonId,
+              prison,
             },
           } as SessionData)
         })
