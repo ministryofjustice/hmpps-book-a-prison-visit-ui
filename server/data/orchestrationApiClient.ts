@@ -357,7 +357,7 @@ export default class OrchestrationApiClient extends RestClient {
     return this.get({ path: '/config/prisons/user-type/PUBLIC/supported' }, asSystem())
   }
 
-  async getPrison(prisonCode: string): Promise<PrisonDto> {
-    return this.get({ path: `/config/prisons/prison/${prisonCode}` }, asSystem())
+  async getPrison(prisonId: string): Promise<PrisonDto> {
+    return this.get({ path: `/config/prisons/prison/${prisonId}` }, asSystem())
   }
 }

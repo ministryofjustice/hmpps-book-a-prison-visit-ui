@@ -17,7 +17,7 @@ describe('bookVisitSessionValidator', () => {
   const next = jest.fn()
 
   const bookerReference = TestData.bookerReference().value
-  const prison = TestData.prisonDto()
+  const prisonId = TestData.prisonDto().code
   const prisoner = TestData.prisoner()
   const visitor = TestData.visitor()
   const sessionRestriction: SessionRestriction = 'OPEN'
@@ -106,7 +106,7 @@ describe('bookVisitSessionValidator', () => {
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.CLOSED_VISIT, expected: 'redirect' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
-          req = createMockReq({ method, path, bookVisitJourney: { prisoner, prison } })
+          req = createMockReq({ method, path, bookVisitJourney: { prisoner, prisonId } })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
         })
@@ -124,7 +124,7 @@ describe('bookVisitSessionValidator', () => {
           req = createMockReq({
             method,
             path,
-            bookVisitJourney: { prisoner, prison, eligibleVisitors: [visitor] },
+            bookVisitJourney: { prisoner, prisonId, eligibleVisitors: [visitor] },
           })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
@@ -146,7 +146,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookVisitJourney: {
               prisoner,
-              prison,
+              prisonId,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -173,7 +173,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookVisitJourney: {
               prisoner,
-              prison,
+              prisonId,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -204,7 +204,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookVisitJourney: {
               prisoner,
-              prison,
+              prisonId,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -244,7 +244,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookVisitJourney: {
               prisoner,
-              prison,
+              prisonId,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -283,7 +283,7 @@ describe('bookVisitSessionValidator', () => {
             path,
             bookVisitJourney: {
               prisoner,
-              prison,
+              prisonId,
               eligibleVisitors: [visitor],
               selectedVisitors: [visitor],
               sessionRestriction,
@@ -309,7 +309,7 @@ describe('bookVisitSessionValidator', () => {
           req = createMockReq({
             method,
             path,
-            bookVisitJourney: { prisoner, prison, cannotBookReason: 'NO_VO_BALANCE' },
+            bookVisitJourney: { prisoner, prisonId, cannotBookReason: 'NO_VO_BALANCE' },
           })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
@@ -320,7 +320,7 @@ describe('bookVisitSessionValidator', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
         ])('$method $path should call $expected', ({ method, path, expected }) => {
-          req = createMockReq({ method, path, bookVisitJourney: { prisoner, prison } })
+          req = createMockReq({ method, path, bookVisitJourney: { prisoner, prisonId } })
           bookVisitSessionValidator()(req, res, next)
           runAssertions(expected)
         })

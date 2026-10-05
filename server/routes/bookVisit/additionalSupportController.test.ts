@@ -19,7 +19,7 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto()
+const prisonId = TestData.prisonDto().code
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const visitSession = TestData.availableVisitSessionDto()
@@ -40,7 +40,7 @@ describe('Additional support needs', () => {
         booker: { reference: bookerReference, prisoners: [prisoner] },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
@@ -189,7 +189,7 @@ describe('Additional support needs', () => {
         },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,

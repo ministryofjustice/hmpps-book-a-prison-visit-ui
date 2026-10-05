@@ -5,9 +5,11 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
+import { createMockPrisonService } from '../../services/testutils/mocks'
 
 let app: Express
 
+const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
@@ -17,18 +19,20 @@ const prison = TestData.prisonDto()
 const visit = TestData.visitDto()
 
 beforeEach(() => {
+  prisonService.getPrison.mockResolvedValue(prison)
+
   sessionData = {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitConfirmed: {
       isARequest: false,
-      prison,
+      prisonId: prison.code,
       visitReference: visit.reference,
       hasEmail: true,
       hasMobile: true,
     },
   } as SessionData
 
-  app = appWithAllRoutes({ sessionData })
+  app = appWithAllRoutes({ services: { prisonService }, sessionData })
 })
 
 afterEach(() => {
@@ -64,11 +68,13 @@ describe('Visit confirmed (BOOKED - AUTO_APPROVED)', () => {
 
           expect($('[data-test="more-visits-info"] a').text()).toBe(`visits at ${prison.prisonName}`)
           expect($('[data-test="more-visits-info"] a').attr('href')).toBe(prison.webAddress)
+
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prison.code)
         })
     })
 
     it('should show alternative content if prison has no phone number', () => {
-      sessionData.bookVisitConfirmed!.prison.phoneNumber = undefined
+      prisonService.getPrison.mockResolvedValue({ ...prison, phoneNumber: undefined })
 
       return request(app)
         .get(paths.BOOK_VISIT.BOOKED)
@@ -149,6 +155,8 @@ describe('Visit confirmed (BOOKED - REQUESTED)', () => {
 
           expect($('[data-test="confirm-or-reject"]').text()).toContain(prison.prisonName)
           expect($('[data-test="response-message"]').text()).toContain('An email and a text message')
+
+          expect(prisonService.getPrison).not.toHaveBeenCalled()
         })
     })
 

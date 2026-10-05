@@ -20,14 +20,22 @@ export default function routes(services: Services): Router {
   const selectPrisonerController = new SelectPrisonerController(services.bookerService, services.prisonService)
   const movedPrisonController = new MovedPrisonController(services.bookerService, services.prisonService)
   const cannotBookController = new CannotBookController()
-  const selectVisitorsController = new SelectVisitorsController(services.bookerService, services.visitSessionsService)
+  const selectVisitorsController = new SelectVisitorsController(
+    services.bookerService,
+    services.prisonService,
+    services.visitSessionsService,
+  )
   const closedVisitController = new ClosedVisitController()
-  const chooseVisitTimeController = new ChooseVisitTimeController(services.visitService, services.visitSessionsService)
+  const chooseVisitTimeController = new ChooseVisitTimeController(
+    services.prisonService,
+    services.visitService,
+    services.visitSessionsService,
+  )
   const additionalSupportController = new AdditionalSupportController()
   const mainContactController = new MainContactController()
   const contactDetailsController = new ContactDetailsController(services.visitService)
   const checkVisitDetailsController = new CheckVisitDetailsController(services.visitService)
-  const bookVisitConfirmedController = new BookVisitConfirmedController()
+  const bookVisitConfirmedController = new BookVisitConfirmedController(services.prisonService)
 
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
@@ -43,7 +51,12 @@ export default function routes(services: Services): Router {
   router.get(paths.BOOK_VISIT.CANNOT_BOOK, cannotBookController.view())
 
   router.get(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.view())
-  router.post(paths.BOOK_VISIT.SELECT_VISITORS, selectVisitorsController.validate(), selectVisitorsController.submit())
+  router.post(
+    paths.BOOK_VISIT.SELECT_VISITORS,
+    selectVisitorsController.loadVisitorLimits(),
+    selectVisitorsController.validate(),
+    selectVisitorsController.submit(),
+  )
 
   router.get(paths.BOOK_VISIT.CLOSED_VISIT, closedVisitController.view())
 

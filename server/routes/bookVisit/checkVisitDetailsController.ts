@@ -43,7 +43,9 @@ export default class CheckVisitDetailsController {
 
         const bookVisitConfirmed: BookVisitConfirmed = {
           isARequest: visit.visitSubStatus === 'REQUESTED',
-          prison: bookVisitJourney.prison!,
+          prisonId: bookVisitJourney.prisonId!,
+          // TODO remove once user sessions no longer using this property
+          prison: bookVisitJourney.prison,
           visitReference: visit.reference,
           hasEmail: !!bookVisitJourney.mainContactEmail,
           hasMobile: isMobilePhoneNumber(bookVisitJourney.mainContactPhone),

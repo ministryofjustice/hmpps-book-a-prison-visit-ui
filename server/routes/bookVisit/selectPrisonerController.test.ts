@@ -2,7 +2,6 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { BadRequest } from 'http-errors'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
@@ -15,8 +14,8 @@ import { CannotBookReason } from '../../@types/bapv'
 jest.mock('../../../logger')
 
 let app: Express
-const bookerService = createMockBookerService()
 const prisonService = createMockPrisonService()
+const bookerService = createMockBookerService()
 let sessionData: SessionData
 
 afterEach(() => {
@@ -63,7 +62,6 @@ describe('Select prisoner', () => {
       .expect(302)
       .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
       .expect(() => {
-        expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
         expect(sessionData).toStrictEqual({
           booker: {
             reference: bookerReference,
@@ -72,11 +70,11 @@ describe('Select prisoner', () => {
           bookVisitJourney: {
             prisoner,
             prison,
+            prisonId: prisoner.prisonId,
           },
         } as SessionData)
 
         expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-        expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
       })
   })
 
@@ -120,7 +118,6 @@ describe('Select prisoner', () => {
       .expect('location', paths.PRISONER_MOVED.CONFIRM_LOCATION)
       .expect(() => {
         expect(bookerService.validatePrisoner).not.toHaveBeenCalled()
-        expect(prisonService.getPrison).not.toHaveBeenCalled()
       })
   })
 
@@ -140,7 +137,7 @@ describe('Select prisoner', () => {
       'if prisoner validation fails with $errorCode, redirect to cannot book with code $cannotBookReason',
       ({ errorCode, cannotBookReason }) => {
         bookerService.validatePrisoner.mockResolvedValue(errorCode)
-        prisonService.getPrison.mockRejectedValue(new BadRequest())
+        prisonService.getPrison.mockResolvedValue(prison)
 
         sessionData = {
           booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
@@ -155,7 +152,6 @@ describe('Select prisoner', () => {
           .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
           .expect(() => {
             expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-            expect(prisonService.getPrison).not.toHaveBeenCalled()
 
             expect(sessionData).toStrictEqual({
               booker: {
@@ -173,14 +169,13 @@ describe('Select prisoner', () => {
 
     it('should redirect to cannot book page for prisoner in transfer (TRN)', () => {
       bookerService.validatePrisoner.mockResolvedValue('PRISONER_TRANSFERRED_SUPPORTED_PRISON')
-      prisonService.getPrison.mockResolvedValue(prison)
       const prisonerInTransfer = TestData.prisoner({ prisonId: 'TRN' })
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisonerInTransfer] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -192,7 +187,6 @@ describe('Select prisoner', () => {
             bookerReference,
             prisonerInTransfer.prisonerNumber,
           )
-          expect(prisonService.getPrison).not.toHaveBeenCalled()
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -209,14 +203,13 @@ describe('Select prisoner', () => {
 
     it('should redirect to cannot book page for a released prisoner (OUT)', () => {
       bookerService.validatePrisoner.mockResolvedValue('PRISONER_RELEASED')
-      prisonService.getPrison.mockResolvedValue(prison)
       const releasedPrisoner = TestData.prisoner({ prisonId: 'OUT' })
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [releasedPrisoner] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -225,7 +218,6 @@ describe('Select prisoner', () => {
         .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(() => {
           expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, releasedPrisoner.prisonerNumber)
-          expect(prisonService.getPrison).not.toHaveBeenCalled()
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -242,13 +234,12 @@ describe('Select prisoner', () => {
 
     it('should redirect to cannot book page with code NO_VO_BALANCE if prisoner has no VOs', () => {
       bookerService.validatePrisoner.mockResolvedValue(true)
-      prisonService.getPrison.mockResolvedValue(prison)
 
       sessionData = {
         booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
@@ -256,8 +247,7 @@ describe('Select prisoner', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
         .expect(() => {
-          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-          expect(prisonService.getPrison).not.toHaveBeenCalled()
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisonerWithNoVos.prisonerNumber)
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -288,8 +278,7 @@ describe('Select prisoner', () => {
         .expect(302)
         .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(() => {
-          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
-          expect(prisonService.getPrison).toHaveBeenCalledWith(prisoner.prisonId)
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, remandPrisoner.prisonerNumber)
 
           expect(sessionData).toStrictEqual({
             booker: {
@@ -298,6 +287,7 @@ describe('Select prisoner', () => {
             },
             bookVisitJourney: {
               prisoner: remandPrisoner,
+              prisonId: remandPrisoner.prisonId,
               prison,
             },
           } as SessionData)

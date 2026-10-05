@@ -40,6 +40,8 @@ export default class SelectPrisonerController {
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
 
       if (validationResult === true && prisonerHasVOsOrRemand) {
+        bookVisitJourney.prisonId = prisoner.prisonId!
+        // TODO remove once user sessions no longer using this property
         bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId!)
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }

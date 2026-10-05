@@ -518,7 +518,7 @@ describe('orchestrationApiClient', () => {
   })
 
   describe('getPrison', () => {
-    it('should get a prison by prisonCode', async () => {
+    it('should get a prison by prisonId', async () => {
       const prison = TestData.prisonDto()
 
       fakeOrchestrationApi

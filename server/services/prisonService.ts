@@ -41,21 +41,21 @@ export default class PrisonService {
     return allPrisonNames
   }
 
-  async getPrison(prisonCode: string): Promise<PrisonDto> {
-    const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`)
+  async getPrison(prisonId: string): Promise<PrisonDto> {
+    const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonId}`)
 
     if (cachedPrison) {
       return cachedPrison
     }
 
-    const prison = await this.orchestrationApiClient.getPrison(prisonCode)
+    const prison = await this.orchestrationApiClient.getPrison(prisonId)
 
-    await this.dataCache.set<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`, prison, this.prisonCache.ttlSecs)
+    await this.dataCache.set<PrisonDto>(`${this.prisonCache.key}:${prisonId}`, prison, this.prisonCache.ttlSecs)
     return prison
   }
 
-  async isSupportedPrison(prisonCode: string): Promise<boolean> {
-    return (await this.getSupportedPrisonIds()).includes(prisonCode)
+  async isSupportedPrison(prisonId: string): Promise<boolean> {
+    return (await this.getSupportedPrisonIds()).includes(prisonId)
   }
 
   async getSupportedPrisonIds(): Promise<string[]> {

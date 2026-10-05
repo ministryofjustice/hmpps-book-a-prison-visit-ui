@@ -153,13 +153,13 @@ export default class TestData {
 
   static bookVisitConfirmed = ({
     isARequest = false,
-    prison = this.prisonDto(),
+    prisonId = this.prisonDto().code,
     visitReference = 'ab-cd-ef-gh',
     hasEmail = true,
     hasMobile = true,
   }: Partial<BookVisitConfirmed> = {}): BookVisitConfirmed => ({
     isARequest,
-    prison,
+    prisonId,
     visitReference,
     hasEmail,
     hasMobile,

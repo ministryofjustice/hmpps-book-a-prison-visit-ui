@@ -21,8 +21,9 @@ const visitService = createMockVisitService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
+const prisoner = TestData.prisoner()
+const prisonId = TestData.prisonDto().code
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const application = TestData.applicationDto()
@@ -33,6 +34,7 @@ beforeEach(() => {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitJourney: {
       prisoner,
+      prisonId,
       prison,
       eligibleVisitors: [visitor],
       selectedVisitors: [visitor],
@@ -172,6 +174,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (with contact details)', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
+          prisonId,
           prison,
           visitReference: visitBooked.reference,
           hasEmail: true,
@@ -202,6 +205,7 @@ describe('Check visit details', () => {
 
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
+          prisonId,
           prison,
           visitReference: visitBooked.reference,
           hasEmail: false,
@@ -240,6 +244,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit requested page', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: true,
+          prisonId,
           prison,
           visitReference: visitRequested.reference,
           hasEmail: true,

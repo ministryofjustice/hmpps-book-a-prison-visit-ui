@@ -58,6 +58,10 @@ export type BookVisitJourney = {
   prisoner: Prisoner
 
   // prison for this visit
+  prisonId?: string
+
+  // TODO remove once user sessions no longer using this property
+  /** @deprecated Use prisonId instead of prison */
   prison?: PrisonDto
 
   // may be set during journey to flag why a visit cannot be booked
@@ -97,7 +101,10 @@ export type BookVisitJourney = {
 
 export type BookVisitConfirmed = {
   isARequest: boolean
-  prison: PrisonDto
+  prisonId: string
+  // TODO remove once user sessions no longer using this property
+  /** @deprecated Use prisonId instead of prison */
+  prison?: PrisonDto
   visitReference: string
   hasEmail: boolean
   hasMobile: boolean
