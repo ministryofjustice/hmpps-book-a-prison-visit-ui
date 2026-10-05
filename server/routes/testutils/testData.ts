@@ -243,8 +243,7 @@ export default class TestData {
     code = 'HEI',
     prisonName = 'Hewell (HMP & YOI)',
     active = true,
-    policyNoticeDaysMax = 28,
-    policyNoticeDaysMin = 2,
+
     maxTotalVisitors = 4,
     maxAdultVisitors = 2,
     maxChildVisitors = 3,
@@ -254,14 +253,11 @@ export default class TestData {
     webAddress = 'https://www.example.com/',
     staffClient = this.prisonUserClientDto({ clientType: 'STAFF' }),
     publicClient = this.prisonUserClientDto(),
-    clients = [],
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
       code,
       prisonName,
       active,
-      policyNoticeDaysMax,
-      policyNoticeDaysMin,
       maxTotalVisitors,
       maxAdultVisitors,
       maxChildVisitors,
@@ -271,7 +267,6 @@ export default class TestData {
       webAddress,
       staffClient,
       publicClient,
-      clients,
     }) as PrisonDto
 
   static prisoner = ({
@@ -324,7 +319,6 @@ export default class TestData {
     policyNoticeDaysMax = 28,
     active = true,
   }: Partial<PrisonUserClientDto> = {}): PrisonUserClientDto => ({
-    userType: clientType,
     clientType,
     policyNoticeDaysMin,
     policyNoticeDaysMax,
