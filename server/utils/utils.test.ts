@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { SessionData } from 'express-session'
 import {
+  ageInYears,
   clearSession,
   convertToTitleCase,
   displayAge,
@@ -144,6 +145,51 @@ describe('isAdult', () => {
       expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
     },
   )
+})
+
+// copied from Staff service
+describe('ageInYears', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2000-01-01', 20],
+    ['2010-01-01', 10],
+    ['2020-01-01', 0],
+    [null, undefined],
+    [undefined, undefined],
+  ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
+    expect(ageInYears(dateOfBirth)).toBe(expectedAge)
+  })
+})
+
+describe('getYoungestVisitorAge', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2000-01-01', 20],
+    ['2010-01-01', 10],
+    ['2020-01-01', 0],
+    [null, undefined],
+    [undefined, undefined],
+  ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
+    expect(ageInYears(dateOfBirth)).toBe(expectedAge)
+  })
 })
 
 describe('Clear session data', () => {

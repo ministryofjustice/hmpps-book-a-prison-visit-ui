@@ -4,6 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set pageTitle = t("bookVisit:chooseVisitTime.title") %}
 
@@ -122,18 +123,32 @@
             {% if sessions | length %}
               {% set visitSessionItems = [] %}
               {% for session in sessions %}
+
+                {%- set sessionHtml -%}
+                  {{ t("common:dateTime.timeRange", {
+                    startTime: session.startTime | formatTime(language),
+                    endTime: session.endTime | formatTime(language)
+                  }) }}
+                  <span class="visits-calendar__session-duration">
+                    ({{ session.startTime | formatTimeDuration(session.endTime, language) }})
+                  </span>
+
+                  {% if session.ageConflict %}
+                    <span class="govuk-!-display-block govuk-!-margin-top-3">
+                      {{ govukTag({
+                        text: t("bookVisit:chooseVisitTime.conflictTag", { age: session.ageConflict }),
+                        classes: "govuk-tag--red"
+                      }) }}
+                    </span>
+                  {% endif %}
+                {%- endset -%}
+
                 {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
                   value: radioValue,
-                  html:
-                    t("common:dateTime.timeRange", {
-                      startTime: session.startTime | formatTime(language),
-                      endTime: session.endTime | formatTime(language)
-                    }) +
-                    ' <span class="visits-calendar__session-duration">(' +
-                      (session.startTime | formatTimeDuration(session.endTime, language)) +
-                    ')</span>',
-                  checked: formValues.visitSession == radioValue
+                  html: sessionHtml,
+                  checked: formValues.visitSession == radioValue,
+                  disabled: true if session.ageConflict
                 }), visitSessionItems) %}
               {% endfor %}
 

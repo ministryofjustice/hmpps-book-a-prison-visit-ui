@@ -1,5 +1,14 @@
 import { Request } from 'express'
-import { differenceInYears, format, formatDuration, intervalToDuration, isAfter, parse, parseISO } from 'date-fns'
+import {
+  differenceInYears,
+  format,
+  formatDuration,
+  intervalToDuration,
+  isAfter,
+  isValid,
+  parse,
+  parseISO,
+} from 'date-fns'
 import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
 import nunjucks from 'nunjucks'
 import type { TFunction } from 'i18next'
@@ -94,6 +103,23 @@ export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: D
   if (!dateOfBirth) return false
   const dobDate = parseISO(dateOfBirth)
   return differenceInYears(referenceDate, dobDate) >= 18
+}
+
+// copied from Staff service
+export const ageInYears = (dateOfBirth: string | undefined | null): number | undefined => {
+  if (!dateOfBirth) {
+    return undefined
+  }
+  const parsedDateOfBirth = parseISO(dateOfBirth)
+  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : undefined
+}
+
+export const getYoungestVisitorAge = (visitors: Visitor[]): string | undefined => {
+  const ages = visitors
+    .map(visitor => ageInYears(visitor.dateOfBirth))
+    .filter((age): age is number => age !== undefined)
+
+  return ages.length > 0 ? Math.min(...ages).toString() : undefined
 }
 
 export const clearSession = (req: Request): void => {

@@ -469,6 +469,7 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
@@ -494,6 +495,7 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'CLOSED',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
@@ -523,6 +525,32 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3], // duplicate '1' & unrecognised UUID filtered out
             sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
+          } as SessionData['bookVisitJourney'])
+          expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor1.visitorId, visitor3.visitorId],
+          })
+        })
+    })
+
+    it('should always select youngest visitor age (reverse display ID order compared to other tests)', () => {
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
+        .send({
+          visitorDisplayIds: [visitor3.visitorDisplayId, visitor1.visitorDisplayId],
+        })
+        .expect(302)
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookVisitJourney).toStrictEqual({
+            prisoner,
+            prisonId,
+            eligibleVisitors: visitors.eligibleVisitors,
+            selectedVisitors: [visitor1, visitor3],
+            sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,

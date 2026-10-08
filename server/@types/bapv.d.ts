@@ -68,6 +68,7 @@ export type BookVisitJourney = {
 
   // selected visitors for this visit
   selectedVisitors?: Visitor[]
+  youngestVisitorAge?: string
 
   // session restriction (OPEN/CLOSED) for this visit
   sessionRestriction?: SessionRestriction

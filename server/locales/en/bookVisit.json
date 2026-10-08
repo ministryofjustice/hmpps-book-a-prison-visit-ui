@@ -60,6 +60,8 @@
       }
     },
 
+    "conflictTag": "No visitors under {{age}} years old ",
+
     "title": "Choose the visit time",
 
     "reservationTime": "Select one visit time. It will be reserved for 10 minutes.",
