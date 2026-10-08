@@ -330,11 +330,13 @@ describe('Booker service', () => {
 
   describe('getVisitors', () => {
     it('should return visitors for the given booker reference and prisoner number, with sequential display ID', async () => {
+      jest.useFakeTimers({ advanceTimers: true, now: new Date('2026-01-01') })
+
       const bookerReference = TestData.bookerReference()
       const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
 
       const visitorInfoDtos = [
-        TestData.visitorInfoDto({ visitorId: 1, dateOfBirth: '2000-01-01' }), // an adult
+        TestData.visitorInfoDto({ visitorId: 1 }), // an adult
         TestData.visitorInfoDto({ visitorId: 2, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
         // with a ban with expiry date
         TestData.visitorInfoDto({
@@ -351,7 +353,7 @@ describe('Booker service', () => {
         // an adult, not approved
         TestData.visitorInfoDto({
           visitorId: 5,
-          dateOfBirth: '2000-01-01',
+          dateOfBirth: '1990-06-06',
           approved: false,
         }),
       ]
@@ -368,6 +370,7 @@ describe('Booker service', () => {
         {
           ...TestData.visitor(visitorInfoDtos[1]),
           visitorDisplayId: 'uuidv4-2-2-2-2',
+          age: 2,
           adult: false,
           banned: false,
           approved: true,
@@ -375,6 +378,7 @@ describe('Booker service', () => {
         {
           ...TestData.visitor(visitorInfoDtos[2]),
           visitorDisplayId: 'uuidv4-3-3-3-3',
+          age: 26,
           adult: true,
           banned: true,
           banExpiryDate: '2025-07-01',
@@ -383,6 +387,7 @@ describe('Booker service', () => {
         {
           ...TestData.visitor(visitorInfoDtos[3]),
           visitorDisplayId: 'uuidv4-4-4-4-4',
+          age: 26,
           adult: true,
           banned: true,
           approved: true,
@@ -390,6 +395,7 @@ describe('Booker service', () => {
         {
           ...TestData.visitor(visitorInfoDtos[4]),
           visitorDisplayId: 'uuidv4-5-5-5-5',
+          age: 35,
           adult: true,
           banned: false,
           approved: false,
@@ -400,6 +406,8 @@ describe('Booker service', () => {
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
       expect(results).toStrictEqual(expectedVisitors)
+
+      jest.useRealTimers()
     })
   })
 

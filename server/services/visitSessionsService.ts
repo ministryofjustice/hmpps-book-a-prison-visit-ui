@@ -70,11 +70,12 @@ export default class VisitSessionsService {
       const visitSessionsOnDate = allVisitSessions.filter(session => session.sessionDate === dateKey)
 
       currentMonth[dateKey] = visitSessionsOnDate.map(session => {
+        const hasAgeRestrictionConflict = session.sessionConflicts.includes('AGE_RESTRICTION')
         return {
           reference: session.sessionTemplateReference,
           startTime: session.sessionTimeSlot.startTime,
           endTime: session.sessionTimeSlot.endTime,
-          ageConflict: session.sessionConflicts.length ? session.ageRestriction : undefined,
+          ageConflict: hasAgeRestrictionConflict ? session.ageRestriction : undefined,
         }
       })
     })
