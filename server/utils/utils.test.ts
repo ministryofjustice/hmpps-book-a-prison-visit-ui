@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { SessionData } from 'express-session'
 import {
+  ageInYears,
   clearSession,
   convertToTitleCase,
   displayAge,
@@ -11,6 +12,7 @@ import {
   formatTimeFromDateTime,
   getMainContactName,
   getPrisonName,
+  getYoungestVisitorAge,
   initialiseName,
   isAdult,
   isMobilePhoneNumber,
@@ -144,6 +146,67 @@ describe('isAdult', () => {
       expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
     },
   )
+})
+
+// copied from Staff service
+describe('ageInYears', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2000-01-01', 20],
+    ['2010-01-01', 10],
+    ['2020-01-01', 0],
+    [null, undefined],
+    [undefined, undefined],
+  ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
+    expect(ageInYears(dateOfBirth)).toBe(expectedAge)
+  })
+})
+
+describe('getYoungestVisitorAge', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  const visitor45 = TestData.visitor({})
+  const visitor15 = TestData.visitor({ age: 15 })
+  const visitor17 = TestData.visitor({ age: 17 })
+  const visitorNoAge: Visitor = {
+    visitorDisplayId: 'uuidv4-1-1-1-1',
+    visitorId: 1234,
+    firstName: 'Joan',
+    lastName: 'Phillips',
+    dateOfBirth: '1980-02-21',
+    age: undefined,
+    adult: true,
+    banned: false,
+    banExpiryDate: null,
+    approved: true,
+  }
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    [[visitor45, visitor15, visitor17], '15'],
+    [[visitor45, visitor17], '17'],
+    [[visitor45, visitor17, visitorNoAge], '17'],
+    [[visitor45, visitor15, visitorNoAge], '15'],
+    [[visitorNoAge], undefined],
+  ])('ageInYears (%s) should return %s', (visitors, expectedAge) => {
+    expect(getYoungestVisitorAge(visitors)).toBe(expectedAge)
+  })
 })
 
 describe('Clear session data', () => {

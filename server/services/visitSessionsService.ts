@@ -4,7 +4,7 @@ import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 
-type VisitSession = { reference: string; startTime: string; endTime: string }
+type VisitSession = { reference: string; startTime: string; endTime: string; ageConflict?: number }
 
 // Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
 export type VisitSessionsCalendar = Record<string, Record<string, VisitSession[]>>
@@ -19,6 +19,7 @@ export default class VisitSessionsService {
     bookerReference,
     excludedApplicationReference,
     daysAhead,
+    youngestVisitorAge,
   }: {
     prisonId: string
     prisonerId: string
@@ -26,6 +27,7 @@ export default class VisitSessionsService {
     bookerReference: string
     excludedApplicationReference?: string
     daysAhead: number
+    youngestVisitorAge?: string
   }): Promise<{
     calendar: VisitSessionsCalendar
     firstSessionDate: string
@@ -38,6 +40,7 @@ export default class VisitSessionsService {
       visitorIds,
       bookerReference,
       excludedApplicationReference,
+      youngestVisitorAge,
     )
 
     if (allVisitSessions.length === 0) {
@@ -67,10 +70,12 @@ export default class VisitSessionsService {
       const visitSessionsOnDate = allVisitSessions.filter(session => session.sessionDate === dateKey)
 
       currentMonth[dateKey] = visitSessionsOnDate.map(session => {
+        const hasAgeRestrictionConflict = session.sessionConflicts.includes('AGE_RESTRICTION')
         return {
           reference: session.sessionTemplateReference,
           startTime: session.sessionTimeSlot.startTime,
           endTime: session.sessionTimeSlot.endTime,
+          ageConflict: hasAgeRestrictionConflict ? session.ageRestriction : undefined,
         }
       })
     })
@@ -89,6 +94,7 @@ export default class VisitSessionsService {
     visitorIds: number[],
     bookerReference: string,
     excludedApplicationReference?: string,
+    youngestVisitorAge?: string,
   ): Promise<AvailableVisitSessionDto[]> {
     return this.orchestrationApiClient.getVisitSessions({
       prisonId,
@@ -96,6 +102,7 @@ export default class VisitSessionsService {
       visitorIds,
       bookerReference,
       excludedApplicationReference,
+      youngestVisitorAge,
     })
   }
 

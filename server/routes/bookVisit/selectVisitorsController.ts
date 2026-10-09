@@ -7,6 +7,7 @@ import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 import type { Locale } from '../../constants/locales'
 import type { PrisonDto } from '../../data/orchestrationApiTypes'
+import { getYoungestVisitorAge } from '../../utils/utils'
 
 type VisitorLimits = Pick<PrisonDto, 'maxTotalVisitors' | 'maxAdultVisitors' | 'maxChildVisitors' | 'adultAgeYears'>
 type VisitorLimitsRequest = Express.Request & {
@@ -114,6 +115,7 @@ export default class SelectVisitorsController {
       )
 
       bookVisitJourney.selectedVisitors = selectedVisitors
+      bookVisitJourney.youngestVisitorAge = getYoungestVisitorAge(selectedVisitors)
 
       const sessionRestriction = await this.visitSessionService.getSessionRestriction({
         prisonerId: bookVisitJourney.prisoner.prisonerNumber,

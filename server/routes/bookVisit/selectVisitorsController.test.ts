@@ -45,6 +45,7 @@ const visitor2 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 18y',
   dateOfBirth: '2006-05-02', // 18 today
+  age: 18,
 })
 const visitor3 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -52,6 +53,7 @@ const visitor3 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 17y',
   dateOfBirth: '2006-05-03', // 18 tomorrow
+  age: 17,
   adult: false,
 })
 const visitor4 = TestData.visitor({
@@ -60,6 +62,7 @@ const visitor4 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 16y',
   dateOfBirth: '2008-05-02', // 16 today
+  age: 16,
   adult: false,
 })
 const visitor5 = TestData.visitor({
@@ -68,6 +71,7 @@ const visitor5 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 15y',
   dateOfBirth: '2008-05-03', // 16 tomorrow
+  age: 15,
   adult: false,
 })
 const visitor6 = TestData.visitor({
@@ -76,6 +80,7 @@ const visitor6 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 10y',
   dateOfBirth: '2014-05-02',
+  age: 10,
   adult: false,
 })
 const visitor7 = TestData.visitor({
@@ -84,6 +89,7 @@ const visitor7 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 1y',
   dateOfBirth: '2023-05-02',
+  age: 1,
   adult: false,
 })
 const visitor8 = TestData.visitor({
@@ -92,6 +98,7 @@ const visitor8 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 4m',
   dateOfBirth: '2024-01-02',
+  age: 0,
   adult: false,
 })
 const visitor9 = TestData.visitor({
@@ -100,6 +107,7 @@ const visitor9 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
+  age: 21,
   adult: false,
   banned: true,
   banExpiryDate: '2024-05-16', // 14 days after currently faked date
@@ -110,6 +118,7 @@ const visitor10 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
+  age: 21,
   adult: false,
   banned: true,
   banExpiryDate: '2025-05-02', // 1 year after currently faked date
@@ -120,6 +129,7 @@ const visitor11 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-05-01',
+  age: 21,
   adult: true,
   approved: false,
 })
@@ -129,6 +139,7 @@ const visitor12 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-05-01',
+  age: 21,
   adult: true,
   banned: true,
   approved: false,
@@ -469,6 +480,7 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
@@ -494,6 +506,7 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'CLOSED',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
@@ -523,6 +536,32 @@ describe('Select visitors', () => {
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3], // duplicate '1' & unrecognised UUID filtered out
             sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
+          } as SessionData['bookVisitJourney'])
+          expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
+            prisonerId: prisoner.prisonerNumber,
+            visitorIds: [visitor1.visitorId, visitor3.visitorId],
+          })
+        })
+    })
+
+    it('should always select youngest visitor age (reverse display ID order compared to other tests)', () => {
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
+        .send({
+          visitorDisplayIds: [visitor3.visitorDisplayId, visitor1.visitorDisplayId],
+        })
+        .expect(302)
+        .expect('Location', paths.BOOK_VISIT.CHOOSE_TIME)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookVisitJourney).toStrictEqual({
+            prisoner,
+            prisonId,
+            eligibleVisitors: visitors.eligibleVisitors,
+            selectedVisitors: [visitor1, visitor3],
+            sessionRestriction: 'OPEN',
+            youngestVisitorAge: '17',
           } as SessionData['bookVisitJourney'])
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,

@@ -17,7 +17,7 @@ import {
 } from '../data/orchestrationApiTypes'
 import RateLimitService from './rateLimitService'
 
-import { isAdult } from '../utils/utils'
+import { ageInYears, isAdult } from '../utils/utils'
 
 export type Prisoner = {
   prisonerDisplayId: UUID
@@ -37,6 +37,7 @@ export type Visitor = {
   firstName: string
   lastName: string
   dateOfBirth?: string | null
+  age?: number
   adult: boolean
   banned: boolean
   banExpiryDate: string | null
@@ -209,6 +210,7 @@ export default class BookerService {
         firstName: visitor.firstName,
         lastName: visitor.lastName,
         dateOfBirth: visitor.dateOfBirth ?? '',
+        age: ageInYears(visitor.dateOfBirth),
         adult: isAdult(visitor.dateOfBirth),
         // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs
         banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
