@@ -172,36 +172,15 @@ describe('ageInYears', () => {
 })
 
 describe('getYoungestVisitorAge', () => {
-  const fakeDate = new Date('2020-02-01T09:00:00')
-
-  const visitor45 = TestData.visitor({})
-  const visitor15 = TestData.visitor({ age: 15 })
-  const visitor17 = TestData.visitor({ age: 17 })
-  const visitorNoAge: Visitor = {
-    visitorDisplayId: 'uuidv4-1-1-1-1',
-    visitorId: 1234,
-    firstName: 'Joan',
-    lastName: 'Phillips',
-    dateOfBirth: '1980-02-21',
-    age: undefined,
-    adult: true,
-    banned: false,
-    banExpiryDate: null,
-    approved: true,
-  }
-
-  beforeEach(() => {
-    jest.useFakeTimers({ now: fakeDate })
-  })
-
-  afterEach(() => {
-    jest.useRealTimers()
-  })
+  const visitor45 = { age: 45 } as Visitor
+  const visitor15 = { age: 15 } as Visitor
+  const visitor17 = { age: 17 } as Visitor
+  const visitorNoAge = { age: undefined } as Visitor
 
   it.each([
     [[visitor45, visitor15, visitor17], '15'],
     [[visitor45, visitor17], '17'],
-    [[visitor45, visitor17, visitorNoAge], '17'],
+    [[visitor17, visitor45, visitorNoAge], '17'],
     [[visitor45, visitor15, visitorNoAge], '15'],
     [[visitorNoAge], undefined],
   ])('ageInYears (%s) should return %s', (visitors, expectedAge) => {

@@ -115,9 +115,14 @@ export const ageInYears = (dateOfBirth: string | undefined | null): number | und
 }
 
 export const getYoungestVisitorAge = (visitors: Visitor[]): string | undefined => {
-  const ages = visitors.map(visitor => visitor.age).filter((age): age is number => age !== undefined)
+  const visitorAges = visitors.filter(visitor => typeof visitor.age === 'number').map(visitor => visitor.age!)
 
-  return ages.length > 0 ? Math.min(...ages).toString() : undefined
+  if (visitorAges.length === 0) {
+    return undefined
+  }
+
+  const youngestAge = Math.min(...visitorAges).toString()
+  return youngestAge
 }
 
 export const clearSession = (req: Request): void => {
