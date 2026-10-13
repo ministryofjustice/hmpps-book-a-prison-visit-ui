@@ -18,6 +18,3 @@ generic-service:
     ROOT_PATH_REDIRECT: "https://www.gov.uk/prison-visits"
     GOOGLE_ANALYTICS_ID: "G-JJ1QR21HJ7"
     ENVIRONMENT_NAME: prod
-
-generic-prometheus-alerts:
-  alertSeverity: visits-alerts
