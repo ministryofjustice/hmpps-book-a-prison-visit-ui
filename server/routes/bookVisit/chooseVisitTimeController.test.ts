@@ -189,6 +189,7 @@ describe('Choose visit time', () => {
             visitorIds: [visitor.visitorId],
             bookerReference,
             daysAhead: prison.publicClient!.policyNoticeDaysMax,
+            youngestVisitorAge: '45',
           })
         })
     })
@@ -346,6 +347,7 @@ describe('Choose visit time', () => {
             visitorIds: [visitor.visitorId],
             bookerReference,
             daysAhead: prison.publicClient!.policyNoticeDaysMax,
+            youngestVisitorAge: '45',
           })
         })
     })

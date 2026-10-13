@@ -7,6 +7,7 @@ import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
 import { MoJAlert } from '../../@types/bapv'
 import { Visitor } from '../../services/bookerService'
+import { getYoungestVisitorAge } from '../../utils/utils'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -19,7 +20,7 @@ export default class ChooseVisitTimeController {
     return async (req, res) => {
       const booker = req.session.booker!
       const bookVisitJourney = req.session.bookVisitJourney!
-      const { prisonId, prisoner, selectedVisitors, applicationReference, youngestVisitorAge } = bookVisitJourney
+      const { prisonId, prisoner, selectedVisitors, applicationReference } = bookVisitJourney
 
       const selectedVisitorIds = selectedVisitors!.map(visitor => visitor.visitorId)
       const bannedVisitors = this.getVisitorsWithFurthestBanExpiry(selectedVisitors!)
@@ -35,7 +36,7 @@ export default class ChooseVisitTimeController {
           excludedApplicationReference: applicationReference,
           // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
           daysAhead: prison.publicClient?.policyNoticeDaysMax ?? prison.staffClient.policyNoticeDaysMax,
-          youngestVisitorAge,
+          youngestVisitorAge: getYoungestVisitorAge(selectedVisitors!), // forced type, middleware enforces having selectedVisitors
         })
 
       if (allVisitSessionIds.length === 0) {

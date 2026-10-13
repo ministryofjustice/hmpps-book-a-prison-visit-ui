@@ -1,13 +1,11 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
-import { differenceInYears } from 'date-fns'
 import { UUID } from 'crypto'
 import { BookerService, VisitSessionsService, PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 import type { Locale } from '../../constants/locales'
 import type { PrisonDto } from '../../data/orchestrationApiTypes'
-import { getYoungestVisitorAge } from '../../utils/utils'
 
 type VisitorLimits = Pick<PrisonDto, 'maxTotalVisitors' | 'maxAdultVisitors' | 'maxChildVisitors' | 'adultAgeYears'>
 type VisitorLimitsRequest = Express.Request & {
@@ -115,7 +113,6 @@ export default class SelectVisitorsController {
       )
 
       bookVisitJourney.selectedVisitors = selectedVisitors
-      bookVisitJourney.youngestVisitorAge = getYoungestVisitorAge(selectedVisitors)
 
       const sessionRestriction = await this.visitSessionService.getSessionRestriction({
         prisonerId: bookVisitJourney.prisoner.prisonerNumber,
@@ -160,12 +157,12 @@ export default class SelectVisitorsController {
             throw new Error(req.t('validation:visitorsTooMany', { count: maxTotalVisitors }))
           }
 
-          // calculate selected visitor ages
+          // make visitor ages array
           const eligibleVisitors = bookVisitJourney.eligibleVisitors!
-          const today = new Date()
+
           const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
             const visitor = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
-            return visitor?.dateOfBirth ? differenceInYears(today, visitor.dateOfBirth) : 0
+            return visitor?.age ? visitor.age : 0
           })
 
           // max 'adult age' visitors
