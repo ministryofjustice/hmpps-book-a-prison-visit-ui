@@ -148,7 +148,6 @@ describe('isAdult', () => {
   )
 })
 
-// copied from Staff service
 describe('ageInYears', () => {
   const fakeDate = new Date('2020-02-01T09:00:00')
 

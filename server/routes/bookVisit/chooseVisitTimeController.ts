@@ -36,7 +36,7 @@ export default class ChooseVisitTimeController {
           excludedApplicationReference: applicationReference,
           // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
           daysAhead: prison.publicClient?.policyNoticeDaysMax ?? prison.staffClient.policyNoticeDaysMax,
-          youngestVisitorAge: getYoungestVisitorAge(selectedVisitors!), // forced type, middleware enforces having selectedVisitors
+          youngestVisitorAge: getYoungestVisitorAge(selectedVisitors!),
         })
 
       if (allVisitSessionIds.length === 0) {
