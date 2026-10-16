@@ -99,6 +99,10 @@
     .govuk-radios__item {
       margin-bottom: govuk-spacing(6);
     }
+
+    .govuk-warning-text {
+      margin-left: govuk-spacing(1);
+    }
   }
 
   .govuk-radios__input:disabled + .govuk-radios__label {
@@ -110,7 +114,7 @@
 
     & >.govuk-tag {
       display: block;
-      margin-top: govuk-spacing(3);
+      margin-top: govuk-spacing(2);
     }
   }
 
