@@ -324,7 +324,6 @@ export default class OrchestrationApiClient extends RestClient {
           visitors: visitorIds.join(','),
           username: bookerReference,
           ...(excludedApplicationReference && { excludedApplicationReference }),
-          userType: 'PUBLIC',
         }).toString(),
       },
       asSystem(),

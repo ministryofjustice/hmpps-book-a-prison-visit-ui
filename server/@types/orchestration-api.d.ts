@@ -797,26 +797,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/visit-sessions': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    /**
-     * Returns all visit sessions which are within the reservable time period - whether or not they are full
-     * @description Retrieve all visits for a specified prisoner
-     */
-    get: operations['getVisitSessions']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/visit-sessions/session': {
     parameters: {
       query?: never
@@ -865,10 +845,10 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Returns available visit sessions with sessions marked for review for a specified prisoner and visitors combination for the date range passed in.
-     * @description Returns available visit sessions with sessions marked for review for a specified prisoner and visitors combination for the date range passed in. Marks sessions for review if prisoner alerts / restrictions or visitor restrictions are found. Used by Visits Public only, not PVB
+     * Returns available visit sessions for a prisoner and visitors, marking sessions that require review.
+     * @description Returns available visit sessions after the prison's minimum notice period in full working days, excluding weekends and England and Wales bank holidays. Visits can start on the following calendar day. The same notice period applies to auto-approved sessions and sessions marked for review. Marks sessions for review if prisoner alerts / restrictions or visitor restrictions are found. Used by Visits Public only, not PVB
      */
-    get: operations['getAvailableVisitSessions']
+    get: operations['getAvailableVisitSessionsForPublic']
     put?: never
     post?: never
     delete?: never
@@ -905,10 +885,10 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
-     * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period
+     * Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period for PVB
+     * @description Returns only available visit sessions for a specified prisoner by restriction and within the reservable time period for PVB. Always checks prisoner restrictions and higher priority appointments. Visitor restrictions, review flags and caller overrides are not applied. Uses the same prison-configured booking window as the PUBLIC service endpoint, with full working days of minimum notice excluding weekends and England and Wales bank holidays.
      */
-    get: operations['getAvailableVisitSessions_1']
+    get: operations['getAvailableVisitSessionsForPvb']
     put?: never
     post?: never
     delete?: never
@@ -945,10 +925,10 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Returns all visit sessions and prisoner schedule for a specified prisoner
-     * @description Retrieve all visit sessions and schedule for a specified prisoner
+     * Returns all visit sessions and prisoner schedule for a specified prisoner for STAFF client
+     * @description Retrieve all visit sessions and schedule for a specified prisoner for STAFF client
      */
-    get: operations['getVisitSessionsAndSchedule']
+    get: operations['getVisitSessionsAndScheduleForStaff']
     put?: never
     post?: never
     delete?: never
@@ -7388,80 +7368,6 @@ export interface operations {
       }
     }
   }
-  getVisitSessions: {
-    parameters: {
-      query: {
-        /**
-         * @description Query by NOMIS Prison Identifier
-         * @example MDI
-         */
-        prisonId: string
-        /**
-         * @description Filter results by prisoner id
-         * @example A12345DC
-         */
-        prisonerId?: string
-        /**
-         * @description Override the default minimum number of days notice from the current date
-         * @example 2
-         */
-        min?: number
-        /**
-         * @description Override the default maximum number of days to book-ahead from the current date
-         * @example 28
-         */
-        max?: number
-        /**
-         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
-         * @example user-1
-         */
-        username?: string
-        /**
-         * @description user type for the session
-         * @example STAFF
-         */
-        userType?: 'STAFF' | 'PUBLIC'
-        /**
-         * @description Age of the youngest visitor
-         * @example 18
-         */
-        youngestVisitorAge?: number
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Visit session information returned */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['VisitSessionDto'][]
-        }
-      }
-      /** @description Incorrect request to Get visit sessions */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized to access this endpoint */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
   getVisitSession: {
     parameters: {
       query: {
@@ -7579,7 +7485,7 @@ export interface operations {
       }
     }
   }
-  getAvailableVisitSessions: {
+  getAvailableVisitSessionsForPublic: {
     parameters: {
       query: {
         /**
@@ -7593,10 +7499,10 @@ export interface operations {
          */
         prisonerId: string
         /**
-         * @description List of visitors who require visit sessions
+         * @description comma separated list of visitors who require visit sessions
          * @example 4729510,4729220
          */
-        visitors?: number[]
+        visitors: number[]
         /**
          * @description The current application reference to be excluded from capacity count and double booking
          * @example dfs-wjs-eqr
@@ -7607,11 +7513,6 @@ export interface operations {
          * @example user-1
          */
         username?: string
-        /**
-         * @description user type for the session
-         * @example PUBLIC
-         */
-        userType?: 'STAFF' | 'PUBLIC'
         /**
          * @description Age of the youngest visitor
          * @example 18
@@ -7721,7 +7622,7 @@ export interface operations {
       }
     }
   }
-  getAvailableVisitSessions_1: {
+  getAvailableVisitSessionsForPvb: {
     parameters: {
       query: {
         /**
@@ -7734,44 +7635,6 @@ export interface operations {
          * @example A12345DC
          */
         prisonerId: string
-        /**
-         * @description Filter sessions by session restriction - OPEN or CLOSED, if prisoner has CLOSED it will use that
-         * @example CLOSED
-         */
-        sessionRestriction?: 'OPEN' | 'CLOSED'
-        /**
-         * @description List of visitors who require visit sessions
-         * @example 4729510,4729220
-         */
-        visitors?: number[]
-        /** @description Defaults to true if not passed. If true, will not return visit times that clash with higher priority legal or medical appointments. */
-        withAppointmentsCheck?: boolean
-        /**
-         * @description The current application reference to be excluded from capacity count and double booking
-         * @example dfs-wjs-eqr
-         */
-        excludedApplicationReference?: string
-        /** @description For PVB only. Allows service to advance the opening session slot booking window by n days on top of any other overrides. Defaults to 0 if not passed. */
-        pvbAdvanceFromDateByDays?: number
-        /** @description minimum override in days for opening session slot booking window, E.g. 2 will set min booking window to today + 2 days */
-        fromDateOverride?: number
-        /** @description maximum override in days for closing session slot booking window, E.g. 28 will set max booking window to today + 28 days */
-        toDateOverride?: number
-        /**
-         * @description Username for the user making the request. Used to exclude user's pending applications from session capacity count. Optional, ignored if not passed in.
-         * @example user-1
-         */
-        username?: string
-        /**
-         * @description user type for the session
-         * @example PUBLIC
-         */
-        userType?: 'STAFF' | 'PUBLIC'
-        /**
-         * @description Age of the youngest visitor
-         * @example 18
-         */
-        youngestVisitorAge?: number
       }
       header?: never
       path?: never
@@ -7857,7 +7720,7 @@ export interface operations {
       }
     }
   }
-  getVisitSessionsAndSchedule: {
+  getVisitSessionsAndScheduleForStaff: {
     parameters: {
       query: {
         /**
