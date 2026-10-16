@@ -7,6 +7,7 @@ import paths from '../../constants/paths'
 import { AvailableVisitSessionDto } from '../../data/orchestrationApiTypes'
 import { MoJAlert } from '../../@types/bapv'
 import { Visitor } from '../../services/bookerService'
+import { getYoungestVisitorAge } from '../../utils/utils'
 
 export default class ChooseVisitTimeController {
   public constructor(
@@ -35,6 +36,7 @@ export default class ChooseVisitTimeController {
           excludedApplicationReference: applicationReference,
           // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
           daysAhead: prison.publicClient?.policyNoticeDaysMax ?? prison.staffClient.policyNoticeDaysMax,
+          youngestVisitorAge: getYoungestVisitorAge(selectedVisitors!),
         })
 
       if (allVisitSessionIds.length === 0) {
@@ -175,7 +177,8 @@ export default class ChooseVisitTimeController {
       session =>
         session.sessionDate === selectedVisitSession.sessionDate &&
         session.sessionTemplateReference === selectedVisitSession.sessionTemplateReference &&
-        session.sessionRestriction === selectedVisitSession.sessionRestriction,
+        session.sessionRestriction === selectedVisitSession.sessionRestriction &&
+        session.sessionConflicts.length === 0,
     )
   }
 

@@ -461,6 +461,7 @@ describe('orchestrationApiClient', () => {
           username: bookerReference.value,
           excludedApplicationReference,
           userType: 'PUBLIC',
+          youngestVisitorAge: 45,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, visitSessions)
@@ -471,6 +472,7 @@ describe('orchestrationApiClient', () => {
         visitorIds,
         bookerReference: bookerReference.value,
         excludedApplicationReference,
+        youngestVisitorAge: '45',
       })
 
       expect(result).toStrictEqual(visitSessions)

@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import { SessionData } from 'express-session'
 import {
+  ageInYears,
   clearSession,
   convertToTitleCase,
   displayAge,
@@ -11,6 +12,7 @@ import {
   formatTimeFromDateTime,
   getMainContactName,
   getPrisonName,
+  getYoungestVisitorAge,
   initialiseName,
   isAdult,
   isMobilePhoneNumber,
@@ -144,6 +146,45 @@ describe('isAdult', () => {
       expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
     },
   )
+})
+
+describe('ageInYears', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it.each([
+    ['2000-01-01', 20],
+    ['2010-01-01', 10],
+    ['2020-01-01', 0],
+    [null, undefined],
+    [undefined, undefined],
+  ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
+    expect(ageInYears(dateOfBirth)).toBe(expectedAge)
+  })
+})
+
+describe('getYoungestVisitorAge', () => {
+  const visitor45 = { age: 45 } as Visitor
+  const visitor15 = { age: 15 } as Visitor
+  const visitor17 = { age: 17 } as Visitor
+  const visitorNoAge = { age: undefined } as Visitor
+
+  it.each([
+    [[visitor45, visitor15, visitor17], '15'],
+    [[visitor45, visitor17], '17'],
+    [[visitor17, visitor45, visitorNoAge], '17'],
+    [[visitor45, visitor15, visitorNoAge], '15'],
+    [[visitorNoAge], undefined],
+  ])('ageInYears (%s) should return %s', (visitors, expectedAge) => {
+    expect(getYoungestVisitorAge(visitors)).toBe(expectedAge)
+  })
 })
 
 describe('Clear session data', () => {
