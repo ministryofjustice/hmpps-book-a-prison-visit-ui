@@ -4,7 +4,12 @@ import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 
-type VisitSession = { reference: string; startTime: string; endTime: string; ageConflict?: number }
+type VisitSession = {
+  reference: string
+  startTime: string
+  endTime: string
+  ageConflict: number | undefined
+}
 
 // Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
 export type VisitSessionsCalendar = Record<string, Record<string, VisitSession[]>>

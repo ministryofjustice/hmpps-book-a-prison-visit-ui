@@ -177,7 +177,8 @@ export default class ChooseVisitTimeController {
       session =>
         session.sessionDate === selectedVisitSession.sessionDate &&
         session.sessionTemplateReference === selectedVisitSession.sessionTemplateReference &&
-        session.sessionRestriction === selectedVisitSession.sessionRestriction,
+        session.sessionRestriction === selectedVisitSession.sessionRestriction &&
+        session.sessionConflicts.length === 0,
     )
   }
 

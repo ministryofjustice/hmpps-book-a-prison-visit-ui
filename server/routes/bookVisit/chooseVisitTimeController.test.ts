@@ -39,15 +39,15 @@ const calendar: VisitSessionsCalendar = {
   '2024-05': {
     '2024-05-28': [],
     '2024-05-29': [],
-    '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30' }],
+    '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30', ageConflict: undefined }],
     '2024-05-31': [
-      { reference: 'b', startTime: '09:00', endTime: '09:45' },
-      { reference: 'c', startTime: '14:00', endTime: '15:00' },
+      { reference: 'b', startTime: '09:00', endTime: '09:45', ageConflict: undefined },
+      { reference: 'c', startTime: '14:00', endTime: '15:00', ageConflict: undefined },
     ],
   },
   '2024-06': {
     '2024-06-01': [],
-    '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00' }],
+    '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00', ageConflict: undefined }],
     '2024-06-03': [{ reference: 'e', startTime: '10:00', endTime: '11:30', ageConflict: 16 }],
     '2024-06-04': [],
   },

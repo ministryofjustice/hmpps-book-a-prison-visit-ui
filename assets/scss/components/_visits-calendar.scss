@@ -95,6 +95,10 @@
 
   .visits-calendar__day-group--active {
     display: block;
+
+    .govuk-radios__item {
+      margin-bottom: govuk-spacing(6);
+    }
   }
 
   .govuk-radios__input:disabled + .govuk-radios__label {

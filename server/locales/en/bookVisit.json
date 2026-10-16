@@ -62,7 +62,7 @@
 
     "ageWarningBanner": "Age restricted visits cannot be selected. You can <link>change visitors</link>.",
 
-    "conflictTag": "No visitors under {{age}} years old ",
+    "conflictTag": "No visitors under {{age}} years old",
 
     "title": "Choose the visit time",
 

@@ -14,7 +14,8 @@
 {%- set ageWarningBanner -%}
   {{ govukWarningText({
     html: ageWarningHtml,
-    iconFallbackText: "Warning"
+    classes: "no-visited-state",
+    iconFallbackText: t("common:labels.warning")
   }) }}
 {%- endset -%}
 
