@@ -75,6 +75,7 @@ export default class SelectVisitorsController {
         eligibleVisitors: bookVisitJourney.eligibleVisitors,
         ineligibleVisitors: bookVisitJourney.ineligibleVisitors,
         visitorRequestsTableRows,
+        prisoner,
       })
     }
   }
