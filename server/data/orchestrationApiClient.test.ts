@@ -460,7 +460,6 @@ describe('orchestrationApiClient', () => {
           visitors: visitorIds.join(','),
           username: bookerReference.value,
           excludedApplicationReference,
-          userType: 'PUBLIC',
           youngestVisitorAge: 45,
         })
         .matchHeader('authorization', `Bearer ${token}`)
