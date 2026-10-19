@@ -60,6 +60,10 @@
       }
     },
 
+    "ageWarningBanner": "Age restricted visits cannot be selected. You can <link>change visitors</link>.",
+
+    "conflictTag": "No visitors under {{age}} years old",
+
     "title": "Choose the visit time",
 
     "reservationTime": "Select one visit time. It will be reserved for 10 minutes.",

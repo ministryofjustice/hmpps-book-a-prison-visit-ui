@@ -1,5 +1,14 @@
 import { Request } from 'express'
-import { differenceInYears, format, formatDuration, intervalToDuration, isAfter, parse, parseISO } from 'date-fns'
+import {
+  differenceInYears,
+  format,
+  formatDuration,
+  intervalToDuration,
+  isAfter,
+  isValid,
+  parse,
+  parseISO,
+} from 'date-fns'
 import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
 import nunjucks from 'nunjucks'
 import type { TFunction } from 'i18next'
@@ -94,6 +103,31 @@ export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: D
   if (!dateOfBirth) return false
   const dobDate = parseISO(dateOfBirth)
   return differenceInYears(referenceDate, dobDate) >= 18
+}
+
+/**
+ * Calculates the age in years based on the provided date of birth.
+ *
+ * @param dateOfBirth date of birth string YYYY-MM-DD
+ * @returns age in years or undefined if date of birth is invalid or not provided.
+ */
+export const ageInYears = (dateOfBirth: string | undefined | null): number | undefined => {
+  if (!dateOfBirth) {
+    return undefined
+  }
+  const parsedDateOfBirth = parseISO(dateOfBirth)
+  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : undefined
+}
+
+export const getYoungestVisitorAge = (visitors: Visitor[]): string | undefined => {
+  const visitorAges = visitors.filter(visitor => typeof visitor.age === 'number').map(visitor => visitor.age!)
+
+  if (visitorAges.length === 0) {
+    return undefined
+  }
+
+  const youngestAge = Math.min(...visitorAges).toString()
+  return youngestAge
 }
 
 export const clearSession = (req: Request): void => {

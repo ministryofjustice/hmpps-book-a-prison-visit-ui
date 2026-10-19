@@ -530,7 +530,6 @@ export default {
               },
             ],
           },
-          userType: { equalTo: 'PUBLIC' },
         },
       },
       response: {
