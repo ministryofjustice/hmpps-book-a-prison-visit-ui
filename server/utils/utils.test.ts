@@ -14,7 +14,6 @@ import {
   getPrisonName,
   getYoungestVisitorAge,
   initialiseName,
-  isAdult,
   isMobilePhoneNumber,
   renderLinkTag,
 } from './utils'
@@ -129,21 +128,6 @@ describe('formatTimeDuration', () => {
     '%s formatTimeDuration(%s, %s) = %s',
     (_: string, startTime: string, endTime: string | undefined, expected: string) => {
       expect(formatTimeDuration(startTime, endTime as string, 'en')).toEqual(expected)
-    },
-  )
-})
-
-describe('isAdult', () => {
-  it.each([
-    ['is an adult', '2000-01-01', new Date('2022-01-01'), true],
-    ['is not an adult', '2010-01-01', new Date('2022-01-01'), false],
-    ['is an adult on their 18th birthday', '2004-01-01', new Date('2022-01-01'), true],
-    ['is not an adult one day before their 18th birthday', '2004-01-02', new Date('2022-01-01'), false],
-    ['handles undefined date of birth', undefined, new Date('2022-01-01'), false],
-  ])(
-    '%s - isAdult(%s, %s) = %s',
-    (_: string, dateOfBirth: string | undefined, referenceDate: Date, expected: boolean) => {
-      expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
     },
   )
 })

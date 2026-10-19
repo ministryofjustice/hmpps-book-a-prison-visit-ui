@@ -99,12 +99,6 @@ export const formatTimeDuration = (startTime: string, endTime: string, lng: Loca
   }
 }
 
-export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: Date = new Date()): boolean => {
-  if (!dateOfBirth) return false
-  const dobDate = parseISO(dateOfBirth)
-  return differenceInYears(referenceDate, dobDate) >= 18
-}
-
 /**
  * Calculates the age in years based on the provided date of birth.
  *
