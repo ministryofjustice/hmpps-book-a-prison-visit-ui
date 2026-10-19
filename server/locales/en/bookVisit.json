@@ -22,8 +22,8 @@
     "title": "Who is going on the visit?",
 
     "visitorLimits": {
-      "maxVisitors_one": "Up to {{count}} person can visit someone at {{prisonName}}. This includes:",
-      "maxVisitors_other": "Up to {{count}} people can visit someone at {{prisonName}}. This includes:",
+      "maxVisitors_one": "Up to {{count}} person can visit {{name}} at {{prisonName}}. This includes:",
+      "maxVisitors_other": "Up to {{count}} people can visit {{name}} at {{prisonName}}. This includes:",
       "maxAdults_one": "{{count}} person {{adultAgeYears}} years old or older",
       "maxAdults_other": "{{count}} people {{adultAgeYears}} years old or older",
       "maxChildren_one": "{{count}} person under {{adultAgeYears}} years old",

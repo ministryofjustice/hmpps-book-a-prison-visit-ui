@@ -126,7 +126,7 @@ context('Book visit journey', () => {
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
-    selectVisitorsPage.maxVisitors().contains('Up to 4 people can visit someone at Hewell (HMP & YOI)')
+    selectVisitorsPage.maxVisitors().contains('Up to 4 people can visit John Smith at Hewell (HMP & YOI)')
     selectVisitorsPage.maxAdults().contains('2 people 16 years old or older')
     selectVisitorsPage.maxChildren().contains('3 people under 16 years old')
     selectVisitorsPage.getVisitorByNameLabel('Adult One').contains('Adult One (25 years old)')
