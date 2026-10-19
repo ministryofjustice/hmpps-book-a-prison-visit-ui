@@ -147,8 +147,8 @@ describe('ageInYears', () => {
     ['2000-01-01', 20],
     ['2010-01-01', 10],
     ['2020-01-01', 0],
-    [null, undefined],
-    [undefined, undefined],
+    [null, null],
+    [undefined, null],
   ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
     expect(ageInYears(dateOfBirth)).toBe(expectedAge)
   })
@@ -158,15 +158,15 @@ describe('getYoungestVisitorAge', () => {
   const visitor45 = { age: 45 } as Visitor
   const visitor15 = { age: 15 } as Visitor
   const visitor17 = { age: 17 } as Visitor
-  const visitorNoAge = { age: undefined } as Visitor
+  const visitorNoAge = { age: null } as Visitor
 
   it.each([
-    [[visitor45, visitor15, visitor17], '15'],
-    [[visitor45, visitor17], '17'],
-    [[visitor17, visitor45, visitorNoAge], '17'],
-    [[visitor45, visitor15, visitorNoAge], '15'],
-    [[visitorNoAge], undefined],
-  ])('ageInYears (%s) should return %s', (visitors, expectedAge) => {
+    [[visitor45, visitor15, visitor17], 15],
+    [[visitor45, visitor17], 17],
+    [[visitor17, visitor45, visitorNoAge], 17],
+    [[visitor45, visitor15, visitorNoAge], 15],
+    [[visitorNoAge], null],
+  ])('getYoungestVisitorAge (%s) should return %s', (visitors, expectedAge) => {
     expect(getYoungestVisitorAge(visitors)).toBe(expectedAge)
   })
 })

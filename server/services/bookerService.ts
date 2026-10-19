@@ -36,8 +36,8 @@ export type Visitor = {
   visitorId: number
   firstName: string
   lastName: string
-  dateOfBirth?: string | null
-  age?: number
+  dateOfBirth: string | null
+  age: number | null
   adult: boolean
   banned: boolean
   banExpiryDate: string | null
@@ -208,14 +208,14 @@ export default class BookerService {
 
     return visitors.map(visitor => {
       const age = ageInYears(visitor.dateOfBirth)
-      const adult = age !== undefined && age >= this.ADULT_AGE
+      const adult = age !== null && age >= this.ADULT_AGE
 
       return {
         visitorDisplayId: randomUUID(),
         visitorId: visitor.visitorId,
         firstName: visitor.firstName,
         lastName: visitor.lastName,
-        dateOfBirth: visitor.dateOfBirth ?? '',
+        dateOfBirth: visitor.dateOfBirth ?? null,
         age,
         adult,
         // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs

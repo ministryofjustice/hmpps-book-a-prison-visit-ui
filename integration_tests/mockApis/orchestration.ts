@@ -503,6 +503,7 @@ export default {
     bookerReference = 'aaaa-bbbb-cccc',
     visitSessions,
     excludedApplicationReference = '',
+    youngestVisitorAge = 18,
   }: {
     prisonId: string
     prisonerId: string
@@ -510,6 +511,7 @@ export default {
     bookerReference: string
     visitSessions: AvailableVisitSessionDto[]
     excludedApplicationReference?: string
+    youngestVisitorAge?: number | null
   }): SuperAgentRequest =>
     stubFor({
       request: {
@@ -530,6 +532,7 @@ export default {
               },
             ],
           },
+          ...(youngestVisitorAge !== null && { youngestVisitorAge: { equalTo: youngestVisitorAge.toString() } }),
         },
       },
       response: {

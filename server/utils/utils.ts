@@ -103,24 +103,24 @@ export const formatTimeDuration = (startTime: string, endTime: string, lng: Loca
  * Calculates the age in years based on the provided date of birth.
  *
  * @param dateOfBirth date of birth string YYYY-MM-DD
- * @returns age in years or undefined if date of birth is invalid or not provided.
+ * @returns age in years or null if date of birth is invalid or not provided.
  */
-export const ageInYears = (dateOfBirth: string | undefined | null): number | undefined => {
+export const ageInYears = (dateOfBirth: string | undefined | null): number | null => {
   if (!dateOfBirth) {
-    return undefined
+    return null
   }
   const parsedDateOfBirth = parseISO(dateOfBirth)
-  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : undefined
+  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : null
 }
 
-export const getYoungestVisitorAge = (visitors: Visitor[]): string | undefined => {
-  const visitorAges = visitors.filter(visitor => typeof visitor.age === 'number').map(visitor => visitor.age!)
+export const getYoungestVisitorAge = (visitors: Visitor[]): number | null => {
+  const visitorAges = visitors.map(visitor => visitor.age).filter((age): age is number => age !== null)
 
   if (visitorAges.length === 0) {
-    return undefined
+    return null
   }
 
-  const youngestAge = Math.min(...visitorAges).toString()
+  const youngestAge = Math.min(...visitorAges)
   return youngestAge
 }
 

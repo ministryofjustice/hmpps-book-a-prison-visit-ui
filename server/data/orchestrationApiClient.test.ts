@@ -450,7 +450,7 @@ describe('orchestrationApiClient', () => {
     const visitSessions: AvailableVisitSessionDto[] = [TestData.availableVisitSessionDto()]
     const excludedApplicationReference = 'aaa-bbb-ccc'
 
-    it('should get available visit sessions for prison / prisoner / visitors', async () => {
+    it('should get available visit sessions for prison / prisoner / visitors (with youngestVisitorAgeSet)', async () => {
       orchestrationApiClient = new OrchestrationApiClient(mockAuthenticationClient)
       fakeOrchestrationApi
         .get('/visit-sessions/public/available')
@@ -460,7 +460,7 @@ describe('orchestrationApiClient', () => {
           visitors: visitorIds.join(','),
           username: bookerReference.value,
           excludedApplicationReference,
-          youngestVisitorAge: 45,
+          youngestVisitorAge: 16,
         })
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, visitSessions)
@@ -471,7 +471,34 @@ describe('orchestrationApiClient', () => {
         visitorIds,
         bookerReference: bookerReference.value,
         excludedApplicationReference,
-        youngestVisitorAge: '45',
+        youngestVisitorAge: 16,
+      })
+
+      expect(result).toStrictEqual(visitSessions)
+    })
+
+    it('should get available visit sessions (when youngestVisitorAge is null))', async () => {
+      orchestrationApiClient = new OrchestrationApiClient(mockAuthenticationClient)
+      fakeOrchestrationApi
+        .get('/visit-sessions/public/available')
+        .query({
+          prisonId: prisoner.prisonId,
+          prisonerId: prisoner.prisonerNumber,
+          visitors: visitorIds.join(','),
+          username: bookerReference.value,
+          excludedApplicationReference,
+          // when null no youngestVisitorAge is sent
+        })
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, visitSessions)
+
+      const result = await orchestrationApiClient.getVisitSessions({
+        prisonId: prisoner.prisonId!,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+        bookerReference: bookerReference.value,
+        excludedApplicationReference,
+        youngestVisitorAge: null,
       })
 
       expect(result).toStrictEqual(visitSessions)

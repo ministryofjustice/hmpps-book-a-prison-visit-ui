@@ -85,6 +85,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         daysAhead,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -92,6 +93,7 @@ describe('Visit sessions service', () => {
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
+        youngestVisitorAge: null,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -142,6 +144,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         daysAhead,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -149,6 +152,7 @@ describe('Visit sessions service', () => {
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
+        youngestVisitorAge: null,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -174,6 +178,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         daysAhead: 28,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -181,6 +186,7 @@ describe('Visit sessions service', () => {
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
+        youngestVisitorAge: null,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -204,6 +210,7 @@ describe('Visit sessions service', () => {
         bookerReference,
         excludedApplicationReference,
         daysAhead: 28,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -212,6 +219,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         excludedApplicationReference,
+        youngestVisitorAge: null,
       })
     })
   })

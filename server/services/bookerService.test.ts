@@ -374,7 +374,7 @@ describe('Booker service', () => {
       expect(results[1].age).toBe(17)
       expect(results[1].adult).toBe(false)
       // Unknown
-      expect(results[2].age).toBeUndefined()
+      expect(results[2].age).toBeNull()
       expect(results[2].adult).toBe(false)
     })
 
