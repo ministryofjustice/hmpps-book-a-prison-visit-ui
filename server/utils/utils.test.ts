@@ -76,8 +76,9 @@ describe('displayAge', () => {
     ['2017-12-15', 'common:plurals.ageYears|count:2'],
     ['2010-12-14', 'common:plurals.ageYears|count:10'],
     ['', ''],
+    [null, ''],
     ['random string', ''],
-  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string, expected: string) => {
+  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string | null, expected: string) => {
     const result = displayAge(dateOfBirth, mockTFunction)
     expect(result).toEqual(expected)
   })

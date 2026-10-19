@@ -42,7 +42,11 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export const displayAge = (dateOfBirth: string, t: TFunction): string => {
+export const displayAge = (dateOfBirth: string | null, t: TFunction): string => {
+  if (dateOfBirth === null) {
+    return ''
+  }
+
   const dob = new Date(dateOfBirth)
   const today = new Date()
 
