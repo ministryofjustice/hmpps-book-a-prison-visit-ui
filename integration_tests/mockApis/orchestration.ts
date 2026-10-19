@@ -501,17 +501,17 @@ export default {
     prisonerId,
     visitorIds,
     bookerReference = 'aaaa-bbbb-cccc',
-    visitSessions,
     excludedApplicationReference = '',
-    youngestVisitorAge = 18,
+    youngestVisitorAge,
+    visitSessions,
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
     bookerReference: string
-    visitSessions: AvailableVisitSessionDto[]
     excludedApplicationReference?: string
-    youngestVisitorAge?: number | null
+    youngestVisitorAge: number | null
+    visitSessions: AvailableVisitSessionDto[]
   }): SuperAgentRequest =>
     stubFor({
       request: {
