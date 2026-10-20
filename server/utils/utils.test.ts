@@ -14,7 +14,6 @@ import {
   getPrisonName,
   getYoungestVisitorAge,
   initialiseName,
-  isAdult,
   isMobilePhoneNumber,
   renderLinkTag,
 } from './utils'
@@ -77,8 +76,9 @@ describe('displayAge', () => {
     ['2017-12-15', 'common:plurals.ageYears|count:2'],
     ['2010-12-14', 'common:plurals.ageYears|count:10'],
     ['', ''],
+    [null, ''],
     ['random string', ''],
-  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string, expected: string) => {
+  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string | null, expected: string) => {
     const result = displayAge(dateOfBirth, mockTFunction)
     expect(result).toEqual(expected)
   })
@@ -133,21 +133,6 @@ describe('formatTimeDuration', () => {
   )
 })
 
-describe('isAdult', () => {
-  it.each([
-    ['is an adult', '2000-01-01', new Date('2022-01-01'), true],
-    ['is not an adult', '2010-01-01', new Date('2022-01-01'), false],
-    ['is an adult on their 18th birthday', '2004-01-01', new Date('2022-01-01'), true],
-    ['is not an adult one day before their 18th birthday', '2004-01-02', new Date('2022-01-01'), false],
-    ['handles undefined date of birth', undefined, new Date('2022-01-01'), false],
-  ])(
-    '%s - isAdult(%s, %s) = %s',
-    (_: string, dateOfBirth: string | undefined, referenceDate: Date, expected: boolean) => {
-      expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
-    },
-  )
-})
-
 describe('ageInYears', () => {
   const fakeDate = new Date('2020-02-01T09:00:00')
 
@@ -163,8 +148,8 @@ describe('ageInYears', () => {
     ['2000-01-01', 20],
     ['2010-01-01', 10],
     ['2020-01-01', 0],
-    [null, undefined],
-    [undefined, undefined],
+    [null, null],
+    [undefined, null],
   ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
     expect(ageInYears(dateOfBirth)).toBe(expectedAge)
   })
@@ -174,15 +159,15 @@ describe('getYoungestVisitorAge', () => {
   const visitor45 = { age: 45 } as Visitor
   const visitor15 = { age: 15 } as Visitor
   const visitor17 = { age: 17 } as Visitor
-  const visitorNoAge = { age: undefined } as Visitor
+  const visitorNoAge = { age: null } as Visitor
 
   it.each([
-    [[visitor45, visitor15, visitor17], '15'],
-    [[visitor45, visitor17], '17'],
-    [[visitor17, visitor45, visitorNoAge], '17'],
-    [[visitor45, visitor15, visitorNoAge], '15'],
-    [[visitorNoAge], undefined],
-  ])('ageInYears (%s) should return %s', (visitors, expectedAge) => {
+    [[visitor45, visitor15, visitor17], 15],
+    [[visitor45, visitor17], 17],
+    [[visitor17, visitor45, visitorNoAge], 17],
+    [[visitor45, visitor15, visitorNoAge], 15],
+    [[visitorNoAge], null],
+  ])('getYoungestVisitorAge (%s) should return %s', (visitors, expectedAge) => {
     expect(getYoungestVisitorAge(visitors)).toBe(expectedAge)
   })
 })

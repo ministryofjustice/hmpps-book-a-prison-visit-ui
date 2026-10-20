@@ -1,7 +1,7 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
 import { UUID } from 'crypto'
 import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
-import BookerService, { Prisoner, Visitor } from './bookerService'
+import BookerService, { Prisoner } from './bookerService'
 import TestData from '../routes/testutils/testData'
 import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
@@ -329,85 +329,88 @@ describe('Booker service', () => {
   })
 
   describe('getVisitors', () => {
-    it('should return visitors for the given booker reference and prisoner number, with sequential display ID', async () => {
-      jest.useFakeTimers({ advanceTimers: true, now: new Date('2026-01-01') })
+    const bookerReference = TestData.bookerReference()
+    const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+    const fakeDateTime = new Date('2026-01-01T09:00:00')
 
-      const bookerReference = TestData.bookerReference()
-      const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+    beforeEach(() => {
+      jest.useFakeTimers({ now: fakeDateTime })
+    })
 
-      const visitorInfoDtos = [
-        TestData.visitorInfoDto({ visitorId: 1 }), // an adult
-        TestData.visitorInfoDto({ visitorId: 2, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
-        // with a ban with expiry date
-        TestData.visitorInfoDto({
-          visitorId: 3,
-          dateOfBirth: '2000-01-01',
-          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-07-01' }],
-        }),
-        // with a ban with no expiry date
-        TestData.visitorInfoDto({
-          visitorId: 4,
-          dateOfBirth: '2000-01-01',
-          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
-        }),
-        // an adult, not approved
-        TestData.visitorInfoDto({
-          visitorId: 5,
-          dateOfBirth: '1990-06-06',
-          approved: false,
-        }),
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('should return visitors for the given booker reference and prisoner number, with UUID displayIds added', async () => {
+      const visitorInfoDtos = [TestData.visitorInfoDto({ visitorId: 1 }), TestData.visitorInfoDto({ visitorId: 2 })]
+      const expectedVisitors = [
+        TestData.visitor({ visitorDisplayId: 'uuidv4-1-1-1-1', visitorId: 1 }),
+        TestData.visitor({ visitorDisplayId: 'uuidv4-2-2-2-2', visitorId: 2 }),
       ]
+
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
-
-      const expectedVisitors: Visitor[] = [
-        {
-          ...TestData.visitor(visitorInfoDtos[0]),
-          visitorDisplayId: 'uuidv4-1-1-1-1',
-          adult: true,
-          banned: false,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[1]),
-          visitorDisplayId: 'uuidv4-2-2-2-2',
-          age: 2,
-          adult: false,
-          banned: false,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[2]),
-          visitorDisplayId: 'uuidv4-3-3-3-3',
-          age: 26,
-          adult: true,
-          banned: true,
-          banExpiryDate: '2025-07-01',
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[3]),
-          visitorDisplayId: 'uuidv4-4-4-4-4',
-          age: 26,
-          adult: true,
-          banned: true,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[4]),
-          visitorDisplayId: 'uuidv4-5-5-5-5',
-          age: 35,
-          adult: true,
-          banned: false,
-          approved: false,
-        },
-      ]
 
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
       expect(results).toStrictEqual(expectedVisitors)
+    })
 
-      jest.useRealTimers()
+    it('should calculate visitor ages and adult status correctly', async () => {
+      const visitorInfoDtos = [
+        TestData.visitorInfoDto({ dateOfBirth: '2008-01-01' }), // an adult (18 today)
+        TestData.visitorInfoDto({ dateOfBirth: '2008-01-02' }), // a child (18 tomorrow)
+        TestData.visitorInfoDto({ dateOfBirth: null }), // no date of birth
+      ]
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      // Adult
+      expect(results[0].age).toBe(18)
+      expect(results[0].adult).toBe(true)
+      // Child
+      expect(results[1].age).toBe(17)
+      expect(results[1].adult).toBe(false)
+      // Unknown
+      expect(results[2].age).toBeNull()
+      expect(results[2].adult).toBe(false)
+    })
+
+    it('should determine if visitors are banned', async () => {
+      const visitorInfoDtos = [
+        // with a ban with expiry date
+        TestData.visitorInfoDto({
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-07-01' }],
+        }),
+        // with a ban with no expiry date
+        TestData.visitorInfoDto({
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
+        }),
+        // no bans
+        TestData.visitorInfoDto(),
+      ]
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(results[0].banned).toBe(true)
+      expect(results[0].banExpiryDate).toBe('2025-07-01')
+      expect(results[1].banned).toBe(true)
+      expect(results[1].banExpiryDate).toBeNull()
+      expect(results[2].banned).toBe(false)
+      expect(results[2].banExpiryDate).toBeNull()
+    })
+
+    it('should return an empty array if no visitors are found', async () => {
+      orchestrationApiClient.getVisitors.mockResolvedValue([])
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(results).toStrictEqual([])
     })
   })
 

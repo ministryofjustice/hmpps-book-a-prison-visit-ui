@@ -32,21 +32,21 @@ export default class VisitSessionsService {
     bookerReference: string
     excludedApplicationReference?: string
     daysAhead: number
-    youngestVisitorAge?: string
+    youngestVisitorAge: number | null
   }): Promise<{
     calendar: VisitSessionsCalendar
     firstSessionDate: string
     allVisitSessionIds: string[]
     allVisitSessions: AvailableVisitSessionDto[]
   }> {
-    const allVisitSessions = await this.getVisitSessions(
+    const allVisitSessions = await this.getVisitSessions({
       prisonId,
       prisonerId,
       visitorIds,
       bookerReference,
       excludedApplicationReference,
       youngestVisitorAge,
-    )
+    })
 
     if (allVisitSessions.length === 0) {
       return {
@@ -93,21 +93,28 @@ export default class VisitSessionsService {
     return { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions }
   }
 
-  private async getVisitSessions(
-    prisonId: string,
-    prisonerId: string,
-    visitorIds: number[],
-    bookerReference: string,
-    excludedApplicationReference?: string,
-    youngestVisitorAge?: string,
-  ): Promise<AvailableVisitSessionDto[]> {
+  private async getVisitSessions({
+    prisonId,
+    prisonerId,
+    visitorIds,
+    bookerReference,
+    excludedApplicationReference,
+    youngestVisitorAge,
+  }: {
+    prisonId: string
+    prisonerId: string
+    visitorIds: number[]
+    bookerReference: string
+    excludedApplicationReference?: string
+    youngestVisitorAge: number | null
+  }): Promise<AvailableVisitSessionDto[]> {
     return this.orchestrationApiClient.getVisitSessions({
       prisonId,
       prisonerId,
       visitorIds,
       bookerReference,
-      excludedApplicationReference,
       youngestVisitorAge,
+      excludedApplicationReference,
     })
   }
 

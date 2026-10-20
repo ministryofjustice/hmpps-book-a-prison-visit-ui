@@ -151,6 +151,7 @@ context('Book visit journey', () => {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
+      youngestVisitorAge: 5,
       visitSessions,
     })
     selectVisitorsPage.continue()
@@ -251,6 +252,7 @@ context('Book visit journey', () => {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
+      youngestVisitorAge: 5,
       // set needs review flag for returned sessions
       visitSessions: visitSessions.map(visitSession => ({ ...visitSession, sessionForReview: true })),
     })
@@ -363,6 +365,7 @@ context('Book visit journey', () => {
       prisonerId: prisoner.prisoner.prisonerNumber,
       visitorIds: [1000],
       bookerReference,
+      youngestVisitorAge: 25,
       visitSessions,
     })
     closedVisitPage.continue()
