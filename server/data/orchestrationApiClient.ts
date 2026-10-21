@@ -315,7 +315,7 @@ export default class OrchestrationApiClient extends RestClient {
     visitorIds: number[]
     excludedApplicationReference?: string
     bookerReference: string
-    youngestVisitorAge?: string
+    youngestVisitorAge: number | null
   }): Promise<AvailableVisitSessionDto[]> {
     return this.get(
       {
@@ -326,7 +326,7 @@ export default class OrchestrationApiClient extends RestClient {
           visitors: visitorIds.join(','),
           username: bookerReference,
           ...(excludedApplicationReference && { excludedApplicationReference }),
-          ...(youngestVisitorAge && { youngestVisitorAge }),
+          ...(youngestVisitorAge !== null && { youngestVisitorAge: youngestVisitorAge.toString() }),
         }).toString(),
       },
       asSystem(),

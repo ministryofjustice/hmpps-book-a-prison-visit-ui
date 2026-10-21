@@ -17,7 +17,7 @@ import {
 } from '../data/orchestrationApiTypes'
 import RateLimitService from './rateLimitService'
 
-import { ageInYears, isAdult } from '../utils/utils'
+import { ageInYears } from '../utils/utils'
 
 export type Prisoner = {
   prisonerDisplayId: UUID
@@ -36,8 +36,8 @@ export type Visitor = {
   visitorId: number
   firstName: string
   lastName: string
-  dateOfBirth?: string | null
-  age?: number
+  dateOfBirth: string | null
+  age: number | null
   adult: boolean
   banned: boolean
   banExpiryDate: string | null
@@ -60,6 +60,9 @@ export default class BookerService {
     private readonly prisonerRateLimit: RateLimitService,
     private readonly visitorRateLimit: RateLimitService,
   ) {}
+
+  // Adult age threshold for 'at least one adult visitor' requirement
+  private readonly ADULT_AGE = 18
 
   async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
     const bookerReference = (await this.orchestrationApiClient.getBookerReference(authDetailDto)).value
@@ -204,14 +207,17 @@ export default class BookerService {
     const visitors = await this.orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map(visitor => {
+      const age = ageInYears(visitor.dateOfBirth)
+      const adult = age !== null && age >= this.ADULT_AGE
+
       return {
         visitorDisplayId: randomUUID(),
         visitorId: visitor.visitorId,
         firstName: visitor.firstName,
         lastName: visitor.lastName,
-        dateOfBirth: visitor.dateOfBirth ?? '',
-        age: ageInYears(visitor.dateOfBirth),
-        adult: isAdult(visitor.dateOfBirth),
+        dateOfBirth: visitor.dateOfBirth ?? null,
+        age,
+        adult,
         // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs
         banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
         banExpiryDate:

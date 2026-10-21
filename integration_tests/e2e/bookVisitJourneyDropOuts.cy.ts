@@ -81,6 +81,7 @@ context('Book visit journey - drop-out points', () => {
         prisonId: prisoner.prisoner.prisonId,
         prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000],
+        youngestVisitorAge: 25,
         visitSessions: [],
       })
       selectVisitorsPage.continue()
@@ -123,6 +124,7 @@ context('Book visit journey - drop-out points', () => {
         prisonId: prisoner.prisoner.prisonId,
         prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000],
+        youngestVisitorAge: 25,
         visitSessions,
       })
       selectVisitorsPage.continue()
@@ -136,6 +138,7 @@ context('Book visit journey - drop-out points', () => {
         prisonId: prisoner.prisoner.prisonId,
         prisonerId: prisoner.prisoner.prisonerNumber,
         visitorIds: [1000],
+        youngestVisitorAge: 25,
         visitSessions: [visitSessions[0]],
       })
 

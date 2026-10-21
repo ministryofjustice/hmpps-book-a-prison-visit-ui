@@ -42,7 +42,11 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export const displayAge = (dateOfBirth: string, t: TFunction): string => {
+export const displayAge = (dateOfBirth: string | null, t: TFunction): string => {
+  if (dateOfBirth === null) {
+    return ''
+  }
+
   const dob = new Date(dateOfBirth)
   const today = new Date()
 
@@ -99,34 +103,28 @@ export const formatTimeDuration = (startTime: string, endTime: string, lng: Loca
   }
 }
 
-export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: Date = new Date()): boolean => {
-  if (!dateOfBirth) return false
-  const dobDate = parseISO(dateOfBirth)
-  return differenceInYears(referenceDate, dobDate) >= 18
-}
-
 /**
  * Calculates the age in years based on the provided date of birth.
  *
  * @param dateOfBirth date of birth string YYYY-MM-DD
- * @returns age in years or undefined if date of birth is invalid or not provided.
+ * @returns age in years or null if date of birth is invalid or not provided.
  */
-export const ageInYears = (dateOfBirth: string | undefined | null): number | undefined => {
+export const ageInYears = (dateOfBirth: string | undefined | null): number | null => {
   if (!dateOfBirth) {
-    return undefined
+    return null
   }
   const parsedDateOfBirth = parseISO(dateOfBirth)
-  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : undefined
+  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : null
 }
 
-export const getYoungestVisitorAge = (visitors: Visitor[]): string | undefined => {
-  const visitorAges = visitors.filter(visitor => typeof visitor.age === 'number').map(visitor => visitor.age!)
+export const getYoungestVisitorAge = (visitors: Visitor[]): number | null => {
+  const visitorAges = visitors.map(visitor => visitor.age).filter((age): age is number => typeof age === 'number')
 
   if (visitorAges.length === 0) {
-    return undefined
+    return null
   }
 
-  const youngestAge = Math.min(...visitorAges).toString()
+  const youngestAge = Math.min(...visitorAges)
   return youngestAge
 }
 
