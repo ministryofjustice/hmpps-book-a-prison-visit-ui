@@ -39,7 +39,8 @@ describe('Visitor details', () => {
           expect($('title').text()).toMatch(/^Visitor information -/)
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_VISITOR.START)
-          expect($('h1').text().trim()).toBe('Visitor information')
+          expect($('h1').text().trim()).toBe('Link a new visitor for John Smith')
+          expect($('h2').text().trim()).toContain('Visitor information')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.ADD_VISITOR.DETAILS)
           expect($('input[name=firstName]').length).toBe(1)

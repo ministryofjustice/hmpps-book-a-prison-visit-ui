@@ -6,7 +6,7 @@ import { dateOfBirthValidationChain } from '../../../utils/validations'
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addVisitorJourney } = req.session
+      const { addVisitorJourney, booker } = req.session
 
       const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
@@ -22,6 +22,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
+        prisoner: booker!.prisoners[0],
       })
     }
   }

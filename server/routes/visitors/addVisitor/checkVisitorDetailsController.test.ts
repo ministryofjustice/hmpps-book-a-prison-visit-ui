@@ -52,6 +52,7 @@ describe('Check visitor request details', () => {
           expect($('[data-test=first-name]').text().trim()).toBe('first')
           expect($('[data-test=last-name]').text().trim()).toBe('last')
           expect($('[data-test=date-of-birth]').text().trim()).toBe('1 February 2000')
+          expect($('[data-test=prisoner-details]').text().trim()).toBe('John Smith at Hewell (HMP & YOI)')
           expect($('[data-test=updates-in-welsh]').length).toBe(0)
           expect($('[data-test=submit]').parent('form').attr('action')).toBe(paths.ADD_VISITOR.CHECK)
           expect($('[data-test=submit]').text().trim()).toBe('Accept and send')
