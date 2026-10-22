@@ -12,22 +12,22 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      <p class="govuk-body-l">{{ t("addVisitor:checkVisitorDetails.description") }}</p>
+      <p class="govuk-body-l">
+        {{- t("addVisitor:checkVisitorDetails.description", {
+          name: prisoner | prisonerNameFirstLast
+        }) }}
+      </p>
 
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-heading-m">{{ t("addVisitor:checkVisitorDetails.visitorInformationHeading") }}</h2>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <p class="govuk-!-text-align-right">
-            <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS }}">
-              {{- t("common:buttons.change") -}}
-              <span class="govuk-visually-hidden">
-                {{ t("addVisitor:checkVisitorDetails.changeVisitorInformation") }}
-              </span>
-            </a>
-          </p>
-        </div>
+      <div class="visits-heading-action">
+        <h2 class="govuk-heading-m">{{ t("addVisitor:checkVisitorDetails.visitorInformationHeading") }}</h2>
+        <p>
+          <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS }}">
+            {{- t("common:buttons.change") -}}
+            <span class="govuk-visually-hidden">
+              {{ t("addVisitor:checkVisitorDetails.changeVisitorInformation") }}
+            </span>
+          </a>
+        </p>
       </div>
 
        {# Only render last item if the language is Welsh #}
@@ -60,6 +60,18 @@
                 '<span data-test="date-of-birth">' +
                 (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE, language)) +
                 "</span>"
+            }
+          },
+          {
+            key: {
+              text: t("common:labels.prisoner")
+            },
+            value: {
+              html: '<span data-test="prisoner-details">' +
+                  (t("common:prisoner.prisonerAtPrison", {
+                    prisonerName: prisoner | prisonerNameFirstLast,
+                    prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
+                  }) | escape) + "</span>"
             }
           },
           ({

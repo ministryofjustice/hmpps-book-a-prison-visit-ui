@@ -15,6 +15,8 @@ export default class CheckVisitorDetailsPage extends Page {
 
   dateOfBirth = (): PageElement => cy.get('[data-test=date-of-birth]')
 
+  prisonerDetails = (): PageElement => cy.get('[data-test=prisoner-details]')
+
   submit = (): void => {
     cy.get('[data-test="submit"]').click()
   }

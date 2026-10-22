@@ -44,7 +44,7 @@ context('Add a visitor', () => {
 
     // Enter visitor details
     addVisitorStartPage.continue()
-    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage)
+    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'John Smith')
     visitorDetailsPage.enterFirstName('Joan')
     visitorDetailsPage.enterLastName('Smith')
     visitorDetailsPage.enterVisitorDob(21, 2, 1980)
@@ -55,6 +55,7 @@ context('Add a visitor', () => {
     checkVisitorDetailsPage.firstName().contains('Joan')
     checkVisitorDetailsPage.lastName().contains('Smith')
     checkVisitorDetailsPage.dateOfBirth().contains('21 February 1980')
+    checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
     // Change details and continue
     checkVisitorDetailsPage.changeDetails()
@@ -86,7 +87,7 @@ context('Add a visitor', () => {
 
     // Enter visitor details
     addVisitorStartPage.continue()
-    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage)
+    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'John Smith')
     visitorDetailsPage.enterFirstName('Joan')
     visitorDetailsPage.enterLastName('Smith')
     visitorDetailsPage.enterVisitorDob(21, 2, 1980)
@@ -97,6 +98,7 @@ context('Add a visitor', () => {
     checkVisitorDetailsPage.firstName().contains('Joan')
     checkVisitorDetailsPage.lastName().contains('Smith')
     checkVisitorDetailsPage.dateOfBirth().contains('21 February 1980')
+    checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
     // Change details and continue
     checkVisitorDetailsPage.changeDetails()
@@ -132,7 +134,7 @@ context('Add a visitor', () => {
 
     // Enter visitor details
     addVisitorStartPage.continue()
-    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage)
+    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'John Smith')
     visitorDetailsPage.enterFirstName('Joan')
     visitorDetailsPage.enterLastName('Phillips')
     visitorDetailsPage.enterVisitorDob(21, 2, 1980)
@@ -168,7 +170,7 @@ context('Add a visitor', () => {
 
         // Enter visitor details
         addVisitorStartPage.continue()
-        const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage)
+        const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'John Smith')
         visitorDetailsPage.enterFirstName('Joan')
         visitorDetailsPage.enterLastName('Phillips')
         visitorDetailsPage.enterVisitorDob(21, 2, 1980)

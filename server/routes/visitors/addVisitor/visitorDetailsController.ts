@@ -7,6 +7,7 @@ export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
+      const prisoner = req.session.booker!.prisoners[0]
 
       const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
@@ -22,6 +23,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
+        prisoner,
       })
     }
   }

@@ -1,8 +1,8 @@
 import Page from '../../page'
 
 export default class VisitorDetailsPage extends Page {
-  constructor() {
-    super('Visitor information')
+  constructor(prisonerName: string) {
+    super(`Link a new visitor for ${prisonerName}`)
   }
 
   enterFirstName = (firstName: string): void => {

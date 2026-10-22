@@ -55,3 +55,10 @@
 .govuk-tag {
   max-width: unset;
 }
+
+.visits-heading-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: govuk-spacing(3);
+}

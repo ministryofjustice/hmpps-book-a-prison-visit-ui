@@ -26,10 +26,10 @@
             },
             value: {
               html: '<span data-test="prisoner-details">' +
-                t("common:prisoner.prisonerAtPrison", {
+                (t("common:prisoner.prisonerAtPrison", {
                   prisonerName: prisoner | prisonerNameFirstLast,
                   prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
-                }) + "</span>"
+                }) | escape) + "</span>"
             }
           },
 

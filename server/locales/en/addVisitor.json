@@ -11,11 +11,12 @@
   },
   "visitorDetails": {
     "title": "Visitor information",
+    "titleForPrisoner": "Link a new visitor for {{name}}",
     "updatesInWelsh": "Tick for updates about this request to be sent in Welsh"
   },
   "checkVisitorDetails": {
     "title": "Check your request",
-    "description": "Your answers need to match the information on the prisoner’s visitor list.",
+    "description": "Your answers need to match the information on the visitor list for {{name}}.",
     "visitorInformationHeading": "Visitor information",
     "changeVisitorInformation": "visitor information",
     "updatesInWelshYes": "Yes",
