@@ -7,7 +7,8 @@ export default class CheckVisitorDetailsController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addVisitorJourney, booker } = req.session
+      const { addVisitorJourney } = req.session
+      const prisoner = req.session.booker!.prisoners[0]
 
       if (!addVisitorJourney) {
         return res.redirect(paths.VISITORS)
@@ -16,7 +17,7 @@ export default class CheckVisitorDetailsController {
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
         showOLServiceNav: true,
         visitorDetails: addVisitorJourney.visitorDetails,
-        prisoner: booker!.prisoners[0],
+        prisoner,
       })
     }
   }
