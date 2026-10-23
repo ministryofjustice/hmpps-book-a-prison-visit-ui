@@ -59,9 +59,10 @@ describe('Visits home page (future visits list)', () => {
 
         expect($('[data-test="awaiting-review-tag-2"]').text()).toContain(`Awaiting review`)
 
-        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
-
         expect($('[data-test="no-visits"]').length).toBeFalsy()
+
+        expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
+        expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
@@ -83,9 +84,7 @@ describe('Visits home page (future visits list)', () => {
         const $ = cheerio.load(res.text)
         expect($('h1').text()).toBe('Visits')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
-        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
-        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1-1-1-1')
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
@@ -125,9 +124,6 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
-        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1-1-1-1')
-        expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
         expect(sessionData).toStrictEqual({

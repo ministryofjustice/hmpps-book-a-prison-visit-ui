@@ -92,18 +92,13 @@
           <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
         {% endif %}
 
-        <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
-          <input type="hidden" name="prisonerDisplayId" value="{{ prisoner.prisonerDisplayId }}">
-
-          {{ govukButton({
-            text: t("common:buttons.bookAVisit"),
-            classes: "govuk-!-margin-top-3",
-            preventDoubleClick: true,
-            attributes: { "data-test": "book-a-visit" }
-          }) }}
-        </form>
+        {{ govukButton({
+          text: t("common:buttons.bookAVisit"),
+          href: paths.BOOK_VISIT.SELECT_PRISONER,
+          classes: "govuk-!-margin-top-3",
+          preventDoubleClick: true,
+          attributes: { "data-test": "book-a-visit" }
+        }) }}
 
         <p>
           <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
