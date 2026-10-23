@@ -126,7 +126,7 @@ export default {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },
   features: {
-    //
+    multiplePrisoners: get('FEATURE_MULTIPLE_PRISONERS', 'false') === 'true',
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
