@@ -24,6 +24,7 @@ export type Prisoner = {
   prisonerNumber: string
   firstName: string
   lastName: string
+  dateOfBirth: string
   prisonId?: string | null
   registeredPrisonId: string
   availableVos: number
@@ -160,6 +161,7 @@ export default class BookerService {
         prisonerNumber: prisoner.prisonerNumber,
         firstName: prisoner.firstName,
         lastName: prisoner.lastName,
+        dateOfBirth: prisoner.dateOfBirth,
         prisonId: prisoner.prisonId,
         registeredPrisonId: registeredPrison.prisonCode,
         availableVos,
