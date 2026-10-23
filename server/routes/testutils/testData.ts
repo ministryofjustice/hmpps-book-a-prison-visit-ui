@@ -97,6 +97,7 @@ export default class TestData {
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
+    dateOfBirth = '1980-02-01',
     prisonId = 'HEI',
     prisonName = 'Hewell (HMP & YOI)',
     registeredPrisonId = 'HEI',
@@ -108,6 +109,7 @@ export default class TestData {
     prisonerNumber: string
     firstName: string
     lastName: string
+    dateOfBirth: string
     prisonId: string | null
     prisonName: string
     registeredPrisonId: string
@@ -120,7 +122,7 @@ export default class TestData {
       prisonerNumber,
       firstName,
       lastName,
-      dateOfBirth: '1980-02-01',
+      dateOfBirth,
       prisonId,
       prisonName,
       status: 'ACTIVE IN',
@@ -274,6 +276,7 @@ export default class TestData {
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
+    dateOfBirth = '1980-02-01',
     prisonId = 'HEI',
     registeredPrisonId = 'HEI',
     availableVos = 2,
@@ -284,6 +287,7 @@ export default class TestData {
     prisonerNumber,
     firstName,
     lastName,
+    dateOfBirth,
     prisonId,
     registeredPrisonId,
     availableVos,

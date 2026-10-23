@@ -72,21 +72,21 @@ describe('bookVisitSessionValidator', () => {
       }
     }
 
-    describe('booker data', () => {
-      it(`POST ${paths.BOOK_VISIT.SELECT_PRISONER} should call redirect`, () => {
-        req = createMockReq({
-          method: 'POST',
-          path: paths.BOOK_VISIT.SELECT_PRISONER,
-          booker: { reference: bookerReference, prisoners: [] },
-        })
+    describe('booker data - booker has no prisoners', () => {
+      it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+        { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'redirect' },
+        { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'redirect' },
+      ])('$method $path should call $expected', ({ method, path, expected }) => {
+        req = createMockReq({ method, path, booker: { reference: bookerReference, prisoners: [] } })
         bookVisitSessionValidator()(req, res, next)
-        runAssertions('redirect')
+        runAssertions(expected)
       })
     })
 
     describe('bookVisitJourney data', () => {
       describe('no data', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'redirect' },
@@ -100,6 +100,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('prisoner and prison', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -114,6 +115,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add eligibleVisitors', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -133,6 +135,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add selectedVisitors and sessionRestriction', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -159,6 +162,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add allVisitSessionIds and allVisitSessions', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -188,6 +192,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add selectedVisitSession and applicationReference', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -221,6 +226,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add visitorSupport', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -262,6 +268,7 @@ describe('bookVisitSessionValidator', () => {
 
       describe('...add mainContact', () => {
         it.each(<{ method: Method; path: string; expected: 'next' | 'redirect' }[]>[
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'next' },
@@ -333,6 +340,7 @@ describe('bookVisitSessionValidator', () => {
           // this allowed because bookVisitConfirmed gets cleared in this route
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
 
+          { method: 'GET', path: paths.BOOK_VISIT.SELECT_PRISONER, expected: 'next' },
           { method: 'GET', path: paths.BOOK_VISIT.CANNOT_BOOK, expected: 'redirect' },
           { method: 'GET', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'redirect' },
           { method: 'POST', path: paths.BOOK_VISIT.SELECT_VISITORS, expected: 'redirect' },

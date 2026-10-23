@@ -1,0 +1,62 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("bookVisit:selectPrisoner.title") %}
+
+{% set backLinkHref = paths.VISITS.HOME %}
+
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% include "partials/errorSummary.njk" %}
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <form action="{{ paths.BOOK_VISIT.SELECT_PRISONER }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {# If there is only one prisoner, automatically select them with a hidden input #}
+        {% if prisoners.length == 1 %}
+          <input type="hidden" name="prisonerDisplayId" value="{{ prisoners[0].prisonerDisplayId }}">
+
+          <p data-test="prisoner-0">
+            {{ prisoners[0] | prisonerNameFirstLast }}
+            ({{ prisoners[0].dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }})
+          </p>
+
+        {% else %}
+
+          {# Multiple prisoners: build radio options #}
+          {% set prisonerListItems = [] %}
+          {% for prisoner in prisoners %}
+            {% set prisonerNameAndDob = prisoner | prisonerNameFirstLast + " (" + (prisoner.dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language)) + ")" %}
+            {% set elementId = "prisoner-" + loop.index %}
+
+            {% set prisonerListItems = (prisonerListItems.push({
+              id: elementId,
+              value: prisoner.prisonerDisplayId,
+              text: prisonerNameAndDob,
+              attributes: { "data-test": elementId }
+            }), prisonerListItems)  %}
+          {% endfor %}
+
+          {{ govukRadios({
+            name: "prisonerDisplayId",
+            items: prisonerListItems,
+            value: formValues.prisonerDisplayId
+          }) }}
+        {% endif %}
+
+        {{ govukButton({
+          text: t("common:buttons.continue"),
+          preventDoubleClick: true,
+          attributes: { "data-test": "continue-button" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
