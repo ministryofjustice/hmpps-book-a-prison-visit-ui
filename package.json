@@ -94,7 +94,7 @@
     "@types/superagent": "^8.1.11",
     "@types/supertest": "^7.2.1",
     "audit-ci": "^7.1.0",
-    "axe-core": "^4.14.0",
+    "axe-core": "4.13.0",
     "cheerio": "^1.2.0",
     "concurrently": "^10.0.6",
     "cypress": "^15.21.1",
