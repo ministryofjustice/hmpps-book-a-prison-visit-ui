@@ -37,6 +37,7 @@ export default function setUpI18n({ production }: { production: boolean }): Rout
           'visitors',
           'visits',
           'staticPages',
+          'prisoners',
         ],
         defaultNS: 'common',
 

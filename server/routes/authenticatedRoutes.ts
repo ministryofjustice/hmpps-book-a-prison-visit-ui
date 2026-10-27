@@ -6,6 +6,7 @@ import addVisitorRoutes from './visitors/addVisitor'
 import bookVisitRoutes from './bookVisit'
 import visitsRoutes from './visits'
 import visitorsRoutes from './visitors'
+import prisonersRoutes from './prisoners'
 import { clearSession } from '../utils/utils'
 
 export default function routes(services: Services): Router {
@@ -23,6 +24,7 @@ export default function routes(services: Services): Router {
   router.use(bookVisitRoutes(services))
   router.use(visitsRoutes(services))
   router.use(visitorsRoutes(services))
+  router.use(prisonersRoutes(services))
 
   return router
 }
