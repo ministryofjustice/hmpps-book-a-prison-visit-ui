@@ -9,6 +9,8 @@ export default class PrisonersController {
   public view(): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!
+      // Ensure prisoners list is up to date
+      booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
       const prisonersTableRows = buildPrisonersTableRows({
         prisoners: booker.prisoners,
@@ -18,6 +20,7 @@ export default class PrisonersController {
       return res.render('pages/prisoners/prisoners', {
         prisoners: booker.prisoners,
         prisonersTableRows,
+        showOLServiceNav: true,
       })
     }
   }

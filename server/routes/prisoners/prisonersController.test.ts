@@ -18,7 +18,7 @@ const prisoner = TestData.prisoner()
 
 beforeEach(() => {
   bookerService.getVisitorRequests.mockResolvedValue([])
-
+  bookerService.getPrisoners.mockResolvedValue([prisoner])
   sessionData = {
     booker: {
       reference: bookerReference,
@@ -34,7 +34,7 @@ afterEach(() => {
 
 describe('Prisoners page', () => {
   it('should render the  link new prisoner section when no prisoners are linked', () => {
-    sessionData.booker!.prisoners = []
+    bookerService.getPrisoners.mockResolvedValue([])
     return request(app)
       .get(paths.PRISONERS)
       .expect('Content-Type', /html/)
@@ -42,6 +42,8 @@ describe('Prisoners page', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Prisoners and Visitors -/)
         expect($('h1').text()).toBe('Prisoners and Visitors')
+        expect($('h2[data-test="prisoners-linked"]').length).toBe(0)
+        expect($('[data-test="prisoners-table"]').length).toBe(0)
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
         expect($('[data-test="link-new-prisoner-button"]').text().trim()).toBe('Link a new prisoner')
       })

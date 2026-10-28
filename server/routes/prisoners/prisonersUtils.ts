@@ -12,6 +12,10 @@ export const buildPrisonersTableRows = ({
   prisoners: Prisoner[]
   lng: Locale
 }): GOVUKTableRow[] => {
+  if (prisoners.length === 0) {
+    return []
+  }
+
   return prisoners.map((prisoner, index) => {
     return [
       // Prisoner name

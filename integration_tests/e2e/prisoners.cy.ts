@@ -41,4 +41,29 @@ context('Prisoners page', () => {
 
     Page.verifyOnPage(PrisonerLocationPage)
   })
+
+  it('should show an added prisoner in the list on the Prisoners page', () => {
+    cy.visit(paths.PRISONERS)
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.addANewPrisoner()
+
+    Page.verifyOnPage(PrisonerLocationPage)
+
+    cy.task('stubGetPrisoners', {
+      prisoners: [
+        ...prisoners,
+        TestData.bookerPrisonerInfoDto({
+          prisonerNumber: 'C52333AD',
+          firstName: 'Carol',
+          lastName: 'Collins',
+          dateOfBirth: '2000-01-01',
+        }),
+      ],
+    })
+
+    cy.visit(paths.PRISONERS)
+    const prisonersPageAfterAdd = Page.verifyOnPage(PrisonersPage)
+    prisonersPageAfterAdd.prisonerName(2).contains('Carol Collins')
+    prisonersPageAfterAdd.prisonerDateOfBirth(2).contains('1 January 2000')
+  })
 })
