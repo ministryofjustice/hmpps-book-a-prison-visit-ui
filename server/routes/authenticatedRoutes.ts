@@ -8,6 +8,7 @@ import visitsRoutes from './visits'
 import visitorsRoutes from './visitors'
 import prisonersRoutes from './prisoners'
 import { clearSession } from '../utils/utils'
+import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -24,7 +25,10 @@ export default function routes(services: Services): Router {
   router.use(bookVisitRoutes(services))
   router.use(visitsRoutes(services))
   router.use(visitorsRoutes(services))
-  router.use(prisonersRoutes(services))
+
+  if (config.features.multiplePrisoners) {
+    router.use(prisonersRoutes(services))
+  }
 
   return router
 }

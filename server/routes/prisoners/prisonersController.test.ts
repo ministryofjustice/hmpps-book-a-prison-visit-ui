@@ -6,7 +6,7 @@ import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
+import { enableFeatureForTest, disableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -17,6 +17,7 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 
 beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
   bookerService.getVisitorRequests.mockResolvedValue([])
   bookerService.getPrisoners.mockResolvedValue([prisoner])
   sessionData = {
@@ -33,7 +34,13 @@ afterEach(() => {
 })
 
 describe('Prisoners page', () => {
-  it('should render the  link new prisoner section when no prisoners are linked', () => {
+  it('should return a 404 if FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    disableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+    return request(app).get(paths.PRISONERS).expect(404)
+  })
+
+  it('should render the link new prisoner section when no prisoners are linked', () => {
     bookerService.getPrisoners.mockResolvedValue([])
     return request(app)
       .get(paths.PRISONERS)
@@ -61,22 +68,6 @@ describe('Prisoners page', () => {
         expect($('[data-test="prisoners-table"]').length).toBe(1)
         expect($('[data-test="prisoner-name-0"]').text().trim()).toBe('John Smith')
         expect($('[data-test="prisoner-dob-0"]').text().trim()).toBe('1 February 1980')
-        expect($('[data-test="link-new-prisoner-button"]').length).toBe(0)
-      })
-  })
-  it('should render the link new prisoner section if FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
-
-    return request(app)
-      .get(paths.PRISONERS)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Prisoners and Visitors -/)
-        expect($('h1').text()).toBe('Prisoners and Visitors')
-        expect($('h2[data-test="prisoners-linked"]').text()).toBe('Prisoners linked to your account')
-        expect($('[data-test="prisoners-table"]').length).toBe(1)
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
         expect($('[data-test="link-new-prisoner-button"]').text().trim()).toBe('Link a new prisoner')
       })
