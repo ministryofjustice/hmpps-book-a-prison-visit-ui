@@ -73,6 +73,7 @@ const paths = {
   },
 
   VISITORS: '/visitors',
+  PRISONERS: '/prisoners-and-visitors',
 
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies',
