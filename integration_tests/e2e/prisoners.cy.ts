@@ -3,6 +3,7 @@ import paths from '../../server/constants/paths'
 import PrisonersPage from '../pages/prisoners/prisoners'
 import Page from '../pages/page'
 import PrisonerLocationPage from '../pages/addPrisoner/prisonerLocation'
+import VisitorsPage from '../pages/visitors/visitors'
 
 context('Prisoners page', () => {
   const prisoners = [
@@ -27,6 +28,8 @@ context('Prisoners page', () => {
       visits: [],
     })
     cy.task('stubGetSupportedPrisonIds')
+    cy.task('stubGetVisitors', { visitors: [TestData.visitorInfoDto()] })
+    cy.task('stubGetVisitorRequests')
     cy.signIn()
   })
 
@@ -65,5 +68,15 @@ context('Prisoners page', () => {
     const prisonersPageAfterAdd = Page.verifyOnPage(PrisonersPage)
     prisonersPageAfterAdd.prisonerName(2).contains('Carol Collins')
     prisonersPageAfterAdd.prisonerDateOfBirth(2).contains('1 January 2000')
+  })
+
+  it('should navigate to the visitors page for the prisoner', () => {
+    // This will need updating when multiple prisoners are supported on the visitors page
+    cy.visit(paths.PRISONERS)
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.prisonerName(0).contains('John Smith')
+    prisonersPage.viewPrisonerVisitors(0)
+
+    Page.verifyOnPage(VisitorsPage)
   })
 })

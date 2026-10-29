@@ -9,6 +9,10 @@ export default class PrisonersPage extends Page {
 
   prisonerDateOfBirth = (index: number): PageElement => cy.get(`[data-test="prisoner-dob-${index}"]`)
 
+  viewPrisonerVisitors = (index: number): void => {
+    cy.get(`[data-test="prisoner-visitors-link-${index}"]`).click()
+  }
+
   addANewPrisoner = (): void => {
     cy.get('[data-test="link-new-prisoner-button"]').click()
   }

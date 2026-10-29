@@ -68,6 +68,7 @@ describe('Prisoners page', () => {
         expect($('[data-test="prisoners-table"]').length).toBe(1)
         expect($('[data-test="prisoner-name-0"]').text().trim()).toBe('John Smith')
         expect($('[data-test="prisoner-dob-0"]').text().trim()).toBe('1 February 1980')
+        expect($('[data-test="prisoner-visitors-link-0"]').text().trim()).toBe('View visitors linked to John Smith')
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
         expect($('[data-test="link-new-prisoner-button"]').text().trim()).toBe('Link a new prisoner')
       })

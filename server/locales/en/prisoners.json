@@ -2,6 +2,8 @@
   "prisoners": {
     "title": "Prisoners and Visitors",
     "prisonersLinkedHeading": "Prisoners linked to your account",
+    "viewVisitorsLink": "View visitors",
+    "viewVisitorsLinkHidden": "linked to {{name}}",
     "linkANewPrisonerHeading": "Link a new prisoner",
     "linkANewPrisonerText": "Begin booking visits for a new prisoner.",
     "linkANewPrisonerRequestLink": "Link a new prisoner"

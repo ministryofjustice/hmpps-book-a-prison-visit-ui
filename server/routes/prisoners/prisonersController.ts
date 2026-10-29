@@ -15,6 +15,7 @@ export default class PrisonersController {
       const prisonersTableRows = buildPrisonersTableRows({
         prisoners: booker.prisoners,
         lng: req.language as Locale,
+        t: req.t,
       })
 
       return res.render('pages/prisoners/prisoners', {
