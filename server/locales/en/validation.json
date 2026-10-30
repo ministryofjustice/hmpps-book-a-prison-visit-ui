@@ -14,6 +14,7 @@
   "prisonNumberRequired": "Enter a prison number",
   "prisonNumberFormat": "Enter a prison number with only letters and numbers",
   "prisonNumberLength": "Enter a prison number with 7 characters",
+  "prisonerSelectNone": "No prisoner selected",
   "prisonSelectNone": "No prison selected",
   "prisonSelectRequired": "Select a prison",
   "supportDetailsLength": "Please enter at least 3 and no more than 200 characters",
