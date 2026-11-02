@@ -5,36 +5,38 @@
 {% set pageTitle = t("prisoners:prisoners.title") %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-            {% if prisonersTableRows | length %}
-            <h2 class="govuk-heading-m" data-test="prisoners-linked">{{ t("prisoners:prisoners.prisonersLinkedHeading") }}</h2>
-            {{ govukTable({
-                head: [
-                    {
-                        text: t("common:labels.name")
-                    },
-                    {
-                        text: t("common:labels.dateOfBirth"),
-                        colspan: 2
-                    }
-                ],
-                rows: prisonersTableRows,
-                attributes: { "data-test": "prisoners-table" }
-            }) }}
-            {% endif %}
+      {% if prisonersTableRows | length %}
+        <h2 class="govuk-heading-m" data-test="prisoners-linked">{{ t("prisoners:prisoners.prisonersLinkedHeading") }}</h2>
+        {{ govukTable({
+          head: [
+              {
+                text: t("common:labels.name")
+              },
+              {
+                text: t("common:labels.dateOfBirth")
+              },
+              {
+                html: '<span class="govuk-visually-hidden">' + t("prisoners:prisoners.viewVisitorsLink") + '</span>'
+              }
+          ],
+          rows: prisonersTableRows,
+          attributes: { "data-test": "prisoners-table" }
+        }) }}
+      {% endif %}
 
-            <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
-            <p class="govuk-body-l">{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
+      <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
+      <p>{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
 
-            {{ govukButton({
-                text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
-                href: paths.ADD_PRISONER.LOCATION,
-                preventDoubleClick: true,
-                attributes: { "data-test": "link-new-prisoner-button"}
-            }) }}
-        </div>
+      {{ govukButton({
+        text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
+        href: paths.ADD_PRISONER.LOCATION,
+        preventDoubleClick: true,
+        attributes: { "data-test": "link-new-prisoner-button"}
+      }) }}
     </div>
+  </div>
 {% endblock %}

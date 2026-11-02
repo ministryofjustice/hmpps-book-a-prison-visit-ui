@@ -1,6 +1,6 @@
 {
   "prisoners": {
-    "title": "Prisoners and Visitors",
+    "title": "Prisoners and visitors",
     "prisonersLinkedHeading": "Prisoners linked to your account",
     "viewVisitorsLink": "View visitors",
     "viewVisitorsLinkHidden": "linked to {{name}}",
