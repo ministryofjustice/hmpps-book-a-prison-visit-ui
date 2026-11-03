@@ -35,7 +35,7 @@ export const buildPrisonersTableRows = ({
       // Link to Visitors
       {
         html:
-          `<a href="${paths.VISITORS}">` +
+          `<a class="govuk-link--no-visited-state" href="${paths.VISITORS}">` +
           `${t('prisoners:prisoners.viewVisitorsLink')}` +
           `<span class="govuk-visually-hidden">` +
           ` ${t('prisoners:prisoners.viewVisitorsLinkHidden', {

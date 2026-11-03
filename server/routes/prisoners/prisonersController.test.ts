@@ -47,8 +47,8 @@ describe('Prisoners page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Prisoners and Visitors -/)
-        expect($('h1').text()).toBe('Prisoners and Visitors')
+        expect($('title').text()).toMatch(/^Prisoners and visitors -/)
+        expect($('h1').text()).toBe('Prisoners and visitors')
         expect($('h2[data-test="prisoners-linked"]').length).toBe(0)
         expect($('[data-test="prisoners-table"]').length).toBe(0)
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
@@ -62,8 +62,8 @@ describe('Prisoners page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('title').text()).toMatch(/^Prisoners and Visitors -/)
-        expect($('h1').text()).toBe('Prisoners and Visitors')
+        expect($('title').text()).toMatch(/^Prisoners and visitors -/)
+        expect($('h1').text()).toBe('Prisoners and visitors')
         expect($('h2[data-test="prisoners-linked"]').text()).toBe('Prisoners linked to your account')
         expect($('[data-test="prisoners-table"]').length).toBe(1)
         expect($('[data-test="prisoner-name-0"]').text().trim()).toBe('John Smith')

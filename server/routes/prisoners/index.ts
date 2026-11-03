@@ -8,7 +8,7 @@ export default function routes(services: Services): Router {
 
   const prisonersController = new PrisonersController(services.bookerService)
 
-  // Prisoners and Visitors
+  // Prisoners and visitors
   router.get(paths.PRISONERS, prisonersController.view())
 
   return router
