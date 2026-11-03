@@ -96,11 +96,11 @@ describe('Check visitor request details', () => {
         .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
     })
 
-    it('should return to visits page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    it('should return to visitors page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', `${paths.VISITS.HOME}`)
+      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', `${paths.VISITORS}`)
     })
   })
 
@@ -157,11 +157,11 @@ describe('Check visitor request details', () => {
         .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
     })
 
-    it('should return to visits page on post if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    it('should return to visitors page on post if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', `${paths.VISITS.HOME}`)
+      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', `${paths.VISITORS}`)
     })
 
     it('should return to prisoners page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
@@ -171,11 +171,11 @@ describe('Check visitor request details', () => {
       return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
     })
 
-    it('should return to visits page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    it('should return to visitors page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       sessionData.booker = { reference: 'ref', prisoners: [] }
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITS.HOME)
+      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
     })
   })
 })

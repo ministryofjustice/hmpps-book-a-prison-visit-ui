@@ -19,7 +19,7 @@ export default class CancelVisitorRequestController {
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
         const prisoner = req.session.booker?.prisoners[0]
         return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
@@ -50,10 +50,13 @@ export default class CancelVisitorRequestController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         if (!visitorRequestDisplayId) {
-          if (bookerPrisoner) {
-            return res.redirect(`${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}`)
+          if (!config.features.multiplePrisoners) {
+            return res.redirect(paths.VISITORS)
           }
-          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
+
+          return res.redirect(
+            bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.PRISONERS,
+          )
         }
 
         req.flash('errors', errors.array())
@@ -78,7 +81,10 @@ export default class CancelVisitorRequestController {
           text: req.t('visitors:visitors.alert.visitorRequestReview.text', { prisonName }),
         })
 
-        return res.redirect(bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITORS)
+        }
+        return res.redirect(bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       await this.bookerService.withdrawVisitorRequest({

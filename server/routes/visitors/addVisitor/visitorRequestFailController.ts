@@ -10,7 +10,7 @@ export default class VisitorRequestFailController {
 
       if (!addVisitorJourneyResult) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
 
         return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
@@ -31,10 +31,11 @@ export default class VisitorRequestFailController {
           break
 
         default:
-          if (prisoner) {
-            return res.redirect(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
+          if (!config.features.multiplePrisoners) {
+            return res.redirect(paths.VISITORS)
           }
-          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
+
+          return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       return res.render(`pages/visitors/addVisitor/${pageTemplate}`, {

@@ -72,12 +72,12 @@ describe('Add visitor request success page', () => {
         .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
     })
 
-    it('should redirect to visits page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    it('should redirect to visitors page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
 
-      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', `${paths.VISITS.HOME}`)
+      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', `${paths.VISITORS}`)
     })
   })
 
@@ -90,12 +90,12 @@ describe('Add visitor request success page', () => {
     return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.PRISONERS)
   })
 
-  it('should redirect to prisoners page if add visitor request result and no prisoner in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+  it('should redirect to visitors page if add visitor request result and no prisoner in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
     disableFeatureForTest('multiplePrisoners')
     app = appWithAllRoutes({ sessionData })
     sessionData.booker = { reference: 'ref', prisoners: [] }
     delete sessionData.addVisitorJourneyResult
 
-    return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITS.HOME)
+    return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
   })
 })

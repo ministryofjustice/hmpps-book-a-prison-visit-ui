@@ -7,7 +7,7 @@ export default class VisitorRequestSuccessController {
     return async (req, res) => {
       if (req.session.addVisitorJourneyResult === undefined) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
 
         const prisoner = req.session.booker?.prisoners[0]
@@ -22,7 +22,7 @@ export default class VisitorRequestSuccessController {
     return async (req, res) => {
       if (req.session.addVisitorJourneyResult === undefined) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
         const prisoner = req.session.booker?.prisoners[0]
         return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)

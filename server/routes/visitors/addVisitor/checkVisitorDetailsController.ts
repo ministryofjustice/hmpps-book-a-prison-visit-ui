@@ -13,7 +13,7 @@ export default class CheckVisitorDetailsController {
 
       if (!addVisitorJourney) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
 
         return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
@@ -33,7 +33,7 @@ export default class CheckVisitorDetailsController {
 
       if (!addVisitorJourney || !booker?.prisoners?.length) {
         if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(paths.VISITORS)
         }
 
         return res.redirect(
