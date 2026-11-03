@@ -21,7 +21,7 @@ describe('buildPrisonersTableRows', () => {
         { text: 'John Smith', attributes: { 'data-test': 'prisoner-name-0' } },
         { text: '1 February 1980', attributes: { 'data-test': 'prisoner-dob-0' } },
         {
-          html: `<a href="${paths.VISITORS}/uuidv4-1-1-1-1">prisoners:prisoners.viewVisitorsLink<span class="govuk-visually-hidden"> prisoners:prisoners.viewVisitorsLinkHidden|name:John Smith</span></a>`,
+          html: `<a class="govuk-link--no-visited-state" href="${paths.VISITORS}/uuidv4-1-1-1-1">prisoners:prisoners.viewVisitorsLink<span class="govuk-visually-hidden"> prisoners:prisoners.viewVisitorsLinkHidden|name:John Smith</span></a>`,
           attributes: { 'data-test': 'prisoner-visitors-link-0' },
         },
       ],
@@ -29,7 +29,7 @@ describe('buildPrisonersTableRows', () => {
         { text: 'Prisoner 2 Last 2', attributes: { 'data-test': 'prisoner-name-1' } },
         { text: '1 January 1990', attributes: { 'data-test': 'prisoner-dob-1' } },
         {
-          html: `<a href="${paths.VISITORS}/uuidv4-1-2-3-4">prisoners:prisoners.viewVisitorsLink<span class="govuk-visually-hidden"> prisoners:prisoners.viewVisitorsLinkHidden|name:Prisoner 2 Last 2</span></a>`,
+          html: `<a class="govuk-link--no-visited-state" href="${paths.VISITORS}/uuidv4-1-2-3-4">prisoners:prisoners.viewVisitorsLink<span class="govuk-visually-hidden"> prisoners:prisoners.viewVisitorsLinkHidden|name:Prisoner 2 Last 2</span></a>`,
           attributes: { 'data-test': 'prisoner-visitors-link-1' },
         },
       ],
