@@ -76,7 +76,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(url)
         .send('cancelVisitorRequest=no')
         .expect(302)
-        .expect('location', paths.VISITORS)
+        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('messages', {
@@ -111,7 +111,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
         .send('cancelVisitorRequest=yes')
         .expect(302)
-        .expect('location', paths.VISITORS)
+        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
         })

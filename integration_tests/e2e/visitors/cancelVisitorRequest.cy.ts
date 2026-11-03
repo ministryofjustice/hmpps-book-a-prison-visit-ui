@@ -4,6 +4,7 @@ import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
 import CancelVisitorRequestPage from '../../pages/visitors/cancelVisitorRequest/cancelVisitorRequest'
 import CancelVisitorRequestConfirmedPage from '../../pages/visitors/cancelVisitorRequest/cancelVisitorRequestConfirmed'
+import PrisonersPage from '../../pages/prisoners/prisoners'
 
 const bookerReference = TestData.bookerReference().value
 
@@ -31,6 +32,8 @@ context('Cancel a visitor request', () => {
 
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('exist')
 
@@ -59,6 +62,8 @@ context('Cancel a visitor request', () => {
 
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('exist')
 

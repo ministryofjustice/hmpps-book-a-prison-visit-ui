@@ -1,13 +1,19 @@
 import { RequestHandler } from 'express'
 import paths from '../../../constants/paths'
+import config from '../../../config'
 
 export default class VisitorRequestFailController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourneyResult } = req.session
+      const prisoner = req.session.booker!.prisoners[0]
 
       if (!addVisitorJourneyResult) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITS.HOME)
+        }
+
+        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       let pageTemplate
@@ -25,7 +31,10 @@ export default class VisitorRequestFailController {
           break
 
         default:
-          return res.redirect(paths.VISITORS)
+          if (prisoner) {
+            return res.redirect(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
+          }
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
       }
 
       return res.render(`pages/visitors/addVisitor/${pageTemplate}`, {

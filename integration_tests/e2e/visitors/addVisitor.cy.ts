@@ -8,6 +8,7 @@ import VisitorRequestedPage from '../../pages/visitors/addVisitor/visitorRequest
 import VisitsPage from '../../pages/visits/visits'
 import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
+import PrisonersPage from '../../pages/prisoners/prisoners'
 
 const bookerReference = TestData.bookerReference().value
 
@@ -35,6 +36,8 @@ context('Add a visitor', () => {
 
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('not.exist')
 
@@ -78,6 +81,8 @@ context('Add a visitor', () => {
 
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.visitorRequests().should('not.exist')
 
@@ -126,6 +131,8 @@ context('Add a visitor', () => {
 
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
 
     // Start link a new visitor journey
@@ -162,6 +169,8 @@ context('Add a visitor', () => {
 
         // Navigate to Visitors page
         visitsPage.goToServiceHeaderLinkByName('Visitors')
+        const prisonersPage = Page.verifyOnPage(PrisonersPage)
+        prisonersPage.viewPrisonerVisitors(0)
         const visitorsPage = Page.verifyOnPage(VisitorsPage)
 
         // Start link a new visitor journey

@@ -7,6 +7,7 @@ import paths from '../../../constants/paths'
 import { validateVisitorRequestDisplayId } from '../validations'
 import { getPrisonName } from '../../../utils/utils'
 import type { Locale } from '../../../constants/locales'
+import config from '../../../config'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -17,7 +18,11 @@ export default class CancelVisitorRequestController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITS.HOME)
+        }
+        const prisoner = req.session.booker?.prisoners[0]
+        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)
@@ -41,11 +46,14 @@ export default class CancelVisitorRequestController {
         cancelVisitorRequest: 'yes' | 'no'
         visitorRequestDisplayId: UUID
       }>(req)
-
+      const bookerPrisoner = req.session.booker?.prisoners[0]
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         if (!visitorRequestDisplayId) {
-          return res.redirect(paths.VISITORS)
+          if (bookerPrisoner) {
+            return res.redirect(`${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}`)
+          }
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
         }
 
         req.flash('errors', errors.array())
@@ -70,7 +78,7 @@ export default class CancelVisitorRequestController {
           text: req.t('visitors:visitors.alert.visitorRequestReview.text', { prisonName }),
         })
 
-        return res.redirect(`${paths.VISITORS}`)
+        return res.redirect(bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.VISITORS)
       }
 
       await this.bookerService.withdrawVisitorRequest({

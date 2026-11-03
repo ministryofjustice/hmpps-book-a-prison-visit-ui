@@ -1,11 +1,17 @@
 import { RequestHandler } from 'express'
 import paths from '../../../constants/paths'
+import config from '../../../config'
 
 export default class VisitorRequestSuccessController {
   public viewRequested(): RequestHandler {
     return async (req, res) => {
       if (req.session.addVisitorJourneyResult === undefined) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITS.HOME)
+        }
+
+        const prisoner = req.session.booker?.prisoners[0]
+        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/visitorRequested', { showOLServiceNav: true })
@@ -15,7 +21,11 @@ export default class VisitorRequestSuccessController {
   public viewApproved(): RequestHandler {
     return async (req, res) => {
       if (req.session.addVisitorJourneyResult === undefined) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITS.HOME)
+        }
+        const prisoner = req.session.booker?.prisoners[0]
+        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
       }
 
       const { firstName, lastName } = req.session.addVisitorJourneyResult

@@ -4,6 +4,7 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
+import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 let sessionData: SessionData
@@ -79,9 +80,43 @@ describe('Add visitor request failure pages', () => {
         })
     })
 
-    it('should redirect to visitors page if add visitor request journey result not in session', () => {
+    it('should redirect to visits page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
-      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
+        .expect(302)
+        .expect('location', `${paths.VISITS.HOME}`)
+    })
+
+    it('should redirect to visitors page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+      enableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      delete sessionData.addVisitorJourneyResult
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
+        .expect(302)
+        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
+    })
+
+    it('should redirect to prisoners page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+      enableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      sessionData.booker = { reference: 'ref', prisoners: [] }
+
+      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.PRISONERS)
+    })
+
+    it('should redirect to visits page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      sessionData.booker = { reference: 'ref', prisoners: [] }
+
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
+        .expect(302)
+        .expect('location', paths.VISITS.HOME)
     })
   })
 })
