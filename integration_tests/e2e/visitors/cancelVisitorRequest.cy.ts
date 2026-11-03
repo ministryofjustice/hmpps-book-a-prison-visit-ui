@@ -48,7 +48,7 @@ context('Cancel a visitor request', () => {
     cancelVisitorRequestPage.cancelVisitNo().click()
     cancelVisitorRequestPage.confirm()
 
-    Page.verifyOnPage(VisitorsPage)
+    Page.verifyOnPage(PrisonersPage)
   })
 
   it('should complete the cancel a visitor request journey', () => {

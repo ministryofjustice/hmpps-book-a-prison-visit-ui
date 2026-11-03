@@ -61,15 +61,12 @@ describe('Add visitor request success page', () => {
         })
     })
 
-    it('should redirect to visitors page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    it('should redirect to prisoners page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
       enableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
 
-      return request(app)
-        .get(paths.ADD_VISITOR.SUCCESS)
-        .expect(302)
-        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
+      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.PRISONERS)
     })
 
     it('should redirect to visitors page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
@@ -77,7 +74,7 @@ describe('Add visitor request success page', () => {
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
 
-      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', `${paths.VISITORS}`)
+      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
     })
   })
 

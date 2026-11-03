@@ -6,14 +6,13 @@ export default class VisitorRequestFailController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourneyResult } = req.session
-      const prisoner = req.session.booker!.prisoners[0]
 
       if (!addVisitorJourneyResult) {
         if (!config.features.multiplePrisoners) {
           return res.redirect(paths.VISITORS)
         }
 
-        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+        return res.redirect(paths.PRISONERS)
       }
 
       let pageTemplate
@@ -35,7 +34,7 @@ export default class VisitorRequestFailController {
             return res.redirect(paths.VISITORS)
           }
 
-          return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+          return res.redirect(paths.PRISONERS)
       }
 
       return res.render(`pages/visitors/addVisitor/${pageTemplate}`, {

@@ -79,7 +79,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(url)
         .send('cancelVisitorRequest=no')
         .expect(302)
-        .expect('location', `${paths.VISITORS}`)
+        .expect('location', paths.VISITORS)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('messages', {
@@ -91,14 +91,14 @@ describe('Cancel a visitor request - Are you sure page', () => {
         })
     })
 
-    it('should redirect to visitors page if "no" is selected when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    it('should redirect to prisoners page if "no" is selected when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
       enableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       return request(app)
         .post(url)
         .send('cancelVisitorRequest=no')
         .expect(302)
-        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
+        .expect('location', paths.PRISONERS)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('messages', {
@@ -135,7 +135,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
         .send('cancelVisitorRequest=yes')
         .expect(302)
-        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
+        .expect('location', paths.PRISONERS)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
         })
@@ -148,7 +148,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
         .send('cancelVisitorRequest=yes')
         .expect(302)
-        .expect('location', `${paths.VISITORS}`)
+        .expect('location', paths.VISITORS)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
         })

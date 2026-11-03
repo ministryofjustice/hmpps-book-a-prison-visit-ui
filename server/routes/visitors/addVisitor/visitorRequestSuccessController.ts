@@ -10,8 +10,7 @@ export default class VisitorRequestSuccessController {
           return res.redirect(paths.VISITORS)
         }
 
-        const prisoner = req.session.booker?.prisoners[0]
-        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+        return res.redirect(paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/visitorRequested', { showOLServiceNav: true })
@@ -24,8 +23,7 @@ export default class VisitorRequestSuccessController {
         if (!config.features.multiplePrisoners) {
           return res.redirect(paths.VISITORS)
         }
-        const prisoner = req.session.booker?.prisoners[0]
-        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+        return res.redirect(paths.PRISONERS)
       }
 
       const { firstName, lastName } = req.session.addVisitorJourneyResult

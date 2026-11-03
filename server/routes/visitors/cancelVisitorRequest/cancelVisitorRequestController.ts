@@ -21,8 +21,8 @@ export default class CancelVisitorRequestController {
         if (!config.features.multiplePrisoners) {
           return res.redirect(paths.VISITORS)
         }
-        const prisoner = req.session.booker?.prisoners[0]
-        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+
+        return res.redirect(paths.PRISONERS)
       }
 
       const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)
@@ -46,7 +46,6 @@ export default class CancelVisitorRequestController {
         cancelVisitorRequest: 'yes' | 'no'
         visitorRequestDisplayId: UUID
       }>(req)
-      const bookerPrisoner = req.session.booker?.prisoners[0]
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         if (!visitorRequestDisplayId) {
@@ -54,9 +53,7 @@ export default class CancelVisitorRequestController {
             return res.redirect(paths.VISITORS)
           }
 
-          return res.redirect(
-            bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.PRISONERS,
-          )
+          return res.redirect(paths.PRISONERS)
         }
 
         req.flash('errors', errors.array())
@@ -84,7 +81,7 @@ export default class CancelVisitorRequestController {
         if (!config.features.multiplePrisoners) {
           return res.redirect(paths.VISITORS)
         }
-        return res.redirect(bookerPrisoner ? `${paths.VISITORS}/${bookerPrisoner.prisonerDisplayId}` : paths.PRISONERS)
+        return res.redirect(paths.PRISONERS)
       }
 
       await this.bookerService.withdrawVisitorRequest({

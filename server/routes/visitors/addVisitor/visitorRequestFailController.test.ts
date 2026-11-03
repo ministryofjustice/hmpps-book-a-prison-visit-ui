@@ -84,36 +84,14 @@ describe('Add visitor request failure pages', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
-      return request(app)
-        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
-        .expect(302)
-        .expect('location', `${paths.VISITORS}`)
+      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
 
-    it('should redirect to visitors page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    it('should redirect to prisoners page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
       enableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
-      return request(app)
-        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
-        .expect(302)
-        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
-    })
-
-    it('should redirect to prisoners page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      sessionData.booker = { reference: 'ref', prisoners: [] }
-
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.PRISONERS)
-    })
-
-    it('should redirect to visitors page if booker has no prisoner when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      sessionData.booker = { reference: 'ref', prisoners: [] }
-
-      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
   })
 })

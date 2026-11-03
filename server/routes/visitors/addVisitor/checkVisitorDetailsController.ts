@@ -16,7 +16,7 @@ export default class CheckVisitorDetailsController {
           return res.redirect(paths.VISITORS)
         }
 
-        return res.redirect(prisoner ? `${paths.VISITORS}/${prisoner.prisonerDisplayId}` : paths.PRISONERS)
+        return res.redirect(paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
@@ -36,9 +36,7 @@ export default class CheckVisitorDetailsController {
           return res.redirect(paths.VISITORS)
         }
 
-        return res.redirect(
-          booker?.prisoners?.length ? `${paths.VISITORS}/${booker.prisoners[0].prisonerDisplayId}` : paths.PRISONERS,
-        )
+        return res.redirect(paths.PRISONERS)
       }
 
       const { visitorDetails } = addVisitorJourney
