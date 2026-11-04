@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express'
 import paths from '../../../constants/paths'
 import { BookerService } from '../../../services'
+import config from '../../../config'
 
 export default class CheckVisitorDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -11,7 +12,11 @@ export default class CheckVisitorDetailsController {
       const prisoner = req.session.booker!.prisoners[0]
 
       if (!addVisitorJourney) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITORS)
+        }
+
+        return res.redirect(paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
@@ -27,7 +32,11 @@ export default class CheckVisitorDetailsController {
       const { addVisitorJourney, booker } = req.session
 
       if (!addVisitorJourney || !booker?.prisoners?.length) {
-        return res.redirect(paths.VISITORS)
+        if (!config.features.multiplePrisoners) {
+          return res.redirect(paths.VISITORS)
+        }
+
+        return res.redirect(paths.PRISONERS)
       }
 
       const { visitorDetails } = addVisitorJourney
@@ -67,7 +76,7 @@ export default class CheckVisitorDetailsController {
 
         case 'PRISONER_NOT_FOUND_FOR_BOOKER':
         default:
-          return res.redirect(paths.VISITS.HOME)
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
       }
     }
   }

@@ -30,6 +30,7 @@ context('Prisoners page', () => {
     cy.task('stubGetSupportedPrisonIds')
     cy.task('stubGetVisitors', { visitors: [TestData.visitorInfoDto()] })
     cy.task('stubGetVisitorRequests')
+    cy.task('stubGetVisitors', { prisonerNumber: 'B4321CA', visitors: [TestData.visitorInfoDto()] })
     cy.signIn()
   })
 
@@ -70,13 +71,21 @@ context('Prisoners page', () => {
     prisonersPageAfterAdd.prisonerDateOfBirth(2).contains('1 January 2000')
   })
 
-  it('should navigate to the visitors page for the prisoner', () => {
-    // This will need updating when multiple prisoners are supported on the visitors page
+  it('should navigate to the correct visitors page for the prisoner', () => {
     cy.visit(paths.PRISONERS)
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.prisonerName(0).contains('John Smith')
     prisonersPage.viewPrisonerVisitors(0)
 
-    Page.verifyOnPage(VisitorsPage)
+    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('John Smith')
+
+    cy.visit(paths.PRISONERS)
+    const prisonersPageAfterVisit = Page.verifyOnPage(PrisonersPage)
+    prisonersPageAfterVisit.prisonerName(1).contains('Roger Jones')
+    prisonersPageAfterVisit.viewPrisonerVisitors(1)
+
+    const visitorsPageForRoger = Page.verifyOnPage(VisitorsPage)
+    visitorsPageForRoger.prisonerName().contains('Roger Jones')
   })
 })

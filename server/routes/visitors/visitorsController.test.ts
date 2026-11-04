@@ -2,11 +2,13 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
+import { UUID, randomUUID } from 'crypto'
 import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { MoJAlert } from '../../@types/bapv'
+import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -151,6 +153,49 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('.moj-alert').eq(0).text()).toContain(alert.title)
         expect($('.moj-alert').eq(0).text()).toContain(alert.text)
+      })
+  })
+
+  it('should return prisoners page if no prisoner display id is provided and FEATURE_MULTIPLE PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app).get(paths.VISITORS).expect(302).expect('Location', paths.PRISONERS)
+  })
+
+  it('should redirect to visits home if incorrect prisoner display id is provided and FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(`${paths.VISITORS}/53dbc264-6f84-4a83-a38d-da8e35b2d125`)
+      .expect(302)
+      .expect('Location', paths.VISITS.HOME)
+  })
+
+  it('should show correct prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    const prisonerDisplayId: UUID = randomUUID()
+    sessionData.booker!.prisoners = [
+      prisoner,
+      TestData.prisoner({
+        prisonerDisplayId,
+        prisonerNumber: 'B2414AC',
+        firstName: 'Sam',
+        lastName: 'Jones',
+      }),
+    ]
+
+    bookerService.getVisitors.mockResolvedValue([])
+
+    return request(app)
+      .get(`${paths.VISITORS}/${prisonerDisplayId}`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test="prisoner-visitors"]').text()).toContain('Sam Jones')
       })
   })
 })

@@ -4,6 +4,7 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
+import { enableFeatureForTest, disableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 let sessionData: SessionData
@@ -60,10 +61,38 @@ describe('Add visitor request success page', () => {
         })
     })
 
-    it('should redirect to visitors page if add visitor request result not in session', () => {
+    it('should redirect to prisoners page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+      enableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      delete sessionData.addVisitorJourneyResult
+
+      return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.PRISONERS)
+    })
+
+    it('should redirect to visitors page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourneyResult
 
       return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
     })
+  })
+
+  it('should redirect to prisoners page if add visitor request result and no prisoner in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ sessionData })
+    sessionData.booker = { reference: 'ref', prisoners: [] }
+    delete sessionData.addVisitorJourneyResult
+
+    return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.PRISONERS)
+  })
+
+  it('should redirect to visitors page if add visitor request result and no prisoner in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+    disableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ sessionData })
+    sessionData.booker = { reference: 'ref', prisoners: [] }
+    delete sessionData.addVisitorJourneyResult
+
+    return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.VISITORS)
   })
 })

@@ -3,6 +3,7 @@ import SelectVisitorsPage from '../../pages/bookVisit/selectVisitors'
 import VisitsPage from '../../pages/visits/visits'
 import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
+import PrisonersPage from '../../pages/prisoners/prisoners'
 
 context('Visitors page', () => {
   const visitors = [
@@ -56,6 +57,8 @@ context('Visitors page', () => {
   it('should show Visitors page with two visitors (one having a BAN restriction) and one visitor request', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
 
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
     visitorsPage.prisonerName().contains('John Smith')

@@ -11,6 +11,8 @@ export default function routes(services: Services): Router {
   const visitorsController = new VisitorsController(services.bookerService)
 
   // Visitors
+  router.get(`${paths.VISITORS}/:prisonerDisplayId`, visitorsController.validate(), visitorsController.view())
+  // TODO remove original visitors path: currently remains to stop existing page breaking
   router.get(paths.VISITORS, visitorsController.view())
 
   // Add (request) a visitor routes
