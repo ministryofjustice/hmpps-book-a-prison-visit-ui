@@ -37,6 +37,9 @@ export default abstract class Page {
 
         // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
         { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
+
+        // TODO temporary until language toggle is replaced in VB-7107'
+        { id: 'label-content-name-mismatch', selector: 'visits-language-toggle' },
       ],
     })
 
