@@ -98,6 +98,10 @@ export default {
     },
   },
 
+  // System token key for HMPPS Auth tokens in Redis
+  // (useful for local dev to ensure 'real'/wiremock tokens aren't mixed between 'start' and 'start-feature' run tasks)
+  tokenStorePrefix: get('TOKEN_STORE_PREFIX', 'systemToken'),
+
   // include short Git ref in dataCache prefix to invalidate data cache on deploy of new build
   // DATA_CACHE_PREFIX overrides for integration tests
   dataCachePrefix: `dataCache_${get('DATA_CACHE_PREFIX', '') || get('GIT_REF', 'local').slice(0, 7)}:`,
