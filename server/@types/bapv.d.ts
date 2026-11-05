@@ -30,11 +30,14 @@ export type AddPrisonerJourney = {
 export type AddPrisonerJourneyResult = {
   selectedPrisonId: string
   result: boolean
+  prisonerNumber?: string /// TODO Currently optional to support FEATURES_MULTIPLE_PRISONERS disabled
 }
 
 // data that is built up during an add visitor request journey
 export type AddVisitorJourney = {
-  visitorDetails: {
+  prisoner?: Prisoner /// TODO Currently optional to support FEATURES_MULTIPLE_PRISONERS disabled
+  // Made this optional to support starting the journey with just prisoner - visitor details can be added later. Check this
+  visitorDetails?: {
     firstName: string
     lastName: string
     'visitorDob-day': string

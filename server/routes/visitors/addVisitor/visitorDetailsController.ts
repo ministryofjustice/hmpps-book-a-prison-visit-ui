@@ -2,12 +2,15 @@ import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
 import paths from '../../../constants/paths'
 import { dateOfBirthValidationChain } from '../../../utils/validations'
+import config from '../../../config'
 
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
-      const prisoner = req.session.booker!.prisoners[0]
+      const prisoner = config.features.multiplePrisoners
+        ? req.session.addVisitorJourney?.prisoner
+        : req.session.booker!.prisoners[0]
 
       const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
@@ -49,16 +52,15 @@ export default class VisitorDetailsController {
         }
       >matchedData(req)
 
-      req.session.addVisitorJourney = {
-        visitorDetails: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          'visitorDob-day': data['visitorDob-day'],
-          'visitorDob-month': data['visitorDob-month'],
-          'visitorDob-year': data['visitorDob-year'],
-          visitorDob: data.visitorDob,
-          languagePreference: data.languagePreference ?? 'en',
-        },
+      req.session.addVisitorJourney = req.session.addVisitorJourney ?? {}
+      req.session.addVisitorJourney.visitorDetails = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        'visitorDob-day': data['visitorDob-day'],
+        'visitorDob-month': data['visitorDob-month'],
+        'visitorDob-year': data['visitorDob-year'],
+        visitorDob: data.visitorDob,
+        languagePreference: data.languagePreference ?? 'en',
       }
 
       return res.redirect(paths.ADD_VISITOR.CHECK)

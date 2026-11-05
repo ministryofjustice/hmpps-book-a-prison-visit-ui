@@ -82,7 +82,7 @@
 
       {{ govukButton({
         text: t("common:buttons.linkNewVisitor"),
-        href: paths.ADD_VISITOR.START,
+        href: (paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START,
         attributes: { "data-test": "link-a-visitor" },
         preventDoubleClick: true
       }) }}

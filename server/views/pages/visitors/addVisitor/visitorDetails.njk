@@ -6,7 +6,7 @@
 
 {% set pageTitle = t("addVisitor:visitorDetails.title") %}
 
-{% set backLinkHref = paths.ADD_VISITOR.START %}
+{% set backLinkHref = (paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START %}
 
 {% block content %}
   <div class="govuk-grid-row">

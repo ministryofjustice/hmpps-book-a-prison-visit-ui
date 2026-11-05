@@ -3,6 +3,7 @@ import { Services } from '../../../services'
 import paths from '../../../constants/paths'
 import CancelVisitorRequestController from './cancelVisitorRequestController'
 import CancelVisitorRequestConfirmedController from './cancelVisitorRequestConfirmedController'
+import config from '../../../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -16,7 +17,15 @@ export default function routes(services: Services): Router {
     .get(cancelVisitorRequestController.view())
     .post(cancelVisitorRequestController.validateCancelChoice(), cancelVisitorRequestController.submit())
 
-  router.get(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION, cancelVisitorRequestConfirmedController.view())
+  if (config.features.multiplePrisoners) {
+    router.get(
+      `${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/:prisonerDisplayId`,
+      cancelVisitorRequestConfirmedController.validate(),
+      cancelVisitorRequestConfirmedController.view(),
+    )
+  } else {
+    router.get(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION, cancelVisitorRequestConfirmedController.view())
+  }
 
   return router
 }

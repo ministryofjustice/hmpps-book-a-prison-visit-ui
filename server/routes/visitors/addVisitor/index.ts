@@ -6,6 +6,7 @@ import VisitorDetailsController from './visitorDetailsController'
 import CheckVisitorDetailsController from './checkVisitorDetailsController'
 import VisitorRequestSuccessController from './visitorRequestSuccessController'
 import VisitorRequestFailController from './visitorRequestFailController'
+import config from '../../../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -16,7 +17,15 @@ export default function routes(services: Services): Router {
   const visitorRequestSuccessController = new VisitorRequestSuccessController()
   const visitorRequestFailController = new VisitorRequestFailController()
 
-  router.get(paths.ADD_VISITOR.START, addVisitorStartController.view())
+  if (config.features.multiplePrisoners) {
+    router.get(
+      `${paths.ADD_VISITOR.START}/:prisonerDisplayId`,
+      addVisitorStartController.validate(),
+      addVisitorStartController.view(),
+    )
+  } else {
+    router.get(paths.ADD_VISITOR.START, addVisitorStartController.view())
+  }
 
   router.get(paths.ADD_VISITOR.DETAILS, visitorDetailsController.view())
   router.post(paths.ADD_VISITOR.DETAILS, visitorDetailsController.validate(), visitorDetailsController.submit())

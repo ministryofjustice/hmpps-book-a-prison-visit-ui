@@ -15,7 +15,7 @@
       <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
 
       <p class="no-visited-state">
-        {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag(paths.ADD_VISITOR.START) | safe -}}
+        {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag((paths.ADD_VISITOR.START + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START) | safe -}}
       </p>
 
       <p>
@@ -27,7 +27,7 @@
       <p>
         {{ govukButton({
           text: t("common:buttons.linkNewVisitor"),
-          href: paths.ADD_VISITOR.START,
+          href: paths.ADD_VISITOR.START + '/' + prisonerDisplayId if features.multiplePrisoners else paths.ADD_VISITOR.START,
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
         }) }}

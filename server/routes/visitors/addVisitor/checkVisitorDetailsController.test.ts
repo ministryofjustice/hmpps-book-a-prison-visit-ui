@@ -74,7 +74,7 @@ describe('Check visitor request details', () => {
     })
 
     it('should render check visitor request page (in Welsh - with updates in Welsh row showing yes)', () => {
-      sessionData.addVisitorJourney!.visitorDetails.languagePreference = 'cy'
+      sessionData.addVisitorJourney!.visitorDetails!.languagePreference = 'cy'
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)

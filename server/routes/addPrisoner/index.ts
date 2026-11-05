@@ -11,7 +11,7 @@ export default function routes(services: Services): Router {
 
   const prisonerLocationController = new PrisonerLocationController(services.prisonService)
   const prisonerDetailsController = new PrisonerDetailsController(services.bookerService)
-  const prisonerAddedController = new PrisonerAddedController()
+  const prisonerAddedController = new PrisonerAddedController(services.bookerService)
   const prisonerNotAddedController = new PrisonerNotMatchedController()
 
   router.get(paths.ADD_PRISONER.LOCATION, prisonerLocationController.view())

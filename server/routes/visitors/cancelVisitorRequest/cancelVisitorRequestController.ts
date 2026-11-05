@@ -89,7 +89,12 @@ export default class CancelVisitorRequestController {
         requestReference: visitorRequest.reference,
       })
 
-      return res.redirect(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
+      const prisoner = booker!.prisoners.find(p => p.prisonerNumber === visitorRequest.prisonerId)
+      return res.redirect(
+        config.features.multiplePrisoners
+          ? `${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/${prisoner?.prisonerDisplayId}`
+          : paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION,
+      )
     }
   }
 

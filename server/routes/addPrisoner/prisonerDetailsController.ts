@@ -3,6 +3,7 @@ import { body, matchedData, ValidationChain, validationResult } from 'express-va
 import paths from '../../constants/paths'
 import { BookerService } from '../../services'
 import { dateOfBirthValidationChain } from '../../utils/validations'
+import config from '../../config'
 
 export default class PrisonerDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -65,6 +66,10 @@ export default class PrisonerDetailsController {
       req.session.addPrisonerJourneyResult = {
         selectedPrisonId: addPrisonerJourney.selectedPrisonId,
         result,
+      }
+
+      if (config.features.multiplePrisoners) {
+        req.session.addPrisonerJourneyResult.prisonerNumber = data.prisonNumber
       }
 
       if (result) {

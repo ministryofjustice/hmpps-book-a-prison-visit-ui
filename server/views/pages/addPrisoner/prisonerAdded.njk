@@ -17,7 +17,7 @@
 
       {{ govukButton({
         text: t("common:buttons.addVisitors"),
-        href: paths.ADD_VISITOR.START,
+        href: (paths.ADD_VISITOR.START + '/' + prisonerId) if features.multiplePrisoners else paths.ADD_VISITOR.START,
         attributes: { "data-test": "add-visitors-button" },
         preventDoubleClick: true
       }) }}
