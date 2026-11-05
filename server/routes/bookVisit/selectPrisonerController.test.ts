@@ -2,6 +2,7 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
+import { randomUUID } from 'crypto'
 import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
@@ -18,10 +19,10 @@ const bookerService = createMockBookerService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner1 = TestData.prisoner({ prisonerDisplayId: crypto.randomUUID() })
+const prisoner1 = TestData.prisoner({ prisonerDisplayId: randomUUID() })
 const prisoner2 = TestData.prisoner({
   prisonerNumber: 'B2345DC',
-  prisonerDisplayId: crypto.randomUUID(),
+  prisonerDisplayId: randomUUID(),
   firstName: 'Bob',
   dateOfBirth: '1990-05-10',
 })

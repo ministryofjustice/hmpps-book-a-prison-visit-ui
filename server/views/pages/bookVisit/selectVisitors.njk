@@ -148,7 +148,7 @@
 
       {% else %}
         {{ govukWarningText({
-          text: t("common:visitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked", { name: prisoner | prisonerNameFirstLast }),
           iconFallbackText: t("common:labels.warning")
         }) }}
 
@@ -179,7 +179,9 @@
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
+        <h2 class="govuk-heading-m">
+          {{- t("common:visitors.linkingNewVisitorsHeading", { name: prisoner | prisonerNameFirstLast}) -}}
+        </h2>
 
         <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
         <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
