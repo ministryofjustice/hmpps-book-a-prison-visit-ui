@@ -1,16 +1,32 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import { UUID } from 'crypto'
 import paths from '../../../constants/paths'
 import { dateOfBirthValidationChain } from '../../../utils/validations'
 import config from '../../../config'
+import { validatePrisonerDisplayId } from '../validations'
 
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
+      req.session.addVisitorJourney = req.session.addVisitorJourney ?? {}
       const { addVisitorJourney } = req.session
-      const prisoner = config.features.multiplePrisoners
-        ? req.session.addVisitorJourney?.prisoner
-        : req.session.booker!.prisoners[0]
+
+      if (config.features.multiplePrisoners) {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+          return res.redirect(paths.PRISONERS)
+        }
+        const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: string }>(req)
+        const prisoner = req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+        if (!prisoner) {
+          return res.redirect(paths.PRISONERS)
+        }
+
+        addVisitorJourney.prisoner = prisoner
+      } else {
+        ;[addVisitorJourney.prisoner] = req.session.booker!.prisoners
+      }
 
       const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
@@ -26,7 +42,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        prisoner,
+        prisoner: addVisitorJourney.prisoner,
       })
     }
   }
@@ -37,6 +53,11 @@ export default class VisitorDetailsController {
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
+
+        if (config.features.multiplePrisoners) {
+          const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+          return res.redirect(`${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`)
+        }
         return res.redirect(paths.ADD_VISITOR.DETAILS)
       }
 
@@ -83,5 +104,9 @@ export default class VisitorDetailsController {
 
       body('languagePreference').optional().isIn(['cy']),
     ]
+  }
+
+  public validatePrisonerDisplayId(): ValidationChain[] {
+    return [validatePrisonerDisplayId]
   }
 }

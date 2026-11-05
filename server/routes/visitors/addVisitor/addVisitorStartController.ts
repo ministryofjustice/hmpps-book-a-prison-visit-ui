@@ -13,15 +13,10 @@ export default class AddVisitorStartController {
         if (!errors.isEmpty()) {
           return res.redirect(paths.PRISONERS)
         }
-
-        const booker = req.session.booker!
         const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-        const prisoner = booker.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
-        if (!prisoner) {
-          return res.redirect(paths.PRISONERS)
-        }
 
-        req.session.addVisitorJourney = { prisoner }
+        delete req.session.addVisitorJourneyResult
+        return res.render('pages/visitors/addVisitor/addVisitorStart', { showOLServiceNav: true, prisonerDisplayId })
       }
       delete req.session.addVisitorJourneyResult
       return res.render('pages/visitors/addVisitor/addVisitorStart', { showOLServiceNav: true })

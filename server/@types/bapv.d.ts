@@ -30,7 +30,7 @@ export type AddPrisonerJourney = {
 export type AddPrisonerJourneyResult = {
   selectedPrisonId: string
   result: boolean
-  prisonerNumber?: string /// TODO Currently optional to support FEATURES_MULTIPLE_PRISONERS disabled
+  prisonerNumber: string
 }
 
 // data that is built up during an add visitor request journey
@@ -52,6 +52,7 @@ export type AddVisitorJourneyResult = {
   firstName: string
   lastName: string
   result: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
+  prisoner: Prisoner
 }
 
 // data that is built up during a visit booking journey

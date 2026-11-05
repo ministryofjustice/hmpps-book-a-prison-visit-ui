@@ -27,8 +27,16 @@ export default function routes(services: Services): Router {
     router.get(paths.ADD_VISITOR.START, addVisitorStartController.view())
   }
 
-  router.get(paths.ADD_VISITOR.DETAILS, visitorDetailsController.view())
-  router.post(paths.ADD_VISITOR.DETAILS, visitorDetailsController.validate(), visitorDetailsController.submit())
+  if (config.features.multiplePrisoners) {
+    router
+      .route(`${paths.ADD_VISITOR.DETAILS}/:prisonerDisplayId`)
+      .all(visitorDetailsController.validatePrisonerDisplayId())
+      .get(visitorDetailsController.view())
+      .post(visitorDetailsController.validate(), visitorDetailsController.submit())
+  } else {
+    router.get(paths.ADD_VISITOR.DETAILS, visitorDetailsController.view())
+    router.post(paths.ADD_VISITOR.DETAILS, visitorDetailsController.validate(), visitorDetailsController.submit())
+  }
 
   router.get(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.view())
   router.post(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.submit())

@@ -4,14 +4,26 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
+import TestData from '../testutils/testData'
+import { createMockBookerService } from '../../services/testutils/mocks'
 
 let app: Express
 let sessionData: SessionData
+const bookerService = createMockBookerService()
+
+const bookerReference = TestData.bookerReference().value
+const prisoner = TestData.prisoner()
 
 beforeEach(() => {
   sessionData = {} as SessionData
-
-  app = appWithAllRoutes({ sessionData })
+  bookerService.getPrisoners.mockResolvedValue([prisoner])
+  sessionData = {
+    booker: {
+      reference: bookerReference,
+      prisoners: [prisoner],
+    },
+  } as SessionData
+  app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })
 
 afterEach(() => {
@@ -26,8 +38,9 @@ describe('Prisoner added', () => {
 
     it('should render the success page', () => {
       sessionData.addPrisonerJourneyResult = {
-        selectedPrisonId: 'some-prison-id',
+        selectedPrisonId: 'HEI',
         result: true,
+        prisonerNumber: 'A1234BC',
       }
 
       return request(app)

@@ -28,6 +28,7 @@ describe('Prisoner not matched', () => {
       sessionData.addPrisonerJourneyResult = {
         selectedPrisonId: 'HEI',
         result: false,
+        prisonerNumber: 'A1234BC',
       }
 
       return request(app)

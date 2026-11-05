@@ -9,14 +9,15 @@ export default class CheckVisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
-      const prisoner = req.session.booker!.prisoners[0]
 
       if (!addVisitorJourney) {
-        if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITORS)
-        }
+        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
+      }
 
-        return res.redirect(paths.PRISONERS)
+      const { prisoner } = req.session.addVisitorJourney!
+
+      if (!prisoner) {
+        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
@@ -31,18 +32,19 @@ export default class CheckVisitorDetailsController {
     return async (req, res) => {
       const { addVisitorJourney, booker } = req.session
 
-      if (!addVisitorJourney || !booker?.prisoners?.length) {
-        if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITORS)
-        }
+      if (!addVisitorJourney || !booker) {
+        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
+      }
+      const { prisoner } = addVisitorJourney!
 
-        return res.redirect(paths.PRISONERS)
+      if (!prisoner) {
+        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
       }
 
       const { visitorDetails } = addVisitorJourney
       const result = await this.bookerService.addVisitorRequest({
         bookerReference: booker.reference,
-        prisonerId: booker.prisoners[0].prisonerNumber,
+        prisonerId: prisoner.prisonerNumber,
         addVisitorRequest: {
           firstName: visitorDetails!.firstName,
           lastName: visitorDetails!.lastName,
@@ -55,7 +57,9 @@ export default class CheckVisitorDetailsController {
         firstName: visitorDetails!.firstName,
         lastName: visitorDetails!.lastName,
         result,
+        prisoner,
       }
+
       delete req.session.addVisitorJourney
 
       switch (result) {

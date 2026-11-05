@@ -5,6 +5,7 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
 import { enableFeatureForTest, disableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import TestData from '../../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
@@ -15,6 +16,7 @@ beforeEach(() => {
       firstName: 'First',
       lastName: 'Last',
       result: 'REQUESTED',
+      prisoner: TestData.prisoner(),
     },
   } as SessionData
   app = appWithAllRoutes({ sessionData })

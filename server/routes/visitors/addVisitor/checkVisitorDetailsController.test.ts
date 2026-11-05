@@ -9,11 +9,13 @@ import { BookerService } from '../../../services'
 import type { AddVisitorJourneyResult } from '../../../@types/bapv'
 import config from '../../../config'
 import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import TestData from '../../testutils/testData'
 
 let app: Express
 
 const bookerService = createMockBookerService()
 let sessionData: SessionData
+const prisoner = TestData.prisoner()
 
 beforeEach(() => {
   sessionData = {
@@ -27,6 +29,7 @@ beforeEach(() => {
         visitorDob: '2000-02-01',
         languagePreference: 'en',
       },
+      prisoner,
     },
   } as SessionData
 
@@ -129,6 +132,18 @@ describe('Check visitor request details', () => {
               firstName: 'first',
               lastName: 'last',
               result: apiResponse as unknown as AddVisitorJourneyResult['result'],
+              prisoner: {
+                firstName: 'JOHN',
+                lastName: 'SMITH',
+                dateOfBirth: '1980-02-01',
+                prisonerNumber: 'A1234BC',
+                prisonId: 'HEI',
+                prisonerDisplayId: 'uuidv4-1-1-1-1',
+                registeredPrisonId: 'HEI',
+                availableVos: 2,
+                convictedStatus: 'Convicted',
+                nextAvailableVoDate: '2024-07-01',
+              },
             })
             expect(bookerService.addVisitorRequest).toHaveBeenCalledWith({
               bookerReference: 'aaaa-bbbb-cccc',
@@ -148,6 +163,8 @@ describe('Check visitor request details', () => {
       enableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
+
+      bookerService.getPrisoners.mockResolvedValue([prisoner])
       return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
     })
 
@@ -155,6 +172,8 @@ describe('Check visitor request details', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
+
+      bookerService.getPrisoners.mockResolvedValue([prisoner])
       return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
     })
   })
