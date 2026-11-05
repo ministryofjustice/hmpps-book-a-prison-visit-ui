@@ -23,7 +23,7 @@
         {% if prisoners.length == 1 %}
           <input type="hidden" name="prisonerDisplayId" value="{{ prisoners[0].prisonerDisplayId }}">
 
-          <p data-test="prisoner-0">
+          <p data-test="prisoner-1">
             {{ prisoners[0] | prisonerNameFirstLast }}
             ({{ prisoners[0].dateOfBirth | formatDate(dateFormats.DISPLAY_DATE, language) }})
           </p>
