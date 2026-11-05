@@ -178,7 +178,7 @@ async addVisitorRequest(...): Promise<...> {
 
 | Task | Command |
 |------|---------|
-| **Setup** | `npm run setup` (must be Node 24.x, npm 11.x) |
+| **Setup** | `npm ci` (must be Node 26.x, npm 12.x) |
 | **Dev (with auto-rebuild)** | `npm run start:dev` (concurrent: views, TS, Node, Sass) |
 | **Build** | `npm run build` (SASS + TypeScript + copy views) |
 | **Unit Tests** | `npm run test` (Jest, runs *.test.ts files) |
