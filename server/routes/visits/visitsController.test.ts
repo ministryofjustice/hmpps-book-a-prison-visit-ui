@@ -8,6 +8,7 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { VisitDetails } from '../../services/visitService'
 import { Prisoner } from '../../services/bookerService'
+import { BookVisitJourney } from '../../@types/bapv'
 
 let app: Express
 
@@ -165,6 +166,21 @@ describe('Visits home page (future visits list)', () => {
             visits: [] as VisitDetails[],
           },
         } as SessionData)
+      })
+  })
+
+  it('should clear any stale session data', () => {
+    sessionData.booker = { reference: TestData.bookerReference().value, prisoners: [prisoner] }
+    sessionData.bookVisitJourney = { data: 'abandoned book visit journey data' } as unknown as BookVisitJourney
+
+    bookerService.getPrisoners.mockResolvedValue([prisoner])
+    visitService.getFuturePublicVisits.mockResolvedValue([])
+
+    return request(app)
+      .get(paths.VISITS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(() => {
+        expect(sessionData.bookVisitJourney).toBeUndefined()
       })
   })
 
