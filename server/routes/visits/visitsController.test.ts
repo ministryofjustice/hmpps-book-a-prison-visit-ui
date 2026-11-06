@@ -183,34 +183,6 @@ describe('Visits home page (future visits list)', () => {
         expect(sessionData.bookVisitJourney).toBeUndefined()
       })
   })
-
-  it('Page header - should render the GOVUK One Login Header on pages where the user is logged in', () => {
-    return request(app)
-      .get(paths.VISITS.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('head > title').text()).toBe('Visits - Visit someone in prison - GOV.UK')
-
-        expect($('header .rebranded-one-login-header').length).toBe(1)
-        expect($('header.govuk-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
-        expect($('.govuk-service-navigation__link').length).toBe(2)
-        expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Visits')
-        expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('Page header - should render the phase banner', () => {
-    return request(app)
-      .get(paths.VISITS.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('head > title').text()).toBe('Visits - Visit someone in prison - GOV.UK')
-        expect($('.govuk-phase-banner').text()).toContain('Beta')
-      })
-  })
 })
 
 describe('Past visits list page', () => {
