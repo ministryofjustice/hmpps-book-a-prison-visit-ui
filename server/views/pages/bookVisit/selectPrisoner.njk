@@ -47,7 +47,8 @@
           {{ govukRadios({
             name: "prisonerDisplayId",
             items: prisonerListItems,
-            value: formValues.prisonerDisplayId
+            value: formValues.prisonerDisplayId,
+            errorMessage: errors | findError('prisonerDisplayId')
           }) }}
         {% endif %}
 
@@ -57,6 +58,14 @@
           attributes: { "data-test": "continue-button" }
         }) }}
       </form>
+
+      {% if features.multiplePrisoners %}
+        <p>
+          <a href="{{ paths.ADD_PRISONER.LOCATION }}" data-test="link-new-prisoner" class="govuk-link--no-visited-state">
+            {{- t("prisoners:prisoners.linkANewPrisonerRequestLink") -}}
+          </a>
+        </p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

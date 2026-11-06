@@ -3,6 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { randomUUID } from 'crypto'
+import { FieldValidationError } from 'express-validator'
 import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
@@ -11,6 +12,7 @@ import { Prisoner } from '../../services/bookerService'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { CannotBookReason } from '../../@types/bapv'
+import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 jest.mock('../../../logger')
 
@@ -25,6 +27,10 @@ const prisoner2 = TestData.prisoner({
   prisonerDisplayId: randomUUID(),
   firstName: 'Bob',
   dateOfBirth: '1990-05-10',
+})
+
+beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
 })
 
 afterEach(() => {
@@ -77,6 +83,9 @@ describe('Select prisoner', () => {
           expect($('[data-test="prisoner-1"]').text().trim()).toContain('John Smith')
           expect($('[data-test="prisoner-1"]').text().trim()).toContain('(1 February 1980)')
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
+
+          expect($('[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
+          expect($('[data-test="link-new-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
         })
     })
 
@@ -124,7 +133,41 @@ describe('Select prisoner', () => {
         })
     })
 
-    it('should render validation errors', () => {})
+    it('should render validation errors', () => {
+      sessionData.booker!.prisoners = [prisoner1, prisoner2]
+
+      const validationError: FieldValidationError = {
+        type: 'field',
+        location: 'body',
+        path: 'prisonerDisplayId',
+        value: [],
+        msg: 'validation error message',
+      }
+      flashData = { errors: [validationError] }
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_PRISONER)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('.govuk-error-summary a[href="#prisonerDisplayId"]').text()).toBe('validation error message')
+          expect($('#prisonerDisplayId-error').text()).toContain('validation error message')
+        })
+    })
+
+    it('should NOT show link new prisoner button if multiple prisoners feature disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      sessionData.booker!.prisoners = [prisoner1]
+
+      return request(app)
+        .get(paths.BOOK_VISIT.SELECT_PRISONER)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="link-new-prisoner"]').length).toBe(0)
+        })
+    })
   })
 
   // FIXME un-skip and fix tests!
