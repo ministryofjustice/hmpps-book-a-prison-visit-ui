@@ -9,23 +9,17 @@ import { validatePrisonerDisplayId } from '../validations'
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
-      req.session.addVisitorJourney = req.session.addVisitorJourney ?? {}
       const { addVisitorJourney } = req.session
 
-      if (config.features.multiplePrisoners) {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-          return res.redirect(paths.PRISONERS)
-        }
-        const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: string }>(req)
-        const prisoner = req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
-        if (!prisoner) {
-          return res.redirect(paths.PRISONERS)
-        }
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+      const prisoner = config.features.multiplePrisoners
+        ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+        : req.session.booker!.prisoners[0]
 
-        addVisitorJourney.prisoner = prisoner
-      } else {
-        ;[addVisitorJourney.prisoner] = req.session.booker!.prisoners
+      const errors = validationResult(req)
+
+      if (config.features.multiplePrisoners && (!errors.isEmpty() || !prisoner)) {
+        return res.redirect(paths.PRISONERS)
       }
 
       const formValues: Record<string, string> = {
@@ -42,7 +36,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        prisoner: addVisitorJourney.prisoner,
+        prisoner,
       })
     }
   }
@@ -50,15 +44,28 @@ export default class VisitorDetailsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
 
-        if (config.features.multiplePrisoners) {
-          const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-          return res.redirect(`${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`)
-        }
-        return res.redirect(paths.ADD_VISITOR.DETAILS)
+        return res.redirect(
+          config.features.multiplePrisoners
+            ? `${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`
+            : paths.ADD_VISITOR.DETAILS,
+        )
+      }
+
+      const prisoner = config.features.multiplePrisoners
+        ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+        : req.session.booker!.prisoners[0]
+
+      if (!prisoner) {
+        return res.redirect(
+          config.features.multiplePrisoners
+            ? `${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`
+            : paths.ADD_VISITOR.DETAILS,
+        )
       }
 
       const data = <
@@ -73,15 +80,17 @@ export default class VisitorDetailsController {
         }
       >matchedData(req)
 
-      req.session.addVisitorJourney = req.session.addVisitorJourney ?? {}
-      req.session.addVisitorJourney.visitorDetails = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        'visitorDob-day': data['visitorDob-day'],
-        'visitorDob-month': data['visitorDob-month'],
-        'visitorDob-year': data['visitorDob-year'],
-        visitorDob: data.visitorDob,
-        languagePreference: data.languagePreference ?? 'en',
+      req.session.addVisitorJourney = {
+        prisoner,
+        visitorDetails: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          'visitorDob-day': data['visitorDob-day'],
+          'visitorDob-month': data['visitorDob-month'],
+          'visitorDob-year': data['visitorDob-year'],
+          visitorDob: data.visitorDob,
+          languagePreference: data.languagePreference ?? 'en',
+        },
       }
 
       return res.redirect(paths.ADD_VISITOR.CHECK)

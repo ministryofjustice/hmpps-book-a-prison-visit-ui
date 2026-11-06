@@ -17,7 +17,7 @@
 
       <p>
         {{- t("addVisitor:visitorRequested.statusOnVisitorsPage")
-          | renderLinkTag(paths.VISITORS)
+          | renderLinkTag(paths.VISITORS + '/' + prisonerDisplayId if features.multiplePrisoners else paths.VISITORS)
           | safe -}}
       </p>
 

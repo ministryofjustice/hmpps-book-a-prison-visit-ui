@@ -14,7 +14,7 @@ export default class CancelVisitorRequestController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { visitorRequests } = req.session as SessionData
+      const { visitorRequests, booker } = req.session as SessionData
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
@@ -31,11 +31,16 @@ export default class CancelVisitorRequestController {
         request => request.visitorRequestDisplayId === visitorRequestDisplayId,
       )
 
+      const prisoner = config.features.multiplePrisoners
+        ? booker!.prisoners.find(p => p.prisonerNumber === visitorRequest?.prisonerId)
+        : booker!.prisoners[0]
+
       return res.render('pages/visitors/cancelVisitorRequest/cancel', {
         errors: req.flash('errors'),
         visitorRequest,
         visitorRequestDisplayId,
         showOLServiceNav: true,
+        prisonerDisplayId: prisoner?.prisonerDisplayId,
       })
     }
   }

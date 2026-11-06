@@ -28,7 +28,7 @@
           preventDoubleClick: true
         }) }}
 
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS + '/' + prisonerDisplayId if features.multiplePrisoners else paths.VISITORS }}">
           {{- t("addVisitor:actions.viewLinkedAndRequestedVisitors") -}}
         </a>
       </div>

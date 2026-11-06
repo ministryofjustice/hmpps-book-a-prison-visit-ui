@@ -6,6 +6,7 @@ import { FieldValidationError } from 'express-validator'
 import { FlashData, appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
 import { AddVisitorJourney, FlashFormValues } from '../../../@types/bapv'
+import TestData from '../../testutils/testData'
 
 let app: Express
 
@@ -68,6 +69,7 @@ describe('Visitor details', () => {
 
     it('should pre-populate with data in session', () => {
       sessionData.addVisitorJourney = {
+        prisoner: TestData.prisoner(),
         visitorDetails: {
           firstName: 'first',
           lastName: 'last',

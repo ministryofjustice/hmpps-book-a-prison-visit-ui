@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = t("addVisitor:addVisitorStart.title") %}
-{% set backLinkHref = paths.VISITORS %}
+{% set backLinkHref = paths.VISITORS + '/' + prisonerDisplayId if features.multiplePrisoners else paths.VISITORS %}
 
 {% block content %}
   <div class="govuk-grid-row">
