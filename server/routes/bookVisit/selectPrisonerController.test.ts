@@ -11,8 +11,9 @@ import logger from '../../../logger'
 import { Prisoner } from '../../services/bookerService'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
-import { CannotBookReason } from '../../@types/bapv'
+import { BookVisitJourney, CannotBookReason, FlashFormValues } from '../../@types/bapv'
 import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
+import * as utils from '../../utils/utils'
 
 jest.mock('../../../logger')
 
@@ -170,47 +171,105 @@ describe('Select prisoner', () => {
     })
   })
 
-  // FIXME un-skip and fix tests!
-  describe.skip(`POST ${paths.BOOK_VISIT.SELECT_PRISONER}`, () => {
-    const bookVisitConfirmed = TestData.bookVisitConfirmed()
+  describe(`POST ${paths.BOOK_VISIT.SELECT_PRISONER}`, () => {
+    let clearSession: jest.SpyInstance
 
-    it('should use the session validation middleware', () => {
-      sessionData = {
-        booker: { reference: bookerReference },
-      } as SessionData
+    beforeEach(() => {
+      clearSession = jest.spyOn(utils, 'clearSession')
+      sessionData = {} as SessionData
 
       app = appWithAllRoutes({ services: { bookerService }, sessionData })
-
-      return request(app)
-        .post(paths.BOOK_VISIT.SELECT_PRISONER)
-        .expect(302)
-        .expect('Location', paths.VISITS.HOME)
-        .expect(() => {
-          expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
-        })
     })
 
-    it('should clear any exiting bookVisitJourney session data, populate new data and redirect to select visitors page', () => {
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('should clear session, populate new booking session and redirect to select visitors page - NEW JOURNEY', () => {
       bookerService.validatePrisoner.mockResolvedValue(true)
 
-      sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner1] },
-        bookVisitJourney: { prisoner: { prisonerNumber: 'OLD JOURNEY DATA' } as Prisoner },
-        bookVisitConfirmed,
-      } as SessionData
-
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      // new journey because no 'bookVisitJourney' data
+      sessionData.booker = { reference: bookerReference, prisoners: [prisoner1, prisoner2] }
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
-        .send({ prisonerDisplayId: prisoner1.prisonerDisplayId.toString() })
+        .send({ prisonerDisplayId: prisoner2.prisonerDisplayId })
         .expect(302)
         .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(() => {
           expect(sessionData).toStrictEqual({
             booker: {
               reference: bookerReference,
-              prisoners: [prisoner1],
+              prisoners: [prisoner1, prisoner2],
+            },
+            bookVisitJourney: {
+              prisoner: prisoner2,
+              prisonId: prisoner2.prisonId,
+            },
+          } as SessionData)
+
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(clearSession).toHaveBeenCalled()
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner2.prisonerNumber)
+        })
+    })
+
+    // e.g. user has gone back to select prisoner page but does not change selection
+    it('should retain booking session data and redirect to select visitors page - EXISTING JOURNEY FOR SAME PRISONER', () => {
+      bookerService.validatePrisoner.mockResolvedValue(true)
+
+      sessionData.booker = { reference: bookerReference, prisoners: [prisoner1, prisoner2] }
+      sessionData.bookVisitJourney = {
+        prisoner: prisoner2,
+        prisonId: prisoner2.prisonId,
+        data: 'more existing session data',
+      } as BookVisitJourney
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: prisoner2.prisonerDisplayId })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner1, prisoner2],
+            },
+            bookVisitJourney: {
+              prisoner: prisoner2,
+              prisonId: prisoner2.prisonId,
+              data: 'more existing session data',
+            } as BookVisitJourney,
+          } as SessionData)
+
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(clearSession).not.toHaveBeenCalled()
+          expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner2.prisonerNumber)
+        })
+    })
+
+    // e.g. user starts booking but goes back and now selects a different prisoner
+    it('should clear session, populate new booking session and redirect to select visitors page - EXISTING JOURNEY BUT PRISONER CHANGED', () => {
+      bookerService.validatePrisoner.mockResolvedValue(true)
+
+      sessionData.booker = { reference: bookerReference, prisoners: [prisoner1, prisoner2] }
+      sessionData.bookVisitJourney = {
+        prisoner: prisoner2,
+        prisonId: prisoner2.prisonId,
+        data: 'more existing session data',
+      } as BookVisitJourney
+
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_PRISONER)
+        .send({ prisonerDisplayId: prisoner1.prisonerDisplayId }) // select a different prisoner
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
+        .expect(() => {
+          expect(sessionData).toStrictEqual({
+            booker: {
+              reference: bookerReference,
+              prisoners: [prisoner1, prisoner2],
             },
             bookVisitJourney: {
               prisoner: prisoner1,
@@ -218,57 +277,33 @@ describe('Select prisoner', () => {
             },
           } as SessionData)
 
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(clearSession).toHaveBeenCalled()
           expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner1.prisonerNumber)
         })
     })
 
-    it('should reject an invalid prisoner number', () => {
-      sessionData = {
-        booker: { reference: bookerReference, prisoners: [prisoner1] },
-      } as SessionData
-
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
-
-      return request(app)
-        .post(paths.BOOK_VISIT.SELECT_PRISONER)
-        .send({ prisonerDisplayId: 1000 })
-        .expect(404)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('h1').text()).toBe('Prisoner not found')
-          expect(sessionData).toStrictEqual({
-            booker: {
-              reference: bookerReference,
-              prisoners: [prisoner1],
-            },
-          } as SessionData)
-        })
-    })
-
     it('should redirect to confirm location route, if prisoner not in registered prison', () => {
-      sessionData = {
-        booker: {
-          reference: bookerReference,
-          prisoners: [TestData.prisoner({ prisonId: 'HEI', registeredPrisonId: 'DHI' })],
-        },
-      } as SessionData
-
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      sessionData.booker = {
+        reference: bookerReference,
+        prisoners: [{ ...prisoner1, registeredPrisonId: 'DHI' }],
+      }
 
       return request(app)
         .post(paths.BOOK_VISIT.SELECT_PRISONER)
-        .send({ prisonerDisplayId: prisoner1.prisonerDisplayId.toString() })
+        .send({ prisonerDisplayId: prisoner1.prisonerDisplayId })
         .expect(302)
         .expect('location', paths.PRISONER_MOVED.CONFIRM_LOCATION)
         .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
           expect(bookerService.validatePrisoner).not.toHaveBeenCalled()
         })
     })
 
     describe('Prisoner validation', () => {
       // testing all these scenarios with no VO balance as validation failures should take precedence
-      const prisonerWithNoVos = TestData.prisoner({ availableVos: -1 })
-      const remandPrisoner = TestData.prisoner({ availableVos: 0, convictedStatus: 'Remand' })
+      const prisonerWithNoVos: Prisoner = { ...prisoner1, availableVos: -1 }
+      const remandPrisoner: Prisoner = { ...prisoner1, availableVos: 0, convictedStatus: 'Remand' }
 
       it.each(<
         { errorCode: BookerPrisonerValidationErrorResponse['validationError']; cannotBookReason: CannotBookReason }[]
@@ -282,18 +317,15 @@ describe('Select prisoner', () => {
         ({ errorCode, cannotBookReason }) => {
           bookerService.validatePrisoner.mockResolvedValue(errorCode)
 
-          sessionData = {
-            booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
-          } as SessionData
-
-          app = appWithAllRoutes({ services: { bookerService }, sessionData })
+          sessionData.booker = { reference: bookerReference, prisoners: [prisonerWithNoVos] }
 
           return request(app)
             .post(paths.BOOK_VISIT.SELECT_PRISONER)
-            .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+            .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId })
             .expect(302)
             .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
             .expect(() => {
+              expect(flashProvider).not.toHaveBeenCalled()
               expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, prisoner1.prisonerNumber)
 
               expect(sessionData).toStrictEqual({
@@ -312,20 +344,17 @@ describe('Select prisoner', () => {
 
       it('should redirect to cannot book page for prisoner in transfer (TRN)', () => {
         bookerService.validatePrisoner.mockResolvedValue('PRISONER_TRANSFERRED_SUPPORTED_PRISON')
-        const prisonerInTransfer = TestData.prisoner({ prisonId: 'TRN' })
+        const prisonerInTransfer = { ...prisoner1, prisonId: 'TRN' }
 
-        sessionData = {
-          booker: { reference: bookerReference, prisoners: [prisonerInTransfer] },
-        } as SessionData
-
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        sessionData.booker = { reference: bookerReference, prisoners: [prisonerInTransfer] }
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
-          .send({ prisonerDisplayId: prisonerInTransfer.prisonerDisplayId.toString() })
+          .send({ prisonerDisplayId: prisonerInTransfer.prisonerDisplayId })
           .expect(302)
           .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
           .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
             expect(bookerService.validatePrisoner).toHaveBeenCalledWith(
               bookerReference,
               prisonerInTransfer.prisonerNumber,
@@ -346,20 +375,17 @@ describe('Select prisoner', () => {
 
       it('should redirect to cannot book page for a released prisoner (OUT)', () => {
         bookerService.validatePrisoner.mockResolvedValue('PRISONER_RELEASED')
-        const releasedPrisoner = TestData.prisoner({ prisonId: 'OUT' })
+        const releasedPrisoner = { ...prisoner1, prisonId: 'OUT' }
 
-        sessionData = {
-          booker: { reference: bookerReference, prisoners: [releasedPrisoner] },
-        } as SessionData
-
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        sessionData.booker = { reference: bookerReference, prisoners: [releasedPrisoner] }
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
-          .send({ prisonerDisplayId: releasedPrisoner.prisonerDisplayId.toString() })
+          .send({ prisonerDisplayId: releasedPrisoner.prisonerDisplayId })
           .expect(302)
           .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
           .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
             expect(bookerService.validatePrisoner).toHaveBeenCalledWith(
               bookerReference,
               releasedPrisoner.prisonerNumber,
@@ -381,18 +407,15 @@ describe('Select prisoner', () => {
       it('should redirect to cannot book page with code NO_VO_BALANCE if prisoner has no VOs', () => {
         bookerService.validatePrisoner.mockResolvedValue(true)
 
-        sessionData = {
-          booker: { reference: bookerReference, prisoners: [prisonerWithNoVos] },
-        } as SessionData
-
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        sessionData.booker = { reference: bookerReference, prisoners: [prisonerWithNoVos] }
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
-          .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId.toString() })
+          .send({ prisonerDisplayId: prisonerWithNoVos.prisonerDisplayId })
           .expect(302)
           .expect('location', paths.BOOK_VISIT.CANNOT_BOOK)
           .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
             expect(bookerService.validatePrisoner).toHaveBeenCalledWith(
               bookerReference,
               prisonerWithNoVos.prisonerNumber,
@@ -414,18 +437,15 @@ describe('Select prisoner', () => {
       it('should allow prisoner on REMAND to book with no VO balance', () => {
         bookerService.validatePrisoner.mockResolvedValue(true)
 
-        sessionData = {
-          booker: { reference: bookerReference, prisoners: [remandPrisoner] },
-        } as SessionData
-
-        app = appWithAllRoutes({ services: { bookerService }, sessionData })
+        sessionData.booker = { reference: bookerReference, prisoners: [remandPrisoner] }
 
         return request(app)
           .post(paths.BOOK_VISIT.SELECT_PRISONER)
-          .send({ prisonerDisplayId: remandPrisoner.prisonerDisplayId.toString() })
+          .send({ prisonerDisplayId: remandPrisoner.prisonerDisplayId })
           .expect(302)
           .expect('location', paths.BOOK_VISIT.SELECT_VISITORS)
           .expect(() => {
+            expect(flashProvider).not.toHaveBeenCalled()
             expect(bookerService.validatePrisoner).toHaveBeenCalledWith(bookerReference, remandPrisoner.prisonerNumber)
 
             expect(sessionData).toStrictEqual({
@@ -438,6 +458,66 @@ describe('Select prisoner', () => {
                 prisonId: remandPrisoner.prisonId,
               },
             } as SessionData)
+          })
+      })
+    })
+
+    describe('Validation errors', () => {
+      let expectedFlashErrors: FieldValidationError[]
+      let expectedFlashFormValues: FlashFormValues
+
+      beforeEach(() => {
+        sessionData.booker = { reference: bookerReference, prisoners: [prisoner1] }
+
+        expectedFlashErrors = [
+          { type: 'field', location: 'body', path: 'prisonerDisplayId', value: undefined, msg: 'No prisoner selected' },
+        ]
+        expectedFlashFormValues = { prisonerDisplayId: undefined }
+      })
+
+      it('should show a validation error if no prisoner is selected', () => {
+        return request(app)
+          .post(paths.BOOK_VISIT.SELECT_PRISONER)
+          .expect(302)
+          .expect('Location', paths.BOOK_VISIT.SELECT_PRISONER)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
+          })
+      })
+
+      it('should show a validation error if a UUID is not supplied', () => {
+        const invalidUUID = 'not-a-uuid!'
+        expectedFlashErrors[0].value = invalidUUID
+        expectedFlashFormValues.prisonerDisplayId = invalidUUID
+
+        return request(app)
+          .post(paths.BOOK_VISIT.SELECT_PRISONER)
+          .send({ prisonerDisplayId: invalidUUID })
+          .expect(302)
+          .expect('Location', paths.BOOK_VISIT.SELECT_PRISONER)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
+          })
+      })
+
+      it('should show a validation error if prisoner UUID is not found', () => {
+        const unknownUUID = randomUUID()
+        expectedFlashErrors[0].value = unknownUUID
+        expectedFlashFormValues.prisonerDisplayId = unknownUUID
+
+        return request(app)
+          .post(paths.BOOK_VISIT.SELECT_PRISONER)
+          .send({ prisonerDisplayId: unknownUUID })
+          .expect(302)
+          .expect('Location', paths.BOOK_VISIT.SELECT_PRISONER)
+          .expect(() => {
+            expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
+            expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)
+            expect(sessionData.bookVisitJourney).toBe(undefined)
           })
       })
     })

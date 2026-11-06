@@ -4,7 +4,6 @@ import { SessionData } from 'express-session'
 import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
 import { BookerService } from '../../services'
-import { BookVisitJourney } from '../../@types/bapv'
 
 export default class SelectPrisonerController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -39,14 +38,18 @@ export default class SelectPrisonerController {
         return res.redirect(paths.BOOK_VISIT.SELECT_PRISONER)
       }
 
-      clearSession(req) // TODO need to review this - need to support coming back to this page DURING a journey
-
       const booker = req.session.booker!
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: string }>(req)
       const prisoner = booker.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)!
 
-      const bookVisitJourney: BookVisitJourney = { prisoner }
-      req.session.bookVisitJourney = bookVisitJourney
+      // Clear session unless there is an existing journey and the selected prisoner has not changed
+      const existingJourneyForThisPrisoner =
+        req.session?.bookVisitJourney?.prisoner.prisonerNumber === prisoner.prisonerNumber
+      if (!existingJourneyForThisPrisoner) {
+        clearSession(req)
+      }
+      req.session.bookVisitJourney ??= { prisoner }
+      const { bookVisitJourney } = req.session
 
       // if prisoner is not currently in registered prison or an excluded location, send to confirm location route
       if (
