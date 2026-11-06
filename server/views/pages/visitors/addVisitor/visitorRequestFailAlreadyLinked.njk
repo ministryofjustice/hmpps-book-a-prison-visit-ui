@@ -20,7 +20,7 @@
       <div class="govuk-button-group">
         {{ govukButton({
           text: t("common:buttons.linkAnotherVisitor"),
-          href: paths.ADD_VISITOR.DETAILS,
+          href: (paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.DETAILS,
           classes: "govuk-button--secondary",
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true

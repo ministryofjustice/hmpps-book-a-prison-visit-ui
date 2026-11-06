@@ -41,6 +41,7 @@ export default class VisitorRequestFailController {
         showOLServiceNav: true,
         firstName: addVisitorJourneyResult.firstName,
         lastName: addVisitorJourneyResult.lastName,
+        prisonerDisplayId: addVisitorJourneyResult.prisoner.prisonerDisplayId,
       })
     }
   }

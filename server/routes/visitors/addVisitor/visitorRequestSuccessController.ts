@@ -5,7 +5,8 @@ import config from '../../../config'
 export default class VisitorRequestSuccessController {
   public viewRequested(): RequestHandler {
     return async (req, res) => {
-      if (req.session.addVisitorJourneyResult === undefined) {
+      const { addVisitorJourneyResult } = req.session
+      if (addVisitorJourneyResult === undefined) {
         if (!config.features.multiplePrisoners) {
           return res.redirect(paths.VISITORS)
         }
@@ -13,7 +14,10 @@ export default class VisitorRequestSuccessController {
         return res.redirect(paths.PRISONERS)
       }
 
-      return res.render('pages/visitors/addVisitor/visitorRequested', { showOLServiceNav: true })
+      return res.render('pages/visitors/addVisitor/visitorRequested', {
+        showOLServiceNav: true,
+        prisonerDisplayId: addVisitorJourneyResult.prisoner.prisonerDisplayId,
+      })
     }
   }
 
