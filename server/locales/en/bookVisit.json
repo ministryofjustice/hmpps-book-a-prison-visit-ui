@@ -18,6 +18,10 @@
     "addNewVisitorRequest": "To make a request to book a visit for someone new, <link>complete the form</link>. We will respond within 5 working days."
   },
 
+  "selectPrisoner": {
+    "title": "Who are you visiting?"
+  },
+
   "selectVisitors": {
     "title": "Who is going on the visit?",
 

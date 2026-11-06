@@ -33,6 +33,8 @@ describe('Static content pages - authenticated users', () => {
         expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Visits')
         expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Visitors')
 
+        expect($('.govuk-phase-banner').text()).toContain('Beta')
+
         expect($('.govuk-footer__inline-list a').eq(0).text().trim()).toBe('Accessibility')
         expect($('.govuk-footer__inline-list a').eq(1).text().trim()).toBe('Cookies')
         expect($('.govuk-footer__inline-list a').eq(2).text().trim()).toBe('Privacy')
@@ -57,6 +59,8 @@ describe('Static content pages - unauthenticated users', () => {
         expect($('div.govuk-header').length).toBe(1)
         expect($('header .rebranded-one-login-header').length).toBe(0)
         expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
+
+        expect($('.govuk-phase-banner').text()).toContain('Beta')
 
         expect($('.govuk-footer__inline-list a').eq(0).text().trim()).toBe('Accessibility')
         expect($('.govuk-footer__inline-list a').eq(1).text().trim()).toBe('Cookies')
