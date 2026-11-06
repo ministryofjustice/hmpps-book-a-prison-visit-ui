@@ -35,7 +35,6 @@
             {% set elementId = "prisoner-" + loop.index %}
 
             {% set prisonerListItems = (prisonerListItems.push({
-              id: elementId,
               value: prisoner.prisonerDisplayId,
               text: prisonerNameAndDob,
               attributes: { "data-test": elementId }
@@ -44,6 +43,12 @@
 
           {{ govukRadios({
             name: "prisonerDisplayId",
+            fieldset: {
+               legend: {
+                 text: pageTitle,
+                 classes: "govuk-visually-hidden"
+               }
+             },
             items: prisonerListItems,
             value: formValues.prisonerDisplayId,
             errorMessage: errors | findError('prisonerDisplayId')

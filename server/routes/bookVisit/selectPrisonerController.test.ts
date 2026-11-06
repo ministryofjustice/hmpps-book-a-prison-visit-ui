@@ -105,13 +105,13 @@ describe('Select prisoner', () => {
           expect($('input[type=radio]').length).toBe(2)
           expect($('input[type=radio]:checked').length).toBe(0)
 
-          expect($('input#prisoner-1').val()).toBe(prisoner1.prisonerDisplayId)
-          expect($('label[for="prisoner-1"]').text().trim()).toContain('John Smith')
-          expect($('label[for="prisoner-1"]').text().trim()).toContain('(1 February 1980)')
+          expect($('input[data-test="prisoner-1"]').val()).toBe(prisoner1.prisonerDisplayId)
+          expect($('input[data-test="prisoner-1"]').next('label').text()).toContain('John Smith')
+          expect($('input[data-test="prisoner-1"]').next('label').text()).toContain('(1 February 1980)')
 
-          expect($('input#prisoner-2').val()).toBe(prisoner2.prisonerDisplayId)
-          expect($('label[for="prisoner-2"]').text().trim()).toContain('Bob Smith')
-          expect($('label[for="prisoner-2"]').text().trim()).toContain('(10 May 1990)')
+          expect($('input[data-test="prisoner-2"]').val()).toBe(prisoner2.prisonerDisplayId)
+          expect($('input[data-test="prisoner-2"]').next('label').text()).toContain('Bob Smith')
+          expect($('input[data-test="prisoner-2"]').next('label').text()).toContain('(10 May 1990)')
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
         })
@@ -130,7 +130,7 @@ describe('Select prisoner', () => {
           expect($('input[type=hidden][name=prisonerDisplayId]').length).toBe(0)
           expect($('input[type=radio]').length).toBe(2)
           expect($('input[type=radio]:checked').length).toBe(1)
-          expect($('input#prisoner-2').prop('checked')).toBe(true)
+          expect($('input[data-test="prisoner-2"]').prop('checked')).toBe(true)
         })
     })
 
