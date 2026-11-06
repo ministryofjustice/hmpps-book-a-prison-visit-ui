@@ -40,6 +40,23 @@
       gtag('js', new Date());
 
       gtag('config', '{{ googleAnalyticsId }}');
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const navigationLinks = document.querySelectorAll(
+          '.govuk-service-navigation__link'
+        );
+
+        navigationLinks.forEach(function (link, index) {
+          link.addEventListener('click', function () {
+            gtag('event', 'service_navigation_click', {
+              navigation_type: 'service_navigation',
+              navigation_text: link.textContent.trim(),
+              navigation_url: link.getAttribute('href'),
+              navigation_position: index + 1
+            });
+          });
+        });
+      });
     </script>
   {% endif %}
 
