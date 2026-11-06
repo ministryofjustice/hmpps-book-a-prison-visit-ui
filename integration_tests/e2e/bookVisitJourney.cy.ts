@@ -20,7 +20,7 @@ context('Book visit journey', () => {
   const prison = TestData.prisonDto({
     publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 36 }), // > 31 so always 2 months shown
   })
-  const prisoner = TestData.bookerPrisonerInfoDto()
+  const prisoner1 = TestData.bookerPrisonerInfoDto()
   const prisoner2 = TestData.bookerPrisonerInfoDto({
     prisonerNumber: 'B2345DC',
     firstName: 'Bob',
@@ -111,7 +111,7 @@ context('Book visit journey', () => {
     cy.task('stubPrisonNames')
 
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner, prisoner2] })
+    cy.task('stubGetPrisoners', { prisoners: [prisoner1, prisoner2] })
     cy.task('stubGetFuturePublicVisits', {
       bookerReference,
       visits: [],
@@ -153,14 +153,14 @@ context('Book visit journey', () => {
     selectVisitorsPage.unavailableVisitor(2).contains('Adult NotApproved (25 years old)')
     selectVisitorsPage.visitorRequest(0).should('not.exist')
     cy.task('stubGetSessionRestriction', {
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
     })
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisoner.prisonId,
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonId: prisoner1.prisoner.prisonId,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
       youngestVisitorAge: 5,
@@ -381,7 +381,7 @@ context('Book visit journey', () => {
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.selectVisitorByName('Adult One')
     cy.task('stubGetSessionRestriction', {
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000],
       sessionRestriction: 'CLOSED',
     })
@@ -392,8 +392,8 @@ context('Book visit journey', () => {
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisoner.prisonId,
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonId: prisoner1.prisoner.prisonId,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000],
       bookerReference,
       youngestVisitorAge: 25,
