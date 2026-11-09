@@ -17,7 +17,7 @@ let sessionData: SessionData
 let flashData: FlashData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner()
+const prisoner = TestData.prisoner({ prisonerDisplayId: randomUUID() })
 const visitor = TestData.visitor()
 
 beforeEach(() => {
@@ -60,6 +60,7 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visitors')
         expect($('.moj-alert').length).toBe(0)
 
@@ -88,11 +89,12 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visitors')
         expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
-        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to your account')
+        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to John Smith.')
         expect($('[data-test=link-a-visitor]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
@@ -153,6 +155,20 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('.moj-alert').eq(0).text()).toContain(alert.title)
         expect($('.moj-alert').eq(0).text()).toContain(alert.text)
+      })
+  })
+
+  it('should render correct back link when FEATURE_MULTIPLE PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    bookerService.getVisitors.mockResolvedValue([visitor])
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONERS)
       })
   })
 

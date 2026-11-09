@@ -8,6 +8,7 @@ import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
 import CannotBookPage from '../pages/bookVisit/cannotBook'
+import SelectPrisonerPage from '../pages/bookVisit/selectPrisoner'
 
 context('Book visit journey - drop-out points', () => {
   const today = new Date()
@@ -68,6 +69,10 @@ context('Book visit journey - drop-out points', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
+
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
       selectVisitorsPage.selectVisitorByName('Adult One')
@@ -110,6 +115,10 @@ context('Book visit journey - drop-out points', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       // Select visitors page - choose visitors
       const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -169,6 +178,10 @@ context('Book visit journey - drop-out points', () => {
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
 
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
+
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getCannotBookReason().contains('John Smith')
@@ -200,6 +213,10 @@ context('Book visit journey - drop-out points', () => {
       cy.task('stubValidatePrisonerFail')
       visitsPage.bookVisit()
 
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
+
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)
       cannotBookPage.getCannotBookReason().contains('John Smith')
@@ -229,6 +246,10 @@ context('Book visit journey - drop-out points', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       // Visit cannot be booked page
       const cannotBookPage = Page.verifyOnPage(CannotBookPage)

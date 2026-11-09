@@ -3,6 +3,7 @@ import createError from 'http-errors'
 import { BookerService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 import { BookedVisits } from '../../@types/bapv'
+import { clearSession } from '../../utils/utils'
 
 export default class VisitsController {
   public constructor(
@@ -12,6 +13,8 @@ export default class VisitsController {
 
   public home(): RequestHandler {
     return async (req, res) => {
+      clearSession(req)
+
       const booker = req.session.booker!
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
