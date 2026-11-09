@@ -148,10 +148,10 @@
     "banned": "Banned",
     "bannedUntil": "{{name}} is banned until {{date}}.",
     "notApproved": "Not approved",
-    "noVisitorsLinked": "No visitors are linked to your account.",
+    "noVisitorsLinked": "No visitors are linked to {{name}}.",
     "visitorRequestsHeading": "Visitors awaiting review",
     "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
-    "linkingNewVisitorsHeading": "Linking new visitors to your account",
+    "linkingNewVisitorsHeading": "Linking new visitors to {{name}}",
     "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
     "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
     "requestResponseTime": "We will respond to your request within 5 working days."

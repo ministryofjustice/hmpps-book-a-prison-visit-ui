@@ -6,6 +6,7 @@
 
 {% set activeLink = 'visitors-link' %}
 {% set pageTitle = t("visitors:visitors.title") %}
+{% set backLinkHref = paths.PRISONERS if features.multiplePrisoners else null%}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -45,7 +46,7 @@
         }) }}
       {% else %}
         {{ govukWarningText({
-          text: t("common:visitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked", { name: prisoner | prisonerNameFirstLast }),
           iconFallbackText: t("common:labels.warning"),
           attributes: { "data-test": "no-visitors" }
         }) }}
@@ -74,7 +75,9 @@
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
+      <h2 class="govuk-heading-m">
+        {{- t("common:visitors.linkingNewVisitorsHeading", { name: prisoner | prisonerNameFirstLast}) -}}
+      </h2>
 
       <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
       <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>

@@ -39,7 +39,8 @@ export default function routes(services: Services): Router {
 
   router.use(paths.BOOK_VISIT.ROOT, bookVisitSessionValidator())
 
-  router.post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.selectPrisoner())
+  router.get(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.view())
+  router.post(paths.BOOK_VISIT.SELECT_PRISONER, selectPrisonerController.validate(), selectPrisonerController.submit())
 
   router.get(paths.PRISONER_MOVED.CONFIRM_LOCATION, movedPrisonController.view())
   router.post(paths.PRISONER_MOVED.CONFIRM_LOCATION, movedPrisonController.validate(), movedPrisonController.submit())

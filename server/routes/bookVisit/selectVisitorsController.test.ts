@@ -196,7 +196,7 @@ describe('Select visitors', () => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
           expect($('#navigation').length).toBe(0)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=max-visitors]').text()).toContain(
@@ -363,7 +363,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
@@ -419,7 +419,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)

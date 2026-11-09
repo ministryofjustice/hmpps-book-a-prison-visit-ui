@@ -4,6 +4,7 @@ import VisitsPage from '../../pages/visits/visits'
 import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
 import PrisonersPage from '../../pages/prisoners/prisoners'
+import SelectPrisonerPage from '../../pages/bookVisit/selectPrisoner'
 
 context('Visitors page', () => {
   const visitors = [
@@ -79,6 +80,9 @@ context('Visitors page', () => {
   it('should not show a banned visitor on book visit journey Select visitors page', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.bookVisit()
+
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.continue()
 
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')
