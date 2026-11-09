@@ -3,17 +3,27 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
+import { randomUUID } from 'crypto'
 import { FlashData, appWithAllRoutes, flashProvider } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
 import { AddVisitorJourney, FlashFormValues } from '../../../@types/bapv'
 import TestData from '../../testutils/testData'
+import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
 let sessionData: SessionData
+const prisoner1 = TestData.prisoner({ prisonerDisplayId: randomUUID() })
+const prisoner2 = TestData.prisoner({
+  prisonerDisplayId: randomUUID(),
+  prisonerNumber: 'B2134AB',
+  firstName: 'Jane',
+  dateOfBirth: '1990-05-20',
+})
 
 beforeEach(() => {
-  sessionData = {} as SessionData
+  enableFeatureForTest('multiplePrisoners')
+  sessionData = { booker: { prisoners: [prisoner1, prisoner2] } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })
@@ -33,17 +43,21 @@ describe('Visitor details', () => {
 
     it('should render visitor information page (in English - without Welsh updates preference checkbox)', () => {
       return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Visitor information -/)
           expect($('#navigation').length).toBe(1)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('[data-test="back-link"]').attr('href')).toBe(
+            `${paths.ADD_VISITOR.START}/${prisoner1.prisonerDisplayId}`,
+          )
           expect($('h1').text().trim()).toBe('Link a new visitor for John Smith')
           expect($('h2').text().trim()).toContain('Visitor information')
 
-          expect($('form[method=POST]').attr('action')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('form[method=POST]').attr('action')).toBe(
+            `${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`,
+          )
           expect($('input[name=firstName]').length).toBe(1)
           expect($('input[name=lastName]').length).toBe(1)
           expect($('input[name=visitorDob-day]').length).toBe(1)
@@ -54,11 +68,41 @@ describe('Visitor details', () => {
         })
     })
 
+    it('should display the prisoner associated with the display id in the URL', () => {
+      return request(app)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner2.prisonerDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe('Link a new visitor for Jane Smith')
+          expect($('[data-test="back-link"]').attr('href')).toBe(
+            `${paths.ADD_VISITOR.START}/${prisoner2.prisonerDisplayId}`,
+          )
+          expect($('form[method=POST]').attr('action')).toBe(
+            `${paths.ADD_VISITOR.DETAILS}/${prisoner2.prisonerDisplayId}`,
+          )
+        })
+    })
+
+    it('should fallback to the first prisoner when FEATURES_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      return request(app)
+        .get(paths.ADD_VISITOR.DETAILS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text().trim()).toBe('Link a new visitor for John Smith')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('form[method=POST]').attr('action')).toBe(paths.ADD_VISITOR.DETAILS)
+        })
+    })
+
     it('should render visitor information page (in Welsh - with Welsh updates preference checkbox)', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -69,7 +113,7 @@ describe('Visitor details', () => {
 
     it('should pre-populate with data in session', () => {
       sessionData.addVisitorJourney = {
-        prisoner: TestData.prisoner(),
+        prisoner: prisoner1,
         visitorDetails: {
           firstName: 'first',
           lastName: 'last',
@@ -82,7 +126,7 @@ describe('Visitor details', () => {
       }
 
       return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -107,7 +151,7 @@ describe('Visitor details', () => {
       flashData = { formValues: [formValues] }
 
       return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -127,7 +171,7 @@ describe('Visitor details', () => {
       flashData = { errors: [validationError] }
 
       return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -137,7 +181,7 @@ describe('Visitor details', () => {
     })
   })
 
-  describe(`POST ${paths.ADD_VISITOR.DETAILS}`, () => {
+  describe(`POST ${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`, () => {
     const formData = {
       firstName: 'first',
       lastName: 'last',
@@ -153,7 +197,7 @@ describe('Visitor details', () => {
         languagePreference: 'en',
       }
       return request(app)
-        .post(paths.ADD_VISITOR.DETAILS)
+        .post(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .send(formData)
         .expect(302)
         .expect('Location', paths.ADD_VISITOR.CHECK)
@@ -171,7 +215,7 @@ describe('Visitor details', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .post(paths.ADD_VISITOR.DETAILS)
+        .post(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .send({ ...formData, languagePreference: 'cy' })
         .expect(302)
         .expect('Location', paths.ADD_VISITOR.CHECK)
@@ -204,13 +248,14 @@ describe('Visitor details', () => {
           'visitorDob-day': '',
           'visitorDob-month': '',
           'visitorDob-year': '',
+          prisonerDisplayId: prisoner1.prisonerDisplayId,
         }
 
         return request(app)
-          .post(paths.ADD_VISITOR.DETAILS)
+          .post(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
           .send({})
           .expect(302)
-          .expect('Location', paths.ADD_VISITOR.DETAILS)
+          .expect('Location', `${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(flashProvider).toHaveBeenCalledWith('formValues', expectedFlashFormValues)

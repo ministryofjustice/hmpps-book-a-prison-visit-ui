@@ -11,19 +11,23 @@ export default class CancelVisitorRequestConfirmedController {
     return async (req, res) => {
       if (config.features.multiplePrisoners) {
         const errors = validationResult(req)
+        let showLinkNewVisitorButton: boolean = true
         if (!errors.isEmpty()) {
-          /// TODO: What do we do with an error here - we probably still want to show confirmation?
+          // Invalid prisoner display ID
+          showLinkNewVisitorButton = false
         }
 
         const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
         return res.render('pages/visitors/cancelVisitorRequest/cancelConfirmed', {
           showOLServiceNav: true,
           prisonerDisplayId,
+          showLinkNewVisitorButton,
         })
       }
 
       return res.render('pages/visitors/cancelVisitorRequest/cancelConfirmed', {
         showOLServiceNav: true,
+        showLinkNewVisitorButton: true,
       })
     }
   }

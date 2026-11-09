@@ -24,14 +24,16 @@
           | safe -}}
       </p>
 
-      <p>
-        {{ govukButton({
-          text: t("common:buttons.linkNewVisitor"),
-          href: paths.ADD_VISITOR.START + '/' + prisonerDisplayId if features.multiplePrisoners else paths.ADD_VISITOR.START,
-          attributes: { "data-test": "link-a-visitor" },
-          preventDoubleClick: true
-        }) }}
-      </p>
+      {% if showLinkNewVisitorButton %}
+        <p>
+          {{ govukButton({
+            text: t("common:buttons.linkNewVisitor"),
+            href: paths.ADD_VISITOR.START + '/' + prisonerDisplayId if features.multiplePrisoners else paths.ADD_VISITOR.START,
+            attributes: { "data-test": "link-a-visitor" },
+            preventDoubleClick: true
+          }) }}
+        </p>
+    {% endif %}
 
     </div>
   </div>

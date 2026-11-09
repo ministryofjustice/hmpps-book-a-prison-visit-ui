@@ -22,6 +22,7 @@ let sessionData: SessionData
 let visitorRequest: VisitorRequest
 
 beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
   visitorRequest = TestData.visitorRequest({ visitorRequestDisplayId })
 
   sessionData = {
@@ -44,7 +45,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Cancel your visitor link request -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITORS)
+          expect($('[data-test="back-link"]').attr('href')).toBe(`${paths.VISITORS}/uuidv4-1-1-1-1`)
           expect($('h1').text()).toBe('Are you sure you want to cancel your request?')
 
           expect($('[data-test="visitor-name"]').text()).toBe('Joan Phillips')
@@ -63,7 +64,7 @@ describe('Cancel a visitor request - Are you sure page', () => {
         .post(url)
         .send('cancelVisitorRequest=yes')
         .expect(302)
-        .expect('location', paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
+        .expect('location', `${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/uuidv4-1-1-1-1`)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledWith({
             bookerReference: TestData.bookerReference().value,
@@ -92,8 +93,6 @@ describe('Cancel a visitor request - Are you sure page', () => {
     })
 
     it('should redirect to prisoners page if "no" is selected when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
       return request(app)
         .post(url)
         .send('cancelVisitorRequest=no')
@@ -129,8 +128,6 @@ describe('Cancel a visitor request - Are you sure page', () => {
     })
 
     it('should NOT cancel the visitor request if invalid request ID is posted when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
       return request(app)
         .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
         .send('cancelVisitorRequest=yes')

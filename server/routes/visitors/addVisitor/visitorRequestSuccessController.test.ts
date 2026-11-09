@@ -11,6 +11,7 @@ let app: Express
 let sessionData: SessionData
 
 beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     addVisitorJourneyResult: {
       firstName: 'First',
@@ -39,6 +40,19 @@ describe('Add visitor request success page', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Request submitted')
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
+        })
+    })
+
+    it('should have original add visitor link when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+
+      return request(app)
+        .get(paths.ADD_VISITOR.SUCCESS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
           expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
         })
     })
@@ -54,7 +68,7 @@ describe('Add visitor request success page', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visitor linked')
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
           expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
           expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.VISITS.HOME)
           expect($('[data-test="visitor-approved"]').text()).toStrictEqual(
@@ -63,9 +77,7 @@ describe('Add visitor request success page', () => {
         })
     })
 
-    it('should redirect to prisoners page if add visitor request result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
+    it('should redirect to prisoners page if add visitor request result not in session', () => {
       delete sessionData.addVisitorJourneyResult
 
       return request(app).get(paths.ADD_VISITOR.SUCCESS).expect(302).expect('location', paths.PRISONERS)
@@ -80,9 +92,7 @@ describe('Add visitor request success page', () => {
     })
   })
 
-  it('should redirect to prisoners page if add visitor request result and no prisoner in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
-    app = appWithAllRoutes({ sessionData })
+  it('should redirect to prisoners page if add visitor request result and no prisoner in session', () => {
     sessionData.booker = { reference: 'ref', prisoners: [] }
     delete sessionData.addVisitorJourneyResult
 
