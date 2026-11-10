@@ -55,7 +55,11 @@ export default class VisitorDetailsController {
         ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
         : req.session.booker!.prisoners[0]
 
-      if (!errors.isEmpty() || !prisoner) {
+      if (!prisoner) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+      }
+
+      if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
 
