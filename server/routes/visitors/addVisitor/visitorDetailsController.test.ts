@@ -111,7 +111,7 @@ describe('Visitor details', () => {
         })
     })
 
-    it('should pre-populate with data in session', () => {
+    it('should pre-populate with data in session if prisoner matches', () => {
       sessionData.addVisitorJourney = {
         prisoner: prisoner1,
         visitorDetails: {
@@ -138,11 +138,39 @@ describe('Visitor details', () => {
         })
     })
 
+    it('should not pre-populate with data in session if prisoner does not match', () => {
+      sessionData.addVisitorJourney = {
+        prisoner: prisoner1,
+        visitorDetails: {
+          firstName: 'first',
+          lastName: 'last',
+          'visitorDob-day': '1',
+          'visitorDob-month': '2',
+          'visitorDob-year': '2000',
+          visitorDob: '2000-02-01',
+          languagePreference: 'en',
+        },
+      }
+
+      return request(app)
+        .get(`${paths.ADD_VISITOR.DETAILS}/${prisoner2.prisonerDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          ;['firstName', 'lastName', 'visitorDob-day', 'visitorDob-month', 'visitorDob-year'].forEach(name => {
+            const input = $(`input[name=${name}]`)
+            expect(input.length).toBe(1)
+            expect(input.val() ?? '').toBe('')
+          })
+        })
+    })
+
     it('should pre-populate with data in formValues overriding that in session', () => {
       sessionData.addVisitorJourney = {
         visitorDetails: {
           firstName: 'first-session',
         },
+        prisoner: prisoner1,
       } as AddVisitorJourney
 
       const formValues = {

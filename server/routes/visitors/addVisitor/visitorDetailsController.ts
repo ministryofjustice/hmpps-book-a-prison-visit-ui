@@ -9,7 +9,7 @@ import { validatePrisonerDisplayId } from '../validations'
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addVisitorJourney } = req.session
+      let { addVisitorJourney } = req.session
 
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
       const prisoner = config.features.multiplePrisoners
@@ -20,6 +20,11 @@ export default class VisitorDetailsController {
 
       if (config.features.multiplePrisoners && (!errors.isEmpty() || !prisoner)) {
         return res.redirect(paths.PRISONERS)
+      }
+
+      if (addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
+        delete req.session.addVisitorJourney
+        addVisitorJourney = undefined
       }
 
       const formValues: Record<string, string> = {
