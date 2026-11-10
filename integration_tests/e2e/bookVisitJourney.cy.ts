@@ -13,13 +13,19 @@ import VisitBookedPage from '../pages/bookVisit/visitBooked'
 import ClosedVisitPage from '../pages/bookVisit/closedVisit'
 import ContactDetailsPage from '../pages/bookVisit/contactDetails'
 import VisitRequestedPage from '../pages/bookVisit/visitRequested'
+import SelectPrisonerPage from '../pages/bookVisit/selectPrisoner'
 
 context('Book visit journey', () => {
   const today = new Date()
   const prison = TestData.prisonDto({
     publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 36 }), // > 31 so always 2 months shown
   })
-  const prisoner = TestData.bookerPrisonerInfoDto()
+  const prisoner1 = TestData.bookerPrisonerInfoDto()
+  const prisoner2 = TestData.bookerPrisonerInfoDto({
+    prisonerNumber: 'B2345DC',
+    firstName: 'Bob',
+    dateOfBirth: '1990-05-10',
+  })
 
   const banExpiryDate = format(addYears(today, 1), DateFormats.API_DATE)
   const visitors = [
@@ -105,7 +111,7 @@ context('Book visit journey', () => {
     cy.task('stubPrisonNames')
 
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+    cy.task('stubGetPrisoners', { prisoners: [prisoner1, prisoner2] })
     cy.task('stubGetFuturePublicVisits', {
       bookerReference,
       visits: [],
@@ -113,6 +119,7 @@ context('Book visit journey', () => {
     cy.signIn()
   })
 
+  // Using first prisoner for this test
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (AUTO_APPROVED)', () => {
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
@@ -123,6 +130,11 @@ context('Book visit journey', () => {
     cy.task('stubValidatePrisonerPass')
     cy.task('stubGetVisitorRequests')
     visitsPage.bookVisit()
+
+    // Select prisoner page
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.selectPrisonerByName('John Smith')
+    selectPrisonerPage.continue()
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
@@ -141,14 +153,14 @@ context('Book visit journey', () => {
     selectVisitorsPage.unavailableVisitor(2).contains('Adult NotApproved (25 years old)')
     selectVisitorsPage.visitorRequest(0).should('not.exist')
     cy.task('stubGetSessionRestriction', {
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
     })
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisoner.prisonId,
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonId: prisoner1.prisoner.prisonId,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
       youngestVisitorAge: 5,
@@ -226,30 +238,36 @@ context('Book visit journey', () => {
       .contains('An email and a text message confirming the visit will be sent')
   })
 
+  // Using second prisoner for this test
   it('should complete the book visit journey (OPEN visit) - visit BOOKED (REQUESTED)', () => {
     // Visits home page - prisoner shown
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Start book visit journey
     cy.task('stubGetPrison', prison)
-    cy.task('stubGetVisitors', { visitors })
-    cy.task('stubValidatePrisonerPass')
+    cy.task('stubGetVisitors', { visitors, prisonerNumber: prisoner2.prisoner.prisonerNumber })
+    cy.task('stubValidatePrisonerPass', { prisonerNumber: prisoner2.prisoner.prisonerNumber })
     cy.task('stubGetVisitorRequests')
     visitsPage.bookVisit()
+
+    // Select prisoner page
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.selectPrisonerByName('Bob Smith')
+    selectPrisonerPage.continue()
 
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.selectVisitorByName('Adult One')
     selectVisitorsPage.selectVisitorByName('Child Two')
     cy.task('stubGetSessionRestriction', {
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonerId: prisoner2.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
     })
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisoner.prisonId,
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonId: prisoner2.prisoner.prisonId,
+      prisonerId: prisoner2.prisoner.prisonerNumber,
       visitorIds: [1000, 3000],
       bookerReference,
       youngestVisitorAge: 5,
@@ -260,7 +278,10 @@ context('Book visit journey', () => {
     const chooseVisitTimePage = Page.verifyOnPage(ChooseVisitTimePage)
     chooseVisitTimePage.clickCalendarDay(in5Days)
     chooseVisitTimePage.selectSession(in5Days, 1)
-    cy.task('stubCreateVisitApplication', { application, bookerReference })
+    cy.task('stubCreateVisitApplication', {
+      application: { ...application, prisonerId: prisoner2.prisoner.prisonerNumber },
+      bookerReference,
+    })
     chooseVisitTimePage.continue()
 
     // Additional support
@@ -290,7 +311,7 @@ context('Book visit journey', () => {
 
     // Check visit details
     const checkVisitDetailsPage = Page.verifyOnPage(CheckVisitDetailsPage)
-    checkVisitDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
+    checkVisitDetailsPage.prisonerDetails().contains('Bob Smith at Hewell (HMP & YOI)')
     checkVisitDetailsPage.visitorName(1).contains('Adult One (25 years old)')
     checkVisitDetailsPage.visitorName(2).contains('Child Two (5 years old')
     checkVisitDetailsPage.visitDate().contains(format(in5Days, DateFormats.DISPLAY_DATE_WITH_DAY))
@@ -315,6 +336,7 @@ context('Book visit journey', () => {
     visitRequestedPage.requestReference().contains('ab-cd-ef-gh')
   })
 
+  // Using only single prisoner for this test
   it('should be possible to start book visit journey with no VOs if REMAND prisoner', () => {
     const remandPrisoner = TestData.bookerPrisonerInfoDto({ availableVos: 0, convictedStatus: 'Remand' })
     cy.task('stubGetBookerReference')
@@ -331,6 +353,10 @@ context('Book visit journey', () => {
     cy.task('stubGetVisitorRequests')
     visitsPage.bookVisit()
 
+    // Select prisoner page
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.continue()
+
     // Select visitors page - choose visitors
     Page.verifyOnPage(SelectVisitorsPage)
   })
@@ -346,11 +372,16 @@ context('Book visit journey', () => {
     cy.task('stubGetVisitorRequests')
     visitsPage.bookVisit()
 
+    // Select prisoner page
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.selectPrisonerByName('John Smith')
+    selectPrisonerPage.continue()
+
     // Select visitors page - choose visitors
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.selectVisitorByName('Adult One')
     cy.task('stubGetSessionRestriction', {
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000],
       sessionRestriction: 'CLOSED',
     })
@@ -361,8 +392,8 @@ context('Book visit journey', () => {
 
     // Choose visit time
     cy.task('stubGetVisitSessions', {
-      prisonId: prisoner.prisoner.prisonId,
-      prisonerId: prisoner.prisoner.prisonerNumber,
+      prisonId: prisoner1.prisoner.prisonId,
+      prisonerId: prisoner1.prisoner.prisonerNumber,
       visitorIds: [1000],
       bookerReference,
       youngestVisitorAge: 25,
