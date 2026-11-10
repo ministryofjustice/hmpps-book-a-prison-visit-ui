@@ -15,13 +15,14 @@
 
       <p>{{ t("addPrisoner:prisonerAdded.nextStep") }}</p>
 
-      {{ govukButton({
-        text: t("common:buttons.addVisitors"),
-        href: (paths.ADD_VISITOR.START + '/' + prisonerId) if features.multiplePrisoners else paths.ADD_VISITOR.START,
-        attributes: { "data-test": "add-visitors-button" },
-        preventDoubleClick: true
-      }) }}
-
+      {% if prisonerId or not features.multiplePrisoners %}
+        {{ govukButton({
+          text: t("common:buttons.addVisitors"),
+          href: (paths.ADD_VISITOR.START + '/' + prisonerId) if features.multiplePrisoners else paths.ADD_VISITOR.START,
+          attributes: { "data-test": "add-visitors-button" },
+          preventDoubleClick: true
+        }) }}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

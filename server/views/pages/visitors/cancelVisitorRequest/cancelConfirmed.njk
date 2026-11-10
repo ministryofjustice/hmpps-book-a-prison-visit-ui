@@ -14,9 +14,11 @@
 
       <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
 
-      <p class="no-visited-state">
-        {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag((paths.ADD_VISITOR.START + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START) | safe -}}
-      </p>
+      {% if showLinkNewVisitorButton %}
+        <p class="no-visited-state">
+          {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag((paths.ADD_VISITOR.START + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START) | safe -}}
+        </p>
+      {% endif %}
 
       <p>
         {{- t("common:postBooking.feedback")

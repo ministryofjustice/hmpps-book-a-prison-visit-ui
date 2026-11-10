@@ -12,11 +12,12 @@ export default class PrisonerAddedController {
       }
 
       const booker = req.session.booker!
+      const { addPrisonerJourneyResult } = req.session
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
-      const prisoner = req.session.booker?.prisoners.find(
-        p => p.prisonerNumber === req.session.addPrisonerJourneyResult?.prisonerNumber,
-      )
+      const prisoner =
+        addPrisonerJourneyResult &&
+        req.session.booker?.prisoners.find(p => p.prisonerNumber === addPrisonerJourneyResult.prisonerNumber)
 
       return res.render('pages/addPrisoner/prisonerAdded', {
         showOLServiceNav: true,

@@ -21,8 +21,8 @@ export default class VisitorDetailsController {
       if (config.features.multiplePrisoners && (!errors.isEmpty() || !prisoner)) {
         return res.redirect(paths.PRISONERS)
       }
-
-      if (addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
+      // Old session data won't contain prisoner (pre multiple prisoners feature)
+      if (addVisitorJourney?.prisoner && addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
         delete req.session.addVisitorJourney
         addVisitorJourney = undefined
       }
