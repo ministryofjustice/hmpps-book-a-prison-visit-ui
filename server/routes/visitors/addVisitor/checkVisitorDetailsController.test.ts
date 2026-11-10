@@ -83,7 +83,7 @@ describe('Check visitor request details', () => {
     })
 
     it('should render check visitor request page (in Welsh - with updates in Welsh row showing yes)', () => {
-      sessionData.addVisitorJourney!.visitorDetails!.languagePreference = 'cy'
+      sessionData.addVisitorJourney!.visitorDetails.languagePreference = 'cy'
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
@@ -168,7 +168,6 @@ describe('Check visitor request details', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-
       return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
     })
   })

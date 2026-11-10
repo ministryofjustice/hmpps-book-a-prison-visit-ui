@@ -46,20 +46,19 @@ export default class CheckVisitorDetailsController {
         bookerReference: booker.reference,
         prisonerId: prisoner.prisonerNumber,
         addVisitorRequest: {
-          firstName: visitorDetails!.firstName,
-          lastName: visitorDetails!.lastName,
-          dateOfBirth: visitorDetails!.visitorDob,
-          languagePreference: visitorDetails!.languagePreference,
+          firstName: visitorDetails.firstName,
+          lastName: visitorDetails.lastName,
+          dateOfBirth: visitorDetails.visitorDob,
+          languagePreference: visitorDetails.languagePreference,
         },
       })
 
       req.session.addVisitorJourneyResult = {
-        firstName: visitorDetails!.firstName,
-        lastName: visitorDetails!.lastName,
+        firstName: visitorDetails.firstName,
+        lastName: visitorDetails.lastName,
         result,
         prisoner,
       }
-
       delete req.session.addVisitorJourney
 
       switch (result) {

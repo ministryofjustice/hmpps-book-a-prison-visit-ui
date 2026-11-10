@@ -45,22 +45,15 @@ export default class VisitorDetailsController {
     return async (req, res) => {
       const errors = validationResult(req)
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-      if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
-        req.flash('formValues', matchedData(req, { onlyValidData: false }))
-
-        return res.redirect(
-          config.features.multiplePrisoners
-            ? `${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`
-            : paths.ADD_VISITOR.DETAILS,
-        )
-      }
 
       const prisoner = config.features.multiplePrisoners
         ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
         : req.session.booker!.prisoners[0]
 
-      if (!prisoner) {
+      if (!errors.isEmpty() || !prisoner) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
+
         return res.redirect(
           config.features.multiplePrisoners
             ? `${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`

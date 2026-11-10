@@ -30,13 +30,13 @@ export default class VisitorRequestSuccessController {
         return res.redirect(paths.PRISONERS)
       }
 
-      const { firstName, lastName } = req.session.addVisitorJourneyResult
+      const { firstName, lastName, prisoner } = req.session.addVisitorJourneyResult
 
       return res.render('pages/visitors/addVisitor/visitorApproved', {
         showOLServiceNav: true,
         firstName,
         lastName,
-        prisoner: req.session.addVisitorJourneyResult?.prisoner,
+        prisoner,
       })
     }
   }
