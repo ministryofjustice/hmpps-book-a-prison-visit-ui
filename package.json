@@ -39,7 +39,7 @@
     "npm": "^12"
   },
   "dependencies": {
-    "@govuk-one-login/service-header": "6.0.0",
+    "@govuk-one-login/service-header": "7.0.1",
     "@ministryofjustice/frontend": "^11.1.0",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.3.0",
