@@ -8,11 +8,7 @@ export default class VisitorRequestFailController {
       const { addVisitorJourneyResult } = req.session
 
       if (!addVisitorJourneyResult) {
-        if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITORS)
-        }
-
-        return res.redirect(paths.PRISONERS)
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
       let pageTemplate
@@ -30,11 +26,7 @@ export default class VisitorRequestFailController {
           break
 
         default:
-          if (!config.features.multiplePrisoners) {
-            return res.redirect(paths.VISITORS)
-          }
-
-          return res.redirect(paths.PRISONERS)
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
       return res.render(`pages/visitors/addVisitor/${pageTemplate}`, {

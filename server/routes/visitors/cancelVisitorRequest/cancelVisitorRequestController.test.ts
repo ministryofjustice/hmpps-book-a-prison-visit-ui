@@ -9,7 +9,7 @@ import { createMockBookerService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import paths from '../../../constants/paths'
 import { VisitorRequest } from '../../../services/bookerService'
-import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -73,31 +73,12 @@ describe('Cancel a visitor request - Are you sure page', () => {
         })
     })
 
-    it('should redirect to visitors page if "no" is selected when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
+    it('should redirect to prisoners page if "no" is selected', () => {
       return request(app)
         .post(url)
         .send('cancelVisitorRequest=no')
         .expect(302)
-        .expect('location', paths.VISITORS)
-        .expect(() => {
-          expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
-          expect(flashProvider).toHaveBeenCalledWith('messages', {
-            variant: 'information',
-            title: 'Your request needs to be reviewed.',
-            showTitleAsHeading: true,
-            text: 'Your visitor needs to be checked by Hewell (HMP & YOI).',
-          })
-        })
-    })
-
-    it('should redirect to prisoners page if "no" is selected when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      return request(app)
-        .post(url)
-        .send('cancelVisitorRequest=no')
-        .expect(302)
-        .expect('location', paths.PRISONERS)
+        .expect('location', `${paths.VISITORS}/uuidv4-1-1-1-1`)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
           expect(flashProvider).toHaveBeenCalledWith('messages', {
@@ -127,25 +108,12 @@ describe('Cancel a visitor request - Are you sure page', () => {
         })
     })
 
-    it('should NOT cancel the visitor request if invalid request ID is posted when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    it('should NOT cancel the visitor request if invalid request ID is posted', () => {
       return request(app)
         .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
         .send('cancelVisitorRequest=yes')
         .expect(302)
         .expect('location', paths.PRISONERS)
-        .expect(() => {
-          expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
-        })
-    })
-
-    it('should NOT cancel the visitor request if invalid request ID is posted when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      return request(app)
-        .post(`${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${randomUUID()}`)
-        .send('cancelVisitorRequest=yes')
-        .expect(302)
-        .expect('location', paths.VISITORS)
         .expect(() => {
           expect(bookerService.withdrawVisitorRequest).toHaveBeenCalledTimes(0)
         })

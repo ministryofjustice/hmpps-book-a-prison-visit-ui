@@ -12,13 +12,12 @@ export default class VisitorDetailsController {
       let { addVisitorJourney } = req.session
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
       const errors = validationResult(req)
-      const { prisoners } = req.session.booker!
 
       if (!errors.isEmpty()) {
         return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
       // If prisoner doesn't exist, validation will have already caught and redirected
-      const prisoner = prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+      const prisoner = req.session.booker?.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
 
       // Old session data won't contain prisoner (pre multiple prisoners feature)
       if (addVisitorJourney?.prisoner && addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
@@ -40,7 +39,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        prisoner: prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId),
+        prisoner,
       })
     }
   }

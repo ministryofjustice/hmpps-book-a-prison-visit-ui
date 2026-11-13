@@ -19,6 +19,10 @@ export default class PrisonerAddedController {
         addPrisonerJourneyResult &&
         req.session.booker?.prisoners.find(p => p.prisonerNumber === addPrisonerJourneyResult.prisonerNumber)
 
+      if (!prisoner) {
+        return res.redirect(paths.RETURN_HOME)
+      }
+
       return res.render('pages/addPrisoner/prisonerAdded', {
         showOLServiceNav: true,
         prisonerId: prisoner?.prisonerDisplayId,
