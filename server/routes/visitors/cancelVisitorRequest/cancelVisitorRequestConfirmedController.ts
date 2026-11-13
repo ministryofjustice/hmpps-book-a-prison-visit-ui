@@ -3,31 +3,22 @@ import { matchedData, ValidationChain, validationResult } from 'express-validato
 import { UUID } from 'crypto'
 import { validatePrisonerDisplayId } from '../validations'
 import config from '../../../config'
+import paths from '../../../constants/paths'
 
 export default class CancelVisitorRequestConfirmedController {
   public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
-      if (config.features.multiplePrisoners) {
-        const errors = validationResult(req)
-        let showLinkNewVisitorButton: boolean = true
-        if (!errors.isEmpty()) {
-          // Invalid prisoner display ID
-          showLinkNewVisitorButton = false
-        }
-
-        const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-        return res.render('pages/visitors/cancelVisitorRequest/cancelConfirmed', {
-          showOLServiceNav: true,
-          prisonerDisplayId,
-          showLinkNewVisitorButton,
-        })
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
       return res.render('pages/visitors/cancelVisitorRequest/cancelConfirmed', {
         showOLServiceNav: true,
-        showLinkNewVisitorButton: true,
+        prisonerDisplayId,
       })
     }
   }

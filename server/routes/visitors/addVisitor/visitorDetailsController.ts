@@ -10,17 +10,16 @@ export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       let { addVisitorJourney } = req.session
-
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-      const prisoner = config.features.multiplePrisoners
-        ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
-        : req.session.booker!.prisoners[0]
-
       const errors = validationResult(req)
+      const { prisoners } = req.session.booker!
 
-      if (config.features.multiplePrisoners && (!errors.isEmpty() || !prisoner)) {
-        return res.redirect(paths.PRISONERS)
+      if (!errors.isEmpty()) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
+      // If prisoner doesn't exist, validation will have already caught and redirected
+      const prisoner = prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+
       // Old session data won't contain prisoner (pre multiple prisoners feature)
       if (addVisitorJourney?.prisoner && addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
         delete req.session.addVisitorJourney
@@ -41,7 +40,7 @@ export default class VisitorDetailsController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        prisoner,
+        prisoner: prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId),
       })
     }
   }
@@ -51,9 +50,7 @@ export default class VisitorDetailsController {
       const errors = validationResult(req)
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
 
-      const prisoner = config.features.multiplePrisoners
-        ? req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
-        : req.session.booker!.prisoners[0]
+      const prisoner = req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
 
       if (!prisoner) {
         return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
@@ -63,11 +60,7 @@ export default class VisitorDetailsController {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
 
-        return res.redirect(
-          config.features.multiplePrisoners
-            ? `${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`
-            : paths.ADD_VISITOR.DETAILS,
-        )
+        return res.redirect(`${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`)
       }
 
       const data = <
@@ -95,7 +88,7 @@ export default class VisitorDetailsController {
         },
       }
 
-      return res.redirect(paths.ADD_VISITOR.CHECK)
+      return res.redirect(`${paths.ADD_VISITOR.CHECK}/${prisonerDisplayId}`)
     }
   }
 

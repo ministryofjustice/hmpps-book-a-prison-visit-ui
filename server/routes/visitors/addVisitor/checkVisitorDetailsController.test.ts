@@ -50,7 +50,7 @@ describe('Check visitor request details', () => {
   describe(`GET ${paths.ADD_VISITOR.CHECK}`, () => {
     it('should render check visitor request page (in English - no updates in Welsh row)', () => {
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -65,7 +65,7 @@ describe('Check visitor request details', () => {
           expect($('[data-test=date-of-birth]').text().trim()).toBe('1 February 2000')
           expect($('[data-test=prisoner-details]').text().trim()).toBe('John Smith at Hewell (HMP & YOI)')
           expect($('[data-test=updates-in-welsh]').length).toBe(0)
-          expect($('[data-test=submit]').parent('form').attr('action')).toBe(paths.ADD_VISITOR.CHECK)
+          expect($('[data-test=submit]').parent('form').attr('action')).toBe(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
           expect($('[data-test=submit]').text().trim()).toBe('Accept and send')
         })
     })
@@ -74,7 +74,7 @@ describe('Check visitor request details', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -87,7 +87,7 @@ describe('Check visitor request details', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -97,14 +97,14 @@ describe('Check visitor request details', () => {
 
     it('should return to prisoners page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
+      return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
     })
 
     it('should return to visitors page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
+      return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
     })
   })
 
@@ -123,7 +123,7 @@ describe('Check visitor request details', () => {
         )
 
         return request(app)
-          .post(paths.ADD_VISITOR.CHECK)
+          .post(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
           .expect(302)
           .expect('Location', redirectPath)
           .expect(() => {
@@ -161,14 +161,14 @@ describe('Check visitor request details', () => {
 
     it('should return to prisoners page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
+      return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
     })
 
     it('should return to visitors page on post if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
+      return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
     })
   })
 })

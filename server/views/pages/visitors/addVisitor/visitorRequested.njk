@@ -17,13 +17,13 @@
 
       <p>
         {{- t("addVisitor:visitorRequested.statusOnVisitorsPage")
-          | renderLinkTag(paths.VISITORS + '/' + prisonerDisplayId if features.multiplePrisoners else paths.VISITORS)
+          | renderLinkTag(paths.VISITORS + '/' + prisonerDisplayId)
           | safe -}}
       </p>
 
       {{ govukButton({
         text: t("common:buttons.linkAnotherVisitor"),
-        href: (paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.DETAILS,
+        href: paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId,
         classes: "govuk-button--secondary",
         attributes: { "data-test": "link-a-visitor" },
         preventDoubleClick: true

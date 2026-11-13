@@ -63,7 +63,7 @@
         <p>{{ t("bookVisit:cannotBook.addNewVisitorDescription") }}</p>
 
         <p>
-          {{- t("bookVisit:cannotBook.addNewVisitorRequest") | renderLinkTag((paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START) | safe -}}
+          {{- t("bookVisit:cannotBook.addNewVisitorRequest") | renderLinkTag(paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) | safe -}}
         </p>
       {% endif %}
     </div>

@@ -1,7 +1,10 @@
 import { RequestHandler } from 'express'
+import { matchedData, ValidationChain, validationResult } from 'express-validator'
+import { UUID } from 'crypto'
 import paths from '../../../constants/paths'
 import { BookerService } from '../../../services'
 import config from '../../../config'
+import { validatePrisonerDisplayId } from '../validations'
 
 export default class CheckVisitorDetailsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -9,21 +12,22 @@ export default class CheckVisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourney } = req.session
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+      const errors = validationResult(req)
 
-      if (!addVisitorJourney) {
-        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
-      }
-
-      const { prisoner } = req.session.addVisitorJourney!
-
-      if (!prisoner) {
-        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
+      if (
+        !errors.isEmpty() ||
+        !addVisitorJourney ||
+        !addVisitorJourney.prisoner ||
+        prisonerDisplayId !== addVisitorJourney.prisoner.prisonerDisplayId
+      ) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
         showOLServiceNav: true,
         visitorDetails: addVisitorJourney.visitorDetails,
-        prisoner,
+        prisoner: addVisitorJourney.prisoner,
       })
     }
   }
@@ -31,20 +35,23 @@ export default class CheckVisitorDetailsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const { addVisitorJourney, booker } = req.session
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+      const errors = validationResult(req)
 
-      if (!addVisitorJourney || !booker) {
-        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
-      }
-      const { prisoner } = addVisitorJourney!
-
-      if (!prisoner) {
-        return res.redirect(!config.features.multiplePrisoners ? paths.VISITORS : paths.PRISONERS)
+      if (
+        !errors.isEmpty() ||
+        !addVisitorJourney ||
+        !booker ||
+        !addVisitorJourney.prisoner ||
+        prisonerDisplayId !== addVisitorJourney.prisoner.prisonerDisplayId
+      ) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
       const { visitorDetails } = addVisitorJourney
       const result = await this.bookerService.addVisitorRequest({
         bookerReference: booker.reference,
-        prisonerId: prisoner.prisonerNumber,
+        prisonerId: addVisitorJourney.prisoner.prisonerNumber,
         addVisitorRequest: {
           firstName: visitorDetails.firstName,
           lastName: visitorDetails.lastName,
@@ -57,7 +64,7 @@ export default class CheckVisitorDetailsController {
         firstName: visitorDetails.firstName,
         lastName: visitorDetails.lastName,
         result,
-        prisoner,
+        prisoner: addVisitorJourney.prisoner,
       }
       delete req.session.addVisitorJourney
 
@@ -82,5 +89,9 @@ export default class CheckVisitorDetailsController {
           return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
       }
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [validatePrisonerDisplayId]
   }
 }

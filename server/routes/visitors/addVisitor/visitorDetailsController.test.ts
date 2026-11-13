@@ -8,7 +8,7 @@ import { FlashData, appWithAllRoutes, flashProvider } from '../../testutils/appS
 import paths from '../../../constants/paths'
 import { AddVisitorJourney, FlashFormValues } from '../../../@types/bapv'
 import TestData from '../../testutils/testData'
-import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -81,20 +81,6 @@ describe('Visitor details', () => {
           expect($('form[method=POST]').attr('action')).toBe(
             `${paths.ADD_VISITOR.DETAILS}/${prisoner2.prisonerDisplayId}`,
           )
-        })
-    })
-
-    it('should fallback to the first prisoner when FEATURES_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      return request(app)
-        .get(paths.ADD_VISITOR.DETAILS)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('h1').text().trim()).toBe('Link a new visitor for John Smith')
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_VISITOR.START)
-          expect($('form[method=POST]').attr('action')).toBe(paths.ADD_VISITOR.DETAILS)
         })
     })
 
@@ -228,7 +214,7 @@ describe('Visitor details', () => {
         .post(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .send(formData)
         .expect(302)
-        .expect('Location', paths.ADD_VISITOR.CHECK)
+        .expect('Location', `${paths.ADD_VISITOR.CHECK}/${prisoner1.prisonerDisplayId}`)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(expectedVisitorDetails)
@@ -246,7 +232,7 @@ describe('Visitor details', () => {
         .post(`${paths.ADD_VISITOR.DETAILS}/${prisoner1.prisonerDisplayId}`)
         .send({ ...formData, languagePreference: 'cy' })
         .expect(302)
-        .expect('Location', paths.ADD_VISITOR.CHECK)
+        .expect('Location', `${paths.ADD_VISITOR.CHECK}/${prisoner1.prisonerDisplayId}`)
         .expect(() => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.addVisitorJourney!.visitorDetails).toStrictEqual(expectedVisitorDetails)

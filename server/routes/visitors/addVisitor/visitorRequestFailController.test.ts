@@ -94,19 +94,5 @@ describe('Add visitor request failure pages', () => {
       delete sessionData.addVisitorJourneyResult
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.PRISONERS)
     })
-
-    it('should have original visitor link when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-
-      sessionData.addVisitorJourneyResult!.result = 'VISITOR_ALREADY_EXISTS'
-      return request(app)
-        .get(paths.ADD_VISITOR.FAIL_ALREADY_LINKED)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
-        })
-    })
   })
 })

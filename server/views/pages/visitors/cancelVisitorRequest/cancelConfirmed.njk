@@ -14,11 +14,9 @@
 
       <h2 class="govuk-heading-m">{{ t("common:postBooking.whatHappensNext") }}</h2>
 
-      {% if showLinkNewVisitorButton %}
-        <p class="no-visited-state">
-          {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag((paths.ADD_VISITOR.START + '/' + prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START) | safe -}}
-        </p>
-      {% endif %}
+      <p class="no-visited-state">
+        {{- t("visitors:cancelVisitorRequestConfirmed.linkAnotherVisitor") | renderLinkTag(paths.ADD_VISITOR.START + '/' + prisonerDisplayId) | safe -}}
+      </p>
 
       <p>
         {{- t("common:postBooking.feedback")
@@ -26,16 +24,14 @@
           | safe -}}
       </p>
 
-      {% if showLinkNewVisitorButton %}
-        <p>
-          {{ govukButton({
-            text: t("common:buttons.linkNewVisitor"),
-            href: paths.ADD_VISITOR.START + '/' + prisonerDisplayId if features.multiplePrisoners else paths.ADD_VISITOR.START,
-            attributes: { "data-test": "link-a-visitor" },
-            preventDoubleClick: true
-          }) }}
-        </p>
-    {% endif %}
+      <p>
+        {{ govukButton({
+          text: t("common:buttons.linkNewVisitor"),
+          href: paths.ADD_VISITOR.START + '/' + prisonerDisplayId,
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </p>
 
     </div>
   </div>

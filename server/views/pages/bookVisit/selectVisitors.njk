@@ -38,7 +38,7 @@
   <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
   <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
   <p>
-    <a data-test="link-a-visitor" href="{{ (paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START }}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
+    <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId}}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
   </p>
   <p>{{ t("common:visitors.requestResponseTime") }}</p>
 {% endset %}
@@ -189,7 +189,7 @@
 
         {{ govukButton({
           text: t("common:buttons.linkNewVisitor"),
-          href: (paths.ADD_VISITOR.START +'/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START,
+          href: paths.ADD_VISITOR.START +'/' + prisoner.prisonerDisplayId,
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
         }) }}

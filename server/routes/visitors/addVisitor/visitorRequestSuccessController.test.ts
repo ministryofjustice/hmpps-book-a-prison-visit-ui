@@ -44,19 +44,6 @@ describe('Add visitor request success page', () => {
         })
     })
 
-    it('should have original add visitor link when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-
-      return request(app)
-        .get(paths.ADD_VISITOR.SUCCESS)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
-        })
-    })
-
     it('should render add visitor journey auto approved page', () => {
       return request(app)
         .get(paths.ADD_VISITOR.AUTO_APPROVED)

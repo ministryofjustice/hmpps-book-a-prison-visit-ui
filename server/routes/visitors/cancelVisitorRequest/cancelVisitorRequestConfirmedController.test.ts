@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
-import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 import TestData from '../../testutils/testData'
 
 let app: Express
@@ -42,27 +42,11 @@ describe('Cancel a visitor request - Visitor request cancelled', () => {
         })
     })
 
-    it('should not show the link new visitor button when prisoner display ID is invalid', () => {
+    it('should redirect to prisoners page when prisoner display ID is invalid', () => {
       return request(app)
-        .get(`${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/uuidv4-1-1-1-1`)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test=link-a-visitor]').length).toBe(0)
-        })
-    })
-
-    it('should have original add visitor link when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({})
-
-      return request(app)
-        .get(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
-        })
+        .get(`${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/6f97370f-1812-4ba8-a3f6-65ef3fca6471`)
+        .expect(302)
+        .expect('location', paths.PRISONERS)
     })
   })
 })

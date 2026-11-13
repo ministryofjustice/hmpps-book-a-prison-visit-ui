@@ -6,7 +6,7 @@
 
 {% set pageTitle = t("addVisitor:visitorDetails.title") %}
 
-{% set backLinkHref = (paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.START %}
+{% set backLinkHref = (paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId) %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -21,7 +21,7 @@
       </h1>
       <h2 class="govuk-heading-m">{{ pageTitle }}</h2>
 
-      <form action="{{ (paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId) if features.multiplePrisoners else paths.ADD_VISITOR.DETAILS }}" method="POST" novalidate>
+      <form action="{{ paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukInput({
