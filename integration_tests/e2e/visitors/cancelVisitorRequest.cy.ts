@@ -49,6 +49,7 @@ context('Cancel a visitor request', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('John Smith')
     visitorsPage.visitorRequests().should('exist')
 
     // Start cancellation journey
@@ -62,7 +63,8 @@ context('Cancel a visitor request', () => {
     cancelVisitorRequestPage.cancelVisitNo().click()
     cancelVisitorRequestPage.confirm()
 
-    Page.verifyOnPage(PrisonersPage)
+    const returnedVisitorsPage = Page.verifyOnPage(VisitorsPage)
+    returnedVisitorsPage.prisonerName().contains('John Smith')
   })
 
   // This test uses the second prisoner
@@ -83,6 +85,7 @@ context('Cancel a visitor request', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(1)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('Lisa Smith')
     visitorsPage.visitorRequests().should('exist')
 
     // Start cancellation journey

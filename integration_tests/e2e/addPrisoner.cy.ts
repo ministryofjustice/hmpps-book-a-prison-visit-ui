@@ -59,6 +59,9 @@ context('Add a prisoner', () => {
 
     // Re-submit prisoner details
     cy.task('stubRegisterPrisoner')
+    cy.task('stubGetPrisoners', {
+      prisoners: [TestData.bookerPrisonerInfoDto()],
+    })
     prisonerDetailsPage.continue()
 
     // Prisoner added
@@ -133,6 +136,9 @@ context('Add a prisoner', () => {
       cy.task('stubRegisterPrisoner')
       prisonerDetailsPage.checkOnPage()
       prisonerDetailsPage.enterPrisonNumber('A1234BC')
+      cy.task('stubGetPrisoners', {
+        prisoners: [TestData.bookerPrisonerInfoDto()],
+      })
       prisonerDetailsPage.continue()
 
       // Prisoner added

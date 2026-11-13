@@ -52,6 +52,7 @@ context('Add a visitor', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('John Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -98,6 +99,7 @@ context('Add a visitor', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(1)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('Lisa Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -151,6 +153,7 @@ context('Add a visitor', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('John Smith')
 
     // Start link a new visitor journey
     visitorsPage.linkANewVisitor()
@@ -166,6 +169,7 @@ context('Add a visitor', () => {
     // Check visitor request
     visitorDetailsPage.continue()
     const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+    checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
     // Submit request and get failure page (duplicate request)
     cy.task('stubAddVisitorRequestFail')
@@ -189,6 +193,7 @@ context('Add a visitor', () => {
         const prisonersPage = Page.verifyOnPage(PrisonersPage)
         prisonersPage.viewPrisonerVisitors(0)
         const visitorsPage = Page.verifyOnPage(VisitorsPage)
+        visitorsPage.prisonerName().contains('John Smith')
 
         // Start link a new visitor journey
         visitorsPage.linkANewVisitor()
@@ -204,6 +209,7 @@ context('Add a visitor', () => {
         // Check visitor request
         visitorDetailsPage.continue()
         const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+        checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
         // Submit request and get to confirmation
         cy.task('stubAddVisitorRequest')
