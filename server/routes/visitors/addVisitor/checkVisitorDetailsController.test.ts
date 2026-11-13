@@ -132,18 +132,7 @@ describe('Check visitor request details', () => {
               firstName: 'first',
               lastName: 'last',
               result: apiResponse as unknown as AddVisitorJourneyResult['result'],
-              prisoner: {
-                firstName: 'JOHN',
-                lastName: 'SMITH',
-                dateOfBirth: '1980-02-01',
-                prisonerNumber: 'A1234BC',
-                prisonId: 'HEI',
-                prisonerDisplayId: uuid,
-                registeredPrisonId: 'HEI',
-                availableVos: 2,
-                convictedStatus: 'Convicted',
-                nextAvailableVoDate: '2024-07-01',
-              },
+              prisoner,
             })
             expect(bookerService.addVisitorRequest).toHaveBeenCalledWith({
               bookerReference: 'aaaa-bbbb-cccc',

@@ -54,6 +54,9 @@ describe('Prisoner added', () => {
           expect($('h1').text().trim()).toBe('Prisoner added')
           expect(sessionData.addPrisonerJourney).toBeUndefined()
           expect($('[data-test="add-visitors-button"]').text().trim()).toBe('Add visitors')
+          expect($('[data-test="add-visitors-button"]').attr('href')).toBe(
+            `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+          )
         })
     })
   })
