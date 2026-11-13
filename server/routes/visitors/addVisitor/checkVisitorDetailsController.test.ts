@@ -2,20 +2,24 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
+import { randomUUID } from 'crypto'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
 import { createMockBookerService } from '../../../services/testutils/mocks'
 import { BookerService } from '../../../services'
 import type { AddVisitorJourneyResult } from '../../../@types/bapv'
-import config from '../../../config'
 import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import TestData from '../../testutils/testData'
 
 let app: Express
-
 const bookerService = createMockBookerService()
 let sessionData: SessionData
+const uuid = randomUUID()
+const prisoner = TestData.prisoner({ prisonerDisplayId: uuid })
+const bookerReference = TestData.bookerReference().value
 
 beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
@@ -27,6 +31,11 @@ beforeEach(() => {
         visitorDob: '2000-02-01',
         languagePreference: 'en',
       },
+      prisoner,
+    },
+    booker: {
+      prisoners: [prisoner],
+      reference: bookerReference,
     },
   } as SessionData
 
@@ -41,22 +50,22 @@ describe('Check visitor request details', () => {
   describe(`GET ${paths.ADD_VISITOR.CHECK}`, () => {
     it('should render check visitor request page (in English - no updates in Welsh row)', () => {
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Check your request -/)
           expect($('#navigation').length).toBe(1)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test="back-link"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/${uuid}`)
           expect($('h1').text().trim()).toBe('Check your request')
 
-          expect($('[data-test=change]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test=change]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/${uuid}`)
           expect($('[data-test=first-name]').text().trim()).toBe('first')
           expect($('[data-test=last-name]').text().trim()).toBe('last')
           expect($('[data-test=date-of-birth]').text().trim()).toBe('1 February 2000')
           expect($('[data-test=prisoner-details]').text().trim()).toBe('John Smith at Hewell (HMP & YOI)')
           expect($('[data-test=updates-in-welsh]').length).toBe(0)
-          expect($('[data-test=submit]').parent('form').attr('action')).toBe(paths.ADD_VISITOR.CHECK)
+          expect($('[data-test=submit]').parent('form').attr('action')).toBe(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
           expect($('[data-test=submit]').text().trim()).toBe('Accept and send')
         })
     })
@@ -65,7 +74,7 @@ describe('Check visitor request details', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -78,7 +87,7 @@ describe('Check visitor request details', () => {
       app = appWithAllRoutes({ sessionData, lng: 'cy' })
 
       return request(app)
-        .get(paths.ADD_VISITOR.CHECK)
+        .get(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -86,18 +95,16 @@ describe('Check visitor request details', () => {
         })
     })
 
-    it('should return to prisoners page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
+    it('should return to prisoners page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
+      return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
     })
 
     it('should return to visitors page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).get(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
+      return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
     })
   })
 
@@ -109,18 +116,14 @@ describe('Check visitor request details', () => {
         ['too many requests', 'MAX_IN_PROGRESS_REQUESTS_REACHED', paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS],
         ['request already exists', 'REQUEST_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED],
         ['visitor already linked', 'VISITOR_ALREADY_EXISTS', paths.ADD_VISITOR.FAIL_ALREADY_LINKED],
-        [
-          'prisoner not found',
-          'PRISONER_NOT_FOUND_FOR_BOOKER',
-          config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME,
-        ],
+        ['prisoner not found', 'PRISONER_NOT_FOUND_FOR_BOOKER', paths.PRISONERS],
       ])('%s', (_: string, apiResponse: unknown, redirectPath: string) => {
         bookerService.addVisitorRequest.mockResolvedValue(
           apiResponse as unknown as ReturnType<BookerService['addVisitorRequest']>,
         )
 
         return request(app)
-          .post(paths.ADD_VISITOR.CHECK)
+          .post(`${paths.ADD_VISITOR.CHECK}/${uuid}`)
           .expect(302)
           .expect('Location', redirectPath)
           .expect(() => {
@@ -129,6 +132,7 @@ describe('Check visitor request details', () => {
               firstName: 'first',
               lastName: 'last',
               result: apiResponse as unknown as AddVisitorJourneyResult['result'],
+              prisoner,
             })
             expect(bookerService.addVisitorRequest).toHaveBeenCalledWith({
               bookerReference: 'aaaa-bbbb-cccc',
@@ -144,18 +148,16 @@ describe('Check visitor request details', () => {
       })
     })
 
-    it('should return to prisoners page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
+    it('should return to prisoners page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.PRISONERS)
+      return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
     })
 
     it('should return to visitors page on post if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
       disableFeatureForTest('multiplePrisoners')
       app = appWithAllRoutes({ sessionData })
       delete sessionData.addVisitorJourney
-      return request(app).post(paths.ADD_VISITOR.CHECK).expect(302).expect('location', paths.VISITORS)
+      return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
     })
   })
 })

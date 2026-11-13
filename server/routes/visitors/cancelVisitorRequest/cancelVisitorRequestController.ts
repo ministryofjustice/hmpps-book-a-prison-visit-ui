@@ -14,15 +14,11 @@ export default class CancelVisitorRequestController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const { visitorRequests } = req.session as SessionData
+      const { visitorRequests, booker } = req.session as SessionData
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
-        if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITORS)
-        }
-
-        return res.redirect(paths.PRISONERS)
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
       }
 
       const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)
@@ -31,11 +27,14 @@ export default class CancelVisitorRequestController {
         request => request.visitorRequestDisplayId === visitorRequestDisplayId,
       )
 
+      const prisoner = booker!.prisoners.find(p => p.prisonerNumber === visitorRequest?.prisonerId)
+
       return res.render('pages/visitors/cancelVisitorRequest/cancel', {
         errors: req.flash('errors'),
         visitorRequest,
         visitorRequestDisplayId,
         showOLServiceNav: true,
+        prisonerDisplayId: prisoner?.prisonerDisplayId,
       })
     }
   }
@@ -49,11 +48,7 @@ export default class CancelVisitorRequestController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         if (!visitorRequestDisplayId) {
-          if (!config.features.multiplePrisoners) {
-            return res.redirect(paths.VISITORS)
-          }
-
-          return res.redirect(paths.PRISONERS)
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
         }
 
         req.flash('errors', errors.array())
@@ -66,9 +61,12 @@ export default class CancelVisitorRequestController {
       )!
 
       if (cancelVisitorRequest === 'no') {
-        const prisonId = booker!.prisoners.find(
-          prisoner => prisoner.prisonerNumber === visitorRequest.prisonerId,
-        )?.registeredPrisonId
+        const prisoner = booker!.prisoners.find(p => p.prisonerNumber === visitorRequest.prisonerId)
+        if (!prisoner) {
+          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        }
+
+        const prisonId = prisoner.registeredPrisonId
         const prisonName = getPrisonName(prisonId ?? '', res.locals.prisonNames!, req.language as Locale)
 
         req.flash('messages', {
@@ -78,10 +76,7 @@ export default class CancelVisitorRequestController {
           text: req.t('visitors:visitors.alert.visitorRequestReview.text', { prisonName }),
         })
 
-        if (!config.features.multiplePrisoners) {
-          return res.redirect(paths.VISITORS)
-        }
-        return res.redirect(paths.PRISONERS)
+        return res.redirect(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
       }
 
       await this.bookerService.withdrawVisitorRequest({
@@ -89,7 +84,8 @@ export default class CancelVisitorRequestController {
         requestReference: visitorRequest.reference,
       })
 
-      return res.redirect(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION)
+      const prisoner = booker!.prisoners.find(p => p.prisonerNumber === visitorRequest.prisonerId)
+      return res.redirect(`${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/${prisoner?.prisonerDisplayId}`)
     }
   }
 

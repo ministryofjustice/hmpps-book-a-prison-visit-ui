@@ -4,7 +4,7 @@
 
 {% set pageTitle = t("addVisitor:checkVisitorDetails.title") %}
 
-{% set backLinkHref = paths.ADD_VISITOR.DETAILS %}
+{% set backLinkHref = (paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId) %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -21,7 +21,7 @@
       <div class="visits-heading-action">
         <h2 class="govuk-heading-m">{{ t("addVisitor:checkVisitorDetails.visitorInformationHeading") }}</h2>
         <p>
-          <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS }}">
+          <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId }}">
             {{- t("common:buttons.change") -}}
             <span class="govuk-visually-hidden">
               {{ t("addVisitor:checkVisitorDetails.changeVisitorInformation") }}
@@ -96,7 +96,7 @@
           | safe -}}
       </p>
 
-      <form action="{{ paths.ADD_VISITOR.CHECK }}" method="POST" novalidate>
+      <form action="{{ paths.ADD_VISITOR.CHECK + '/' + prisoner.prisonerDisplayId }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukButton({
