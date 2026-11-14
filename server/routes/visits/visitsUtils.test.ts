@@ -1,13 +1,64 @@
 import { MoJAlert } from '../../@types/bapv'
 import { VisitDetails } from '../../services/visitService'
 import TestData from '../testutils/testData'
-import { getVisitMessages } from './visitsUtils'
+import { getVisitDetailsSummaries, getVisitMessages } from './visitsUtils'
 import { mockTFunction } from '../../data/testutils/mockI18n'
 
 describe('Visits utils', () => {
-  const { prisonName } = TestData.prisonDto()
+  describe('getVisitDetailsSummaries', () => {
+    it('should return visit details summaries', () => {
+      const prisoner = TestData.prisoner()
+      const visit = TestData.visitDetails()
+
+      const summaries = getVisitDetailsSummaries({ prisoners: [prisoner], visits: [visit] })
+
+      expect(summaries.length).toBe(1)
+      expect(summaries[0]).toStrictEqual({
+        visitDisplayId: visit.visitDisplayId,
+        reference: visit.reference,
+        prisonerFirstName: visit.prisonerFirstName,
+        prisonerLastName: visit.prisonerLastName,
+        prisonId: visit.prisonId,
+        startTimestamp: visit.startTimestamp,
+        endTimestamp: visit.endTimestamp,
+        isRequest: false,
+        prisonerMoved: false,
+      })
+    })
+
+    it('should flag a visit with REQUESTED status', () => {
+      const prisoner = TestData.prisoner()
+      const visit = TestData.visitDetails({ visitSubStatus: 'REQUESTED' })
+
+      const summaries = getVisitDetailsSummaries({ prisoners: [prisoner], visits: [visit] })
+
+      expect(summaries[0].reference).toBe(visit.reference)
+      expect(summaries[0].isRequest).toBe(true)
+    })
+
+    it('should flag prisoner moved if prisoner exists but registered prison differs from visit prison', () => {
+      const prisoner = TestData.prisoner({ registeredPrisonId: 'BLI' })
+      const visit = TestData.visitDetails()
+
+      const summaries = getVisitDetailsSummaries({ prisoners: [prisoner], visits: [visit] })
+
+      expect(summaries[0].reference).toBe(visit.reference)
+      expect(summaries[0].prisonerMoved).toBe(true)
+    })
+
+    it('should not flag prisoner moved if prisoner not found (i.e. no longer on booker account)', () => {
+      const visit = TestData.visitDetails()
+
+      const summaries = getVisitDetailsSummaries({ prisoners: [], visits: [visit] })
+
+      expect(summaries[0].reference).toBe(visit.reference)
+      expect(summaries[0].prisonerMoved).toBe(false)
+    })
+  })
 
   describe('getVisitMessages - build messages (MoJ Alerts) to show on visit details page', () => {
+    const { prisonName } = TestData.prisonDto()
+
     describe('Visit cancelled', () => {
       it.each([
         ['BOOKER_CANCELLED', 'visits:alerts.cancelled.byBooker'],
