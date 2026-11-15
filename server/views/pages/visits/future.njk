@@ -12,19 +12,17 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      {% if prisoner %}
+      {% if bookerHasPrisoners %}
         <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
 
         {% if visits | length %}
           {% for visit in visits %}
-            {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
-
             <h2 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">
               {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
             </h2>
 
             <ul class="govuk-list">
-              {% if isRequest %}
+              {% if visit.isRequest %}
                 <li>
                   {{ govukTag({
                   text: t("visits:future.awaitingReview"),
@@ -34,11 +32,11 @@
                 </li>
               {% endif %}
 
-              {% if visit.prisonId !== prisoner.registeredPrisonId %}
+              {% if visit.prisonerMoved %}
                 <li>
                   {{ govukTag({
                   text: t("visits:future.notAtPrisonTag", {
-                    prisonerFirstName: prisoner.firstName | capitalize
+                    prisonerFirstName: visit.prisonerFirstName | capitalize
                   }),
                   classes: "govuk-tag--orange govuk-!-margin-top-1 govuk-!-margin-bottom-1",
                   attributes: { "data-test": "moved-prison-tag-" + loop.index  }

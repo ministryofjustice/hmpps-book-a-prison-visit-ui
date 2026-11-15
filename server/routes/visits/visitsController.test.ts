@@ -14,12 +14,15 @@ let app: Express
 
 const visitService = createMockVisitService()
 const bookerService = createMockBookerService()
+
 const bookerReference = TestData.bookerReference().value
+const prisoner = TestData.prisoner()
 
 let sessionData: SessionData
 
 beforeEach(() => {
   sessionData = {} as SessionData
+  bookerService.getPrisoners.mockResolvedValue([prisoner])
 
   app = appWithAllRoutes({ services: { visitService, bookerService }, sessionData })
 })
@@ -30,10 +33,8 @@ afterEach(() => {
 
 describe('Visits home page (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
-  const prisoner = TestData.prisoner()
 
   it('should render the Visits home page - with a future visit', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
@@ -75,7 +76,6 @@ describe('Visits home page (future visits list)', () => {
   })
 
   it('should render the Visits home page - with no future visits', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
@@ -115,7 +115,6 @@ describe('Visits home page (future visits list)', () => {
   })
 
   it('should render the Visits home page with the prisoner associated with the booker and store prisoners in session', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
     return request(app)
       .get(paths.VISITS.HOME)
@@ -142,6 +141,7 @@ describe('Visits home page (future visits list)', () => {
 
   it('should render the Visits home page with add a prisoner message and button', () => {
     bookerService.getPrisoners.mockResolvedValue([])
+    visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
       .get(paths.VISITS.HOME)
@@ -173,7 +173,6 @@ describe('Visits home page (future visits list)', () => {
     sessionData.booker = { reference: TestData.bookerReference().value, prisoners: [prisoner] }
     sessionData.bookVisitJourney = { data: 'abandoned book visit journey data' } as unknown as BookVisitJourney
 
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
@@ -242,7 +241,7 @@ describe('Past visits list page', () => {
 })
 
 describe('Cancelled visits list page', () => {
-  const cancelledVisitDetails = TestData.visitDetails({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
+  const cancelledVisitDetails = TestData.visitDetails()
 
   it('should render the cancelled visits page', () => {
     visitService.getCancelledPublicVisits.mockResolvedValue([cancelledVisitDetails])
