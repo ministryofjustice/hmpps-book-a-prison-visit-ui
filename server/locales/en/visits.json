@@ -37,8 +37,8 @@
     "noFutureVisits": "There are no future visits or requests.",
     "viewPastVisits": "View past visits",
     "viewCancelledVisits": "View rejected and cancelled visits",
-    "noPrisonerError": "You need to add a prisoner to book a visit.",
-    "addPrisoner": "Add a prisoner",
+    "noPrisonerError": "You need to link a prisoner to book a visit.",
+    "addPrisoner": "Link a prisoner",
     "notAtPrisonTag": "{{prisonerFirstName}} has moved prison"
   },
   "past": {
