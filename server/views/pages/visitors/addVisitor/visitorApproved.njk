@@ -9,7 +9,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: pageTitle,
-        text: t("addVisitor:visitorApproved.visitorLinked", { visitorName: visitorName })
+        text: t("addVisitor:visitorApproved.visitorLinked", { visitorName: firstName + " " + lastName })
       }) }}
 
       <p data-test="visitor-approved">
