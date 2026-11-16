@@ -77,15 +77,13 @@ context('Prisoners page', () => {
     prisonersPage.prisonerName(0).contains('John Smith')
     prisonersPage.viewPrisonerVisitors(0)
 
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    Page.verifyOnPage(VisitorsPage, 'John Smith')
 
     cy.visit(paths.PRISONERS)
     const prisonersPageAfterVisit = Page.verifyOnPage(PrisonersPage)
     prisonersPageAfterVisit.prisonerName(1).contains('Roger Jones')
     prisonersPageAfterVisit.viewPrisonerVisitors(1)
 
-    const visitorsPageForRoger = Page.verifyOnPage(VisitorsPage)
-    visitorsPageForRoger.prisonerName().contains('Roger Jones')
+    Page.verifyOnPage(VisitorsPage, 'Roger Jones')
   })
 })

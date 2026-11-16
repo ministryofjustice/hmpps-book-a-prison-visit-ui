@@ -61,8 +61,7 @@ context('Visitors page', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
 
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
     visitorsPage.visitorName(0).contains('Joan Phillips')
     visitorsPage.visitorDateOfBirth(0).contains('21 February 1980')
     visitorsPage.visitorAvailability(0).contains('Yes')
