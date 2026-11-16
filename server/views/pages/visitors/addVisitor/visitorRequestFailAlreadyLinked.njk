@@ -20,13 +20,13 @@
       <div class="govuk-button-group">
         {{ govukButton({
           text: t("common:buttons.linkAnotherVisitor"),
-          href: paths.ADD_VISITOR.DETAILS,
+          href: paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId,
           classes: "govuk-button--secondary",
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
         }) }}
 
-        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS }}">
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS + '/' + prisonerDisplayId }}">
           {{- t("addVisitor:actions.viewLinkedAndRequestedVisitors") -}}
         </a>
       </div>

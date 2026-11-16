@@ -16,7 +16,11 @@ export default function routes(services: Services): Router {
     .get(cancelVisitorRequestController.view())
     .post(cancelVisitorRequestController.validateCancelChoice(), cancelVisitorRequestController.submit())
 
-  router.get(paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION, cancelVisitorRequestConfirmedController.view())
+  router.get(
+    `${paths.CANCEL_VISITOR_REQUEST.CANCEL_CONFIRMATION}/:prisonerDisplayId`,
+    cancelVisitorRequestConfirmedController.validate(),
+    cancelVisitorRequestConfirmedController.view(),
+  )
 
   return router
 }

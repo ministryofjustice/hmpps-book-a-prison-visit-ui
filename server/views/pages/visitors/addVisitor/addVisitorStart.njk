@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = t("addVisitor:addVisitorStart.title") %}
-{% set backLinkHref = paths.VISITORS %}
+{% set backLinkHref = paths.VISITORS + '/' + prisonerDisplayId %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -24,7 +24,7 @@
 
       {{ govukButton({
         text: t("common:buttons.continue"),
-        href: paths.ADD_VISITOR.DETAILS,
+        href: paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId,
         attributes: { "data-test": "continue-button" },
         preventDoubleClick: true
       }) }}

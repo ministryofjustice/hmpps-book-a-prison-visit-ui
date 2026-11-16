@@ -7,6 +7,12 @@ import CancelVisitorRequestConfirmedPage from '../../pages/visitors/cancelVisito
 import PrisonersPage from '../../pages/prisoners/prisoners'
 
 const bookerReference = TestData.bookerReference().value
+const prisoner1 = TestData.bookerPrisonerInfoDto()
+const prisoner2 = TestData.bookerPrisonerInfoDto({
+  prisonerNumber: 'B2345CD',
+  firstName: 'Lisa',
+  dateOfBirth: '1992-05-23',
+})
 
 context('Cancel a visitor request', () => {
   beforeEach(() => {
@@ -15,16 +21,24 @@ context('Cancel a visitor request', () => {
     cy.task('stubPrisonNames')
 
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
+    cy.task('stubGetPrisoners', { prisoners: [prisoner1, prisoner2] })
     cy.task('stubGetVisitors')
+    cy.task('stubGetVisitors', {
+      bookerReference: TestData.bookerReference(),
+      prisonerNumber: prisoner2.prisoner.prisonerNumber,
+    })
     cy.task('stubGetFuturePublicVisits', {
       bookerReference,
       visits: [],
     })
   })
 
+  // This test uses the first prisoner
   it('should be able to abandon the cancel a visitor request journey', () => {
-    cy.task('stubGetVisitorRequests')
+    cy.task('stubGetVisitorRequests', {
+      prisonerNumber: prisoner1.prisoner.prisonerNumber,
+      visitorRequests: [TestData.bookerPrisonerVisitorRequestDto()],
+    })
 
     // Visits home page
     cy.signIn()
@@ -35,6 +49,7 @@ context('Cancel a visitor request', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('John Smith')
     visitorsPage.visitorRequests().should('exist')
 
     // Start cancellation journey
@@ -48,13 +63,18 @@ context('Cancel a visitor request', () => {
     cancelVisitorRequestPage.cancelVisitNo().click()
     cancelVisitorRequestPage.confirm()
 
-    Page.verifyOnPage(PrisonersPage)
+    const returnedVisitorsPage = Page.verifyOnPage(VisitorsPage)
+    returnedVisitorsPage.prisonerName().contains('John Smith')
   })
 
+  // This test uses the second prisoner
   it('should complete the cancel a visitor request journey', () => {
-    const visitorRequest = TestData.bookerPrisonerVisitorRequestDto()
+    const visitorRequest = TestData.bookerPrisonerVisitorRequestDto({ prisonerId: prisoner2.prisoner.prisonerNumber })
 
-    cy.task('stubGetVisitorRequests', { visitorRequests: [visitorRequest] })
+    cy.task('stubGetVisitorRequests', {
+      visitorRequests: [visitorRequest],
+      prisonerNumber: prisoner2.prisoner.prisonerNumber,
+    })
 
     // Visits home page
     cy.signIn()
@@ -63,8 +83,9 @@ context('Cancel a visitor request', () => {
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
-    prisonersPage.viewPrisonerVisitors(0)
+    prisonersPage.viewPrisonerVisitors(1)
     const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    visitorsPage.prisonerName().contains('Lisa Smith')
     visitorsPage.visitorRequests().should('exist')
 
     // Start cancellation journey

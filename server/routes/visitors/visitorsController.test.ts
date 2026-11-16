@@ -127,7 +127,9 @@ describe('Visitors page', () => {
           `${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequests[0].visitorRequestDisplayId}`,
         )
 
-        expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+        expect($('[data-test=link-a-visitor]').attr('href')).toBe(
+          `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+        )
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
