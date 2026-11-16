@@ -16,6 +16,7 @@ context('Add a prisoner', () => {
     cy.task('stubGetSupportedPrisonIds')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners')
+    cy.task('stubGetFuturePublicVisits')
 
     cy.task('clearRateLimits')
   })
@@ -150,6 +151,7 @@ context('Add a prisoner', () => {
         const bookerReference = TestData.bookerReference({ value: booker })
         cy.task('stubGetBookerReference', { bookerReference })
         cy.task('stubGetPrisoners', { bookerReference })
+        cy.task('stubGetFuturePublicVisits', { bookerReference: bookerReference.value })
         cy.signIn()
 
         // Start Add a prisoner journey
