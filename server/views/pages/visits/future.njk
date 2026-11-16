@@ -12,24 +12,25 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
+      <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
+
+      {% if visits.length %}
+        {% for visit in visits %}
+          {{ visitDetailsSummary({
+            visit: visit,
+            index: loop.index,
+            pathPrefix: paths.VISITS.DETAILS,
+            showTags: true,
+            showReference: true,
+            showCancelLink: true
+          }) }}
+        {% endfor %}
+
+      {% else %}
+        <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
+      {% endif %}
+
       {% if bookerHasPrisoners %}
-        <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
-
-        {% if visits | length %}
-          {% for visit in visits %}
-            {{ visitDetailsSummary({
-              visit: visit,
-              index: loop.index,
-              pathPrefix: paths.VISITS.DETAILS,
-              showTags: true,
-              showReference: true,
-              showCancelLink: true
-            }) }}
-          {% endfor %}
-
-        {% else %}
-          <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
-        {% endif %}
 
         {{ govukButton({
           text: t("common:buttons.bookAVisit"),
@@ -39,29 +40,31 @@
           attributes: { "data-test": "book-a-visit" }
         }) }}
 
-        <p>
-          <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
-            {{- t("visits:future.viewPastVisits") -}}
-          </a>
-        </p>
-        <p>
-          <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">
-            {{- t("visits:future.viewCancelledVisits") -}}
-          </a>
-        </p>
-
       {% else %}
+        <hr class="govuk-section-break govuk-section-break--m">
+
         <p data-test="no-prisoner">{{ t("visits:future.noPrisonerError") }}</p>
 
         {{ govukButton({
           text: t("visits:future.addPrisoner"),
           href: paths.ADD_PRISONER.LOCATION,
-          classes: "govuk-!-margin-top-3",
           preventDoubleClick: true,
           attributes: { "data-test": "add-prisoner" }
         }) }}
 
       {% endif %}
+
+      <p>
+        <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
+          {{- t("visits:future.viewPastVisits") -}}
+        </a>
+      </p>
+
+      <p>
+        <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">
+          {{- t("visits:future.viewCancelledVisits") -}}
+        </a>
+      </p>
     </div>
   </div>
 
