@@ -27,7 +27,6 @@ context('Cancel a visitor request', () => {
       prisonerNumber: prisoner2.prisoner.prisonerNumber,
     })
     cy.task('stubGetFuturePublicVisits')
-    cy.task('stubGetFuturePublicVisits')
   })
 
   // This test uses the first prisoner
