@@ -75,6 +75,48 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
+  it('should render the Visits home page - with a future visit (but no registered prisoner)', () => {
+    bookerService.getPrisoners.mockResolvedValue([])
+    visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
+
+    return request(app)
+      .get(paths.VISITS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visits -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="moved-prison-tag-1"]').length).toBe(0)
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
+        expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
+        expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
+
+        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
+          `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
+        )
+        expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
+          `${paths.VISITS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
+        )
+
+        expect($('[data-test="no-visits"]').length).toBeFalsy()
+
+        expect($('[data-test="book-a-visit"]').length).toBe(0)
+
+        expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
+        expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
+
+        expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData.bookedVisits).toStrictEqual({
+          type: 'future',
+          visits: futureVisitDetails,
+        } as SessionData['bookedVisits'])
+      })
+  })
+
   it('should render the Visits home page - with no future visits', () => {
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
@@ -153,7 +195,7 @@ describe('Visits home page (future visits list)', () => {
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('[data-test="prisoner-name"]').length).toBe(0)
         expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
-        expect($('[data-test="start"]').length).toBe(0)
+        expect($('[data-test="book-a-visit"]').length).toBe(0)
         expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 
         expect(sessionData).toStrictEqual({

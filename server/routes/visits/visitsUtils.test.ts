@@ -7,20 +7,40 @@ import { mockTFunction } from '../../data/testutils/mockI18n'
 describe('Visits utils', () => {
   describe('getVisitDetailsSummaries', () => {
     it('should return visit details summaries', () => {
-      const prisoner = TestData.prisoner()
-      const visit = TestData.visitDetails()
+      // Prisoner's registered prison and visit prison match (HEI)
+      const prisonerA = TestData.prisoner()
+      const visitForPrisonerA = TestData.visitDetails()
 
-      const summaries = getVisitDetailsSummaries({ prisoners: [prisoner], visits: [visit] })
+      // Prisoner's registered prison and visit prison do not match (HEI / BLI - so prisoner moved)
+      const prisonerB = TestData.prisoner({ prisonerNumber: 'B1234BC', firstName: 'BOB', registeredPrisonId: 'BLI' })
+      const visitForPrisonerB = TestData.visitDetails({ prisonerId: 'B1234BC', prisonerFirstName: 'BOB' })
 
-      expect(summaries.length).toBe(1)
+      const summaries = getVisitDetailsSummaries({
+        prisoners: [prisonerA, prisonerB],
+        visits: [visitForPrisonerB, visitForPrisonerA],
+      })
+
+      expect(summaries.length).toBe(2)
       expect(summaries[0]).toStrictEqual({
-        visitDisplayId: visit.visitDisplayId,
-        reference: visit.reference,
-        prisonerFirstName: visit.prisonerFirstName,
-        prisonerLastName: visit.prisonerLastName,
-        prisonId: visit.prisonId,
-        startTimestamp: visit.startTimestamp,
-        endTimestamp: visit.endTimestamp,
+        visitDisplayId: visitForPrisonerB.visitDisplayId,
+        reference: visitForPrisonerB.reference,
+        prisonerFirstName: visitForPrisonerB.prisonerFirstName,
+        prisonerLastName: visitForPrisonerB.prisonerLastName,
+        prisonId: visitForPrisonerB.prisonId,
+        startTimestamp: visitForPrisonerB.startTimestamp,
+        endTimestamp: visitForPrisonerB.endTimestamp,
+        isRequest: false,
+        prisonerMoved: true,
+      })
+
+      expect(summaries[1]).toStrictEqual({
+        visitDisplayId: visitForPrisonerA.visitDisplayId,
+        reference: visitForPrisonerA.reference,
+        prisonerFirstName: visitForPrisonerA.prisonerFirstName,
+        prisonerLastName: visitForPrisonerA.prisonerLastName,
+        prisonId: visitForPrisonerA.prisonId,
+        startTimestamp: visitForPrisonerA.startTimestamp,
+        endTimestamp: visitForPrisonerA.endTimestamp,
         isRequest: false,
         prisonerMoved: false,
       })
