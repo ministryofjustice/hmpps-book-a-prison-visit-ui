@@ -112,10 +112,7 @@ context('Book visit journey', () => {
 
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner1, prisoner2] })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.signIn()
   })
 

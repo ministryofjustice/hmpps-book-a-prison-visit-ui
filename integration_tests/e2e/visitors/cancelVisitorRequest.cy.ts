@@ -6,7 +6,6 @@ import CancelVisitorRequestPage from '../../pages/visitors/cancelVisitorRequest/
 import CancelVisitorRequestConfirmedPage from '../../pages/visitors/cancelVisitorRequest/cancelVisitorRequestConfirmed'
 import PrisonersPage from '../../pages/prisoners/prisoners'
 
-const bookerReference = TestData.bookerReference().value
 const prisoner1 = TestData.bookerPrisonerInfoDto()
 const prisoner2 = TestData.bookerPrisonerInfoDto({
   prisonerNumber: 'B2345CD',
@@ -27,10 +26,8 @@ context('Cancel a visitor request', () => {
       bookerReference: TestData.bookerReference(),
       prisonerNumber: prisoner2.prisoner.prisonerNumber,
     })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
+    cy.task('stubGetFuturePublicVisits')
   })
 
   // This test uses the first prisoner

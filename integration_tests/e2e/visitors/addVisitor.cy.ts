@@ -10,7 +10,6 @@ import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
 import PrisonersPage from '../../pages/prisoners/prisoners'
 
-const bookerReference = TestData.bookerReference().value
 const prisoner1 = TestData.bookerPrisonerInfoDto()
 const prisoner2 = TestData.bookerPrisonerInfoDto({
   prisonerNumber: 'B2345CD',
@@ -35,10 +34,7 @@ context('Add a visitor', () => {
       visitorRequests: [],
     })
     cy.task('clearRateLimits')
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
   })
 
   // Using first prisoner for this test

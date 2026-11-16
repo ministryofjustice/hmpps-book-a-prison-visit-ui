@@ -24,8 +24,6 @@ context('Book visit journey - prisoner moved prison', () => {
     dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old
   })
 
-  const bookerReference = TestData.bookerReference().value
-
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
@@ -42,10 +40,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -91,10 +86,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -132,10 +124,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -172,10 +161,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
