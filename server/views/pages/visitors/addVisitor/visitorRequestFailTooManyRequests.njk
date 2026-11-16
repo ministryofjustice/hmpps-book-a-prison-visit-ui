@@ -14,7 +14,7 @@
 
       <p class="no-visited-state">
         {{- t("addVisitor:visitorRequestFailTooManyRequests.viewLinkedAndRequestedVisitors")
-          | renderLinkTag(paths.VISITORS)
+          | renderLinkTag(paths.VISITORS + '/' + prisonerDisplayId)
           | safe -}}
       </p>
 

@@ -17,11 +17,10 @@
 
       {{ govukButton({
         text: t("common:buttons.addVisitors"),
-        href: paths.ADD_VISITOR.START,
+        href: paths.ADD_VISITOR.START + '/' + prisonerId,
         attributes: { "data-test": "add-visitors-button" },
         preventDoubleClick: true
       }) }}
-
     </div>
   </div>
 {% endblock %}

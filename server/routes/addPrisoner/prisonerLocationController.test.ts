@@ -35,7 +35,11 @@ describe('Prisoner location', () => {
     })
 
     it('should render prisoner location page with list of supported prisons, store supported prison in session and clear any old session data', () => {
-      sessionData.addPrisonerJourneyResult = { selectedPrisonId: 'some-prison-id', result: true }
+      sessionData.addPrisonerJourneyResult = {
+        selectedPrisonId: 'some-prison-id',
+        result: true,
+        prisonerNumber: 'A1234BC',
+      }
 
       return request(app)
         .get(paths.ADD_PRISONER.LOCATION)
