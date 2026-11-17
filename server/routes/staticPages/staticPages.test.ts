@@ -26,7 +26,7 @@ describe('Static content pages - authenticated users', () => {
         expect($('title').text()).toMatch(new RegExp(`^${pageTitle} -`))
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe(pageTitle)
-        expect($('header .rebranded-one-login-header').length).toBe(1)
+        expect($('header .cross-service-header').length).toBe(1)
         expect($('header.govuk-header').length).toBe(0)
         expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
         expect($('.govuk-service-navigation__link').length).toBe(2)
@@ -57,7 +57,7 @@ describe('Static content pages - unauthenticated users', () => {
         expect($('h1').text()).toBe(pageTitle)
 
         expect($('div.govuk-header').length).toBe(1)
-        expect($('header .rebranded-one-login-header').length).toBe(0)
+        expect($('header .cross-service-header').length).toBe(0)
         expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
 
         expect($('.govuk-phase-banner').text()).toContain('Beta')

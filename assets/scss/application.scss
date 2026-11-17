@@ -9,7 +9,7 @@ $path: "/assets/images/";
 
 @import 'dist/accessible-autocomplete.min';
 
-@import 'service-header/dist/styles/service-header-no-imports.scss';
+@import '@govuk-one-login/service-header/dist/styles';
 
 @import './components/visits-spacing';
 @import './components/visits-calendar';
