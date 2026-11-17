@@ -13,9 +13,9 @@
   },
 
   "prisonerAdded": {
-    "title": "Prisoner added",
+    "title": "Prisoner linked",
     "matchedMessage": "The prisoner details you submitted were successfully matched.",
-    "nextStep": "To book a visit for this prisoner, you need to add visitors."
+    "nextStep": "To book a visit for this prisoner, you need to link a visitor."
   },
 
   "prisonerNotMatched": {

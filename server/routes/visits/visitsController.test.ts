@@ -105,7 +105,7 @@ describe('Visits home page (future visits list)', () => {
 
         expect($('[data-test="book-a-visit"]').length).toBe(0)
 
-        expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
+        expect($('[data-test=no-prisoner]').text()).toBe('You need to link a prisoner to book a visit.')
         expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
@@ -194,7 +194,7 @@ describe('Visits home page (future visits list)', () => {
         expect($('h1').text()).toBe('Visits')
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('[data-test="prisoner-name"]').length).toBe(0)
-        expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
+        expect($('[data-test=no-prisoner]').text()).toBe('You need to link a prisoner to book a visit.')
         expect($('[data-test="book-a-visit"]').length).toBe(0)
         expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 

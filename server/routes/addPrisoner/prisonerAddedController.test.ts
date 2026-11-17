@@ -48,12 +48,12 @@ describe('Prisoner added', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('title').text()).toMatch(/^Prisoner added -/)
+          expect($('title').text()).toMatch(/^Prisoner linked -/)
           expect($('#navigation').length).toBe(1)
           expect($('[data-test="back-link"]').length).toBe(0)
-          expect($('h1').text().trim()).toBe('Prisoner added')
+          expect($('h1').text().trim()).toBe('Prisoner linked')
           expect(sessionData.addPrisonerJourney).toBeUndefined()
-          expect($('[data-test="add-visitors-button"]').text().trim()).toBe('Add visitors')
+          expect($('[data-test="add-visitors-button"]').text().trim()).toBe('Link a visitor')
           expect($('[data-test="add-visitors-button"]').attr('href')).toBe(
             `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
           )
