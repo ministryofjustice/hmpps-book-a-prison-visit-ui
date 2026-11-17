@@ -94,9 +94,9 @@ export default {
     bookerReference = TestData.bookerReference().value,
     visits = [],
   }: {
-    bookerReference: string
-    visits: VisitDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: string
+    visits?: VisitDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',

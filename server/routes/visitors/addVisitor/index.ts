@@ -16,13 +16,23 @@ export default function routes(services: Services): Router {
   const visitorRequestSuccessController = new VisitorRequestSuccessController()
   const visitorRequestFailController = new VisitorRequestFailController()
 
-  router.get(paths.ADD_VISITOR.START, addVisitorStartController.view())
+  router.get(
+    `${paths.ADD_VISITOR.START}/:prisonerDisplayId`,
+    addVisitorStartController.validate(),
+    addVisitorStartController.view(),
+  )
 
-  router.get(paths.ADD_VISITOR.DETAILS, visitorDetailsController.view())
-  router.post(paths.ADD_VISITOR.DETAILS, visitorDetailsController.validate(), visitorDetailsController.submit())
+  router
+    .route(`${paths.ADD_VISITOR.DETAILS}/:prisonerDisplayId`)
+    .all(visitorDetailsController.validatePrisonerDisplayId())
+    .get(visitorDetailsController.view())
+    .post(visitorDetailsController.validate(), visitorDetailsController.submit())
 
-  router.get(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.view())
-  router.post(paths.ADD_VISITOR.CHECK, checkVisitorDetailsController.submit())
+  router
+    .route(`${paths.ADD_VISITOR.CHECK}/:prisonerDisplayId`)
+    .all(checkVisitorDetailsController.validate())
+    .get(checkVisitorDetailsController.view())
+    .post(checkVisitorDetailsController.submit())
 
   router.get(paths.ADD_VISITOR.SUCCESS, visitorRequestSuccessController.viewRequested())
   router.get(paths.ADD_VISITOR.AUTO_APPROVED, visitorRequestSuccessController.viewApproved())

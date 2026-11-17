@@ -65,6 +65,7 @@ export default class PrisonerDetailsController {
       req.session.addPrisonerJourneyResult = {
         selectedPrisonId: addPrisonerJourney.selectedPrisonId,
         result,
+        prisonerNumber: data.prisonNumber,
       }
 
       if (result) {

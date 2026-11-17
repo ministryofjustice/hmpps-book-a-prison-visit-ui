@@ -31,16 +31,12 @@ context('Static content pages', () => {
   })
 
   describe('Authenticated user', () => {
-    const bookerReference = TestData.bookerReference().value
     it('should be able to navigate to static content pages from Visits home page using footer links', () => {
       cy.task('stubHmppsAuthToken')
 
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page

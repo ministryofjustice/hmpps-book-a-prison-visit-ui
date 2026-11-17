@@ -1,5 +1,5 @@
 {% extends "partials/layout.njk" %}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "components/visitDetailsSummary.njk" import visitDetailsSummary with context %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set activeLink = 'visits-link' %}
@@ -12,85 +12,25 @@
 
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
-      {% if prisoner %}
-        <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
+      <p>{{ t("visits:shared.onlyGovukBookings") }}</p>
 
-        {% if visits | length %}
-          {% for visit in visits %}
-            {% set isRequest = visit.visitSubStatus == "REQUESTED" %}
+      {% if visits.length %}
+        {% for visit in visits %}
+          {{ visitDetailsSummary({
+            visit: visit,
+            index: loop.index,
+            pathPrefix: paths.VISITS.DETAILS,
+            showTags: true,
+            showReference: true,
+            showCancelLink: true
+          }) }}
+        {% endfor %}
 
-            <h2 class="govuk-heading-s" data-test="visit-date-{{ loop.index }}">
-              {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
-            </h2>
+      {% else %}
+        <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
+      {% endif %}
 
-            <ul class="govuk-list">
-              {% if isRequest %}
-                <li>
-                  {{ govukTag({
-                  text: t("visits:future.awaitingReview"),
-                  classes: "govuk-tag--orange govuk-!-margin-bottom-2",
-                  attributes: { "data-test": "awaiting-review-tag-" + loop.index  }
-                }) }}
-                </li>
-              {% endif %}
-
-              {% if visit.prisonId !== prisoner.registeredPrisonId %}
-                <li>
-                  {{ govukTag({
-                  text: t("visits:future.notAtPrisonTag", {
-                    prisonerFirstName: prisoner.firstName | capitalize
-                  }),
-                  classes: "govuk-tag--orange govuk-!-margin-top-1 govuk-!-margin-bottom-1",
-                  attributes: { "data-test": "moved-prison-tag-" + loop.index  }
-                }) }}
-                </li>
-              {% endif %}
-
-              <li data-test="visit-start-end-time-{{ loop.index }}">
-                {{- t("common:dateTime.timeRange", {
-                  startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                  endTime: visit.endTimestamp | formatTimeFromDateTime(language)
-                }) -}}
-              </li>
-
-              <li data-test="visit-prisoner-name-{{ loop.index }}">
-                {{- t("common:prisoner.prisonerAtPrison", {
-                  prisonerName: visit | prisonerNameFirstLast,
-                  prisonName: visit.prisonId | getPrisonName(prisonNames, language)
-                }) -}}
-              </li>
-
-              <li>
-                {{ t("common:labels.visitReference") }}:
-                <span data-test="visit-reference-{{ loop.index }}">{{ visit.reference }}</span>
-              </li>
-
-              <li>
-                <a href="{{ paths.VISITS.DETAILS }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ loop.index }}">
-                  {{- t("visits:shared.viewDetailsLink") }}
-                  <span class="govuk-visually-hidden">
-                    {{ t("visits:shared.viewDetailsLinkHidden", {
-                      startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
-                    }) }}
-                  </span>
-                </a>
-                <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ loop.index }}">
-                  {{- t("common:labels.cancelVisit") }}
-                  <span class="govuk-visually-hidden">
-                    {{ t("visits:future.cancelLinkHidden", {
-                      startTime: visit.startTimestamp | formatTimeFromDateTime(language),
-                      date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
-                    }) }}
-                  </span>
-                </a>
-              </li>
-            </ul>
-          {% endfor %}
-
-        {% else %}
-          <p data-test="no-visits">{{ t("visits:future.noFutureVisits") }}</p>
-        {% endif %}
+      {% if bookerHasPrisoners %}
 
         {{ govukButton({
           text: t("common:buttons.bookAVisit"),
@@ -100,30 +40,31 @@
           attributes: { "data-test": "book-a-visit" }
         }) }}
 
-        <p>
-          <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
-            {{- t("visits:future.viewPastVisits") -}}
-          </a>
-        </p>
-        <p>
-          <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">
-            {{- t("visits:future.viewCancelledVisits") -}}
-          </a>
-        </p>
-
       {% else %}
+        <hr class="govuk-section-break govuk-section-break--m">
+
         <p data-test="no-prisoner">{{ t("visits:future.noPrisonerError") }}</p>
 
         {{ govukButton({
           text: t("visits:future.addPrisoner"),
           href: paths.ADD_PRISONER.LOCATION,
-          classes: "govuk-!-margin-top-3",
           preventDoubleClick: true,
           attributes: { "data-test": "add-prisoner" }
         }) }}
 
       {% endif %}
 
+      <p>
+        <a href="{{ paths.VISITS.PAST }}" class="govuk-link--no-visited-state" data-test="past-visits-link">
+          {{- t("visits:future.viewPastVisits") -}}
+        </a>
+      </p>
+
+      <p>
+        <a href="{{ paths.VISITS.CANCELLED }}" class="govuk-link--no-visited-state" data-test="cancelled-visits-link">
+          {{- t("visits:future.viewCancelledVisits") -}}
+        </a>
+      </p>
     </div>
   </div>
 

@@ -160,6 +160,7 @@ describe('Prisoner details', () => {
           expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
             selectedPrisonId,
             result: true,
+            prisonerNumber: 'A1234BC',
           })
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })
@@ -179,6 +180,7 @@ describe('Prisoner details', () => {
           expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
             selectedPrisonId,
             result: false,
+            prisonerNumber: 'A1234BC',
           })
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
         })

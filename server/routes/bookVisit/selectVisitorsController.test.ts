@@ -288,7 +288,9 @@ describe('Select visitors', () => {
           expect($('[data-test=visitor-request-dob-0]').text().trim()).toBe('21 February 1980')
 
           // Link new visitor
-          expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('[data-test=link-a-visitor]').attr('href')).toBe(
+            `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+          )
 
           expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
             bookerReference,

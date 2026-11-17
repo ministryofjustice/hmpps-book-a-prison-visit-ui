@@ -5,15 +5,18 @@ import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
 import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import TestData from '../../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
 
 beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     addVisitorJourneyResult: {
       firstName: 'first',
       lastName: 'last',
+      prisoner: TestData.prisoner(),
     },
   } as SessionData
   app = appWithAllRoutes({ sessionData })
@@ -41,7 +44,7 @@ describe('Add visitor request failure pages', () => {
           expect($('[data-test="visitor-already-requested"]').text()).toContain('first last')
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
         })
     })
 
@@ -61,7 +64,7 @@ describe('Add visitor request failure pages', () => {
           expect($('[data-test="visitor-already-linked"]').text()).toContain('first last')
 
           expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
-          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(paths.ADD_VISITOR.DETAILS)
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
         })
     })
 
@@ -87,9 +90,7 @@ describe('Add visitor request failure pages', () => {
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
 
-    it('should redirect to prisoners page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-      enableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
+    it('should redirect to prisoners page if add visitor request journey result not in session', () => {
       delete sessionData.addVisitorJourneyResult
       return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.PRISONERS)
     })

@@ -138,7 +138,7 @@ export default {
   // Prisons that do not use this service or PVB
   noDigitalServicePrisonIds: get(
     'NO_DIGITAL_SERVICE_PRISON_IDS',
-    'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI,WYI',
+    'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI',
   )
     .split(',')
     .map(value => value.trim())
