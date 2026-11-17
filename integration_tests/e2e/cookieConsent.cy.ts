@@ -4,18 +4,13 @@ import VisitsPage from '../pages/visits/visits'
 import Page from '../pages/page'
 
 context('Cookie consent and analytics', () => {
-  const bookerReference = TestData.bookerReference().value
-
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubHmppsAuthToken')
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.signIn({ hideCookieBanner: false })
   })
 

@@ -15,7 +15,7 @@ export default function routes(services: Services): Router {
   const cancelVisitConfirmedController = new CancelVisitConfirmedController()
 
   // Home (future visits), past and cancelled visits
-  router.get(paths.VISITS.HOME, visitsController.home())
+  router.get(paths.VISITS.HOME, visitsController.view('future'))
   router.get(paths.VISITS.PAST, visitsController.view('past'))
   router.get(paths.VISITS.CANCELLED, visitsController.view('cancelled'))
 

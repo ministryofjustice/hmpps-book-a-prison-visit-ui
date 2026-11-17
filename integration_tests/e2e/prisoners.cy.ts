@@ -15,7 +15,6 @@ context('Prisoners page', () => {
       prisonerNumber: 'B4321CA',
     }),
   ]
-  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
@@ -23,10 +22,7 @@ context('Prisoners page', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.task('stubGetSupportedPrisonIds')
     cy.task('stubGetVisitors', { visitors: [TestData.visitorInfoDto()] })
     cy.task('stubGetVisitorRequests')

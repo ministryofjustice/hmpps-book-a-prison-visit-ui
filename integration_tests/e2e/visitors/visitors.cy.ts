@@ -35,7 +35,6 @@ context('Visitors page', () => {
 
   const prison = TestData.prisonDto()
   const prisoner = TestData.bookerPrisonerInfoDto()
-  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
@@ -43,10 +42,7 @@ context('Visitors page', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.signIn()
 
     cy.task('stubGetPrison', prison)
