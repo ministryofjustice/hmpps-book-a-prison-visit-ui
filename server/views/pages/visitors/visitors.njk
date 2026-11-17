@@ -17,18 +17,14 @@
         {{ mojAlert(message) }}
       {% endfor %}
 
-      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
-
-      <h2 class="govuk-heading-m" data-test="prisoner-visitors">
-        {{- t("visitors:visitors.visitorsOf", {
+      <h1 class="govuk-heading-l">{{- t("visitors:visitors.visitorsOf", {
           name: prisoner | prisonerNameFirstLast
-        }) -}}
-      </h2>
+        }) -}}</h1>
 
       {% if visitorsTableRows | length %}
-        <h3 class="govuk-heading-s govuk-!-margin-top-5">
+        <h2 class="govuk-heading-m" data-test="visitors-linked">
           {{- t("visitors:visitors.linkedVisitorsHeading") -}}
-        </h3>
+        </h2>
 
         {{ govukTable({
           head: [

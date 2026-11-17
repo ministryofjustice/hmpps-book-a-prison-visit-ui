@@ -47,8 +47,7 @@ context('Add a visitor', () => {
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -94,8 +93,7 @@ context('Add a visitor', () => {
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(1)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('Lisa Smith')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'Lisa Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -148,8 +146,7 @@ context('Add a visitor', () => {
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
 
     // Start link a new visitor journey
     visitorsPage.linkANewVisitor()
@@ -188,8 +185,7 @@ context('Add a visitor', () => {
         visitsPage.goToServiceHeaderLinkByName('Visitors')
         const prisonersPage = Page.verifyOnPage(PrisonersPage)
         prisonersPage.viewPrisonerVisitors(0)
-        const visitorsPage = Page.verifyOnPage(VisitorsPage)
-        visitorsPage.prisonerName().contains('John Smith')
+        const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
 
         // Start link a new visitor journey
         visitorsPage.linkANewVisitor()
