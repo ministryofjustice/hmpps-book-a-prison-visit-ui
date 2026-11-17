@@ -19,7 +19,8 @@ describe('orchestrationApiClient', () => {
   let fakeOrchestrationApi: nock.Scope
   let orchestrationApiClient: OrchestrationApiClient
   let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
-  const token = 'token-1'
+
+  const token = 'test-system-token'
   const bookerReference = TestData.bookerReference()
 
   beforeEach(() => {
@@ -31,12 +32,12 @@ describe('orchestrationApiClient', () => {
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
     nock.cleanAll()
+    jest.resetAllMocks()
+  })
+
+  afterAll(() => {
+    nock.restore()
   })
 
   describe('bookVisit', () => {
@@ -66,6 +67,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(output).toStrictEqual(result)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -92,6 +94,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(fakeOrchestrationApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -107,6 +110,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getFuturePublicVisits(bookerReference.value)
 
       expect(result).toStrictEqual(visits)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -122,6 +126,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getCancelledPublicVisits(bookerReference.value)
 
       expect(result).toStrictEqual(visits)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -137,6 +142,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getPastPublicVisits(bookerReference.value)
 
       expect(result).toStrictEqual(visits)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -181,6 +187,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(output).toStrictEqual(result)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -222,6 +229,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(output).toStrictEqual(result)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -237,6 +245,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getBookerReference(authDetailDto)
 
       expect(result).toStrictEqual(bookerReference)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -252,6 +261,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getVisitorRequests(bookerReference.value)
 
       expect(result).toStrictEqual(requests)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -276,6 +286,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toStrictEqual('REQUESTED')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
     it('should try to send an add visitor request and return validation error code for a 422 API response', async () => {
@@ -297,6 +308,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toBe('VISITOR_ALREADY_EXISTS')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
     it('should try to send an add visitor request and throw other API error responses', async () => {
@@ -315,6 +327,7 @@ describe('orchestrationApiClient', () => {
           addVisitorRequest,
         }),
       ).rejects.toThrow('Bad Request')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -333,6 +346,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(fakeOrchestrationApi.isDone()).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -348,6 +362,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
 
       expect(result).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
     it('should try to register a prisoner and return false for a 422 API response', async () => {
@@ -361,6 +376,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
 
       expect(result).toBe(false)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
     it('should try to register a prisoner and throw API errors', async () => {
@@ -374,6 +390,7 @@ describe('orchestrationApiClient', () => {
       await expect(
         orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto),
       ).rejects.toThrow('Bad Request')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -389,6 +406,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
 
       expect(result).toBe(true)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -404,6 +422,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getPrisoners(bookerReference.value)
 
       expect(result).toEqual(prisoners)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -425,6 +444,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(output).toStrictEqual(resultDto)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -441,6 +461,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getVisitors(bookerReference.value, prisonerNumber)
 
       expect(result).toStrictEqual(visitors)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -475,6 +496,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toStrictEqual(visitSessions)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
     it('should get available visit sessions (when youngestVisitorAge is null))', async () => {
@@ -502,6 +524,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toStrictEqual(visitSessions)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -527,6 +550,7 @@ describe('orchestrationApiClient', () => {
       })
 
       expect(result).toBe(availableVisitSessionRestrictionDto.sessionRestriction)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -542,6 +566,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getSupportedPrisonIds()
 
       expect(result).toStrictEqual(prisonIds)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -557,6 +582,7 @@ describe('orchestrationApiClient', () => {
       const result = await orchestrationApiClient.getPrison(prison.code)
 
       expect(result).toStrictEqual(prison)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 })

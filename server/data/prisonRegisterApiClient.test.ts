@@ -8,7 +8,8 @@ describe('prisonRegisterApiClient', () => {
   let fakePrisonRegisterApi: nock.Scope
   let prisonRegisterApiClient: PrisonRegisterApiClient
   let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
-  const token = 'token-1'
+
+  const token = 'test-system-token'
 
   beforeEach(() => {
     fakePrisonRegisterApi = nock(config.apis.prisonRegister.url)
@@ -19,12 +20,12 @@ describe('prisonRegisterApiClient', () => {
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
     nock.cleanAll()
+    jest.resetAllMocks()
+  })
+
+  afterAll(() => {
+    nock.restore()
   })
 
   describe('getPrisonNames', () => {
@@ -39,6 +40,7 @@ describe('prisonRegisterApiClient', () => {
 
       const output = await prisonRegisterApiClient.getPrisonNames()
       expect(output).toEqual(prisonNames)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 })
