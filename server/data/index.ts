@@ -1,42 +1,33 @@
-/* eslint-disable import/first */
-/*
- * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
- */
-import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
-import applicationInfoSupplier from '../applicationInfo'
-
-const applicationInfo = applicationInfoSupplier()
-initialiseAppInsights()
-buildAppInsightsClient(applicationInfo)
-
-import HmppsAuthClient from './hmppsAuthClient'
+import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
 import OrchestrationApiClient from './orchestrationApiClient'
-import tokenStoreFactory from './tokenStore/tokenStoreFactory'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import config from '../config'
 import { createRedisClient } from './redisClient'
 import { DataCache } from './dataCache/dataCache'
 import InMemoryDataCache from './dataCache/inMemoryDataCache'
 import RedisDataCache from './dataCache/redisDataCache'
+import InMemoryRateLimitStore from './rateLimitStore/inMemoryRateLimitStore'
+import RedisRateLimitStore from './rateLimitStore/redisRateLimitStore'
+import applicationInfoSupplier from '../applicationInfo'
+import logger from '../../logger'
 
-type RestClientBuilder<T> = (token: string) => T
+const applicationInfo = applicationInfoSupplier()
+const redisClient = config.redis.enabled ? createRedisClient() : null
+const hmppsAuthClient = new AuthenticationClient(
+  config.apis.hmppsAuth,
+  logger,
+  config.redis.enabled ? new RedisTokenStore(redisClient!, config.tokenStorePrefix) : new InMemoryTokenStore(),
+)
 
-export const dataAccess = () => {
-  const dataCache = config.redis.enabled ? new RedisDataCache(createRedisClient()) : new InMemoryDataCache()
-
-  return {
-    applicationInfo,
-    dataCache,
-    hmppsAuthClient: new HmppsAuthClient(tokenStoreFactory('systemToken')), // TODO refactor to use redis client defined above
-    orchestrationApiClientBuilder: ((token: string) =>
-      new OrchestrationApiClient(token)) as RestClientBuilder<OrchestrationApiClient>,
-    prisonRegisterApiClientBuilder: ((token: string) =>
-      new PrisonRegisterApiClient(token)) as RestClientBuilder<PrisonRegisterApiClient>,
-    rateLimitStore: tokenStoreFactory('rateLimit'),
-  }
-}
+export const dataAccess = () => ({
+  applicationInfo,
+  dataCache: config.redis.enabled ? new RedisDataCache(redisClient!) : new InMemoryDataCache(),
+  hmppsAuthClient,
+  orchestrationApiClient: new OrchestrationApiClient(hmppsAuthClient),
+  prisonRegisterApiClient: new PrisonRegisterApiClient(hmppsAuthClient),
+  rateLimitStore: config.redis.enabled ? new RedisRateLimitStore(redisClient!) : new InMemoryRateLimitStore(),
+})
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { type DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient, type RestClientBuilder }
+export { type DataCache, AuthenticationClient, OrchestrationApiClient, PrisonRegisterApiClient }

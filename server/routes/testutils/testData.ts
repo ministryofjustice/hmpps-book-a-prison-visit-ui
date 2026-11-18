@@ -12,23 +12,28 @@ import type {
   ConvictedStatus,
   RegisterPrisonerForBookerDto,
   AddVisitorToBookerPrisonerRequestDto,
-  BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
+  PermittedPrisonerForBookerDto,
+  BookerPrisonerVisitorRequestDto,
+  PrisonUserClientDto,
 } from '../../data/orchestrationApiTypes'
 import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
-import { Prisoner, Visitor } from '../../services/bookerService'
+import { VisitorRequest, Prisoner, Visitor } from '../../services/bookerService'
 import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
+import { VisitDetailsSummary } from '../visits/visitsUtils'
 
 export default class TestData {
   static addVisitorRequest = ({
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
+    languagePreference = 'en',
   }: Partial<AddVisitorToBookerPrisonerRequestDto> = {}): AddVisitorToBookerPrisonerRequestDto => ({
     firstName,
     lastName,
     dateOfBirth,
+    languagePreference,
   })
 
   static applicationDto = ({
@@ -73,18 +78,27 @@ export default class TestData {
     sessionTimeSlot = { startTime: '10:00', endTime: '11:30' },
     sessionRestriction = 'OPEN',
     sessionForReview = false,
+    visitOrderRestriction = 'VO_PVO',
+    isAgeRestricted = false,
+    ageRestriction = 18,
+    sessionConflicts = [],
   }: Partial<AvailableVisitSessionDto> = {}): AvailableVisitSessionDto => ({
     sessionDate,
     sessionTemplateReference,
     sessionTimeSlot,
     sessionRestriction,
     sessionForReview,
+    visitOrderRestriction,
+    isAgeRestricted,
+    ageRestriction,
+    sessionConflicts,
   })
 
   static bookerPrisonerInfoDto = ({
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
+    dateOfBirth = '1980-02-01',
     prisonId = 'HEI',
     prisonName = 'Hewell (HMP & YOI)',
     registeredPrisonId = 'HEI',
@@ -96,6 +110,7 @@ export default class TestData {
     prisonerNumber: string
     firstName: string
     lastName: string
+    dateOfBirth: string
     prisonId: string | null
     prisonName: string
     registeredPrisonId: string
@@ -104,23 +119,50 @@ export default class TestData {
     nextAvailableVoDate: string
     convictedStatus: ConvictedStatus
   }> = {}): BookerPrisonerInfoDto => ({
-    prisoner: { prisonerNumber, firstName, lastName, dateOfBirth: '1980-02-01', prisonId, prisonName, convictedStatus },
+    prisoner: {
+      prisonerNumber,
+      firstName,
+      lastName,
+      dateOfBirth,
+      prisonId,
+      prisonName,
+      status: 'ACTIVE IN',
+      convictedStatus,
+    },
     availableVos,
     nextAvailableVoDate,
     registeredPrison: { prisonCode: registeredPrisonId, prisonName: registeredPrisonName },
+  })
+
+  static bookerPrisonerVisitorRequestDto = ({
+    reference = 'dddd-eeee-ffff',
+    prisonerId = 'A1234BC',
+    firstName = 'Joan',
+    lastName = 'Phillips',
+    dateOfBirth = '1980-02-21',
+    requestedOn = '2026-05-01',
+    languagePreference = 'en',
+  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    reference,
+    prisonerId,
+    firstName,
+    lastName,
+    dateOfBirth,
+    requestedOn,
+    languagePreference,
   })
 
   static bookerReference = ({ value = 'aaaa-bbbb-cccc' }: Partial<BookerReference> = {}): BookerReference => ({ value })
 
   static bookVisitConfirmed = ({
     isARequest = false,
-    prison = this.prisonDto(),
+    prisonId = this.prisonDto().code,
     visitReference = 'ab-cd-ef-gh',
     hasEmail = true,
     hasMobile = true,
   }: Partial<BookVisitConfirmed> = {}): BookVisitConfirmed => ({
     isARequest,
-    prison,
+    prisonId,
     visitReference,
     hasEmail,
     hasMobile,
@@ -131,11 +173,13 @@ export default class TestData {
     status = 'REQUESTED',
     bookerReference = 'aaaa-bbbb-cccc',
     prisonerId = 'A1234BC',
+    languagePreference = 'en',
   }: Partial<CreateVisitorRequestResponseDto> = {}): CreateVisitorRequestResponseDto => ({
     reference,
     status,
     bookerReference,
     prisonerId,
+    languagePreference,
   })
 
   static registerPrisonerForBookerDto = ({
@@ -163,7 +207,12 @@ export default class TestData {
     outcomeStatus = null,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'visitor@example.com' },
+    visitContact = {
+      name: 'Joan Phillips',
+      telephone: '07712 000 000',
+      email: 'visitor@example.com',
+      languagePreference: 'en',
+    },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<OrchestrationVisitDto> = {}): OrchestrationVisitDto =>
@@ -183,12 +232,21 @@ export default class TestData {
       visitorSupport,
     }) as OrchestrationVisitDto
 
+  static permittedPrisonerForBookerDto = ({
+    prisonerId = 'A1234BC',
+    prisonCode = 'HEI',
+    permittedVisitors = [{ visitorId: 1234 }],
+  }: Partial<PermittedPrisonerForBookerDto> = {}): PermittedPrisonerForBookerDto => ({
+    prisonerId,
+    prisonCode,
+    permittedVisitors,
+  })
+
   static prisonDto = ({
     code = 'HEI',
     prisonName = 'Hewell (HMP & YOI)',
     active = true,
-    policyNoticeDaysMax = 28,
-    policyNoticeDaysMin = 2,
+
     maxTotalVisitors = 4,
     maxAdultVisitors = 2,
     maxChildVisitors = 3,
@@ -196,14 +254,13 @@ export default class TestData {
     emailAddress = 'visits@example.com',
     phoneNumber = '01234 567 890',
     webAddress = 'https://www.example.com/',
-    clients = [],
+    staffClient = this.prisonUserClientDto({ clientType: 'STAFF' }),
+    publicClient = this.prisonUserClientDto(),
   }: Partial<PrisonDto> = {}): PrisonDto =>
     ({
       code,
       prisonName,
       active,
-      policyNoticeDaysMax,
-      policyNoticeDaysMin,
       maxTotalVisitors,
       maxAdultVisitors,
       maxChildVisitors,
@@ -211,7 +268,8 @@ export default class TestData {
       emailAddress,
       phoneNumber,
       webAddress,
-      clients,
+      staffClient,
+      publicClient,
     }) as PrisonDto
 
   static prisoner = ({
@@ -219,6 +277,7 @@ export default class TestData {
     prisonerNumber = 'A1234BC',
     firstName = 'JOHN',
     lastName = 'SMITH',
+    dateOfBirth = '1980-02-01',
     prisonId = 'HEI',
     registeredPrisonId = 'HEI',
     availableVos = 2,
@@ -229,6 +288,7 @@ export default class TestData {
     prisonerNumber,
     firstName,
     lastName,
+    dateOfBirth,
     prisonId,
     registeredPrisonId,
     availableVos,
@@ -258,8 +318,20 @@ export default class TestData {
     ] as PrisonNameDto[],
   } = {}): PrisonNameDto[] => prisons
 
+  static prisonUserClientDto = ({
+    clientType = 'PUBLIC',
+    policyNoticeDaysMin = 2,
+    policyNoticeDaysMax = 28,
+    active = true,
+  }: Partial<PrisonUserClientDto> = {}): PrisonUserClientDto => ({
+    clientType,
+    policyNoticeDaysMin,
+    policyNoticeDaysMax,
+    active,
+  })
+
   static visitDetails = ({
-    visitDisplayId = 'uuidv4-1',
+    visitDisplayId = 'uuidv4-1-1-1-1',
     reference = 'ab-cd-ef-gh',
     prisonerId = 'A1234BC',
     prisonerFirstName = 'JOHN',
@@ -270,7 +342,12 @@ export default class TestData {
     outcomeStatus = undefined,
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
-    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'visitor@example.com' },
+    visitContact = {
+      name: 'Joan Phillips',
+      telephone: '07712 000 000',
+      email: 'visitor@example.com',
+      languagePreference: 'en',
+    },
     visitors = [{ nomisPersonId: 1234, firstName: 'Keith', lastName: 'Phillips' }],
     visitorSupport = { description: 'Wheelchair access requested' },
   }: Partial<VisitDetails> = {}): VisitDetails => ({
@@ -290,6 +367,28 @@ export default class TestData {
     visitorSupport,
   })
 
+  static visitDetailsSummary = ({
+    visitDisplayId = 'uuidv4-1-1-1-1',
+    reference = 'ab-cd-ef-gh',
+    prisonerFirstName = 'JOHN',
+    prisonerLastName = 'SMITH',
+    prisonId = 'HEI',
+    startTimestamp = '2024-05-30T10:00:00',
+    endTimestamp = '2024-05-30T11:30:00',
+    isRequest = false,
+    prisonerMoved = false,
+  }: Partial<VisitDetailsSummary> = {}): VisitDetailsSummary => ({
+    visitDisplayId,
+    reference,
+    prisonerFirstName,
+    prisonerLastName,
+    prisonId,
+    startTimestamp,
+    endTimestamp,
+    isRequest,
+    prisonerMoved,
+  })
+
   static visitDto = ({
     applicationReference = 'aaa-bbb-ccc',
     reference = 'ab-cd-ef-gh',
@@ -305,7 +404,7 @@ export default class TestData {
     startTimestamp = '2024-05-30T10:00:00',
     endTimestamp = '2024-05-30T11:30:00',
     visitNotes = [],
-    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000' },
+    visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', languagePreference: 'en' },
     visitors = [{ nomisPersonId: 1234, visitContact: true }],
     visitorSupport = { description: 'wheelchair access' },
   }: Partial<VisitDto> = {}): VisitDto =>
@@ -351,6 +450,7 @@ export default class TestData {
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
+    age = 45,
     adult = true,
     banned = false,
     banExpiryDate = null,
@@ -361,6 +461,7 @@ export default class TestData {
     lastName,
     firstName,
     dateOfBirth,
+    age,
     adult,
     banned,
     banExpiryDate,
@@ -368,16 +469,22 @@ export default class TestData {
   })
 
   static visitorRequest = ({
+    visitorRequestDisplayId = 'uuidv4-1-1-1-1',
     reference = 'dddd-eeee-ffff',
     prisonerId = 'A1234BC',
     firstName = 'Joan',
     lastName = 'Phillips',
     dateOfBirth = '1980-02-21',
-  }: Partial<BookerPrisonerVisitorRequestDto> = {}): BookerPrisonerVisitorRequestDto => ({
+    requestedOn = '2026-05-01',
+    languagePreference = 'en',
+  }: Partial<VisitorRequest> = {}): VisitorRequest => ({
+    visitorRequestDisplayId,
     reference,
     prisonerId,
     firstName,
     lastName,
     dateOfBirth,
+    requestedOn,
+    languagePreference,
   })
 }

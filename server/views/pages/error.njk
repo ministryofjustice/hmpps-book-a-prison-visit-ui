@@ -9,7 +9,7 @@
   {% if production %}
     <p>{{ t("errors:error.logged") }}</p>
     <p class="no-visited-state">
-      {{- t("errors:error.tryReload", { url: paths.VISITS.HOME }) | safe -}}
+      {{- t("errors:error.tryReload") | renderLinkTag(paths.VISITS.HOME) | safe -}}
     </p>
     <p>
       <a href="https://www.gov.uk/government/collections/prisons-in-england-and-wales">

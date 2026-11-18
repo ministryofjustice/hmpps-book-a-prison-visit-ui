@@ -32,7 +32,7 @@ import type { Services } from '../../services'
 import TestData from './testData'
 import analyticsConsent from '../../middleware/analyticsConsent'
 import { FlashFormValues, MoJAlert } from '../../@types/bapv'
-import { type Locale, LOCALE } from '../../constants/locales'
+import { type Locale } from '../../constants/locales'
 
 export const user: Express.User = {
   // Default values from GOV.UK One Login Simulator
@@ -66,13 +66,12 @@ function appSetup(
   const app = express()
 
   // Need to set any cookies before i18n middleware so that language can be detected from cookies
-  app.use((req, res, next) => {
+  app.use((req, _res, next) => {
     req.cookies = { ...cookies, ...(lng && { lng }) }
     next()
   })
 
-  // TODO remove explicit setting of supportedLngs once Welsh feature flag is removed
-  app.use(setUpI18n({ production, supportedLngs: [LOCALE.EN, LOCALE.CY] }))
+  app.use(setUpI18n({ production }))
 
   app.set('view engine', 'njk')
 
@@ -101,7 +100,7 @@ function appSetup(
   app.use(analyticsConsent())
   app.use(unauthenticatedRoutes(services))
   app.use(authenticatedRoutes(services))
-  app.use((req, res, next) => next(new NotFound()))
+  app.use((_req, _res, next) => next(new NotFound()))
   app.use(errorHandler(production))
 
   return app

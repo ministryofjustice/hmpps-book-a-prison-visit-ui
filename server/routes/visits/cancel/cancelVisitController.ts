@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, body, validationResult } from 'express-validator'
+import { type UUID } from 'crypto'
 import { VisitService } from '../../../services'
 import paths from '../../../constants/paths'
 import { isMobilePhoneNumber } from '../../../utils/utils'
@@ -17,7 +18,7 @@ export default class CancelVisitController {
         return res.redirect(paths.VISITS.HOME)
       }
 
-      const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
+      const { visitDisplayId } = matchedData<{ visitDisplayId: UUID }>(req)
 
       const visit = bookedVisits.visits.find(v => v.visitDisplayId === visitDisplayId)!
 
@@ -31,20 +32,19 @@ export default class CancelVisitController {
   }
 
   public submit(): RequestHandler {
-    return async (req, res, next) => {
+    return async (req, res) => {
       const { cancelVisit, visitDisplayId } = matchedData<{
         cancelVisit: 'yes' | 'no'
-        visitDisplayId: string
+        visitDisplayId: UUID
       }>(req)
 
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
-
         if (!visitDisplayId) {
           return res.redirect(paths.VISITS.HOME)
         }
 
+        req.flash('errors', errors.array())
         return res.redirect(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
       }
 
@@ -53,7 +53,7 @@ export default class CancelVisitController {
       }
 
       const { booker, bookedVisits } = req.session
-      const { visits } = bookedVisits!
+      const { visits } = bookedVisits! // validation middleware ensures this is defined
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)!
 
       // Redirect to 'Past Visits' page, if visit start time has already passed
@@ -78,7 +78,7 @@ export default class CancelVisitController {
     }
   }
 
-  public validateDisplayId(): ValidationChain[] {
+  public validateVisitDisplayId(): ValidationChain[] {
     return [validateVisitDisplayId]
   }
 

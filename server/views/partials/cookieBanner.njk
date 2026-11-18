@@ -8,26 +8,26 @@
 {% set acceptHtml %}
   <p class="no-visited-state">
     {{- t("common:cookieBanner.acceptedAnalytics") }}
-    {{ t("common:cookieBanner.changeSettings", { url: paths.COOKIES }) | safe }}
+    {{ t("common:cookieBanner.changeSettings") | renderLinkTag(paths.COOKIES) | safe }}
   </p>
 {% endset %}
 
 {% set rejectHtml %}
   <p class="no-visited-state">
     {{- t("common:cookieBanner.rejectedAnalytics") }}
-    {{ t("common:cookieBanner.changeSettings", { url: paths.COOKIES }) | safe }}
+    {{ t("common:cookieBanner.changeSettings") | renderLinkTag(paths.COOKIES) | safe }}
   </p>
 {% endset %}
 
 {{ govukCookieBanner({
-  ariaLabel: t("common:cookieBanner.cookiesOn"),
+  ariaLabel: t("common:cookieBanner.cookiesOn", { serviceName: t("common:applicationName") }),
   attributes: {
     id: "cookie-banner"
   },
   hidden: true,
   messages: [
     {
-      headingText: t("common:cookieBanner.cookiesOn"),
+      headingText: t("common:cookieBanner.cookiesOn", { serviceName: t("common:applicationName") }),
       attributes: {
         id: "cookie-banner-main"
       },

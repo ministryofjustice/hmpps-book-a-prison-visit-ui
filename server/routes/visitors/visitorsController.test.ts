@@ -2,22 +2,29 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
-import { appWithAllRoutes } from '../testutils/appSetup'
+import { UUID, randomUUID } from 'crypto'
+import { appWithAllRoutes, FlashData, flashProvider } from '../testutils/appSetup'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
+import { MoJAlert } from '../../@types/bapv'
+import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
 const bookerService = createMockBookerService()
 let sessionData: SessionData
+let flashData: FlashData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner()
+const prisoner = TestData.prisoner({ prisonerDisplayId: randomUUID() })
 const visitor = TestData.visitor()
 
 beforeEach(() => {
   bookerService.getVisitorRequests.mockResolvedValue([])
+
+  flashData = {}
+  flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
   sessionData = {
     booker: {
@@ -39,7 +46,7 @@ describe('Visitors page', () => {
       .get(paths.VISITORS)
       .expect(302)
       .expect('location', paths.VISITS.HOME)
-      .expect(res => {
+      .expect(() => {
         expect(bookerService.getVisitors).not.toHaveBeenCalled()
       })
   })
@@ -53,9 +60,11 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('h1').text()).toBe('Visitors')
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('John Smith’s visitors')
+        expect($('.moj-alert').length).toBe(0)
 
-        expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="visitors-linked"]').text()).toBe('Visitors linked to your account')
         expect($('[data-test="visitor-name-0"]').text()).toBe('Joan Phillips')
         expect($('[data-test="visitor-dob-0"]').text()).toBe('21 February 1980')
         expect($('[data-test="visitor-availability-0"]').text()).toBe('Yes')
@@ -80,11 +89,12 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('h1').text()).toBe('Visitors')
-        expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="visitors-linked"]').length).toBe(0)
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
-        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to your account')
+        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to John Smith.')
         expect($('[data-test=link-a-visitor]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
@@ -110,14 +120,100 @@ describe('Visitors page', () => {
         expect($('[data-test=visitor-requests]').length).toBe(1)
         expect($('[data-test=visitor-request-name-0]').text()).toBe('Joan Phillips')
         expect($('[data-test=visitor-request-dob-0]').text()).toBe('21 February 1980')
+        expect($('[data-test=visitor-request-cancel-0]').text()).toBe(
+          'Cancel request to link Joan Phillips to your account',
+        )
+        expect($('[data-test=visitor-request-cancel-0] a').prop('href')).toBe(
+          `${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequests[0].visitorRequestDisplayId}`,
+        )
 
-        expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+        expect($('[data-test=link-a-visitor]').attr('href')).toBe(
+          `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+        )
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
           bookerReference,
           prisonerNumber: prisoner.prisonerNumber,
         })
+      })
+  })
+
+  it('should render alert message if set in flash', () => {
+    const alert: MoJAlert = {
+      variant: 'information',
+      title: 'Alert title',
+      showTitleAsHeading: true,
+      text: 'Alert text',
+    }
+    flashData = { messages: [alert] }
+
+    bookerService.getVisitors.mockResolvedValue([])
+
+    return request(app)
+      .get(paths.VISITORS)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('.moj-alert').eq(0).text()).toContain(alert.title)
+        expect($('.moj-alert').eq(0).text()).toContain(alert.text)
+      })
+  })
+
+  it('should render correct back link when FEATURE_MULTIPLE PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    bookerService.getVisitors.mockResolvedValue([visitor])
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONERS)
+      })
+  })
+
+  it('should return prisoners page if no prisoner display id is provided and FEATURE_MULTIPLE PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app).get(paths.VISITORS).expect(302).expect('Location', paths.PRISONERS)
+  })
+
+  it('should redirect to visits home if incorrect prisoner display id is provided and FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(`${paths.VISITORS}/53dbc264-6f84-4a83-a38d-da8e35b2d125`)
+      .expect(302)
+      .expect('Location', paths.VISITS.HOME)
+  })
+
+  it('should show correct prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    const prisonerDisplayId: UUID = randomUUID()
+    sessionData.booker!.prisoners = [
+      prisoner,
+      TestData.prisoner({
+        prisonerDisplayId,
+        prisonerNumber: 'B2414AC',
+        firstName: 'Sam',
+        lastName: 'Jones',
+      }),
+    ]
+
+    bookerService.getVisitors.mockResolvedValue([])
+
+    return request(app)
+      .get(`${paths.VISITORS}/${prisonerDisplayId}`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h1').text()).toContain('Sam Jones')
       })
   })
 })

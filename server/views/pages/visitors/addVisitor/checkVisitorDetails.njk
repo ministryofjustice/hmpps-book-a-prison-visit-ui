@@ -1,0 +1,110 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("addVisitor:checkVisitorDetails.title") %}
+
+{% set backLinkHref = (paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId) %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p class="govuk-body-l">
+        {{- t("addVisitor:checkVisitorDetails.description", {
+          name: prisoner | prisonerNameFirstLast
+        }) }}
+      </p>
+
+      <div class="visits-heading-action">
+        <h2 class="govuk-heading-m">{{ t("addVisitor:checkVisitorDetails.visitorInformationHeading") }}</h2>
+        <p>
+          <a data-test="change" class="govuk-link--no-visited-state" href="{{ paths.ADD_VISITOR.DETAILS + '/' + prisoner.prisonerDisplayId }}">
+            {{- t("common:buttons.change") -}}
+            <span class="govuk-visually-hidden">
+              {{ t("addVisitor:checkVisitorDetails.changeVisitorInformation") }}
+            </span>
+          </a>
+        </p>
+      </div>
+
+       {# Only render last item if the language is Welsh #}
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: t("common:labels.firstName")
+            },
+            value: {
+              html:
+                '<span data-test="first-name">' + (visitorDetails.firstName | escape) + "</span>"
+            }
+          },
+          {
+            key: {
+              text: t("common:labels.lastName")
+            },
+            value: {
+              html:
+                '<span data-test="last-name">' + (visitorDetails.lastName | escape) + "</span>"
+            }
+          },
+          {
+            key: {
+              text: t("common:labels.dateOfBirth")
+            },
+            value: {
+              html:
+                '<span data-test="date-of-birth">' +
+                (visitorDetails.visitorDob | formatDate(dateFormats.DISPLAY_DATE, language)) +
+                "</span>"
+            }
+          },
+          {
+            key: {
+              text: t("common:labels.prisoner")
+            },
+            value: {
+              html: '<span data-test="prisoner-details">' +
+                  (t("common:prisoner.prisonerAtPrison", {
+                    prisonerName: prisoner | prisonerNameFirstLast,
+                    prisonName: prisoner.prisonId | getPrisonName(prisonNames, language)
+                  }) | escape) + "</span>"
+            }
+          },
+          ({
+            key: {
+              text: t("common:labels.updatesInWelsh")
+            },
+            value: {
+              html:
+                '<span data-test="updates-in-welsh">' +
+                (t("addVisitor:checkVisitorDetails.updatesInWelshYes") if visitorDetails.languagePreference == 'cy' else t("addVisitor:checkVisitorDetails.updatesInWelshNo")) +
+                "</span>"
+            }
+          } if language == 'cy')
+        ]
+      }) }}
+
+      <p>{{ t("addVisitor:checkVisitorDetails.confirmInformation") }}</p>
+
+      <p>
+        {{- t("addVisitor:checkVisitorDetails.acceptableId")
+          | renderLinkTag("https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a")
+          | safe -}}
+      </p>
+
+      <form action="{{ paths.ADD_VISITOR.CHECK + '/' + prisoner.prisonerDisplayId }}" method="POST" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukButton({
+          text: t("common:buttons.acceptAndSend"),
+          attributes: { "data-test": "submit" },
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -54,7 +54,7 @@ export function setUpAuthentication(): Router {
   // GOV.UK One Login setup is async so middleware here to check that authentication is ready
   // Requests will be rejected with 503 until the discovery process completes successfully
   let isReady = false
-  router.use((req, res, next) => {
+  router.use((_req, _res, next) => {
     return isReady ? next() : next(new ServiceUnavailable())
   })
 
@@ -68,7 +68,7 @@ export function setUpAuthentication(): Router {
         passReqToCallback: true,
       }
 
-      const verify: VerifyFunctionWithRequest = async (req, tokens, verified) => {
+      const verify: VerifyFunctionWithRequest = async (_req, tokens, verified) => {
         try {
           const claims = tokens.claims()
           if (claims === undefined) {
@@ -112,7 +112,7 @@ export function setUpAuthentication(): Router {
       router.use(passport.session())
       router.use(flash())
 
-      router.get(paths.AUTH_ERROR, (req, res) => {
+      router.get(paths.AUTH_ERROR, (_req, res) => {
         res.status(401)
         return res.render('authError')
       })

@@ -9,7 +9,7 @@
 
 {% set pageTitle = t("bookVisit:selectVisitors.title") %}
 
-{% set backLinkHref = paths.VISITS.HOME %}
+{% set backLinkHref = paths.BOOK_VISIT.SELECT_PRISONER %}
 
 {% set bannedTagHtml = govukTag({ text: t("common:visitors.banned"), classes: "govuk-tag--red" }) %}
 
@@ -38,7 +38,7 @@
   <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
   <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
   <p>
-    <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START }}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
+    <a data-test="link-a-visitor" href="{{ paths.ADD_VISITOR.START + '/' + prisoner.prisonerDisplayId}}">{{ t("bookVisit:selectVisitors.bookForSomeoneElse.linkVisitorAction") }}</a>.
   </p>
   <p>{{ t("common:visitors.requestResponseTime") }}</p>
 {% endset %}
@@ -55,20 +55,21 @@
 
         <p data-test="max-visitors">
           {{- t("bookVisit:selectVisitors.visitorLimits.maxVisitors", {
-            maxVisitors: prison.maxTotalVisitors,
-            prisonName: prison.code | getPrisonName(prisonNames, language)
+            count: prison.maxTotalVisitors,
+            prisonName: prison.code | getPrisonName(prisonNames, language),
+            name: prisoner | prisonerNameFirstLast
           }) -}}
         </p>
         <ul class="govuk-list govuk-list--bullet">
           <li data-test="max-adults">
             {{- t("bookVisit:selectVisitors.visitorLimits.maxAdults", {
-              maxAdultVisitors: prison.maxAdultVisitors,
+              count: prison.maxAdultVisitors,
               adultAgeYears: prison.adultAgeYears
             }) -}}
           </li>
           <li data-test="max-children">
             {{- t("bookVisit:selectVisitors.visitorLimits.maxChildren", {
-              maxChildVisitors: prison.maxChildVisitors,
+              count: prison.maxChildVisitors,
               adultAgeYears: prison.adultAgeYears
             }) -}}
           </li>
@@ -104,11 +105,11 @@
 
             {% set visitorList = (visitorList.push({
               value: visitor.visitorDisplayId,
-              text: visitorNameAge 
+              text: visitorNameAge
             }), visitorList) %}
           {% endif%}
         {% endfor %}
-  
+
         <form action="{{ paths.BOOK_VISIT.SELECT_VISITORS }}" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
@@ -147,7 +148,7 @@
 
       {% else %}
         {{ govukWarningText({
-          text: t("common:visitors.noVisitorsLinked"),
+          text: t("common:visitors.noVisitorsLinked", { name: prisoner | prisonerNameFirstLast }),
           iconFallbackText: t("common:labels.warning")
         }) }}
 
@@ -178,7 +179,9 @@
           {{ ineligibleVisitorsHtml | safe }}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ t("common:visitors.linkingNewVisitorsHeading") }}</h2>
+        <h2 class="govuk-heading-m">
+          {{- t("common:visitors.linkingNewVisitorsHeading", { name: prisoner | prisonerNameFirstLast}) -}}
+        </h2>
 
         <p>{{ t("common:visitors.linkedVisitorsOnly") }}</p>
         <p>{{ t("common:visitors.mustBeOnVisitorList") }}</p>
@@ -186,10 +189,10 @@
 
         {{ govukButton({
           text: t("common:buttons.linkNewVisitor"),
-          href: paths.ADD_VISITOR.START,
+          href: paths.ADD_VISITOR.START +'/' + prisoner.prisonerDisplayId,
           attributes: { "data-test": "link-a-visitor" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       {% endif %}
 
     </div>

@@ -1,15 +1,21 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, body, matchedData, validationResult } from 'express-validator'
-import { differenceInYears } from 'date-fns'
 import { UUID } from 'crypto'
-import { BookerService, VisitSessionsService } from '../../services'
+import { BookerService, VisitSessionsService, PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows } from '../visitors/visitorsUtils'
 import type { Locale } from '../../constants/locales'
+import type { PrisonDto } from '../../data/orchestrationApiTypes'
+
+type VisitorLimits = Pick<PrisonDto, 'maxTotalVisitors' | 'maxAdultVisitors' | 'maxChildVisitors' | 'adultAgeYears'>
+type VisitorLimitsRequest = Express.Request & {
+  visitorLimits?: VisitorLimits
+}
 
 export default class SelectVisitorsController {
   public constructor(
     private readonly bookerService: BookerService,
+    private readonly prisonService: PrisonService,
     private readonly visitSessionService: VisitSessionsService,
   ) {}
 
@@ -17,15 +23,18 @@ export default class SelectVisitorsController {
     return async (req, res) => {
       const booker = req.session.booker!
       const bookVisitJourney = req.session.bookVisitJourney!
-      const prison = bookVisitJourney.prison!
+      const prisonId = bookVisitJourney.prisonId!
       const { prisoner } = bookVisitJourney
+
+      const prison = await this.prisonService.getPrison(prisonId)
 
       // only request visitors once per journey so random visitor UUIDs don't change
       if (!bookVisitJourney.eligibleVisitors) {
         const visitorsByEligibility = await this.bookerService.getVisitorsByEligibility({
           bookerReference: booker.reference,
           prisonerNumber: prisoner.prisonerNumber,
-          policyNoticeDaysMax: prison.policyNoticeDaysMax,
+          // Use staff client policy as a fallback; should not happen in practice given other checks (but required because optional on PrisonDto)
+          policyNoticeDaysMax: prison!.publicClient?.policyNoticeDaysMax ?? prison!.staffClient.policyNoticeDaysMax,
         })
         bookVisitJourney.eligibleVisitors = visitorsByEligibility.eligibleVisitors
         bookVisitJourney.ineligibleVisitors = visitorsByEligibility.ineligibleVisitors
@@ -53,6 +62,7 @@ export default class SelectVisitorsController {
         })
         visitorRequestsTableRows = buildVisitorRequestsTableRows({
           visitors: visitorRequests,
+          t: req.t,
           lng: req.language as Locale,
         })
       }
@@ -64,7 +74,25 @@ export default class SelectVisitorsController {
         eligibleVisitors: bookVisitJourney.eligibleVisitors,
         ineligibleVisitors: bookVisitJourney.ineligibleVisitors,
         visitorRequestsTableRows,
+        prisoner,
       })
+    }
+  }
+
+  // Load visitor limits for the current prison into the request object
+  // for POST requests so they are available during validation
+  public loadVisitorLimits(): RequestHandler {
+    return async (req: VisitorLimitsRequest, _res, next) => {
+      const prison = await this.prisonService.getPrison(req.session.bookVisitJourney!.prisonId!)
+
+      req.visitorLimits = {
+        maxTotalVisitors: prison.maxTotalVisitors,
+        maxAdultVisitors: prison.maxAdultVisitors,
+        maxChildVisitors: prison.maxChildVisitors,
+        adultAgeYears: prison.adultAgeYears,
+      }
+
+      next()
     }
   }
 
@@ -122,19 +150,20 @@ export default class SelectVisitorsController {
         .custom((visitorDisplayIds: string[], { req }) => {
           const bookVisitJourney = (req as Express.Request).session.bookVisitJourney!
 
-          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } = bookVisitJourney.prison!
+          const { adultAgeYears, maxAdultVisitors, maxChildVisitors, maxTotalVisitors } = (req as VisitorLimitsRequest)
+            .visitorLimits!
 
           // max total visitors
           if (visitorDisplayIds.length > maxTotalVisitors) {
             throw new Error(req.t('validation:visitorsTooMany', { count: maxTotalVisitors }))
           }
 
-          // calculate selected visitor ages
+          // make visitor ages array
           const eligibleVisitors = bookVisitJourney.eligibleVisitors!
-          const today = new Date()
+
           const visitorAges: number[] = visitorDisplayIds.map(visitorDisplayId => {
             const visitor = eligibleVisitors.find(v => v.visitorDisplayId === visitorDisplayId)
-            return visitor?.dateOfBirth ? differenceInYears(today, visitor.dateOfBirth) : 0
+            return visitor?.age ? visitor.age : 0
           })
 
           // max 'adult age' visitors

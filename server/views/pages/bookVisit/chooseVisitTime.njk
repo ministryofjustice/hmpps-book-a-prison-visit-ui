@@ -4,8 +4,20 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% set pageTitle = t("bookVisit:chooseVisitTime.title") %}
+
+{% set ageWarningHtml = t("bookVisit:chooseVisitTime.ageWarningBanner") | renderLinkTag(paths.BOOK_VISIT.SELECT_VISITORS) | safe  %}
+
+{%- set ageWarningBanner -%}
+  {{ govukWarningText({
+    html: ageWarningHtml,
+    classes: "no-visited-state",
+    iconFallbackText: t("common:labels.warning")
+  }) }}
+{%- endset -%}
 
 {% block content %}
 
@@ -121,19 +133,35 @@
           {% for date, sessions in monthData %}
             {% if sessions | length %}
               {% set visitSessionItems = [] %}
+              {% set showAgeWarningBanner = false %}
               {% for session in sessions %}
+
+                {%- set sessionHtml -%}
+                  <span>
+                    {{ t("common:dateTime.timeRange", {
+                      startTime: session.startTime | formatTime(language),
+                      endTime: session.endTime | formatTime(language)
+                    }) }}
+                  </span>
+                  <span class="visits-calendar__session-duration">
+                    ({{ session.startTime | formatTimeDuration(session.endTime, language) }})
+                  </span>
+
+                  {% if session.ageConflict %}
+                    {% set showAgeWarningBanner = true %}
+                    {{ govukTag({
+                      text: t("bookVisit:chooseVisitTime.conflictTag", { age: session.ageConflict }),
+                      classes: "govuk-tag--red"
+                    }) }}
+                  {% endif %}
+                {%- endset -%}
+
                 {% set radioValue = date + "_" + session.reference %}
                 {% set visitSessionItems = (visitSessionItems.push({
                   value: radioValue,
-                  html:
-                    t("common:dateTime.timeRange", {
-                      startTime: session.startTime | formatTime(language),
-                      endTime: session.endTime | formatTime(language)
-                    }) +
-                    ' <span class="visits-calendar__session-duration">(' +
-                      (session.startTime | formatTimeDuration(session.endTime, language)) +
-                    ')</span>',
-                  checked: formValues.visitSession == radioValue
+                  html: sessionHtml,
+                  checked: formValues.visitSession == radioValue,
+                  disabled: true if session.ageConflict
                 }), visitSessionItems) %}
               {% endfor %}
 
@@ -144,7 +172,8 @@
                   classes: "visits-calendar__day-group",
                   attributes: { "data-date": date },
                   afterInputs: {
-                    html: '<p><a class="govuk-visually-hidden-focusable govuk-!-display-inline-block govuk-!-margin-top-5" href="#day-link-' +
+                    html: (ageWarningBanner if showAgeWarningBanner) +
+                      '<p><a class="govuk-visually-hidden-focusable govuk-!-display-inline-block govuk-!-margin-top-5" href="#day-link-' +
                       date + '">' + t("bookVisit:chooseVisitTime.chooseDifferentDate") + '</a></p>'
                   }
                 },

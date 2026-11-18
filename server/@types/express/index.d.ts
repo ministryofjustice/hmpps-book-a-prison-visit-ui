@@ -1,7 +1,9 @@
-import { ValidationError } from 'express-validator'
-import {
+import type { ValidationError } from 'express-validator'
+import type {
   AddPrisonerJourney,
+  AddPrisonerJourneyResult,
   AddVisitorJourney,
+  AddVisitorJourneyResult,
   Booker,
   VisitCancelled,
   BookVisitConfirmed,
@@ -10,7 +12,8 @@ import {
   MoJAlert,
   BookedVisits,
 } from '../bapv'
-import { PrisonNames } from '../../services/prisonService'
+import type { VisitorRequest } from '../../services/bookerService'
+import type { PrisonNames } from '../../services/prisonService'
 
 export default {}
 
@@ -18,20 +21,26 @@ declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
     returnTo: string
-    nowInMinutes: number
 
     booker?: Booker
 
     addPrisonerJourney?: AddPrisonerJourney
+    addPrisonerJourneyResult?: AddPrisonerJourneyResult
 
     addVisitorJourney?: AddVisitorJourney
+    addVisitorJourneyResult?: AddVisitorJourneyResult
 
     bookVisitJourney?: BookVisitJourney
     bookVisitConfirmed?: BookVisitConfirmed
 
     bookedVisits?: BookedVisits
 
+    // Prisoner moved - reconfirm location journey
+    confirmLocationSelectedPrison?: string
+
     visitCancelled?: VisitCancelled
+
+    visitorRequests?: VisitorRequest[]
 
     selectedPrison?: { prisonId: string; hasDigitalService: boolean }
   }

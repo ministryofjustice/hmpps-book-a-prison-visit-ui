@@ -1,1 +1,27 @@
-{}
+{
+  "prisonerLocation": {
+    "title": "Ble mae'r carcharor rydych chi am ymweld ag ef?",
+    "findPrisonerLink": "Os nad ydych chi'n gwybod, gallwch <link>wneud cais i ddod o hyd i leoliad</link> y carcharor."
+  },
+  "prisonerDetails": {
+    "title": "Manylion y carcharor",
+    "prisonNumberHelpSummary": "Help gyda rhif y carchar",
+    "prisonNumberHelpText1": "Dyma'r rhif a roddir i bobl pan fyddant yn mynd i mewn i'r carchar.",
+    "prisonNumberHelpText2": "Mae eu rhif carcharor yn aros yr un peth os ydynt yn symud i garchar arall.",
+    "prisonNumberHelpText3": "Mae angen i chi ofyn i'r carcharor am yr wybodaeth hon cyn i chi allu archebu."
+  },
+  "prisonerAdded": {
+    "title": "Carcharor wedi'i ychwanegu",
+    "matchedMessage": "Mae manylion y carcharor a gyflwynwyd gennych yn cyd-fynd yn llwyddiannus.",
+    "nextStep": "I archebu ymweliad ar gyfer y carcharor hwn, mae angen i chi ychwanegu ymwelwyr."
+  },
+  "prisonerNotMatched": {
+    "title": "Nid yw manylion y carcharor yn cyd-fynd",
+    "noMatch": "Nid yw manylion y carcharor a gyflwynwyd gennych yn cyd-fynd â manylion unrhyw un sydd yn {{prisonName}}.",
+    "reason": "Fe allai hyn fod oherwydd:",
+    "reasonIncorrect": "bod manylion y carcharor yn anghywir",
+    "reasonNotAtPrison": "nid ydynt yn y carchar hwn",
+    "checkDetails": "Gallwch <link>wirio'r manylion a gyflwynwyd gennych trwy fynd yn ôl i'r dudalen flaenorol</link>.",
+    "contact": "Os na ellir paru manylion y carcharor, bydd angen i chi gysylltu â'r carcharor i gael yr wybodaeth gywir cyn i chi archebu ymweliad."
+  }
+}

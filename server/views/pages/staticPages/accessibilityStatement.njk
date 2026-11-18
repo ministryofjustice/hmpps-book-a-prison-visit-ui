@@ -13,22 +13,22 @@
       <p>{{ t("staticPages:accessibility.runBy") }}</p>
 
       <p>{{ t("staticPages:accessibility.wantManyPeople") }}</p>
-      
+
       <p>
-        {{- t("staticPages:accessibility.abilityNet", {
-          url: "https://mcmw.abilitynet.org.uk/"
-        }) | safe -}}
+        {{- t("staticPages:accessibility.abilityNet")
+          | renderLinkTag("https://mcmw.abilitynet.org.uk/")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:accessibility.complianceHeading") }}</h2>
 
-      <p>{{- t("staticPages:accessibility.wcagCompliance", {
-          url: "https://www.w3.org/TR/WCAG22/"
-        }) | safe -}}</p>
+      <p>{{- t("staticPages:accessibility.wcagCompliance")
+          | renderLinkTag("https://www.w3.org/TR/WCAG22/")
+          | safe -}}</p>
 
-      <p>{{- t("staticPages:accessibility.testedBy", {
-          url: "https://uservision.co.uk/"
-        }) | safe -}}</p>
+      <p>{{- t("staticPages:accessibility.testedBy")
+          | renderLinkTag("https://uservision.co.uk/")
+          | safe -}}</p>
 
       <p>{{ t("staticPages:accessibility.testedUsing") }}</p>
 
@@ -45,17 +45,17 @@
       <h2 class="govuk-heading-m">{{ t("staticPages:accessibility.feedbackHeading") }}</h2>
 
       <p>
-        {{- t("staticPages:accessibility.sendFeedback", {
-          url: "https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/"
-        }) | safe -}}
+        {{- t("staticPages:accessibility.sendFeedback")
+          | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:accessibility.enforcementHeading") }}</h2>
 
       <p>
-        {{- t("staticPages:accessibility.enforcement", {
-          url: "https://www.equalityadvisoryservice.com/"
-        }) | safe -}}
+        {{- t("staticPages:accessibility.enforcement")
+          | renderLinkTag("https://www.equalityadvisoryservice.com/")
+          | safe -}}
       </p>
 
       <h2 class="govuk-heading-m">{{ t("staticPages:accessibility.technicalHeading") }}</h2>

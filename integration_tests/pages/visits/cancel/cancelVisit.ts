@@ -17,7 +17,5 @@ export default class CancelVisitPage extends Page {
 
   cancelVisitYes = (): PageElement => cy.get(`[data-test=cancel-visit-yes`)
 
-  confirmButton = (): void => {
-    cy.get('[data-test="confirm-button"]').click()
-  }
+  confirm = (): void => this.clickDisabledOnSubmitButton('confirm-button')
 }

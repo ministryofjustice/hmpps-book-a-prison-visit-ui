@@ -22,7 +22,7 @@ generic-service:
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: dev
 
-    FEATURE_WELSH_LANGUAGE: "true"
+    FEATURE_MULTIPLE_PRISONERS: "true"
 
   allowlist:
     groups:
@@ -30,5 +30,4 @@ generic-service:
       - moj_cloud_platform
 
 generic-prometheus-alerts:
-  alertSeverity: visits-alerts-nonprod
   businessHoursOnly: true

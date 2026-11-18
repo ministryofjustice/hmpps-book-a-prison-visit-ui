@@ -3,8 +3,11 @@ import logAccessibilityViolations from '../support/logAccessibilityViolations'
 export type PageElement = Cypress.Chainable<JQuery>
 
 export default abstract class Page {
-  static verifyOnPage<T>(constructor: new (title?: string) => T, title?: string): T {
-    return new constructor(title)
+  static verifyOnPage<T>(
+    constructor: new (data?: string | Record<string, string>) => T,
+    data?: string | Record<string, string>,
+  ): T {
+    return new constructor(data)
   }
 
   constructor(
@@ -34,6 +37,9 @@ export default abstract class Page {
 
         // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
         { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
+
+        // TODO temporary until language toggle is replaced in VB-7107'
+        { id: 'label-content-name-mismatch', selector: 'visits-language-toggle' },
       ],
     })
 
@@ -65,9 +71,9 @@ export default abstract class Page {
     cy.get('[data-test=hide-cookies-rejected]').click()
   }
 
-  oneLoginHeader = (): PageElement => cy.get('.rebranded-one-login-header')
+  oneLoginHeader = (): PageElement => cy.get('.cross-service-header')
 
-  signOut = (): PageElement => cy.get('.rebranded-one-login-header').contains('a', 'Sign out').click()
+  signOut = (): PageElement => cy.get('.cross-service-header').contains('a', 'Sign out').click()
 
   getServiceName = (): PageElement => cy.get('.govuk-service-navigation__text')
 

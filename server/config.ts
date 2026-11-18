@@ -97,9 +97,15 @@ export default {
       agent: new AgentConfig(Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 10000))),
     },
   },
+
+  // System token key for HMPPS Auth tokens in Redis
+  // (useful for local dev to ensure 'real'/wiremock tokens aren't mixed between 'start' and 'start-feature' run tasks)
+  tokenStorePrefix: get('TOKEN_STORE_PREFIX', 'systemToken'),
+
   // include short Git ref in dataCache prefix to invalidate data cache on deploy of new build
   // DATA_CACHE_PREFIX overrides for integration tests
   dataCachePrefix: `dataCache_${get('DATA_CACHE_PREFIX', '') || get('GIT_REF', 'local').slice(0, 7)}:`,
+
   rateLimit: <Record<string, RateLimitConfig>>{
     // Rate limit config for Add a prisoner journey
     booker: {
@@ -119,11 +125,12 @@ export default {
       windowSeconds: Number(get('ADD_VISITOR_RATE_LIMIT_BOOKER_WINDOW_SECS', 60 * 60 * 24)), // 24 hours
     },
   },
+
   analytics: {
     googleAnalyticsId: get('GOOGLE_ANALYTICS_ID', 'G-SSLMWLQYHQ', requiredInProduction),
   },
   features: {
-    welshLanguageEnabled: get('FEATURE_WELSH_LANGUAGE', 'false') === 'true',
+    multiplePrisoners: get('FEATURE_MULTIPLE_PRISONERS', 'false') === 'true',
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
@@ -131,7 +138,7 @@ export default {
   // Prisons that do not use this service or PVB
   noDigitalServicePrisonIds: get(
     'NO_DIGITAL_SERVICE_PRISON_IDS',
-    'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI,WYI',
+    'ACI,ASI,BMI,BZI,DAI,DNI,DGI,FYI,FMI,FWI,FBI,FEI,ISI,KVI,MRI,MKI,NLI,OWI,PRI,PYI,PBI,PFI,UPI,RHI,TCI',
   )
     .split(',')
     .map(value => value.trim())

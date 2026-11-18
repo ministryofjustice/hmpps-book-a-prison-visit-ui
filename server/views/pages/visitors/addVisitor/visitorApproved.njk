@@ -1,0 +1,41 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("addVisitor:visitorApproved.title") %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: pageTitle,
+        text: t("addVisitor:visitorApproved.visitorLinked")
+      }) }}
+
+      <p data-test="visitor-approved">
+        {{- t("addVisitor:visitorApproved.approvedMessage", {
+          visitorName: firstName + " " + lastName,
+          prisonerName: prisoner | prisonerNameFirstLast
+        }) -}}
+      </p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: t("common:buttons.bookAVisit"),
+          href: paths.VISITS.HOME,
+          attributes: { "data-test": "book-a-visit" },
+          preventDoubleClick: true
+        }) }}
+
+        {{ govukButton({
+          text: t("common:buttons.linkAnotherVisitor"),
+          href: paths.ADD_VISITOR.DETAILS + "/" + prisoner.prisonerDisplayId,
+          classes: "govuk-button--secondary",
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

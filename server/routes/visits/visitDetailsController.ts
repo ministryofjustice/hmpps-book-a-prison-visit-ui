@@ -1,5 +1,6 @@
 import type { RequestHandler } from 'express'
 import { ValidationChain, matchedData, validationResult } from 'express-validator'
+import { type UUID } from 'crypto'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import { getVisitMessages } from './visitsUtils'
@@ -29,7 +30,7 @@ export default class VisitDetailsController {
         return res.redirect(paths.VISITS.HOME)
       }
 
-      const { visitDisplayId } = matchedData<{ visitDisplayId: string }>(req)
+      const { visitDisplayId } = matchedData<{ visitDisplayId: UUID }>(req)
 
       const { visits } = bookedVisits
       const visit = visits.find(v => v.visitDisplayId === visitDisplayId)!

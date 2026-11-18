@@ -37,7 +37,7 @@
           errorMessage: errors | findError('mainContactEmail')
         }) }}
         {% endset -%}
-  
+
         {% set phoneHtml %}
         <p class="govuk-hint">
           {{ t("bookVisit:contactDetails.ukMobileHint") }}
@@ -87,11 +87,31 @@
 
         }) }}
 
+        {# Only render if the language is Welsh #}
+        {{ govukCheckboxes({
+          name: "languagePreference",
+          fieldset: {
+            legend: {
+              text: t("common:labels.welshLanguage")
+            }
+          },
+          items: [
+            {
+              value: "cy",
+              text: t("bookVisit:contactDetails.updatesInWelsh"),
+              hint: {
+                text: t("common:hints.alsoInEnglish")
+              },
+              checked: formValues.languagePreference === "cy"
+            }
+          ]
+        }) if language == 'cy' }}
+
         {{ govukButton({
           text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

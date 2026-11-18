@@ -8,7 +8,7 @@
 
   "phase": {
     "beta": "Beta",
-    "feedback": "This is a new service – your <a href=\"https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/\" target=\"_blank\">feedback (opens in a new tab)</a> will help us to improve it."
+    "feedback": "This is a new service – your <link>feedback (opens in a new tab)</link> will help us to improve it."
   },
 
   "links": {
@@ -24,7 +24,7 @@
   },
 
   "cookieBanner": {
-    "cookiesOn": "Cookies on $t(common:applicationName)",
+    "cookiesOn": "Cookies on {{serviceName}}",
     "essential": "We use some essential cookies to make this service work.",
     "analytics": "We’d also like to use analytics cookies so we can understand how you use the service and make improvements.",
     "acceptButton": "Accept analytics cookies",
@@ -32,15 +32,16 @@
     "viewButton": "View cookies",
     "acceptedAnalytics": "You’ve accepted analytics cookies.",
     "rejectedAnalytics": "You’ve rejected analytics cookies.",
-    "changeSettings": "You can <a href=\"{{url}}\">change your cookie settings</a> at any time.",
+    "changeSettings": "You can <link>change your cookie settings</link> at any time.",
     "hideCookieMessage": "Hide cookie message"
   },
 
   "buttons": {
-    "addVisitors": "Add visitors",
+    "addVisitors": "Link a visitor",
     "acceptAndSend": "Accept and send",
     "bookAVisit": "Book a visit",
     "change": "Change",
+    "confirm": "Confirm",
     "confirmAndSend": "Confirm and send",
     "continue": "Continue",
     "linkAnotherVisitor": "Link another visitor",
@@ -53,8 +54,8 @@
 
   "postBooking": {
     "whatHappensNext": "What happens next",
-    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <a href=\"{{url}}\">check the details of your visits</a>.",
-    "feedback": "You can help us to improve this service by giving <a href=\"{{url}}\">feedback</a>."
+    "checkVisitDetails": "When signed in to GOV.UK One Login, you can <link>check the details of your visits</link>.",
+    "feedback": "You can help us to improve this service by giving <link>feedback</link>."
   },
 
   "days": {
@@ -84,12 +85,13 @@
     "contactDetails": "Contact details",
     "dateAndTime": "Date and time",
     "dateOfBirth": "Date of birth",
+    "day": "Day",
     "emailAddress": "Email address",
     "firstName": "First name",
     "lastName": "Last name",
     "mainContact": "Main contact",
+    "month": "Month",
     "name": "Name",
-    "no": "No",
     "noContactDetails": "No contact details provided",
     "none": "None",
     "phoneNumber": "Phone number",
@@ -101,10 +103,10 @@
     "updatesInWelshAndEnglish": "Updates in Welsh and English",
     "visitCancelled": "Visit cancelled",
     "visitReference": "Visit reference",
+    "visitor": "Visitor",
     "visitors": "Visitors",
     "warning": "Warning",
-    "yes": "Yes",
-    "yesDetails": "If yes, provide details",
+    "year": "Year",
     "welshLanguage": "Welsh language"
   },
 
@@ -138,14 +140,18 @@
     "year_other": "{{count}} years"
   },
 
+  "prisoner": {
+    "prisonerAtPrison": "{{prisonerName}} at {{prisonName}}"
+  },
+
   "visitors": {
     "banned": "Banned",
     "bannedUntil": "{{name}} is banned until {{date}}.",
     "notApproved": "Not approved",
-    "noVisitorsLinked": "No visitors are linked to your account.",
+    "noVisitorsLinked": "No visitors are linked to {{name}}.",
     "visitorRequestsHeading": "Visitors awaiting review",
     "reviewedByPrison": "Requests to link visitors are reviewed by the prison.",
-    "linkingNewVisitorsHeading": "Linking new visitors to your account",
+    "linkingNewVisitorsHeading": "Link a new visitor to your account",
     "linkedVisitorsOnly": "You can only book visits for people linked to your account.",
     "mustBeOnVisitorList": "Visitors must be on the prisoner’s visitor list.",
     "requestResponseTime": "We will respond to your request within 5 working days."

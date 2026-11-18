@@ -46,8 +46,21 @@ const paths = {
     REQUESTED: '/book-visit/visit-requested',
   },
 
+  CANCEL_VISITOR_REQUEST: {
+    CANCEL: '/cancel-visitor-request',
+    CANCEL_CONFIRMATION: '/visitor-request-cancelled',
+  },
+
+  PRISONER_MOVED: {
+    CONFIRM_LOCATION: '/prisoner-moved',
+    LOCATION_UPDATED: '/location-updated',
+    INCORRECT_LOCATION: '/incorrect-location',
+    PVB_PRISON: '/another-service',
+    UNSUPPORTED_PRISON: '/unsupported-prison',
+  },
+
   VISITS: {
-    HOME: '/visits',
+    HOME: '/visits', // future visits
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',
     DETAILS: '/visits/details',
@@ -60,6 +73,7 @@ const paths = {
   },
 
   VISITORS: '/visitors',
+  PRISONERS: '/prisoners-and-visitors',
 
   ACCESSIBILITY: '/accessibility-statement',
   COOKIES: '/cookies',

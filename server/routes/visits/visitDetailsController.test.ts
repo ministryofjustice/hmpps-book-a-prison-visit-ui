@@ -45,7 +45,7 @@ describe('View a single visit', () => {
       jest.useRealTimers()
     })
 
-    it('should render the visit details page', () => {
+    it('should render the visit details page (in English with no Welsh/English preference)', () => {
       sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
 
       return request(app)
@@ -60,13 +60,14 @@ describe('View a single visit', () => {
           expect($('[data-test="visit-reference"]').text()).toBe('ab-cd-ef-gh')
           expect($('[data-test="visit-date"]').text()).toBe('Thursday 30 May 2024')
           expect($('[data-test="visit-start-end-time"]').text()).toBe('10am to 11:30am')
-          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith')
+          expect($('[data-test="prisoner-name"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
           expect($('[data-test="visitor-name-1"]').text().trim()).toBe('Keith Phillips')
           expect($('[data-test="additional-support"]').text()).toBe('Wheelchair access requested')
           expect($('[data-test="main-contact-name"]').text()).toBe('Joan Phillips')
           expect($('[data-test="main-contact-email"]').text()).toBe('visitor@example.com')
           expect($('[data-test="main-contact-number"]').text()).toBe('07712 000 000')
           expect($('[data-test="main-contact-no-details"]').length).toBe(0)
+          expect($('[data-test="main-contact-updates-language"]').length).toBe(0)
 
           expect($('[data-test="contact-prison"]').text()).toContain(prison.prisonName)
           expect($('[data-test="contact-prison"]').text()).toContain(prison.phoneNumber)
@@ -81,6 +82,35 @@ describe('View a single visit', () => {
           expect($('[data-test="cancel-visit"]').attr('href')).toBe(`${paths.VISITS.CANCEL_VISIT}/${visitDisplayId}`)
 
           expect(prisonService.getPrison).toHaveBeenCalledWith(visitDetails.prisonId)
+        })
+    })
+
+    it('should render the visit details page (in Welsh with English and Welsh updates preference)', () => {
+      visitDetails.visitContact!.languagePreference = 'cy'
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
+
+      app = appWithAllRoutes({ services: { prisonService }, sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe("Diweddariadau yn y Gymraeg a'r Saesneg")
+        })
+    })
+
+    it('should render the visit details page (in Welsh with English only updates preference)', () => {
+      sessionData.bookedVisits = { type: 'future', visits: [visitDetails] }
+
+      app = appWithAllRoutes({ services: { prisonService }, sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(`${paths.VISITS.DETAILS}/${visitDetails.visitDisplayId}`)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="main-contact-updates-language"]').text()).toBe('Diweddariadau yn Saesneg')
         })
     })
 

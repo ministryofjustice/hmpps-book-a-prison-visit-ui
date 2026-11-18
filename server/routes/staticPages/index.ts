@@ -20,7 +20,7 @@ export default function routes(): Router {
   })
 
   // Signed out
-  router.get(paths.SIGNED_OUT, (req, res) => {
+  router.get(paths.SIGNED_OUT, (_req, res) => {
     res.render('pages/staticPages/signedOut')
   })
 

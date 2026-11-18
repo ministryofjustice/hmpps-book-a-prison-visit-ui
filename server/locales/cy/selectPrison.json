@@ -1,1 +1,16 @@
-{}
+{
+  "selectPrison": {
+    "title": "Pa garchar ydych chi’n ymweld ag ef?",
+    "selectLabel": "Dewis carchar",
+    "selectHint": "Er enghraifft, Caerdydd (CEF)",
+    "unknownLocationHeading": "Beth os nad wyf yn gwybod beth yw lleoliad y carcharor?",
+    "findPrisonerLink": "Gallwch <link>wneud cais i ddod o hyd i leoliad y carcharor</link>."
+  },
+  "selectedPrison": {
+    "title": "Ymweld â {{prisonName}}",
+    "howBookingChanged": "Mae’r ffordd rydych yn trefnu ymweliadau yn y carchar hwn wedi newid.",
+    "signInPrompt": "Mae angen i chi fewngofnodi neu greu GOV.UK One Login i archebu ymweliad ar-lein.",
+    "onlyOnePrisoner": "Dim ond ymweliadau ar gyfer un carcharor yn {{prisonName}} y gallwch eu harchebu gan ddefnyddio'r gwasanaeth hwn. Os oes angen i chi ymweld â charcharor arall, <link>cysylltwch â'r carchar yn uniongyrchol</link>.",
+    "noDigitalService": "Mae angen i chi <link>gysylltu â'r carchar hwn yn uniongyrchol</link> i archebu ymweliadau."
+  }
+}

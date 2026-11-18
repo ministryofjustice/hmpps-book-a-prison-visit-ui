@@ -1,1 +1,13 @@
-{}
+{
+  "errorTitlePrefix": "Gwall",
+  "errorSummaryTitle": "Mae yna broblem",
+  "authError": {
+    "title": "Mae’n ddrwg gennym, mae yna broblem gyda'r gwasanaeth",
+    "tryAgain": "Rhowch gynnig arall arni yn nes ymlaen drwy <link>mewngofnodi i'r gwasanaeth gan ddefnyddio GOV.UK One Login</link>."
+  },
+  "error": {
+    "message": "Mae’n ddrwg gennym, mae yna broblem gyda'r gwasanaeth",
+    "logged": "Mae'r gwall wedi'i gofnodi.",
+    "tryReload": "Gallwch geisio ail-lwytho'r dudalen neu <link>ddechrau eto</link>."
+  }
+}

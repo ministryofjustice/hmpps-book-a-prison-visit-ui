@@ -1,30 +1,22 @@
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitService from './visitService'
 import { BookVisitJourney } from '../@types/bapv'
 import { Visitor } from './bookerService'
 
-const token = 'some token'
-
 jest.mock('crypto', () => {
   return {
-    randomUUID: () => 'uuidv4-1',
+    randomUUID: () => 'uuidv4-1-1-1-1',
   }
 })
 
 describe('Visit service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let visitService: VisitService
 
   beforeEach(() => {
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    visitService = new VisitService(orchestrationApiClientFactory, hmppsAuthClient)
+    visitService = new VisitService(orchestrationApiClient)
   })
 
   afterEach(() => {
@@ -46,7 +38,7 @@ describe('Visit service', () => {
     beforeEach(() => {
       bookVisitJourney = {
         prisoner: TestData.prisoner(),
-        prison: TestData.prisonDto(),
+        prisonId: TestData.prisonDto().code,
         eligibleVisitors: [visitorOne, visitorTwo, visitorThree],
         selectedVisitors: [visitorOne, visitorTwo],
         allVisitSessionIds: ['2024-05-30_a'],
@@ -80,7 +72,12 @@ describe('Visit service', () => {
 
     describe('changeVisitApplication', () => {
       it('should change an existing visit application to update it with book visit journey data', async () => {
-        const visitContact = { name: 'Joan Phillips', telephone: '07712 000 000', email: 'user@example.com' }
+        const visitContact = {
+          name: 'Joan Phillips',
+          telephone: '07712 000 000',
+          email: 'user@example.com',
+          languagePreference: 'en',
+        }
         const visitors = [
           { nomisPersonId: 100, visitContact: true },
           { nomisPersonId: 200, visitContact: false },
@@ -108,7 +105,7 @@ describe('Visit service', () => {
         bookVisitJourney.mainContactEmail = undefined
         bookVisitJourney.mainContactPhone = undefined
 
-        const visitContact = { name: 'Someone Else' }
+        const visitContact = { name: 'Someone Else', languagePreference: 'en' }
         const visitors = [
           { nomisPersonId: 100, visitContact: false },
           { nomisPersonId: 200, visitContact: false },

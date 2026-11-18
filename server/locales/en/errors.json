@@ -5,11 +5,11 @@
 
   "authError": {
     "title": "Sorry, there is a problem with the service",
-    "tryAgain": "Try again later by <a href=\"{{url}}\">signing into the service using GOV.UK One Login</a>."
+    "tryAgain": "Try again later by <link>signing into the service using GOV.UK One Login</link>."
   },
   "error": {
     "message": "Sorry, there is a problem with the service.",
     "logged": "The error has been logged.",
-    "tryReload": "You can try reloading the page or <a href=\"{{url}}\">start again</a>."
+    "tryReload": "You can try reloading the page or <link>start again</link>."
   }
 }

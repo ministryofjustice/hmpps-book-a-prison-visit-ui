@@ -1,15 +1,15 @@
-import RestClient from './restClient'
+import { RestClient, asSystem } from '@ministryofjustice/hmpps-rest-client'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
+import logger from '../../logger'
 import { PrisonNameDto } from './prisonRegisterApiTypes'
 
-export default class PrisonRegisterApiClient {
-  private restClient: RestClient
-
-  constructor(token: string) {
-    this.restClient = new RestClient('prisonRegisterApiClient', config.apis.prisonRegister, token)
+export default class PrisonRegisterApiClient extends RestClient {
+  constructor(authenticationClient: AuthenticationClient | undefined) {
+    super('prisonRegisterApiClient', config.apis.prisonRegister, logger, authenticationClient)
   }
 
   async getPrisonNames(): Promise<PrisonNameDto[]> {
-    return this.restClient.get({ path: '/prisons/names', query: new URLSearchParams({ active: 'true' }).toString() })
+    return this.get({ path: '/prisons/names', query: new URLSearchParams({ active: 'true' }).toString() }, asSystem())
   }
 }

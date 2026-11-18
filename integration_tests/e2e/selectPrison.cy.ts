@@ -31,6 +31,7 @@ context('Select a prison', () => {
     cy.task('stubHmppsAuthToken')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners')
+    cy.task('stubGetFuturePublicVisits')
     selectedPrisonPage.continue()
 
     // Visits home page (via GOVUK One Login)

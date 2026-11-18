@@ -1,25 +1,18 @@
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import VisitSessionsService, { VisitSessionsCalendar } from './visitSessionsService'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 
-const token = 'some token'
 const bookerReference = TestData.bookerReference().value
 
 describe('Visit sessions service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let visitSessionsService: VisitSessionsService
 
   beforeEach(() => {
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    visitSessionsService = new VisitSessionsService(orchestrationApiClientFactory, hmppsAuthClient)
+    visitSessionsService = new VisitSessionsService(orchestrationApiClient)
   })
 
   afterEach(() => {
@@ -40,7 +33,7 @@ describe('Visit sessions service', () => {
     it('should return a VisitSessionsCalendar with visit sessions for prison / prisoner / visitors', async () => {
       const prisoner = TestData.prisoner()
       const visitorIds = [1, 2]
-      const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison
+      const daysAhead = 6 // the booking window 'policyNoticeDaysMax' for the prison client type
       const visitSessions: AvailableVisitSessionDto[] = [
         // first session after the fake start date to check we get empty dates at start
         TestData.availableVisitSessionDto({
@@ -72,15 +65,15 @@ describe('Visit sessions service', () => {
         '2024-05': {
           '2024-05-28': [],
           '2024-05-29': [],
-          '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30' }],
+          '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30', ageConflict: undefined }],
           '2024-05-31': [
-            { reference: 'b', startTime: '09:00', endTime: '09:45' },
-            { reference: 'c', startTime: '14:00', endTime: '15:00' },
+            { reference: 'b', startTime: '09:00', endTime: '09:45', ageConflict: undefined },
+            { reference: 'c', startTime: '14:00', endTime: '15:00', ageConflict: undefined },
           ],
         },
         '2024-06': {
           '2024-06-01': [],
-          '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00' }],
+          '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00', ageConflict: undefined }],
           '2024-06-03': [],
         },
       }
@@ -92,6 +85,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         daysAhead,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -99,6 +93,66 @@ describe('Visit sessions service', () => {
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
+        youngestVisitorAge: null,
+      })
+      expect(results).toStrictEqual({
+        calendar: expectedCalendar,
+        firstSessionDate: expectedFirstSessionDate,
+        allVisitSessionIds: expectedAllVisitSessionIds,
+        allVisitSessions: visitSessions,
+      })
+    })
+
+    it('should return a VisitSessionsCalendar with visit sessions with age restricted session', async () => {
+      const prisoner = TestData.prisoner()
+      const visitorIds = [1, 2]
+      const daysAhead = 3 // the booking window 'policyNoticeDaysMax' for the prison client type
+      const visitSessions: AvailableVisitSessionDto[] = [
+        TestData.availableVisitSessionDto({
+          sessionDate: '2024-05-30',
+          sessionTemplateReference: 'a',
+          sessionTimeSlot: { startTime: '10:00', endTime: '11:30' },
+          isAgeRestricted: true,
+          ageRestriction: 18,
+          sessionConflicts: [],
+        }),
+        TestData.availableVisitSessionDto({
+          sessionDate: '2024-05-31',
+          sessionTemplateReference: 'b',
+          sessionTimeSlot: { startTime: '09:00', endTime: '09:45' },
+          isAgeRestricted: true,
+          ageRestriction: 16,
+          sessionConflicts: ['AGE_RESTRICTION'],
+        }),
+      ]
+      orchestrationApiClient.getVisitSessions.mockResolvedValue(visitSessions)
+
+      const expectedFirstSessionDate = '2024-05-30'
+      const expectedCalendar: VisitSessionsCalendar = {
+        '2024-05': {
+          '2024-05-28': [],
+          '2024-05-29': [],
+          '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30', ageConflict: undefined }],
+          '2024-05-31': [{ reference: 'b', startTime: '09:00', endTime: '09:45', ageConflict: 16 }],
+        },
+      }
+      const expectedAllVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b']
+
+      const results = await visitSessionsService.getVisitSessionsCalendar({
+        prisonId: prisoner.prisonId!,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+        bookerReference,
+        daysAhead,
+        youngestVisitorAge: null,
+      })
+
+      expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
+        prisonId: prisoner.prisonId,
+        prisonerId: prisoner.prisonerNumber,
+        visitorIds,
+        bookerReference,
+        youngestVisitorAge: null,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -124,6 +178,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         daysAhead: 28,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -131,6 +186,7 @@ describe('Visit sessions service', () => {
         prisonerId: prisoner.prisonerNumber,
         visitorIds,
         bookerReference,
+        youngestVisitorAge: null,
       })
       expect(results).toStrictEqual({
         calendar: expectedCalendar,
@@ -154,6 +210,7 @@ describe('Visit sessions service', () => {
         bookerReference,
         excludedApplicationReference,
         daysAhead: 28,
+        youngestVisitorAge: null,
       })
 
       expect(orchestrationApiClient.getVisitSessions).toHaveBeenCalledWith({
@@ -162,6 +219,7 @@ describe('Visit sessions service', () => {
         visitorIds,
         bookerReference,
         excludedApplicationReference,
+        youngestVisitorAge: null,
       })
     })
   })

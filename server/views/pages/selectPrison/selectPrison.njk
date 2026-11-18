@@ -43,15 +43,13 @@
           text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
 
       </form>
 
       <h2 class="govuk-heading-m">{{ t("selectPrison:selectPrison.unknownLocationHeading") }}</h2>
       <p>
-        {{- t("selectPrison:selectPrison.findPrisonerLink", {
-          url: "https://www.gov.uk/find-prisoner"
-        }) | safe -}}
+        {{- t("selectPrison:selectPrison.findPrisonerLink") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}
       </p>
     </div>
   </div>

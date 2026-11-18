@@ -1,16 +1,14 @@
 import { BadRequest, TooManyRequests } from 'http-errors'
 import { UUID } from 'crypto'
-import BookerService, { Prisoner, Visitor } from './bookerService'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
+import BookerService, { Prisoner } from './bookerService'
 import TestData from '../routes/testutils/testData'
-import { createMockHmppsAuthClient, createMockOrchestrationApiClient } from '../data/testutils/mocks'
+import { createMockOrchestrationApiClient } from '../data/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import logger from '../../logger'
 import { createMockRateLimitService } from './testutils/mocks'
 
 jest.mock('../../logger')
-
-const token = 'some token'
 
 let uuidCount: number
 jest.mock('crypto', () => {
@@ -23,10 +21,7 @@ jest.mock('crypto', () => {
 })
 
 describe('Booker service', () => {
-  const hmppsAuthClient = createMockHmppsAuthClient()
-
   const orchestrationApiClient = createMockOrchestrationApiClient()
-  const orchestrationApiClientFactory = jest.fn()
 
   let bookerService: BookerService
   const bookerRateLimit = createMockRateLimitService()
@@ -35,16 +30,7 @@ describe('Booker service', () => {
 
   beforeEach(() => {
     uuidCount = 0
-    hmppsAuthClient.getSystemClientToken.mockResolvedValue(token)
-
-    orchestrationApiClientFactory.mockReturnValue(orchestrationApiClient)
-    bookerService = new BookerService(
-      orchestrationApiClientFactory,
-      hmppsAuthClient,
-      bookerRateLimit,
-      prisonerRateLimit,
-      visitorRateLimit,
-    )
+    bookerService = new BookerService(orchestrationApiClient, bookerRateLimit, prisonerRateLimit, visitorRateLimit)
   })
 
   afterEach(() => {
@@ -68,15 +54,16 @@ describe('Booker service', () => {
     it('should get visitor requests for provided booker reference filtered for given prisoner', async () => {
       const bookerReference = TestData.bookerReference().value
       const prisonerNumber = 'A1234BC'
-      const visitorRequest1 = TestData.visitorRequest({ prisonerId: prisonerNumber })
-      const visitorRequest2 = TestData.visitorRequest({ prisonerId: 'another prisoner' })
+      const visitorRequest1 = TestData.bookerPrisonerVisitorRequestDto({ prisonerId: prisonerNumber })
+      const visitorRequest2 = TestData.bookerPrisonerVisitorRequestDto({ prisonerId: 'another prisoner' })
+      const expectedVisitorRequest = TestData.visitorRequest({ ...visitorRequest1 })
 
       orchestrationApiClient.getVisitorRequests.mockResolvedValue([visitorRequest1, visitorRequest2])
 
       const result = await bookerService.getVisitorRequests({ bookerReference, prisonerNumber })
 
       expect(orchestrationApiClient.getVisitorRequests).toHaveBeenCalledWith(bookerReference)
-      expect(result).toStrictEqual([visitorRequest1])
+      expect(result).toStrictEqual([expectedVisitorRequest])
     })
   })
 
@@ -119,6 +106,19 @@ describe('Booker service', () => {
       expect(logger.info).toHaveBeenCalledWith(
         `Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: REQUEST_ALREADY_EXISTS`,
       )
+    })
+
+    describe('withdrawVisitorRequest', () => {
+      it('should send a request to withdraw a visitor request', async () => {
+        const requestReference = 'request-ref-123'
+
+        await bookerService.withdrawVisitorRequest({ requestReference, bookerReference })
+
+        expect(orchestrationApiClient.withdrawVisitorRequest).toHaveBeenCalledWith({
+          requestReference,
+          bookerReference,
+        })
+      })
     })
 
     describe('Rate limiting', () => {
@@ -219,6 +219,7 @@ describe('Booker service', () => {
         prisonerNumber: 'A',
         firstName: 'F1',
         lastName: 'L1',
+        dateOfBirth: 'DoB1',
         prisonId: 'P1',
         registeredPrisonId: 'RP1',
         availableVos: 1,
@@ -229,6 +230,7 @@ describe('Booker service', () => {
         prisonerNumber: 'B',
         firstName: 'F2',
         lastName: 'L2',
+        dateOfBirth: 'DoB2',
         prisonId: 'P2',
         registeredPrisonId: 'RP2',
         availableVos: 2,
@@ -273,13 +275,12 @@ describe('Booker service', () => {
     it('should return validationError if API returns an HTTP 422 response', async () => {
       const prisonerReleasedException: SanitisedError<BookerPrisonerValidationErrorResponse> = {
         name: 'Error',
-        status: 422,
+        responseStatus: 422,
         message: '',
         stack: '',
         data: { status: 422, validationError: 'PRISONER_RELEASED' },
       }
       orchestrationApiClient.validatePrisoner.mockRejectedValue(prisonerReleasedException)
-
       const result = await bookerService.validatePrisoner(bookerReference.value, prisoner.prisonerNumber)
 
       expect(result).toBe('PRISONER_RELEASED')
@@ -304,78 +305,114 @@ describe('Booker service', () => {
     })
   })
 
+  describe('updatePrisonersRegisteredPrison', () => {
+    const bookerReference = TestData.bookerReference().value
+    const permittedPrisonerForBookerDto = TestData.permittedPrisonerForBookerDto()
+
+    it('should update prisoners registered prison', async () => {
+      orchestrationApiClient.updatePrisonersRegisteredPrison.mockResolvedValue(permittedPrisonerForBookerDto)
+
+      const result = await bookerService.updatePrisonersRegisteredPrison({
+        bookerReference,
+        prisonerId: 'A1234BC',
+        prisonId: 'HEI',
+      })
+
+      expect(result).toBe(permittedPrisonerForBookerDto)
+      expect(orchestrationApiClient.updatePrisonersRegisteredPrison).toHaveBeenCalledWith({
+        bookerReference,
+        prisonerId: 'A1234BC',
+        prisonId: 'HEI',
+      })
+      expect(logger.info).toHaveBeenCalledWith(
+        `Registered prison for prisoner A1234BC updated to HEI by booker ${bookerReference}`,
+      )
+    })
+  })
+
   describe('getVisitors', () => {
-    it('should return visitors for the given booker reference and prisoner number, with sequential display ID', async () => {
-      const bookerReference = TestData.bookerReference()
-      const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+    const bookerReference = TestData.bookerReference()
+    const { prisonerNumber } = TestData.bookerPrisonerInfoDto().prisoner
+    const fakeDateTime = new Date('2026-01-01T09:00:00')
 
-      const visitorInfoDtos = [
-        TestData.visitorInfoDto({ visitorId: 1, dateOfBirth: '2000-01-01' }), // an adult
-        TestData.visitorInfoDto({ visitorId: 2, dateOfBirth: `${new Date().getFullYear() - 2}-01-01` }), // a child
-        // with a ban with expiry date
-        TestData.visitorInfoDto({
-          visitorId: 3,
-          dateOfBirth: '2000-01-01',
-          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-07-01' }],
-        }),
-        // with a ban with no expiry date
-        TestData.visitorInfoDto({
-          visitorId: 4,
-          dateOfBirth: '2000-01-01',
-          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
-        }),
-        // an adult, not approved
-        TestData.visitorInfoDto({
-          visitorId: 5,
-          dateOfBirth: '2000-01-01',
-          approved: false,
-        }),
+    beforeEach(() => {
+      jest.useFakeTimers({ now: fakeDateTime })
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('should return visitors for the given booker reference and prisoner number, with UUID displayIds added', async () => {
+      const visitorInfoDtos = [TestData.visitorInfoDto({ visitorId: 1 }), TestData.visitorInfoDto({ visitorId: 2 })]
+      const expectedVisitors = [
+        TestData.visitor({ visitorDisplayId: 'uuidv4-1-1-1-1', visitorId: 1 }),
+        TestData.visitor({ visitorDisplayId: 'uuidv4-2-2-2-2', visitorId: 2 }),
       ]
+
       orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
-
-      const expectedVisitors: Visitor[] = [
-        {
-          ...TestData.visitor(visitorInfoDtos[0]),
-          visitorDisplayId: 'uuidv4-1-1-1-1',
-          adult: true,
-          banned: false,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[1]),
-          visitorDisplayId: 'uuidv4-2-2-2-2',
-          adult: false,
-          banned: false,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[2]),
-          visitorDisplayId: 'uuidv4-3-3-3-3',
-          adult: true,
-          banned: true,
-          banExpiryDate: '2025-07-01',
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[3]),
-          visitorDisplayId: 'uuidv4-4-4-4-4',
-          adult: true,
-          banned: true,
-          approved: true,
-        },
-        {
-          ...TestData.visitor(visitorInfoDtos[4]),
-          visitorDisplayId: 'uuidv4-5-5-5-5',
-          adult: true,
-          banned: false,
-          approved: false,
-        },
-      ]
 
       const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
 
       expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
       expect(results).toStrictEqual(expectedVisitors)
+    })
+
+    it('should calculate visitor ages and adult status correctly', async () => {
+      const visitorInfoDtos = [
+        TestData.visitorInfoDto({ dateOfBirth: '2008-01-01' }), // an adult (18 today)
+        TestData.visitorInfoDto({ dateOfBirth: '2008-01-02' }), // a child (18 tomorrow)
+        TestData.visitorInfoDto({ dateOfBirth: null }), // no date of birth
+      ]
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      // Adult
+      expect(results[0].age).toBe(18)
+      expect(results[0].adult).toBe(true)
+      // Child
+      expect(results[1].age).toBe(17)
+      expect(results[1].adult).toBe(false)
+      // Unknown
+      expect(results[2].age).toBeNull()
+      expect(results[2].adult).toBe(false)
+    })
+
+    it('should determine if visitors are banned', async () => {
+      const visitorInfoDtos = [
+        // with a ban with expiry date
+        TestData.visitorInfoDto({
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: '2025-07-01' }],
+        }),
+        // with a ban with no expiry date
+        TestData.visitorInfoDto({
+          visitorRestrictions: [{ restrictionType: 'BAN', expiryDate: undefined }],
+        }),
+        // no bans
+        TestData.visitorInfoDto(),
+      ]
+      orchestrationApiClient.getVisitors.mockResolvedValue(visitorInfoDtos)
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(results[0].banned).toBe(true)
+      expect(results[0].banExpiryDate).toBe('2025-07-01')
+      expect(results[1].banned).toBe(true)
+      expect(results[1].banExpiryDate).toBeNull()
+      expect(results[2].banned).toBe(false)
+      expect(results[2].banExpiryDate).toBeNull()
+    })
+
+    it('should return an empty array if no visitors are found', async () => {
+      orchestrationApiClient.getVisitors.mockResolvedValue([])
+
+      const results = await bookerService.getVisitors(bookerReference.value, prisonerNumber)
+
+      expect(orchestrationApiClient.getVisitors).toHaveBeenCalledWith(bookerReference.value, prisonerNumber)
+      expect(results).toStrictEqual([])
     })
   })
 

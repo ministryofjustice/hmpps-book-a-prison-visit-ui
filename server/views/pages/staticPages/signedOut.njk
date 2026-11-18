@@ -9,7 +9,7 @@
       <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
 
       <p class="no-visited-state" data-test="sign-in">
-        {{- t("staticPages:signedOut.signInAgain", { url: paths.SIGN_IN }) | safe -}}
+        {{- t("staticPages:signedOut.signInAgain") | renderLinkTag(paths.SIGN_IN) | safe -}}
       </p>
 
     </div>

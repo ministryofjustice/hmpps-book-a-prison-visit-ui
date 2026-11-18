@@ -49,7 +49,7 @@
       top: 47%;
       transform: translate(-50%, -50%);
     }
-    
+
     a {
       @include govuk-link-style-no-visited-state;
       font-weight: $govuk-font-weight-bold;
@@ -95,6 +95,27 @@
 
   .visits-calendar__day-group--active {
     display: block;
+
+    .govuk-radios__item {
+      margin-bottom: govuk-spacing(6);
+    }
+
+    .govuk-warning-text {
+      margin-left: govuk-spacing(1);
+    }
+  }
+
+  .govuk-radios__input:disabled + .govuk-radios__label {
+    opacity: unset;
+
+    &::before, & span {
+      opacity: 0.5;
+    }
+
+    & >.govuk-tag {
+      display: block;
+      margin-top: govuk-spacing(2);
+    }
   }
 
   // split time & duration to separate lines and vertically centre by radio
@@ -102,15 +123,15 @@
     .govuk-radios__item  {
       margin-top: govuk-spacing(1);
     }
-  
+
     .visits-calendar__day-group .govuk-label {
       margin-top: govuk-spacing(-2);
     }
-  
+
     .visits-calendar__session-duration {
       display: block;
       padding-bottom: govuk-spacing(1);
-  
+
     }
   }
 }

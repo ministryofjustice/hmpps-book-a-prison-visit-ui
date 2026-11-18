@@ -1,39 +1,76 @@
 import type { RequestHandler } from 'express'
-import { NotFound } from 'http-errors'
+import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import { SessionData } from 'express-session'
 import paths from '../../constants/paths'
 import { clearSession } from '../../utils/utils'
-import { BookerService, PrisonService } from '../../services'
-import { BookVisitJourney } from '../../@types/bapv'
+import { BookerService } from '../../services'
 
 export default class SelectPrisonerController {
-  public constructor(
-    private readonly bookerService: BookerService,
-    private readonly prisonService: PrisonService,
-  ) {}
+  public constructor(private readonly bookerService: BookerService) {}
 
-  public selectPrisoner(): RequestHandler {
+  // Transfer and released
+  private readonly EXCLUDED_LOCATIONS = ['TRN', 'OUT']
+
+  public view(): RequestHandler {
     return async (req, res) => {
-      clearSession(req)
+      const { prisoners } = req.session.booker!
+      const { bookVisitJourney } = req.session
 
-      const booker = req.session.booker!
-      const prisoner = booker.prisoners[0]
-      const bookVisitJourney: BookVisitJourney = { prisoner }
+      const formValues = bookVisitJourney?.prisoner
+        ? { prisonerDisplayId: bookVisitJourney.prisoner.prisonerDisplayId }
+        : {}
 
-      if (req.body?.prisonerDisplayId !== prisoner.prisonerDisplayId) {
-        throw new NotFound('Prisoner not found')
+      return res.render('pages/bookVisit/selectPrisoner', {
+        errors: req.flash('errors'),
+        formValues,
+        prisoners,
+      })
+    }
+  }
+
+  public submit(): RequestHandler {
+    return async (req, res) => {
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        req.flash('errors', errors.array())
+        req.flash('formValues', matchedData(req, { onlyValidData: false }))
+        return res.redirect(paths.BOOK_VISIT.SELECT_PRISONER)
       }
 
-      req.session.bookVisitJourney = bookVisitJourney
+      const booker = req.session.booker!
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: string }>(req)
+      const prisoner = booker.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)!
 
-      const validationResult = await this.bookerService.validatePrisoner(booker.reference, prisoner.prisonerNumber)
+      // Clear session unless there is an existing journey and the selected prisoner has not changed
+      const existingJourneyForThisPrisoner =
+        req.session?.bookVisitJourney?.prisoner.prisonerNumber === prisoner.prisonerNumber
+      if (!existingJourneyForThisPrisoner) {
+        clearSession(req)
+      }
+      req.session.bookVisitJourney ??= { prisoner }
+      const { bookVisitJourney } = req.session
+
+      // if prisoner is not currently in registered prison or an excluded location, send to confirm location route
+      if (
+        prisoner.prisonId !== prisoner.registeredPrisonId &&
+        !this.EXCLUDED_LOCATIONS.includes(prisoner.prisonId ?? '')
+      ) {
+        return res.redirect(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+      }
+
+      const prisonerValidationResponse = await this.bookerService.validatePrisoner(
+        booker.reference,
+        prisoner.prisonerNumber,
+      )
       const prisonerHasVOsOrRemand = prisoner.availableVos > 0 || prisoner.convictedStatus === 'Remand'
 
-      if (validationResult === true && prisonerHasVOsOrRemand) {
-        bookVisitJourney.prison = await this.prisonService.getPrison(prisoner.prisonId!)
+      if (prisonerValidationResponse === true && prisonerHasVOsOrRemand) {
+        bookVisitJourney.prisonId = prisoner.prisonId!
         return res.redirect(paths.BOOK_VISIT.SELECT_VISITORS)
       }
 
-      switch (validationResult) {
+      switch (prisonerValidationResponse) {
         case 'PRISONER_RELEASED':
         case 'PRISONER_TRANSFERRED_SUPPORTED_PRISON':
         case 'PRISONER_TRANSFERRED_UNSUPPORTED_PRISON':
@@ -50,11 +87,23 @@ export default class SelectPrisonerController {
 
         default: {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const unhandledCase: never = validationResult
+          const unhandledCase: never = prisonerValidationResponse
         }
       }
 
       return res.redirect(paths.BOOK_VISIT.CANNOT_BOOK)
     }
+  }
+
+  public validate(): ValidationChain[] {
+    return [
+      body('prisonerDisplayId', (_value, { req }) => req.t('validation:prisonerSelectNone'))
+        .isUUID()
+        .bail()
+        .custom((prisonerDisplayId: string, { req }) => {
+          const { booker } = req.session as SessionData
+          return booker?.prisoners.some(prisoner => prisoner.prisonerDisplayId === prisonerDisplayId)
+        }),
+    ]
   }
 }

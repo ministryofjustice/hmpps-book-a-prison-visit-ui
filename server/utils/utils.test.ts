@@ -1,18 +1,21 @@
 import { Request } from 'express'
 import { SessionData } from 'express-session'
 import {
+  ageInYears,
   clearSession,
   convertToTitleCase,
   displayAge,
+  escapeHtml,
   formatDate,
   formatTime,
   formatTimeDuration,
   formatTimeFromDateTime,
   getMainContactName,
   getPrisonName,
+  getYoungestVisitorAge,
   initialiseName,
-  isAdult,
   isMobilePhoneNumber,
+  renderLinkTag,
 } from './utils'
 import TestData from '../routes/testutils/testData'
 import { Visitor } from '../services/bookerService'
@@ -73,8 +76,9 @@ describe('displayAge', () => {
     ['2017-12-15', 'common:plurals.ageYears|count:2'],
     ['2010-12-14', 'common:plurals.ageYears|count:10'],
     ['', ''],
+    [null, ''],
     ['random string', ''],
-  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string, expected: string) => {
+  ])('should display date of birth (%s) as "%s"', (dateOfBirth: string | null, expected: string) => {
     const result = displayAge(dateOfBirth, mockTFunction)
     expect(result).toEqual(expected)
   })
@@ -129,19 +133,43 @@ describe('formatTimeDuration', () => {
   )
 })
 
-describe('isAdult', () => {
+describe('ageInYears', () => {
+  const fakeDate = new Date('2020-02-01T09:00:00')
+
+  beforeEach(() => {
+    jest.useFakeTimers({ now: fakeDate })
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
   it.each([
-    ['is an adult', '2000-01-01', new Date('2022-01-01'), true],
-    ['is not an adult', '2010-01-01', new Date('2022-01-01'), false],
-    ['is an adult on their 18th birthday', '2004-01-01', new Date('2022-01-01'), true],
-    ['is not an adult one day before their 18th birthday', '2004-01-02', new Date('2022-01-01'), false],
-    ['handles undefined date of birth', undefined, new Date('2022-01-01'), false],
-  ])(
-    '%s - isAdult(%s, %s) = %s',
-    (_: string, dateOfBirth: string | undefined, referenceDate: Date, expected: boolean) => {
-      expect(isAdult(dateOfBirth, referenceDate)).toBe(expected)
-    },
-  )
+    ['2000-01-01', 20],
+    ['2010-01-01', 10],
+    ['2020-01-01', 0],
+    [null, null],
+    [undefined, null],
+  ])('ageInYears (%s) should return %s', (dateOfBirth, expectedAge) => {
+    expect(ageInYears(dateOfBirth)).toBe(expectedAge)
+  })
+})
+
+describe('getYoungestVisitorAge', () => {
+  const visitor45 = { age: 45 } as Visitor
+  const visitor15 = { age: 15 } as Visitor
+  const visitor17 = { age: 17 } as Visitor
+  const visitorNoAge = { age: null } as Visitor
+
+  it.each([
+    [[visitor45, visitor15, visitor17], 15],
+    [[visitor45, visitor17], 17],
+    [[visitor17, visitor45, visitorNoAge], 17],
+    [[visitor45, visitor15, visitorNoAge], 15],
+    [[visitorNoAge], null],
+  ])('getYoungestVisitorAge (%s) should return %s', (visitors, expectedAge) => {
+    expect(getYoungestVisitorAge(visitors)).toBe(expectedAge)
+  })
 })
 
 describe('Clear session data', () => {
@@ -149,8 +177,13 @@ describe('Clear session data', () => {
     const sessionData: Partial<Record<keyof SessionData, string>> = {
       booker: 'BOOKER DATA',
       addPrisonerJourney: 'ADD PRISONER JOURNEY DATA',
+      addPrisonerJourneyResult: 'ADD PRISONER JOURNEY RESULT DATA',
+      addVisitorJourney: 'ADD VISITOR JOURNEY DATA',
+      addVisitorJourneyResult: 'ADD VISITOR JOURNEY RESULT DATA',
       bookVisitJourney: 'BOOK VISIT JOURNEY DATA',
       bookVisitConfirmed: 'BOOK VISIT CONFIRMATION DATA',
+      bookedVisits: 'BOOKED VISITS DATA',
+      visitCancelled: 'VISIT CANCELLED DATA',
     }
     const req = { session: sessionData } as unknown as Request
 
@@ -200,5 +233,65 @@ describe('getPrisonName', () => {
     ['returns prison ID if prison is not found', 'C', prisonNames, 'en', 'C'],
   ] as const)('%s', (_: string, prisonId: string, names: PrisonNames, lng: Locale, expected: string) => {
     expect(getPrisonName(prisonId, names, lng)).toBe(expected)
+  })
+})
+
+describe('escapeHtml', () => {
+  it('should escape HTML characters', () => {
+    expect(escapeHtml('Escape <this> & "that" !')).toBe('Escape &lt;this&gt; &amp; &quot;that&quot; !')
+  })
+
+  it('should handle undefined and null', () => {
+    expect(escapeHtml(null)).toBe('')
+    expect(escapeHtml(undefined)).toBe('')
+  })
+})
+
+describe('renderLinkTag', () => {
+  it.each([
+    ['null input', null, 'https://example.test', ''],
+    ['undefined input', undefined, 'https://example.test', ''],
+    ['no link tag', 'No link here', 'https://example.test', 'No link here'],
+    ['undefined link', '<link>undefined</link> link', undefined, 'undefined link'],
+    ['null link', '<link>null</link> link', null, 'null link'],
+    ['empty link', '<link>empty link</link>', '', 'empty link'],
+    [
+      'single link tag',
+      'Some text <link>link text</link> more text.',
+      'https://example.test',
+      'Some text <a href="https://example.test">link text</a> more text.',
+    ],
+    [
+      'multiple link tags (only first is rendered)',
+      'Start <link>one</link> middle <link>two</link> end',
+      'https://example.test',
+      'Start <a href="https://example.test">one</a> middle &lt;link&gt;two&lt;/link&gt; end',
+    ],
+    [
+      'escapes non-link html and attributes',
+      'Before <script>alert("x")</script> <link>Click <b>here</b></link> after',
+      'https://example.test?a=1&b=2',
+      'Before &lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt; <a href="https://example.test?a=1&amp;b=2">Click &lt;b&gt;here&lt;/b&gt;</a> after',
+    ],
+    [
+      'returns escaped text for open tag only',
+      'Some text <link>missing close',
+      'https://example.test',
+      'Some text &lt;link&gt;missing close',
+    ],
+    [
+      'returns escaped text for wrongly ordered tags',
+      'Some text </link>wrong order<link>',
+      'https://example.test',
+      'Some text &lt;/link&gt;wrong order&lt;link&gt;',
+    ],
+  ])('%s', (_: string, text: string | undefined | null, url: string | undefined | null, expected: string) => {
+    expect(renderLinkTag(text, url)).toBe(expected)
+  })
+
+  it('supports optional new-tab behavior with rel attributes', () => {
+    expect(renderLinkTag('Read <link>more</link>.', 'https://example.test', true)).toBe(
+      'Read <a href="https://example.test" target="_blank" rel="noreferrer noopener">more</a>.',
+    )
   })
 })

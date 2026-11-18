@@ -21,19 +21,17 @@ jest.mock('../../applicationInfo', () => {
 import { BookerService, PrisonService, RateLimitService, VisitService, VisitSessionsService } from '..'
 import {
   createMockDataCache,
-  createMockHmppsAuthClient,
   createMockOrchestrationApiClient,
   createMockPrisonRegisterApiClient,
 } from '../../data/testutils/mocks'
-import { TokenStore } from '../../data/tokenStore/tokenStore'
 import { RateLimitConfig } from '../../config'
+import RateLimitStore from '../../data/rateLimitStore/rateLimitStore'
 
 jest.mock('..')
 
 export const createMockBookerService = () =>
   new BookerService(
-    createMockOrchestrationApiClient,
-    createMockHmppsAuthClient(),
+    createMockOrchestrationApiClient(),
     createMockRateLimitService(),
     createMockRateLimitService(),
     createMockRateLimitService(),
@@ -41,20 +39,16 @@ export const createMockBookerService = () =>
 
 export const createMockPrisonService = () =>
   new PrisonService(
-    createMockOrchestrationApiClient,
-    createMockPrisonRegisterApiClient,
-    createMockHmppsAuthClient(),
+    createMockOrchestrationApiClient(),
+    createMockPrisonRegisterApiClient(),
     createMockDataCache(),
   ) as jest.Mocked<PrisonService>
 
 export const createMockRateLimitService = () =>
-  new RateLimitService({} as TokenStore, {} as RateLimitConfig) as jest.Mocked<RateLimitService>
+  new RateLimitService({} as RateLimitStore, {} as RateLimitConfig) as jest.Mocked<RateLimitService>
 
 export const createMockVisitService = () =>
-  new VisitService(createMockOrchestrationApiClient, createMockHmppsAuthClient()) as jest.Mocked<VisitService>
+  new VisitService(createMockOrchestrationApiClient()) as jest.Mocked<VisitService>
 
 export const createMockVisitSessionsService = () =>
-  new VisitSessionsService(
-    createMockOrchestrationApiClient,
-    createMockHmppsAuthClient(),
-  ) as jest.Mocked<VisitSessionsService>
+  new VisitSessionsService(createMockOrchestrationApiClient()) as jest.Mocked<VisitSessionsService>

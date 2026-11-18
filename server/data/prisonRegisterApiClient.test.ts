@@ -1,4 +1,5 @@
 import nock from 'nock'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import PrisonRegisterApiClient from './prisonRegisterApiClient'
 import TestData from '../routes/testutils/testData'
@@ -6,20 +7,25 @@ import TestData from '../routes/testutils/testData'
 describe('prisonRegisterApiClient', () => {
   let fakePrisonRegisterApi: nock.Scope
   let prisonRegisterApiClient: PrisonRegisterApiClient
-  const token = 'token-1'
+  let mockAuthenticationClient: jest.Mocked<AuthenticationClient>
+
+  const token = 'test-system-token'
 
   beforeEach(() => {
     fakePrisonRegisterApi = nock(config.apis.prisonRegister.url)
-    prisonRegisterApiClient = new PrisonRegisterApiClient(token)
+    mockAuthenticationClient = {
+      getToken: jest.fn().mockResolvedValue(token),
+    } as unknown as jest.Mocked<AuthenticationClient>
+    prisonRegisterApiClient = new PrisonRegisterApiClient(mockAuthenticationClient)
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
     nock.cleanAll()
+    jest.resetAllMocks()
+  })
+
+  afterAll(() => {
+    nock.restore()
   })
 
   describe('getPrisonNames', () => {
@@ -34,6 +40,7 @@ describe('prisonRegisterApiClient', () => {
 
       const output = await prisonRegisterApiClient.getPrisonNames()
       expect(output).toEqual(prisonNames)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
   })
 })

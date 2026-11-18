@@ -1,8 +1,48 @@
 import type { TFunction } from 'i18next'
-import { MoJAlert } from '../../@types/bapv'
-import { VisitDetails } from '../../services/visitService'
+import type { MoJAlert } from '../../@types/bapv'
+import type { VisitDetails } from '../../services/visitService'
+import type { Prisoner } from '../../services/bookerService'
 
-// eslint-disable-next-line import/prefer-default-export
+// Summary of a visit for rendering on listing pages
+export type VisitDetailsSummary = Pick<
+  VisitDetails,
+  | 'visitDisplayId'
+  | 'reference'
+  | 'prisonerFirstName'
+  | 'prisonerLastName'
+  | 'prisonId'
+  | 'startTimestamp'
+  | 'endTimestamp'
+> & {
+  isRequest: boolean
+  prisonerMoved: boolean
+}
+
+export const getVisitDetailsSummaries = ({
+  prisoners,
+  visits,
+}: {
+  prisoners: Prisoner[]
+  visits: VisitDetails[]
+}): VisitDetailsSummary[] => {
+  return visits.map(visit => {
+    const prisoner = prisoners.find(p => p.prisonerNumber === visit.prisonerId)
+    const prisonerMoved = prisoner ? prisoner.registeredPrisonId !== visit.prisonId : false
+
+    return {
+      visitDisplayId: visit.visitDisplayId,
+      reference: visit.reference,
+      prisonerFirstName: visit.prisonerFirstName,
+      prisonerLastName: visit.prisonerLastName,
+      prisonId: visit.prisonId,
+      startTimestamp: visit.startTimestamp,
+      endTimestamp: visit.endTimestamp,
+      isRequest: visit.visitSubStatus === 'REQUESTED',
+      prisonerMoved,
+    }
+  })
+}
+
 export const getVisitMessages = ({
   visit,
   prisonName,

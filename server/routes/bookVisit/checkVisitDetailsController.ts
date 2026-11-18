@@ -1,9 +1,9 @@
 import type { RequestHandler } from 'express'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { BookVisitConfirmed } from '../../@types/bapv'
 import { VisitService } from '../../services'
 import paths from '../../constants/paths'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
-import { SanitisedError } from '../../sanitisedError'
 import { getMainContactName, isMobilePhoneNumber } from '../../utils/utils'
 
 export default class CheckVisitDetailsController {
@@ -15,6 +15,7 @@ export default class CheckVisitDetailsController {
 
       res.render('pages/bookVisit/checkVisitDetails', {
         additionalSupport: bookVisitJourney.visitorSupport,
+        languagePreference: bookVisitJourney.languagePreference,
         mainContactName: getMainContactName(bookVisitJourney.mainContact),
         mainContactPhone: bookVisitJourney.mainContactPhone,
         mainContactEmail: bookVisitJourney.mainContactEmail,
@@ -42,7 +43,7 @@ export default class CheckVisitDetailsController {
 
         const bookVisitConfirmed: BookVisitConfirmed = {
           isARequest: visit.visitSubStatus === 'REQUESTED',
-          prison: bookVisitJourney.prison!,
+          prisonId: bookVisitJourney.prisonId!,
           visitReference: visit.reference,
           hasEmail: !!bookVisitJourney.mainContactEmail,
           hasMobile: isMobilePhoneNumber(bookVisitJourney.mainContactPhone),
@@ -54,7 +55,7 @@ export default class CheckVisitDetailsController {
         return res.redirect(bookVisitConfirmed.isARequest ? paths.BOOK_VISIT.REQUESTED : paths.BOOK_VISIT.BOOKED)
       } catch (error) {
         const sanitisedError = error as SanitisedError<ApplicationValidationErrorResponse>
-        if (sanitisedError.status === 422) {
+        if (sanitisedError.responseStatus === 422) {
           const validationErrors = sanitisedError?.data?.validationErrors ?? []
 
           if (validationErrors.includes('APPLICATION_INVALID_PRISONER_NOT_FOUND')) {

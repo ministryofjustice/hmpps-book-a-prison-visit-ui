@@ -1,4 +1,4 @@
-import { DataCache, HmppsAuthClient, OrchestrationApiClient, PrisonRegisterApiClient, RestClientBuilder } from '../data'
+import { DataCache, OrchestrationApiClient, PrisonRegisterApiClient } from '../data'
 import { PrisonDto } from '../data/orchestrationApiTypes'
 
 type CacheConfig = { key: string; ttlSecs: number }
@@ -13,9 +13,8 @@ export default class PrisonService {
   private readonly prisonCache: CacheConfig = { key: 'prison', ttlSecs: 60 * 5 } // 5 min cache (prisonId added to key)
 
   constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly prisonRegisterApiClientFactory: RestClientBuilder<PrisonRegisterApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
+    private readonly orchestrationApiClient: OrchestrationApiClient,
+    private readonly prisonRegisterApiClient: PrisonRegisterApiClient,
     private readonly dataCache: DataCache,
   ) {}
 
@@ -26,10 +25,7 @@ export default class PrisonService {
       return cachedAllPrisonNames
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const prisonRegisterApiClient = this.prisonRegisterApiClientFactory(token)
-
-    const allPrisonNameDtos = await prisonRegisterApiClient.getPrisonNames()
+    const allPrisonNameDtos = await this.prisonRegisterApiClient.getPrisonNames()
 
     const allPrisonNames: PrisonNames = allPrisonNameDtos.reduce((acc, prison) => {
       acc[prison.prisonId] = {
@@ -45,24 +41,21 @@ export default class PrisonService {
     return allPrisonNames
   }
 
-  async getPrison(prisonCode: string): Promise<PrisonDto> {
-    const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`)
+  async getPrison(prisonId: string): Promise<PrisonDto> {
+    const cachedPrison = await this.dataCache.get<PrisonDto>(`${this.prisonCache.key}:${prisonId}`)
 
     if (cachedPrison) {
       return cachedPrison
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+    const prison = await this.orchestrationApiClient.getPrison(prisonId)
 
-    const prison = await orchestrationApiClient.getPrison(prisonCode)
-
-    await this.dataCache.set<PrisonDto>(`${this.prisonCache.key}:${prisonCode}`, prison, this.prisonCache.ttlSecs)
+    await this.dataCache.set<PrisonDto>(`${this.prisonCache.key}:${prisonId}`, prison, this.prisonCache.ttlSecs)
     return prison
   }
 
-  async isSupportedPrison(prisonCode: string): Promise<boolean> {
-    return (await this.getSupportedPrisonIds()).includes(prisonCode)
+  async isSupportedPrison(prisonId: string): Promise<boolean> {
+    return (await this.getSupportedPrisonIds()).includes(prisonId)
   }
 
   async getSupportedPrisonIds(): Promise<string[]> {
@@ -72,10 +65,7 @@ export default class PrisonService {
       return cachedSupportedPrisonIds
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const supportedPrisonIds = await orchestrationApiClient.getSupportedPrisonIds()
+    const supportedPrisonIds = await this.orchestrationApiClient.getSupportedPrisonIds()
 
     await this.dataCache.set(this.supportedPrisonIdsCache.key, supportedPrisonIds, this.supportedPrisonIdsCache.ttlSecs)
     return supportedPrisonIds

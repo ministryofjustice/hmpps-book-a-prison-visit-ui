@@ -17,7 +17,7 @@
       <p>{{ t("bookVisit:chooseVisitTimeNoSessions.tryLater") }}</p>
 
       <p data-test="contact-prison">
-        {{- t("bookVisit:chooseVisitTimeNoSessions.contactPrison", { url: prison.webAddress }) | safe -}}
+        {{- t("bookVisit:chooseVisitTimeNoSessions.contactPrison") | renderLinkTag(prison.webAddress) | safe -}}
       </p>
     </div>
   </div>

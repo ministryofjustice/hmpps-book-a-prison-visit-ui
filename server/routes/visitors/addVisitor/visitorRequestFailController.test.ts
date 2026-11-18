@@ -1,0 +1,98 @@
+import type { Express } from 'express'
+import request from 'supertest'
+import * as cheerio from 'cheerio'
+import { SessionData } from 'express-session'
+import { appWithAllRoutes } from '../../testutils/appSetup'
+import paths from '../../../constants/paths'
+import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
+import TestData from '../../testutils/testData'
+
+let app: Express
+let sessionData: SessionData
+
+beforeEach(() => {
+  enableFeatureForTest('multiplePrisoners')
+  sessionData = {
+    addVisitorJourneyResult: {
+      firstName: 'first',
+      lastName: 'last',
+      prisoner: TestData.prisoner(),
+    },
+  } as SessionData
+  app = appWithAllRoutes({ sessionData })
+})
+
+afterEach(() => {
+  jest.resetAllMocks()
+})
+
+describe('Add visitor request failure pages', () => {
+  describe(`GET ${paths.ADD_VISITOR.SUCCESS}`, () => {
+    it('should render add visitor journey request failure page - visitor already requested', () => {
+      sessionData.addVisitorJourneyResult!.result = 'REQUEST_ALREADY_EXISTS'
+
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Visitor already requested -/)
+          expect($('#navigation').length).toBe(1)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text().trim()).toBe('Visitor already requested')
+
+          expect($('[data-test="visitor-already-requested"]').text()).toContain('first last')
+
+          expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
+        })
+    })
+
+    it('should render add visitor journey request failure page - visitor already linked', () => {
+      sessionData.addVisitorJourneyResult!.result = 'VISITOR_ALREADY_EXISTS'
+
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_ALREADY_LINKED)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Visitor already linked -/)
+          expect($('#navigation').length).toBe(1)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text().trim()).toBe('Visitor already linked')
+
+          expect($('[data-test="visitor-already-linked"]').text()).toContain('first last')
+
+          expect($('[data-test="link-a-visitor"]').text().trim()).toBe('Link another visitor')
+          expect($('[data-test="link-a-visitor"]').attr('href')).toBe(`${paths.ADD_VISITOR.DETAILS}/uuidv4-1-1-1-1`)
+        })
+    })
+
+    it('should render add visitor journey request failure page - too many requests', () => {
+      sessionData.addVisitorJourneyResult!.result = 'MAX_IN_PROGRESS_REQUESTS_REACHED'
+
+      return request(app)
+        .get(paths.ADD_VISITOR.FAIL_TOO_MANY_REQUESTS)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Visitor request cannot be submitted -/)
+          expect($('#navigation').length).toBe(1)
+          expect($('[data-test="back-link"]').length).toBe(0)
+          expect($('h1').text().trim()).toBe('Visitor request cannot be submitted')
+        })
+    })
+
+    it('should redirect to visitors page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
+      disableFeatureForTest('multiplePrisoners')
+      app = appWithAllRoutes({ sessionData })
+      delete sessionData.addVisitorJourneyResult
+      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
+    })
+
+    it('should redirect to prisoners page if add visitor request journey result not in session', () => {
+      delete sessionData.addVisitorJourneyResult
+      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.PRISONERS)
+    })
+  })
+})

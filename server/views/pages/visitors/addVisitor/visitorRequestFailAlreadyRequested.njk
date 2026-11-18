@@ -1,0 +1,38 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("addVisitor:visitorRequestFailAlreadyRequested.title") %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p data-test="visitor-already-requested">
+        {{- t("addVisitor:visitorRequestFailAlreadyRequested.visitorAlreadyRequested", {
+          visitorName: firstName + " " + lastName
+        }) -}}
+      </p>
+
+      <p>{{ t("addVisitor:visitorRequestFailAlreadyRequested.waitingToBeReviewed") }}</p>
+
+      <p>{{ t("common:visitors.requestResponseTime") }}</p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: t("common:buttons.linkAnotherVisitor"),
+          href: paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId,
+          classes: "govuk-button--secondary",
+          attributes: { "data-test": "link-a-visitor" },
+          preventDoubleClick: true
+        }) }}
+
+        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.VISITORS + '/' + prisonerDisplayId }}">
+          {{- t("addVisitor:actions.viewLinkedAndRequestedVisitors") -}}
+        </a>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

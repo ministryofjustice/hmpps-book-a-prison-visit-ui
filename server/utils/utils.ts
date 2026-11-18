@@ -1,10 +1,22 @@
 import { Request } from 'express'
-import { differenceInYears, format, formatDuration, intervalToDuration, isAfter, parse, parseISO } from 'date-fns'
+import {
+  differenceInYears,
+  format,
+  formatDuration,
+  intervalToDuration,
+  isAfter,
+  isValid,
+  parse,
+  parseISO,
+} from 'date-fns'
 import { parsePhoneNumberFromString as parsePhoneNumber } from 'libphonenumber-js/mobile'
+import nunjucks from 'nunjucks'
 import type { TFunction } from 'i18next'
 import type { Visitor } from '../services/bookerService'
 import { PrisonNames } from '../services/prisonService'
 import { DATE_FNS_LOCALE, Locale } from '../constants/locales'
+
+const nunjucksEnvironment = new nunjucks.Environment()
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -30,7 +42,11 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
-export const displayAge = (dateOfBirth: string, t: TFunction): string => {
+export const displayAge = (dateOfBirth: string | null, t: TFunction): string => {
+  if (dateOfBirth === null) {
+    return ''
+  }
+
   const dob = new Date(dateOfBirth)
   const today = new Date()
 
@@ -87,14 +103,44 @@ export const formatTimeDuration = (startTime: string, endTime: string, lng: Loca
   }
 }
 
-export const isAdult = (dateOfBirth: string | undefined | null, referenceDate: Date = new Date()): boolean => {
-  if (!dateOfBirth) return false
-  const dobDate = parseISO(dateOfBirth)
-  return differenceInYears(referenceDate, dobDate) >= 18
+/**
+ * Calculates the age in years based on the provided date of birth.
+ *
+ * @param dateOfBirth date of birth string YYYY-MM-DD
+ * @returns age in years or null if date of birth is invalid or not provided.
+ */
+export const ageInYears = (dateOfBirth: string | undefined | null): number | null => {
+  if (!dateOfBirth) {
+    return null
+  }
+  const parsedDateOfBirth = parseISO(dateOfBirth)
+  return isValid(parsedDateOfBirth) ? differenceInYears(new Date(), parsedDateOfBirth) : null
+}
+
+export const getYoungestVisitorAge = (visitors: Visitor[]): number | null => {
+  const visitorAges = visitors.map(visitor => visitor.age).filter((age): age is number => typeof age === 'number')
+
+  if (visitorAges.length === 0) {
+    return null
+  }
+
+  const youngestAge = Math.min(...visitorAges)
+  return youngestAge
 }
 
 export const clearSession = (req: Request): void => {
-  ;(['addPrisonerJourney', 'bookVisitJourney', 'bookVisitConfirmed'] as const).forEach(sessionItem => {
+  ;(
+    [
+      'addPrisonerJourney',
+      'addPrisonerJourneyResult',
+      'addVisitorJourney',
+      'addVisitorJourneyResult',
+      'bookVisitJourney',
+      'bookVisitConfirmed',
+      'bookedVisits',
+      'visitCancelled',
+    ] as const
+  ).forEach(sessionItem => {
     delete req.session[sessionItem]
   })
 }
@@ -115,4 +161,34 @@ export const getPrisonName = (prisonId: string, prisonNames: PrisonNames, lng: L
   }
 
   return prison.name?.[lng] ?? prison.name.en
+}
+
+export const escapeHtml = (value: string | undefined | null): string => {
+  const escape = nunjucksEnvironment.getFilter('escape')
+  return String(escape(value))
+}
+
+export const renderLinkTag = (
+  text: string | undefined | null,
+  url: string | undefined | null,
+  openInNewTab = false,
+): string => {
+  if (!text) return ''
+
+  if (!url) {
+    return escapeHtml(text.replaceAll('<link>', '').replaceAll('</link>', ''))
+  }
+
+  const match = text.match(/<link>(.*?)<\/link>/s)
+  if (!match || match.index === undefined) return escapeHtml(text)
+
+  const escapedUrl = escapeHtml(url)
+  const targetAttribute = openInNewTab ? ' target="_blank"' : ''
+  const relAttribute = openInNewTab ? ' rel="noreferrer noopener"' : ''
+  const fullMatch = match[0]
+  const linkText = match[1]
+  const before = escapeHtml(text.slice(0, match.index))
+  const after = escapeHtml(text.slice(match.index + fullMatch.length))
+
+  return `${before}<a href="${escapedUrl}"${targetAttribute}${relAttribute}>${escapeHtml(linkText)}</a>${after}`
 }

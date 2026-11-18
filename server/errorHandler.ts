@@ -4,7 +4,7 @@ import logger from '../logger'
 import paths from './constants/paths'
 
 export default function createErrorHandler(production: boolean) {
-  return (error: HTTPError, req: Request, res: Response, next: NextFunction): void => {
+  return (error: HTTPError, req: Request, res: Response, _next: NextFunction): void => {
     logger.error(`Error handling request for '${req.originalUrl}', user '${req.user?.sub}...'`, error)
 
     if (error.status === 401 || error.status === 403) {
@@ -19,6 +19,6 @@ export default function createErrorHandler(production: boolean) {
 
     res.status(error.status || 500)
 
-    return res.render('pages/error', { showOLServiceNav: !!req.session.booker })
+    return res.render('pages/error', { showOLServiceNav: !!req.session?.booker })
   }
 }

@@ -1,0 +1,86 @@
+import TestData from '../../../server/routes/testutils/testData'
+import SelectVisitorsPage from '../../pages/bookVisit/selectVisitors'
+import VisitsPage from '../../pages/visits/visits'
+import Page from '../../pages/page'
+import VisitorsPage from '../../pages/visitors/visitors'
+import PrisonersPage from '../../pages/prisoners/prisoners'
+import SelectPrisonerPage from '../../pages/bookVisit/selectPrisoner'
+
+context('Visitors page', () => {
+  const visitors = [
+    TestData.visitorInfoDto(),
+    TestData.visitorInfoDto({
+      visitorId: 2000,
+      firstName: 'Keith',
+      lastName: 'Richards',
+      dateOfBirth: '1990-05-05',
+      visitorRestrictions: [{ restrictionType: 'BAN' }],
+    }),
+    TestData.visitorInfoDto({
+      visitorId: 3000,
+      firstName: 'John',
+      lastName: 'Edwards',
+      dateOfBirth: '2000-06-06',
+      approved: false,
+    }),
+  ]
+
+  const visitorRequests = [
+    TestData.bookerPrisonerVisitorRequestDto({
+      firstName: 'Jack',
+      lastName: 'Rogers',
+      dateOfBirth: '1990-01-15',
+    }),
+  ]
+
+  const prison = TestData.prisonDto()
+  const prisoner = TestData.bookerPrisonerInfoDto()
+
+  beforeEach(() => {
+    cy.task('reset')
+    cy.task('stubHmppsAuthToken')
+    cy.task('stubPrisonNames')
+    cy.task('stubGetBookerReference')
+    cy.task('stubGetPrisoners', { prisoners: [prisoner] })
+    cy.task('stubGetFuturePublicVisits')
+    cy.signIn()
+
+    cy.task('stubGetPrison', prison)
+    cy.task('stubGetVisitors', { visitors })
+    cy.task('stubGetVisitorRequests', { visitorRequests })
+    cy.task('stubValidatePrisonerPass')
+  })
+
+  it('should show Visitors page with two visitors (one having a BAN restriction) and one visitor request', () => {
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    const prisonersPage = Page.verifyOnPage(PrisonersPage)
+    prisonersPage.viewPrisonerVisitors(0)
+
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
+    visitorsPage.visitorName(0).contains('Joan Phillips')
+    visitorsPage.visitorDateOfBirth(0).contains('21 February 1980')
+    visitorsPage.visitorAvailability(0).contains('Yes')
+    visitorsPage.visitorName(1).contains('Keith Richards')
+    visitorsPage.visitorDateOfBirth(1).contains('5 May 1990')
+    visitorsPage.visitorAvailability(1).contains('No, banned')
+    visitorsPage.visitorName(2).contains('John Edwards')
+    visitorsPage.visitorDateOfBirth(2).contains('6 June 2000')
+    visitorsPage.visitorAvailability(2).contains('No, visitor not approved')
+    visitorsPage.visitorRequests().should('exist')
+    visitorsPage.visitorRequestName(0).contains('Jack Rogers')
+    visitorsPage.visitorRequestDateOfBirth(0).contains('15 January 1990')
+  })
+
+  it('should not show a banned visitor on book visit journey Select visitors page', () => {
+    const visitsPage = Page.verifyOnPage(VisitsPage)
+    visitsPage.bookVisit()
+
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.continue()
+
+    const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
+    selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')
+    selectVisitorsPage.getVisitorByNameLabel('Keith Richards').should('not.exist')
+  })
+})

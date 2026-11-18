@@ -3,9 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
-import { BadRequest, InternalServerError } from 'http-errors'
+import { InternalServerError } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockVisitService, createMockVisitSessionsService } from '../../services/testutils/mocks'
+import {
+  createMockPrisonService,
+  createMockVisitService,
+  createMockVisitSessionsService,
+} from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { VisitSessionsCalendar } from '../../services/visitSessionsService'
 import paths from '../../constants/paths'
@@ -17,13 +22,16 @@ jest.mock('../../../logger')
 
 let app: Express
 
+const prisonService = createMockPrisonService()
 const visitService = createMockVisitService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto({ policyNoticeDaysMax: 6 }) // small booking window for testing
+const prison = TestData.prisonDto({
+  publicClient: TestData.prisonUserClientDto({ policyNoticeDaysMax: 7 }), // small booking window for testing
+})
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const firstSessionDate = '2024-05-30'
@@ -31,16 +39,17 @@ const calendar: VisitSessionsCalendar = {
   '2024-05': {
     '2024-05-28': [],
     '2024-05-29': [],
-    '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30' }],
+    '2024-05-30': [{ reference: 'a', startTime: '10:00', endTime: '11:30', ageConflict: undefined }],
     '2024-05-31': [
-      { reference: 'b', startTime: '09:00', endTime: '09:45' },
-      { reference: 'c', startTime: '14:00', endTime: '15:00' },
+      { reference: 'b', startTime: '09:00', endTime: '09:45', ageConflict: undefined },
+      { reference: 'c', startTime: '14:00', endTime: '15:00', ageConflict: undefined },
     ],
   },
   '2024-06': {
     '2024-06-01': [],
-    '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00' }],
-    '2024-06-03': [],
+    '2024-06-02': [{ reference: 'd', startTime: '09:00', endTime: '11:00', ageConflict: undefined }],
+    '2024-06-03': [{ reference: 'e', startTime: '10:00', endTime: '11:30', ageConflict: 16 }],
+    '2024-06-04': [],
   },
 }
 const allVisitSessionIds: string[] = ['2024-05-30_a', '2024-05-31_b', '2024-05-31_c', '2024-06-02_d']
@@ -49,7 +58,14 @@ const visitSessionA = TestData.availableVisitSessionDto({ sessionDate: '2024-05-
 const visitSessionB = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'b' })
 const visitSessionC = TestData.availableVisitSessionDto({ sessionDate: '2024-05-31', sessionTemplateReference: 'c' })
 const visitSessionD = TestData.availableVisitSessionDto({ sessionDate: '2024-06-02', sessionTemplateReference: 'd' })
-const allVisitSessions = [visitSessionA, visitSessionB, visitSessionC, visitSessionD]
+const visitSessionE = TestData.availableVisitSessionDto({
+  sessionDate: '2024-06-03',
+  sessionTemplateReference: 'e',
+  sessionConflicts: ['AGE_RESTRICTION'],
+  isAgeRestricted: true,
+  ageRestriction: 16,
+})
+const allVisitSessions = [visitSessionA, visitSessionB, visitSessionC, visitSessionD, visitSessionE]
 
 const application = TestData.applicationDto()
 
@@ -69,6 +85,7 @@ describe('Choose visit time', () => {
     let flashData: FlashData
 
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitSessionsService.getVisitSessionsCalendar.mockResolvedValue({
         calendar,
         firstSessionDate,
@@ -86,14 +103,14 @@ describe('Choose visit time', () => {
         },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId: prison.code,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
         },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitSessionsService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -103,7 +120,7 @@ describe('Choose visit time', () => {
         .get(paths.BOOK_VISIT.CHOOSE_TIME)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })
@@ -134,7 +151,7 @@ describe('Choose visit time', () => {
               .hasClass('visits-calendar__day--start-col-2'),
           ).toBe(true)
           expect($('.visits-calendar h2').eq(1).text()).toBe('June 2024')
-          expect($('.visits-calendar__month').eq(1).children('.visits-calendar__day').length).toBe(3)
+          expect($('.visits-calendar__month').eq(1).children('.visits-calendar__day').length).toBe(4)
           expect(
             $('.visits-calendar__month')
               .eq(1)
@@ -148,10 +165,11 @@ describe('Choose visit time', () => {
           )
 
           // available visit session day links
-          expect($('.visits-calendar__day a').length).toBe(3)
+          expect($('.visits-calendar__day a').length).toBe(4)
           expect($('.visits-calendar__day a').eq(0).attr('href')).toBe('#day-group-2024-05-30')
           expect($('.visits-calendar__day a').eq(1).attr('href')).toBe('#day-group-2024-05-31')
           expect($('.visits-calendar__day a').eq(2).attr('href')).toBe('#day-group-2024-06-02')
+          expect($('.visits-calendar__day a').eq(3).attr('href')).toBe('#day-group-2024-06-03')
           expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
             '30 May - Thursday - 1 visit time available',
           )
@@ -159,26 +177,42 @@ describe('Choose visit time', () => {
           expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.CHOOSE_TIME)
 
           // visit session radios per day
-          expect($('.visits-calendar__day-group').length).toBe(3)
+          expect($('.visits-calendar__day-group').length).toBe(4)
           expect($('.visits-calendar__day-group legend').eq(0).text().trim()).toBe('Thursday 30 May 2024')
           expect($('.visits-calendar__day-group legend').eq(1).text().trim()).toBe('Friday 31 May 2024')
           expect($('.visits-calendar__day-group legend').eq(2).text().trim()).toBe('Sunday 2 June 2024')
+          expect($('.visits-calendar__day-group legend').eq(3).text().trim()).toBe('Monday 3 June 2024')
 
-          expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]').length).toBe(5)
           expect($('input[name=visitSession]:checked').length).toBe(0)
           expect($('input[name=visitSession]').eq(0).attr('value')).toBe('2024-05-30_a')
           expect($('input[name=visitSession]').eq(1).attr('value')).toBe('2024-05-31_b')
           expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
           expect($('input[name=visitSession]').eq(3).attr('value')).toBe('2024-06-02_d')
+          expect($('input[name=visitSession]').eq(4).attr('value')).toBe('2024-06-03_e')
+
+          // check the age conflict changes aren't present on regular session
+          expect($('#day-group-2024-06-02 .govuk-warning-text').text()).toHaveLength(0)
+          expect($('#day-group-2024-06-02 .govuk-tag').text()).toHaveLength(0)
+          expect($('#day-group-2024-06-02 input[name=visitSession]').eq(0).prop('disabled')).toBe(false)
+
+          // check the age conflict banner/tag are present and radio disabled
+          expect($('#day-group-2024-06-03 .govuk-warning-text').text()).toContain(
+            'Age restricted visits cannot be selected. You can change visitors.',
+          )
+          expect($('#day-group-2024-06-03 .govuk-tag').text()).toContain('No visitors under 16 years old')
+          expect($('#day-group-2024-06-03 input[name=visitSession]').eq(0).prop('disabled')).toBe(true)
 
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prison.code)
           expect(visitSessionsService.getVisitSessionsCalendar).toHaveBeenCalledWith({
             prisonId: prison.code,
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
             bookerReference,
-            daysAhead: prison.policyNoticeDaysMax,
+            daysAhead: prison.publicClient!.policyNoticeDaysMax,
+            youngestVisitorAge: 45,
           })
         })
     })
@@ -276,7 +310,7 @@ describe('Choose visit time', () => {
           expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
             '31 May - Friday - 2 visit times available',
           )
-          expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]').length).toBe(5)
           expect($('input[name=visitSession]:checked').length).toBe(1)
           expect($('input[name=visitSession]').eq(2).attr('value')).toBe('2024-05-31_c')
           expect($('input[name=visitSession]').eq(2).prop('checked')).toBe(true)
@@ -300,7 +334,7 @@ describe('Choose visit time', () => {
           expect($('.visits-calendar__day--selected a').text().trim().replace(/\s+/g, ' ')).toBe(
             '30 May - Thursday - 1 visit time available',
           )
-          expect($('input[name=visitSession]').length).toBe(4)
+          expect($('input[name=visitSession]').length).toBe(5)
           // ...but no session radio input should be checked
           expect($('input[name=visitSession]:checked').length).toBe(0)
         })
@@ -335,7 +369,8 @@ describe('Choose visit time', () => {
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor.visitorId],
             bookerReference,
-            daysAhead: prison.policyNoticeDaysMax,
+            daysAhead: prison.publicClient!.policyNoticeDaysMax,
+            youngestVisitorAge: 45,
           })
         })
     })
@@ -365,6 +400,7 @@ describe('Choose visit time', () => {
 
   describe(`POST ${paths.BOOK_VISIT.CHOOSE_TIME}`, () => {
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitService.createVisitApplication.mockResolvedValue(application)
       visitService.changeVisitApplication.mockResolvedValue(application)
 
@@ -372,7 +408,7 @@ describe('Choose visit time', () => {
         booker: { reference: bookerReference, prisoners: [prisoner] },
         bookVisitJourney: {
           prisoner,
-          prison,
+          prisonId: prison.code,
           eligibleVisitors: [visitor],
           selectedVisitors: [visitor],
           sessionRestriction,
@@ -381,7 +417,7 @@ describe('Choose visit time', () => {
         },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitService }, sessionData })
     })
 
     it('should create a visit application for the selected date/time and store data in session', () => {
@@ -438,7 +474,14 @@ describe('Choose visit time', () => {
       }
 
       it('should set message in flash and redirect to current page when create application returns 400 Bad Request', () => {
-        visitService.createVisitApplication.mockRejectedValue(new BadRequest())
+        const error: SanitisedError = {
+          name: 'Error',
+          responseStatus: 400,
+          message: 'Bad Request',
+          stack: 'Error: Bad Request',
+          data: { status: 400 },
+        }
+        visitService.createVisitApplication.mockRejectedValue(error)
 
         return request(app)
           .post(paths.BOOK_VISIT.CHOOSE_TIME)
@@ -462,7 +505,14 @@ describe('Choose visit time', () => {
         bookVisitJourney.selectedVisitSession = visitSessionA
         bookVisitJourney.applicationReference = application.reference
 
-        visitService.changeVisitApplication.mockRejectedValue(new BadRequest())
+        const error: SanitisedError = {
+          name: 'Error',
+          responseStatus: 400,
+          message: 'Bad Request',
+          stack: 'Error: Bad Request',
+          data: { status: 400 },
+        }
+        visitService.changeVisitApplication.mockRejectedValue(error)
 
         return request(app)
           .post(paths.BOOK_VISIT.CHOOSE_TIME)

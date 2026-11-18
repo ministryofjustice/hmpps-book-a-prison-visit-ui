@@ -37,7 +37,12 @@
 
       <h3 class="govuk-heading-s">{{ t("common:labels.prisoner") }}</h3>
       <ul class="govuk-list">
-        <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
+        <li data-test="prisoner-name">
+          {{- t("common:prisoner.prisonerAtPrison", {
+            prisonerName: visit | prisonerNameFirstLast,
+            prisonName: visit.prisonId | getPrisonName(prisonNames, language)
+          }) -}}
+        </li>
       </ul>
 
       <h3 class="govuk-heading-s">{{ t("common:labels.visitors") }}</h3>
@@ -68,6 +73,11 @@
         {% if not visit.visitContact.email and not visit.visitContact.telephone %}
           <li data-test="main-contact-no-details">
             {{- t("common:labels.noContactDetails") -}}
+          </li>
+        {% endif %}
+        {% if language == 'cy' %}
+          <li data-test="main-contact-updates-language">
+            {{- t("common:labels.updatesInWelshAndEnglish") if visit.visitContact.languagePreference == 'cy' else t("common:labels.updatesInEnglish") -}}
           </li>
         {% endif %}
       </ul>

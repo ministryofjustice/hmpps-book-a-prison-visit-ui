@@ -40,6 +40,23 @@
       gtag('js', new Date());
 
       gtag('config', '{{ googleAnalyticsId }}');
+
+      document.addEventListener('DOMContentLoaded', function () {
+        const navigationLinks = document.querySelectorAll(
+          '.govuk-service-navigation__link'
+        );
+
+        navigationLinks.forEach(function (link, index) {
+          link.addEventListener('click', function () {
+            gtag('event', 'service_navigation_click', {
+              navigation_type: 'service_navigation',
+              navigation_text: link.textContent.trim(),
+              navigation_url: link.getAttribute('href'),
+              navigation_position: index + 1
+            });
+          });
+        });
+      });
     </script>
   {% endif %}
 
@@ -59,7 +76,7 @@
 {% block govukHeader %}
 {# If user authenticated then use GOVUK One Login Header; otherwise default header #}
 {% if user and user.sub %}
-  {{ govukOneLoginServiceHeader({ 
+  {{ govukOneLoginServiceHeader({
     signOutLink: signOutLink,
     oneLoginLink: oneLoginLink,
     lng: language
@@ -87,6 +104,7 @@
       role: "complementary"
     },
     html: t("common:phase.feedback")
+      | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/", true)
   }) }}
 
   {% if backLinkHref %}
@@ -105,7 +123,7 @@
       en: currentUrlEn.pathname + currentUrlEn.search,
       cy: currentUrlCy.pathname + currentUrlCy.search
     }
-  }) if features.welshLanguageEnabled }}
+  }) }}
 {% endblock %}
 
 {% block govukFooter %}

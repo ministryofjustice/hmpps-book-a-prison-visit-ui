@@ -1,8 +1,8 @@
-import { randomUUID } from 'crypto'
+import { randomUUID, type UUID } from 'crypto'
 import { intervalToDuration, isValid, parseISO } from 'date-fns'
 import logger from '../../logger'
 import { type BookVisitJourney } from '../@types/bapv'
-import { RestClientBuilder, OrchestrationApiClient, HmppsAuthClient } from '../data'
+import { OrchestrationApiClient } from '../data'
 import {
   ApplicationDto,
   BookingRequestVisitorDetailsDto,
@@ -13,13 +13,11 @@ import { getMainContactName } from '../utils/utils'
 import { Visitor } from './bookerService'
 
 export interface VisitDetails extends OrchestrationVisitDto {
-  visitDisplayId: string
+  visitDisplayId: UUID
 }
+
 export default class VisitService {
-  constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly orchestrationApiClient: OrchestrationApiClient) {}
 
   async createVisitApplication({
     bookVisitJourney,
@@ -28,12 +26,9 @@ export default class VisitService {
     bookVisitJourney: BookVisitJourney
     bookerReference: string
   }): Promise<ApplicationDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
     const visitorIds = bookVisitJourney.selectedVisitors!.map(visitor => visitor.visitorId)
 
-    const application = await orchestrationApiClient.createVisitApplication({
+    const application = await this.orchestrationApiClient.createVisitApplication({
       prisonerId: bookVisitJourney.prisoner.prisonerNumber,
       sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
       sessionDate: bookVisitJourney.selectedVisitSession!.sessionDate,
@@ -47,17 +42,15 @@ export default class VisitService {
   }
 
   async changeVisitApplication({ bookVisitJourney }: { bookVisitJourney: BookVisitJourney }): Promise<ApplicationDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
     const { mainContact } = bookVisitJourney
-    const { mainContactEmail, mainContactPhone } = bookVisitJourney
+    const { mainContactEmail, mainContactPhone, languagePreference } = bookVisitJourney
 
     const visitContact = mainContact
       ? {
           name: getMainContactName(mainContact),
           ...(mainContactPhone && { telephone: mainContactPhone }),
           ...(mainContactEmail && { email: mainContactEmail }),
+          languagePreference: languagePreference ?? 'en',
         }
       : undefined
 
@@ -72,7 +65,7 @@ export default class VisitService {
       ? { description: bookVisitJourney.visitorSupport }
       : undefined
 
-    const application = await orchestrationApiClient.changeVisitApplication({
+    const application = await this.orchestrationApiClient.changeVisitApplication({
       applicationReference: bookVisitJourney.applicationReference!,
       applicationRestriction: bookVisitJourney.selectedVisitSession!.sessionRestriction,
       sessionTemplateReference: bookVisitJourney.selectedVisitSession!.sessionTemplateReference,
@@ -98,12 +91,9 @@ export default class VisitService {
     visitors: Visitor[]
     language: string
   }): Promise<VisitDto> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
     const visitorDetails = this.buildVisitorDetails(visitors)
 
-    const visit = await orchestrationApiClient.bookVisit({
+    const visit = await this.orchestrationApiClient.bookVisit({
       applicationReference,
       actionedBy,
       isRequestBooking,
@@ -125,37 +115,25 @@ export default class VisitService {
     actionedBy: string
     language: string
   }): Promise<void> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    await orchestrationApiClient.cancelVisit({ applicationReference, actionedBy })
+    await this.orchestrationApiClient.cancelVisit({ applicationReference, actionedBy })
 
     logger.info(`Visit '${applicationReference}' has been cancelled by booker '${actionedBy}' (lng: ${language})`)
   }
 
   async getFuturePublicVisits(bookerReference: string): Promise<VisitDetails[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const visits = await orchestrationApiClient.getFuturePublicVisits(bookerReference)
+    const visits = await this.orchestrationApiClient.getFuturePublicVisits(bookerReference)
 
     return this.addVisitDisplayIds(visits)
   }
 
   async getPastPublicVisits(bookerReference: string): Promise<VisitDetails[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const visits = await orchestrationApiClient.getPastPublicVisits(bookerReference)
+    const visits = await this.orchestrationApiClient.getPastPublicVisits(bookerReference)
 
     return this.addVisitDisplayIds(visits)
   }
 
   async getCancelledPublicVisits(bookerReference: string): Promise<VisitDetails[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const visits = await orchestrationApiClient.getCancelledPublicVisits(bookerReference)
+    const visits = await this.orchestrationApiClient.getCancelledPublicVisits(bookerReference)
 
     return this.addVisitDisplayIds(visits)
   }
@@ -170,16 +148,12 @@ export default class VisitService {
       const { visitorId } = visitor
 
       let visitorAge: number | null
-      try {
-        const visitorDoB = parseISO(visitor.dateOfBirth ?? '')
+      const visitorDoB = parseISO(visitor.dateOfBirth ?? '')
 
-        if (isValid(visitorDoB)) {
-          const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
-          visitorAge = ageAsDuration?.years ?? 0
-        } else {
-          visitorAge = null
-        }
-      } catch {
+      if (isValid(visitorDoB)) {
+        const ageAsDuration = intervalToDuration({ start: visitorDoB, end: now })
+        visitorAge = ageAsDuration?.years ?? 0
+      } else {
         visitorAge = null
       }
 

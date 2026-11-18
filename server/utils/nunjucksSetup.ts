@@ -12,6 +12,7 @@ import {
   formatTimeFromDateTime,
   getPrisonName,
   initialiseName,
+  renderLinkTag,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
@@ -38,7 +39,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     app.locals.version = applicationInfo.gitShortHash
   } else {
     // Version changes every request
-    app.use((req, res, next) => {
+    app.use((_req, res, next) => {
       res.locals.version = Date.now().toString()
       return next()
     })
@@ -80,8 +81,10 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     }
   })
 
-  njkEnv.addFilter('prisonerNameFirstLast', prisoner => {
-    return convertToTitleCase(`${prisoner?.firstName} ${prisoner?.lastName}`)
+  njkEnv.addFilter('prisonerNameFirstLast', data => {
+    const firstName = data?.firstName ?? data?.prisonerFirstName
+    const lastName = data?.lastName ?? data?.prisonerLastName
+    return firstName && lastName ? convertToTitleCase(`${firstName} ${lastName}`) : ''
   })
 
   njkEnv.addFilter('displayAge', displayAge)
@@ -98,7 +101,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('getPrisonName', getPrisonName)
 
-  njkEnv.addGlobal('govukRebrand', true)
+  njkEnv.addFilter('renderLinkTag', renderLinkTag)
 
   return njkEnv
 }

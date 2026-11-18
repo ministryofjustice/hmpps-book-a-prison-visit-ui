@@ -1,8 +1,9 @@
 import { randomUUID, UUID } from 'crypto'
 import { TooManyRequests } from 'http-errors'
 import { differenceInDays } from 'date-fns'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import logger from '../../logger'
-import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
+import { OrchestrationApiClient } from '../data'
 import {
   AddVisitorToBookerPrisonerRequestDto,
   AuthDetailDto,
@@ -11,18 +12,19 @@ import {
   BookerVisitorRequestValidationErrorResponse,
   ConvictedStatus,
   CreateVisitorRequestResponseDto,
+  PermittedPrisonerForBookerDto,
   RegisterPrisonerForBookerDto,
 } from '../data/orchestrationApiTypes'
-import { SanitisedError } from '../sanitisedError'
 import RateLimitService from './rateLimitService'
 
-import { isAdult } from '../utils/utils'
+import { ageInYears } from '../utils/utils'
 
 export type Prisoner = {
   prisonerDisplayId: UUID
   prisonerNumber: string
   firstName: string
   lastName: string
+  dateOfBirth: string
   prisonId?: string | null
   registeredPrisonId: string
   availableVos: number
@@ -35,11 +37,16 @@ export type Visitor = {
   visitorId: number
   firstName: string
   lastName: string
-  dateOfBirth?: string | null
+  dateOfBirth: string | null
+  age: number | null
   adult: boolean
   banned: boolean
   banExpiryDate: string | null
   approved: boolean
+}
+
+export interface VisitorRequest extends BookerPrisonerVisitorRequestDto {
+  visitorRequestDisplayId: UUID
 }
 
 export type VisitorsByEligibility = {
@@ -49,18 +56,17 @@ export type VisitorsByEligibility = {
 
 export default class BookerService {
   constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
+    private readonly orchestrationApiClient: OrchestrationApiClient,
     private readonly bookerRateLimit: RateLimitService,
     private readonly prisonerRateLimit: RateLimitService,
     private readonly visitorRateLimit: RateLimitService,
   ) {}
 
-  async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+  // Adult age threshold for 'at least one adult visitor' requirement
+  private readonly ADULT_AGE = 18
 
-    const bookerReference = (await orchestrationApiClient.getBookerReference(authDetailDto)).value
+  async getBookerReference(authDetailDto: AuthDetailDto): Promise<string> {
+    const bookerReference = (await this.orchestrationApiClient.getBookerReference(authDetailDto)).value
 
     logger.info(`Booker reference ${bookerReference} retrieved`)
     return bookerReference
@@ -72,13 +78,12 @@ export default class BookerService {
   }: {
     bookerReference: string
     prisonerNumber: string
-  }): Promise<BookerPrisonerVisitorRequestDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
+  }): Promise<VisitorRequest[]> {
+    const allVisitorRequests = await this.orchestrationApiClient.getVisitorRequests(bookerReference)
 
-    const allVisitorRequests = await orchestrationApiClient.getVisitorRequests(bookerReference)
-
-    return allVisitorRequests.filter(request => request.prisonerId === prisonerNumber)
+    return allVisitorRequests
+      .filter(request => request.prisonerId === prisonerNumber) // get just this prisoner's visitor requests
+      .map(request => ({ ...request, visitorRequestDisplayId: randomUUID() }))
   }
 
   async addVisitorRequest({
@@ -99,13 +104,26 @@ export default class BookerService {
       throw new TooManyRequests()
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const result = await orchestrationApiClient.addVisitorRequest({ bookerReference, prisonerId, addVisitorRequest })
+    const result = await this.orchestrationApiClient.addVisitorRequest({
+      bookerReference,
+      prisonerId,
+      addVisitorRequest,
+    })
 
     logger.info(`Add visitor request for prisoner ${prisonerId} and booker ${bookerReference}: ${result}`)
     return result
+  }
+
+  async withdrawVisitorRequest({
+    requestReference,
+    bookerReference,
+  }: {
+    requestReference: string
+    bookerReference: string
+  }): Promise<void> {
+    await this.orchestrationApiClient.withdrawVisitorRequest({ requestReference, bookerReference })
+
+    logger.info(`Visitor request '${requestReference}' has been cancelled by booker '${bookerReference}'`)
   }
 
   async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
@@ -125,10 +143,7 @@ export default class BookerService {
       throw new TooManyRequests()
     }
 
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const result = await orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
+    const result = await this.orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
 
     const logMessage = result ? 'Registered' : 'Failed to register'
     logger.info(`${logMessage} prisoner ${prisoner.prisonerId} for booker ${bookerReference}`)
@@ -136,10 +151,7 @@ export default class BookerService {
   }
 
   async getPrisoners(bookerReference: string): Promise<Prisoner[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    const prisoners = await orchestrationApiClient.getPrisoners(bookerReference)
+    const prisoners = await this.orchestrationApiClient.getPrisoners(bookerReference)
 
     return prisoners.map(bookerPrisonerInfo => {
       const { prisoner, availableVos, nextAvailableVoDate, registeredPrison } = bookerPrisonerInfo
@@ -149,6 +161,7 @@ export default class BookerService {
         prisonerNumber: prisoner.prisonerNumber,
         firstName: prisoner.firstName,
         lastName: prisoner.lastName,
+        dateOfBirth: prisoner.dateOfBirth,
         prisonId: prisoner.prisonId,
         registeredPrisonId: registeredPrison.prisonCode,
         availableVos,
@@ -162,34 +175,51 @@ export default class BookerService {
     bookerReference: string,
     prisonerNumber: string,
   ): Promise<true | BookerPrisonerValidationErrorResponse['validationError']> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
     try {
-      await orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
+      await this.orchestrationApiClient.validatePrisoner(bookerReference, prisonerNumber)
       return true
     } catch (error) {
       const sanitisedError = error as SanitisedError<BookerPrisonerValidationErrorResponse>
-      if (sanitisedError.status === 422 && sanitisedError.data?.validationError) {
+      if (sanitisedError.responseStatus === 422 && sanitisedError.data?.validationError) {
         return sanitisedError.data.validationError
       }
       throw error
     }
   }
 
+  async updatePrisonersRegisteredPrison({
+    bookerReference,
+    prisonerId,
+    prisonId,
+  }: {
+    bookerReference: string
+    prisonerId: string
+    prisonId: string
+  }): Promise<PermittedPrisonerForBookerDto> {
+    const response = await this.orchestrationApiClient.updatePrisonersRegisteredPrison({
+      bookerReference,
+      prisonerId,
+      prisonId,
+    })
+    logger.info(`Registered prison for prisoner ${prisonerId} updated to ${prisonId} by booker ${bookerReference}`)
+    return response
+  }
+
   async getVisitors(bookerReference: string, prisonerNumber: string): Promise<Visitor[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-    const visitors = await orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
+    const visitors = await this.orchestrationApiClient.getVisitors(bookerReference, prisonerNumber)
 
     return visitors.map(visitor => {
+      const age = ageInYears(visitor.dateOfBirth)
+      const adult = age !== null && age >= this.ADULT_AGE
+
       return {
         visitorDisplayId: randomUUID(),
         visitorId: visitor.visitorId,
         firstName: visitor.firstName,
         lastName: visitor.lastName,
-        dateOfBirth: visitor.dateOfBirth ?? '',
-        adult: isAdult(visitor.dateOfBirth),
+        dateOfBirth: visitor.dateOfBirth ?? null,
+        age,
+        adult,
         // API only returns single BAN with furthest expiry date (or null for indefinite) - so no need to handle overlapping BANs
         banned: visitor.visitorRestrictions.some(restriction => restriction.restrictionType === 'BAN'),
         banExpiryDate:

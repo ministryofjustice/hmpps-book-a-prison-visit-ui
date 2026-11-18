@@ -16,6 +16,7 @@ import {
   BookerPrisonerVisitorRequestDto,
   CreateVisitorRequestResponseDto,
   AuthDetailDto,
+  PermittedPrisonerForBookerDto,
 } from '../../server/data/orchestrationApiTypes'
 import { SessionRestriction } from '../../server/data/orchestrationApiClient'
 
@@ -93,9 +94,9 @@ export default {
     bookerReference = TestData.bookerReference().value,
     visits = [],
   }: {
-    bookerReference: string
-    visits: VisitDto[]
-  }): SuperAgentRequest =>
+    bookerReference?: string
+    visits?: VisitDto[]
+  } = {}): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -245,9 +246,40 @@ export default {
       },
     }),
 
+  stubUpdatePrisonersRegisteredPrison: ({
+    bookerReference = 'aaaa-bbbb-cccc',
+    prisonerId = 'A1234BC',
+    prisonId = 'HEI',
+    permittedPrisonerForBookerDto = TestData.permittedPrisonerForBookerDto(),
+  }: {
+    bookerReference: string
+    prisonerId: string
+    prisonId: string
+    permittedPrisonerForBookerDto: PermittedPrisonerForBookerDto
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/public/booker/${bookerReference}/permitted/prisoners/${prisonerId}/prison`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              prisonId,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: permittedPrisonerForBookerDto,
+      },
+    })
+  },
+
   stubGetVisitorRequests: ({
     bookerReference = TestData.bookerReference(),
-    visitorRequests = [TestData.visitorRequest()],
+    visitorRequests = [TestData.bookerPrisonerVisitorRequestDto()],
   }: {
     bookerReference?: BookerReference
     visitorRequests?: BookerPrisonerVisitorRequestDto[]
@@ -325,6 +357,32 @@ export default {
         },
       },
     }),
+
+  stubCancelVisitorRequest: ({
+    requestReference,
+    bookerReference,
+  }: {
+    requestReference: string
+    bookerReference: string
+  }): SuperAgentRequest => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        url: `/orchestration/visitor-requests/${requestReference}/withdraw`,
+        bodyPatterns: [
+          {
+            equalToJson: {
+              bookerReference,
+            },
+          },
+        ],
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    })
+  },
 
   stubRegisterPrisoner: ({
     bookerReference = TestData.bookerReference(),
@@ -443,15 +501,17 @@ export default {
     prisonerId,
     visitorIds,
     bookerReference = 'aaaa-bbbb-cccc',
-    visitSessions,
     excludedApplicationReference = '',
+    youngestVisitorAge,
+    visitSessions,
   }: {
     prisonId: string
     prisonerId: string
     visitorIds: number[]
     bookerReference: string
-    visitSessions: AvailableVisitSessionDto[]
     excludedApplicationReference?: string
+    youngestVisitorAge: number | null
+    visitSessions: AvailableVisitSessionDto[]
   }): SuperAgentRequest =>
     stubFor({
       request: {
@@ -472,7 +532,7 @@ export default {
               },
             ],
           },
-          userType: { equalTo: 'PUBLIC' },
+          ...(youngestVisitorAge !== null && { youngestVisitorAge: { equalTo: youngestVisitorAge.toString() } }),
         },
       },
       response: {

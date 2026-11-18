@@ -20,7 +20,7 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto()
+const prisonId = TestData.prisonDto().code
 const sessionRestriction: SessionRestriction = 'OPEN'
 const adultVisitor1 = TestData.visitor({ visitorDisplayId: 'uuidv4-1-1-1-1', visitorId: 100 })
 const adultVisitor2 = TestData.visitor({ visitorDisplayId: 'uuidv4-2-2-2-2', visitorId: 200 })
@@ -37,7 +37,7 @@ beforeEach(() => {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitJourney: {
       prisoner,
-      prison,
+      prisonId,
       eligibleVisitors: [adultVisitor1, adultVisitor2, childVisitor],
       selectedVisitors: [adultVisitor1, childVisitor],
       sessionRestriction,
@@ -73,12 +73,12 @@ describe('Contact details', () => {
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })
 
-    it('should render contact details page for selected main contact and all fields empty', () => {
+    it('should render contact details page for selected main contact and all fields empty (in English - without Welsh updates preference checkbox)', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CONTACT_DETAILS)
         .expect(200)
@@ -95,6 +95,21 @@ describe('Contact details', () => {
           expect($('input[name=getUpdatesBy]:checked').length).toBe(0)
           expect($('input[name=mainContactEmail]').prop('value')).toBeFalsy()
           expect($('input[name=mainContactPhone]').prop('value')).toBeFalsy()
+          expect($('input[name=languagePreference]').length).toBe(0)
+        })
+    })
+
+    it('should render contact details page (in Welsh - with Welsh updates preference checkbox)', () => {
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CONTACT_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name=languagePreference]').length).toBe(1)
+          expect($('input[name=languagePreference]').prop('checked')).toBe(true)
         })
     })
 
@@ -111,6 +126,7 @@ describe('Contact details', () => {
           expect($('input[name=getUpdatesBy]:checked').length).toBe(2)
           expect($('input[name=mainContactEmail]').prop('value')).toBe('user@example.com')
           expect($('input[name=mainContactPhone]').prop('value')).toBe('07712 000 000')
+          expect($('input[name=languagePreference]').length).toBe(0)
         })
     })
 
@@ -129,6 +145,30 @@ describe('Contact details', () => {
           expect($('input[name=getUpdatesBy]:checked').length).toBe(1)
           expect($('input[name=mainContactEmail]').prop('value')).toBe('new-email')
           expect($('input[name=mainContactPhone]').prop('value')).toBeFalsy()
+          expect($('input[name=languagePreference]').length).toBe(0)
+        })
+    })
+
+    it('should pre-populate with data in formValues overriding that in session (in Welsh - unchecked updates in Welsh checkbox)', () => {
+      sessionData.bookVisitJourney!.mainContactEmail = 'user@example.com'
+      sessionData.bookVisitJourney!.mainContactPhone = '07712 000 000'
+      sessionData.bookVisitJourney!.languagePreference = 'en'
+      const formValues = { getUpdatesBy: ['email'], mainContactEmail: 'new-email', mainContactPhone: '' }
+      flashData = { formValues: [formValues] }
+
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CONTACT_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('input[name=getUpdatesBy]:checked').length).toBe(1)
+          expect($('input[name=mainContactEmail]').prop('value')).toBe('new-email')
+          expect($('input[name=mainContactPhone]').prop('value')).toBeFalsy()
+          expect($('input[name=languagePreference]').length).toBe(1)
+          expect($('input[name=languagePreference]').prop('checked')).toBe(false)
         })
     })
 
@@ -180,6 +220,35 @@ describe('Contact details', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney!.mainContactEmail).toBe('user@example.com')
           expect(sessionData.bookVisitJourney!.mainContactPhone).toBe('07712 000 000')
+          expect(sessionData.bookVisitJourney!.languagePreference).toBe('en')
+
+          expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
+            bookVisitJourney: sessionData.bookVisitJourney,
+          })
+        })
+    })
+    it('should save new email and phone number to session, update application and redirect to check visit details page (in Welsh with updates in Welsh checked)', () => {
+      sessionData.bookVisitJourney!.mainContactEmail = 'existing-email'
+      sessionData.bookVisitJourney!.mainContactPhone = 'existing-phone'
+      sessionData.bookVisitJourney!.languagePreference = 'en'
+
+      app = appWithAllRoutes({ services: { visitService }, sessionData, lng: 'cy' })
+
+      return request(app)
+        .post(paths.BOOK_VISIT.CONTACT_DETAILS)
+        .send({
+          getUpdatesBy: ['email', 'phone'],
+          mainContactEmail: 'user@example.com',
+          mainContactPhone: '07712 000 000',
+          languagePreference: 'cy',
+        })
+        .expect(302)
+        .expect('location', paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.bookVisitJourney!.mainContactEmail).toBe('user@example.com')
+          expect(sessionData.bookVisitJourney!.mainContactPhone).toBe('07712 000 000')
+          expect(sessionData.bookVisitJourney!.languagePreference).toBe('cy')
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
@@ -204,6 +273,7 @@ describe('Contact details', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney!.mainContactEmail).toBeUndefined()
           expect(sessionData.bookVisitJourney!.mainContactPhone).toBe('07712 000 000')
+          expect(sessionData.bookVisitJourney!.languagePreference).toBe('en')
 
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
@@ -228,7 +298,7 @@ describe('Contact details', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney!.mainContactEmail).toBe('user@example.com')
           expect(sessionData.bookVisitJourney!.mainContactPhone).toBeUndefined()
-
+          expect(sessionData.bookVisitJourney!.languagePreference).toBe('en')
           expect(visitService.changeVisitApplication).toHaveBeenCalledWith({
             bookVisitJourney: sessionData.bookVisitJourney,
           })

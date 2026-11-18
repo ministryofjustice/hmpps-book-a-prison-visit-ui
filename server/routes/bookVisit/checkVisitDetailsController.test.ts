@@ -3,6 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { InternalServerError } from 'http-errors'
+import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 import { appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import TestData from '../testutils/testData'
 import { BookVisitConfirmed, MoJAlert } from '../../@types/bapv'
@@ -10,7 +11,6 @@ import { createMockVisitService } from '../../services/testutils/mocks'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
 import { ApplicationValidationErrorResponse } from '../../data/orchestrationApiTypes'
-import { SanitisedError } from '../../sanitisedError'
 import { SessionRestriction } from '../../data/orchestrationApiClient'
 
 jest.mock('../../../logger')
@@ -22,7 +22,7 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto()
+const prisonId = TestData.prisonDto().code
 const visitor = TestData.visitor()
 const sessionRestriction: SessionRestriction = 'OPEN'
 const application = TestData.applicationDto()
@@ -33,7 +33,7 @@ beforeEach(() => {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitJourney: {
       prisoner,
-      prison,
+      prisonId,
       eligibleVisitors: [visitor],
       selectedVisitors: [visitor],
       sessionRestriction,
@@ -44,6 +44,7 @@ beforeEach(() => {
       mainContact: 'User One',
       mainContactPhone: '07712 000 000',
       mainContactEmail: 'user@example.com',
+      languagePreference: 'en',
       visitorSupport: 'Wheelchair access',
     },
   } as SessionData
@@ -74,12 +75,12 @@ describe('Check visit details', () => {
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })
 
-    it('should render check visit details page', () => {
+    it('should render check visit details page (in English - no updates in English/Welsh row)', () => {
       return request(app)
         .get(paths.BOOK_VISIT.CHECK_DETAILS)
         .expect(200)
@@ -101,7 +102,36 @@ describe('Check visit details', () => {
           expect($('[data-test="main-contact-name"]').text()).toBe('User One')
           expect($('[data-test="contact-details-email"]').text()).toBe('user@example.com')
           expect($('[data-test="contact-details-phone"]').text()).toBe('07712 000 000')
+          expect($('[data-test=updates-in-language]').length).toBe(0)
           expect($('[data-test="change-main-contact"]').attr('href')).toBe(paths.BOOK_VISIT.MAIN_CONTACT)
+        })
+    })
+
+    it('should render check visit details page (in Welsh - with updates in Welsh and English)', () => {
+      sessionData.bookVisitJourney!.languagePreference = 'cy'
+
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-language]').text()).toBe("Diweddariadau yn y Gymraeg a'r Saesneg")
+        })
+    })
+
+    it('should render check visit details page (in Welsh - with updates in English only)', () => {
+      app = appWithAllRoutes({ sessionData, lng: 'cy' })
+
+      return request(app)
+        .get(paths.BOOK_VISIT.CHECK_DETAILS)
+        .expect(200)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test=updates-in-language]').text()).toBe('Diweddariadau yn Saesneg')
         })
     })
 
@@ -142,7 +172,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit booked page (with contact details)', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
-          prison,
+          prisonId,
           visitReference: visitBooked.reference,
           hasEmail: true,
           hasMobile: true,
@@ -172,7 +202,7 @@ describe('Check visit details', () => {
 
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: false,
-          prison,
+          prisonId,
           visitReference: visitBooked.reference,
           hasEmail: false,
           hasMobile: false,
@@ -210,7 +240,7 @@ describe('Check visit details', () => {
       it('should book visit, clear book visit journey data, store visit confirmation and redirect to the visit requested page', () => {
         const expectedBookVisitConfirmed: BookVisitConfirmed = {
           isARequest: true,
-          prison,
+          prisonId,
           visitReference: visitRequested.reference,
           hasEmail: true,
           hasMobile: true,
@@ -236,6 +266,10 @@ describe('Check visit details', () => {
     })
 
     describe('Handle API errors', () => {
+      beforeEach(() => {
+        app = appWithAllRoutes({ services: { visitService }, sessionData })
+      })
+
       describe('HTTP 422 Response', () => {
         const expectedFlashMessage: MoJAlert = {
           variant: 'error',
@@ -247,7 +281,7 @@ describe('Check visit details', () => {
         it('should throw error APPLICATION_INVALID_PRISONER_NOT_FOUND and not set flash message', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISONER_NOT_FOUND'] },
@@ -256,7 +290,7 @@ describe('Check visit details', () => {
 
           return request(app)
             .post(paths.BOOK_VISIT.CHECK_DETAILS)
-            .expect(422)
+            .expect(500)
             .expect(() => {
               expect(flashProvider).not.toHaveBeenCalled()
               expect(sessionData.bookVisitJourney).not.toBe(undefined)
@@ -268,7 +302,7 @@ describe('Check visit details', () => {
         it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_PRISON_PRISONER_MISMATCH', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_PRISON_PRISONER_MISMATCH'] },
@@ -297,7 +331,7 @@ describe('Check visit details', () => {
         it('should redirect to cannot book page with no flash message for error APPLICATION_INVALID_NO_VO_BALANCE', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_VO_BALANCE'] },
@@ -326,7 +360,7 @@ describe('Check visit details', () => {
         it('should set flash message and redirect to choose visit time page for error APPLICATION_INVALID_NO_SLOT_CAPACITY', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: { status: 422, validationErrors: ['APPLICATION_INVALID_NO_SLOT_CAPACITY'] },
@@ -355,7 +389,7 @@ describe('Check visit details', () => {
         it('should set flash message and redirect to choose visit time page for any other error set', () => {
           const error: SanitisedError<ApplicationValidationErrorResponse> = {
             name: 'Error',
-            status: 422,
+            responseStatus: 422,
             message: 'Unprocessable Entity',
             stack: 'Error: Unprocessable Entity',
             data: {

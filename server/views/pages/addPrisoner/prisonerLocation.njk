@@ -40,14 +40,14 @@
         }) }}
 
         <p>
-          {{- t("addPrisoner:prisonerLocation.findPrisonerLink", { url: "https://www.gov.uk/find-prisoner" }) | safe -}}
+          {{- t("addPrisoner:prisonerLocation.findPrisonerLink") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}
         </p>
 
         {{ govukButton({
           text: t("common:buttons.continue"),
           attributes: { "data-test": "continue-button" },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

@@ -5,7 +5,11 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { randomUUID } from 'crypto'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
-import { createMockBookerService, createMockVisitSessionsService } from '../../services/testutils/mocks'
+import {
+  createMockBookerService,
+  createMockPrisonService,
+  createMockVisitSessionsService,
+} from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import logger from '../../../logger'
@@ -17,12 +21,14 @@ jest.mock('../../../logger')
 let app: Express
 
 const bookerService = createMockBookerService()
+const prisonService = createMockPrisonService()
 const visitSessionsService = createMockVisitSessionsService()
 let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 const prison = TestData.prisonDto()
+const prisonId = prison.code
 
 const fakeDate = new Date('2024-05-02')
 
@@ -39,6 +45,7 @@ const visitor2 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 18y',
   dateOfBirth: '2006-05-02', // 18 today
+  age: 18,
 })
 const visitor3 = TestData.visitor({
   visitorDisplayId: randomUUID(),
@@ -46,6 +53,7 @@ const visitor3 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 17y',
   dateOfBirth: '2006-05-03', // 18 tomorrow
+  age: 17,
   adult: false,
 })
 const visitor4 = TestData.visitor({
@@ -54,6 +62,7 @@ const visitor4 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 16y',
   dateOfBirth: '2008-05-02', // 16 today
+  age: 16,
   adult: false,
 })
 const visitor5 = TestData.visitor({
@@ -62,6 +71,7 @@ const visitor5 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 15y',
   dateOfBirth: '2008-05-03', // 16 tomorrow
+  age: 15,
   adult: false,
 })
 const visitor6 = TestData.visitor({
@@ -70,6 +80,7 @@ const visitor6 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 10y',
   dateOfBirth: '2014-05-02',
+  age: 10,
   adult: false,
 })
 const visitor7 = TestData.visitor({
@@ -78,6 +89,7 @@ const visitor7 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 1y',
   dateOfBirth: '2023-05-02',
+  age: 1,
   adult: false,
 })
 const visitor8 = TestData.visitor({
@@ -86,6 +98,7 @@ const visitor8 = TestData.visitor({
   firstName: 'Visitor',
   lastName: 'Age 4m',
   dateOfBirth: '2024-01-02',
+  age: 0,
   adult: false,
 })
 const visitor9 = TestData.visitor({
@@ -94,6 +107,7 @@ const visitor9 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
+  age: 21,
   adult: false,
   banned: true,
   banExpiryDate: '2024-05-16', // 14 days after currently faked date
@@ -104,6 +118,7 @@ const visitor10 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-04-01',
+  age: 21,
   adult: false,
   banned: true,
   banExpiryDate: '2025-05-02', // 1 year after currently faked date
@@ -114,6 +129,7 @@ const visitor11 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-05-01',
+  age: 21,
   adult: true,
   approved: false,
 })
@@ -123,6 +139,7 @@ const visitor12 = TestData.visitor({
   firstName: 'FirstName',
   lastName: 'LastName',
   dateOfBirth: '2004-05-01',
+  age: 21,
   adult: true,
   banned: true,
   approved: false,
@@ -148,15 +165,16 @@ describe('Select visitors', () => {
     beforeEach(() => {
       bookerService.getVisitorsByEligibility.mockResolvedValue(visitors)
       bookerService.getVisitorRequests.mockResolvedValue([])
+      prisonService.getPrison.mockResolvedValue(prison)
 
       flashData = {}
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
 
       sessionData = {
-        bookVisitJourney: { prisoner, prison },
+        bookVisitJourney: { prisoner, prisonId },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
     })
 
     it('should use the session validation middleware', () => {
@@ -165,7 +183,7 @@ describe('Select visitors', () => {
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })
@@ -178,11 +196,11 @@ describe('Select visitors', () => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
           expect($('#navigation').length).toBe(0)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=max-visitors]').text()).toContain(
-            'Up to 4 people can visit someone at Hewell (HMP & YOI)',
+            'Up to 4 people can visit John Smith at Hewell (HMP & YOI)',
           )
           expect($('[data-test=max-adults]').text()).toContain('2 people 16 years old or older')
           expect($('[data-test=max-children]').text()).toContain('3 people under 16 years old')
@@ -239,14 +257,14 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(bookerService.getVisitorRequests).not.toHaveBeenCalled()
-
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookVisitJourney'])
@@ -258,7 +276,7 @@ describe('Select visitors', () => {
       const visitorRequest = TestData.visitorRequest()
       bookerService.getVisitorRequests.mockResolvedValue([visitorRequest])
 
-      app = appWithAllRoutes({ services: { bookerService }, sessionData })
+      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 
       return request(app)
         .get(paths.BOOK_VISIT.SELECT_VISITORS)
@@ -270,7 +288,9 @@ describe('Select visitors', () => {
           expect($('[data-test=visitor-request-dob-0]').text().trim()).toBe('21 February 1980')
 
           // Link new visitor
-          expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+          expect($('[data-test=link-a-visitor]').attr('href')).toBe(
+            `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+          )
 
           expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
             bookerReference,
@@ -345,7 +365,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
@@ -360,12 +380,12 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [],
             ineligibleVisitors: [],
           } as SessionData['bookVisitJourney'])
@@ -382,7 +402,7 @@ describe('Select visitors', () => {
         .expect(() => {
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [visitor6],
             ineligibleVisitors: [],
             cannotBookReason: 'NO_ELIGIBLE_ADULT_VISITOR',
@@ -401,7 +421,7 @@ describe('Select visitors', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Who is going on the visit\? -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('Who is going on the visit?')
 
           expect($('[data-test=visitors-max-total]').length).toBe(0)
@@ -423,12 +443,12 @@ describe('Select visitors', () => {
           expect(bookerService.getVisitorsByEligibility).toHaveBeenCalledWith({
             bookerReference,
             prisonerNumber: prisoner.prisonerNumber,
-            policyNoticeDaysMax: prison.policyNoticeDaysMax,
+            policyNoticeDaysMax: prison.publicClient!.policyNoticeDaysMax,
           })
 
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: [],
             ineligibleVisitors: visitors.ineligibleVisitors,
           } as SessionData['bookVisitJourney'])
@@ -438,13 +458,14 @@ describe('Select visitors', () => {
 
   describe(`POST ${paths.BOOK_VISIT.SELECT_VISITORS}`, () => {
     beforeEach(() => {
+      prisonService.getPrison.mockResolvedValue(prison)
       visitSessionsService.getSessionRestriction.mockResolvedValue('OPEN')
 
       sessionData = {
-        bookVisitJourney: { prisoner, prison, eligibleVisitors: visitors.eligibleVisitors },
+        bookVisitJourney: { prisoner, prisonId, eligibleVisitors: visitors.eligibleVisitors },
       } as SessionData
 
-      app = appWithAllRoutes({ services: { visitSessionsService }, sessionData })
+      app = appWithAllRoutes({ services: { prisonService, visitSessionsService }, sessionData })
     })
 
     it('should should save selected visitors to session and redirect to select date and time page (OPEN visit)', () => {
@@ -457,11 +478,12 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'OPEN',
           } as SessionData['bookVisitJourney'])
+          expect(prisonService.getPrison).toHaveBeenCalledWith(prisonId)
           expect(visitSessionsService.getSessionRestriction).toHaveBeenCalledWith({
             prisonerId: prisoner.prisonerNumber,
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
@@ -481,7 +503,7 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3],
             sessionRestriction: 'CLOSED',
@@ -510,7 +532,7 @@ describe('Select visitors', () => {
           expect(flashProvider).not.toHaveBeenCalled()
           expect(sessionData.bookVisitJourney).toStrictEqual({
             prisoner,
-            prison,
+            prisonId,
             eligibleVisitors: visitors.eligibleVisitors,
             selectedVisitors: [visitor1, visitor3], // duplicate '1' & unrecognised UUID filtered out
             sessionRestriction: 'OPEN',
@@ -520,6 +542,21 @@ describe('Select visitors', () => {
             visitorIds: [visitor1.visitorId, visitor3.visitorId],
           })
         })
+    })
+
+    it('should handle failing to load visitor limits with normal error handling', () => {
+      prisonService.getPrison.mockRejectedValue(new Error())
+      return request(app)
+        .post(paths.BOOK_VISIT.SELECT_VISITORS)
+        .send({
+          visitorDisplayIds: [
+            visitor1.visitorDisplayId,
+            visitor1.visitorDisplayId,
+            randomUUID(),
+            visitor3.visitorDisplayId,
+          ],
+        })
+        .expect(500)
     })
 
     describe('Validation errors', () => {

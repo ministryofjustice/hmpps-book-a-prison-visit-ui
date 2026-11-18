@@ -12,9 +12,8 @@
       }) -}}
     {% else %}
       {{- t("shared:howToChangeVisit.contactPrisonWebsite", {
-        prisonName: prison.code | getPrisonName(prisonNames, language),
-        url: prison.webAddress
-      }) | safe -}}
+        prisonName: prison.code | getPrisonName(prisonNames, language)
+      }) | renderLinkTag(prison.webAddress) | safe -}}
     {% endif -%}
   </p>
 
@@ -24,6 +23,6 @@
 
 {% if bookVisitConfirmed %}
   <p class="no-visited-state" data-test="cancel-visit-content">
-    {{- t("shared:howToChangeVisit.cancelVisit", { url: paths.VISITS.HOME }) | safe -}}
+    {{- t("shared:howToChangeVisit.cancelVisit") | renderLinkTag(paths.VISITS.HOME) | safe -}}
   </p>
 {% endif %}

@@ -18,7 +18,7 @@ let sessionData: SessionData
 
 const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
-const prison = TestData.prisonDto()
+const prisonId = TestData.prisonDto().code
 const sessionRestriction: SessionRestriction = 'OPEN'
 const adultVisitor1 = TestData.visitor({ visitorDisplayId: 'uuidv4-1-1-1-1', visitorId: 100 })
 const adultVisitor2 = TestData.visitor({ visitorDisplayId: 'uuidv4-2-2-2-2', visitorId: 200 })
@@ -35,7 +35,7 @@ beforeEach(() => {
     booker: { reference: bookerReference, prisoners: [prisoner] },
     bookVisitJourney: {
       prisoner,
-      prison,
+      prisonId,
       eligibleVisitors: [adultVisitor1, adultVisitor2, childVisitor],
       selectedVisitors: [adultVisitor1, childVisitor],
       sessionRestriction,
@@ -70,7 +70,7 @@ describe('Main contact', () => {
         .get(paths.BOOK_VISIT.MAIN_CONTACT)
         .expect(302)
         .expect('Location', paths.VISITS.HOME)
-        .expect(res => {
+        .expect(() => {
           expect(logger.info).toHaveBeenCalledWith(expect.stringMatching('Session validation failed'))
         })
     })

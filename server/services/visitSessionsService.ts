@@ -1,19 +1,21 @@
 import { addDays, eachDayOfInterval, format } from 'date-fns'
-import { HmppsAuthClient, OrchestrationApiClient, RestClientBuilder } from '../data'
+import { OrchestrationApiClient } from '../data'
 import { AvailableVisitSessionDto } from '../data/orchestrationApiTypes'
 import { DateFormats } from '../constants/dateFormats'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 
-type VisitSession = { reference: string; startTime: string; endTime: string }
+type VisitSession = {
+  reference: string
+  startTime: string
+  endTime: string
+  ageConflict: number | undefined
+}
 
 // Keyed by month (yyyy-MM); all dates for each month(s), sessions for each day (keyed yyyy-MM-dd)
 export type VisitSessionsCalendar = Record<string, Record<string, VisitSession[]>>
 
 export default class VisitSessionsService {
-  constructor(
-    private readonly orchestrationApiClientFactory: RestClientBuilder<OrchestrationApiClient>,
-    private readonly hmppsAuthClient: HmppsAuthClient,
-  ) {}
+  constructor(private readonly orchestrationApiClient: OrchestrationApiClient) {}
 
   async getVisitSessionsCalendar({
     prisonId,
@@ -22,6 +24,7 @@ export default class VisitSessionsService {
     bookerReference,
     excludedApplicationReference,
     daysAhead,
+    youngestVisitorAge,
   }: {
     prisonId: string
     prisonerId: string
@@ -29,19 +32,21 @@ export default class VisitSessionsService {
     bookerReference: string
     excludedApplicationReference?: string
     daysAhead: number
+    youngestVisitorAge: number | null
   }): Promise<{
     calendar: VisitSessionsCalendar
     firstSessionDate: string
     allVisitSessionIds: string[]
     allVisitSessions: AvailableVisitSessionDto[]
   }> {
-    const allVisitSessions = await this.getVisitSessions(
+    const allVisitSessions = await this.getVisitSessions({
       prisonId,
       prisonerId,
       visitorIds,
       bookerReference,
       excludedApplicationReference,
-    )
+      youngestVisitorAge,
+    })
 
     if (allVisitSessions.length === 0) {
       return {
@@ -70,10 +75,12 @@ export default class VisitSessionsService {
       const visitSessionsOnDate = allVisitSessions.filter(session => session.sessionDate === dateKey)
 
       currentMonth[dateKey] = visitSessionsOnDate.map(session => {
+        const hasAgeRestrictionConflict = session.sessionConflicts.includes('AGE_RESTRICTION')
         return {
           reference: session.sessionTemplateReference,
           startTime: session.sessionTimeSlot.startTime,
           endTime: session.sessionTimeSlot.endTime,
+          ageConflict: hasAgeRestrictionConflict ? session.ageRestriction : undefined,
         }
       })
     })
@@ -86,21 +93,27 @@ export default class VisitSessionsService {
     return { calendar, firstSessionDate, allVisitSessionIds, allVisitSessions }
   }
 
-  private async getVisitSessions(
-    prisonId: string,
-    prisonerId: string,
-    visitorIds: number[],
-    bookerReference: string,
-    excludedApplicationReference?: string,
-  ): Promise<AvailableVisitSessionDto[]> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    return orchestrationApiClient.getVisitSessions({
+  private async getVisitSessions({
+    prisonId,
+    prisonerId,
+    visitorIds,
+    bookerReference,
+    excludedApplicationReference,
+    youngestVisitorAge,
+  }: {
+    prisonId: string
+    prisonerId: string
+    visitorIds: number[]
+    bookerReference: string
+    excludedApplicationReference?: string
+    youngestVisitorAge: number | null
+  }): Promise<AvailableVisitSessionDto[]> {
+    return this.orchestrationApiClient.getVisitSessions({
       prisonId,
       prisonerId,
       visitorIds,
       bookerReference,
+      youngestVisitorAge,
       excludedApplicationReference,
     })
   }
@@ -112,9 +125,6 @@ export default class VisitSessionsService {
     prisonerId: string
     visitorIds: number[]
   }): Promise<SessionRestriction> {
-    const token = await this.hmppsAuthClient.getSystemClientToken()
-    const orchestrationApiClient = this.orchestrationApiClientFactory(token)
-
-    return orchestrationApiClient.getSessionRestriction({ prisonerId, visitorIds })
+    return this.orchestrationApiClient.getSessionRestriction({ prisonerId, visitorIds })
   }
 }

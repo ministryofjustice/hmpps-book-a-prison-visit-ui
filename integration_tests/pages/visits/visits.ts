@@ -9,6 +9,8 @@ export default class VisitsPage extends Page {
 
   visitStartEndTime = (index: number): PageElement => cy.get(`[data-test=visit-start-end-time-${index}]`)
 
+  visitPrisonerName = (index: number): PageElement => cy.get(`[data-test="visit-prisoner-name-${index}"]`)
+
   visitReference = (index: number): PageElement => cy.get(`[data-test=visit-reference-${index}]`)
 
   visitLink = (index: number): PageElement => cy.get(`[data-test=visit-link-${index}]`)
@@ -26,6 +28,4 @@ export default class VisitsPage extends Page {
   }
 
   noPrisoner = (): PageElement => cy.get('[data-test="no-prisoner"]')
-
-  prisonerName = (): PageElement => cy.get('h2')
 }

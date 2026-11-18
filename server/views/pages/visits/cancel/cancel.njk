@@ -29,7 +29,12 @@
 
       <h2 class="govuk-heading-m">{{ t("common:labels.prisoner") }}</h2>
       <ul class="govuk-list">
-        <li data-test="prisoner-name">{{ visit.prisonerFirstName | capitalize }} {{ visit.prisonerLastName | capitalize }}</li>
+        <li data-test="prisoner-name">
+          {{- t("common:prisoner.prisonerAtPrison", {
+            prisonerName: visit | prisonerNameFirstLast,
+            prisonName: visit.prisonId | getPrisonName(prisonNames, language)
+          }) -}}
+        </li>
       </ul>
 
 
@@ -65,14 +70,14 @@
           ],
           errorMessage: errors | findError('cancelVisit')
         }) }}
-          
+
         {{ govukButton({
-          text: t("visits:cancel.confirmButton"),
+          text: t("common:buttons.confirm"),
           attributes: {
             "data-test": "confirm-button"
           },
           preventDoubleClick: true
-        }) }} 
+        }) }}
       </form>
     </div>
   </div>

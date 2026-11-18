@@ -1,0 +1,33 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = t("addVisitor:addVisitorStart.title") %}
+{% set backLinkHref = paths.VISITORS + '/' + prisonerDisplayId %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p class="govuk-body-l">{{ t("addVisitor:addVisitorStart.identityRequirement") }}</p>
+
+      <p>
+        {{- t("addVisitor:addVisitorStart.acceptableId")
+          | renderLinkTag("https://www.gov.uk/government/publications/management-of-security-at-visits-policy-framework-open-estate/acceptable-forms-of-identification-id-when-visiting-a-prison-in-england-and-wales-annex-a")
+          | safe -}}
+      </p>
+
+      <p>{{ t("addVisitor:addVisitorStart.visitorList") }}</p>
+
+      <p>{{ t("addVisitor:addVisitorStart.incorrectInfoRejected") }}</p>
+
+      {{ govukButton({
+        text: t("common:buttons.continue"),
+        href: paths.ADD_VISITOR.DETAILS + '/' + prisonerDisplayId,
+        attributes: { "data-test": "continue-button" },
+        preventDoubleClick: true
+      }) }}
+    </div>
+  </div>
+{% endblock %}

@@ -8,17 +8,21 @@ import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { VisitDetails } from '../../services/visitService'
 import { Prisoner } from '../../services/bookerService'
+import { BookVisitJourney } from '../../@types/bapv'
 
 let app: Express
 
 const visitService = createMockVisitService()
 const bookerService = createMockBookerService()
+
 const bookerReference = TestData.bookerReference().value
+const prisoner = TestData.prisoner()
 
 let sessionData: SessionData
 
 beforeEach(() => {
   sessionData = {} as SessionData
+  bookerService.getPrisoners.mockResolvedValue([prisoner])
 
   app = appWithAllRoutes({ services: { visitService, bookerService }, sessionData })
 })
@@ -27,19 +31,10 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-// Short term redirect from old bookings URL to new visits URL (because old URL in confirmation emails)
-describe('/bookings => /visits redirect', () => {
-  it('should redirect /bookings to the Visits home page', () => {
-    return request(app).get('/bookings').expect(302).expect('Location', paths.VISITS.HOME)
-  })
-})
-
 describe('Visits home page (future visits list)', () => {
   const futureVisitDetails = [TestData.visitDetails(), TestData.visitDetails({ visitSubStatus: 'REQUESTED' })]
-  const prisoner = TestData.prisoner()
 
   it('should render the Visits home page - with a future visit', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
 
     return request(app)
@@ -50,11 +45,13 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
-        expect($('[data-test="tag-1"]').length).toBe(0)
+        expect($('[data-test="moved-prison-tag-1"]').length).toBe(0)
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
+
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
         )
@@ -62,11 +59,54 @@ describe('Visits home page (future visits list)', () => {
           `${paths.VISITS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
         )
 
-        expect($('[data-test="tag-2"]').text()).toContain(`Awaiting review`)
-
-        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
+        expect($('[data-test="awaiting-review-tag-2"]').text()).toContain(`Awaiting review`)
 
         expect($('[data-test="no-visits"]').length).toBeFalsy()
+
+        expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
+        expect($('[data-test="book-a-visit"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+
+        expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
+
+        expect(sessionData.bookedVisits).toStrictEqual({
+          type: 'future',
+          visits: futureVisitDetails,
+        } as SessionData['bookedVisits'])
+      })
+  })
+
+  it('should render the Visits home page - with a future visit (but no registered prisoner)', () => {
+    bookerService.getPrisoners.mockResolvedValue([])
+    visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
+
+    return request(app)
+      .get(paths.VISITS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visits -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="moved-prison-tag-1"]').length).toBe(0)
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
+        expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
+        expect($('[data-test="visit-reference-1"]').text()).toBe('ab-cd-ef-gh')
+
+        expect($('[data-test="visit-link-1"]').attr('href')).toBe(
+          `${paths.VISITS.DETAILS}/${futureVisitDetails[0].visitDisplayId}`,
+        )
+        expect($('[data-test="visit-link-cancel-1"]').attr('href')).toBe(
+          `${paths.VISITS.CANCEL_VISIT}/${futureVisitDetails[0].visitDisplayId}`,
+        )
+
+        expect($('[data-test="no-visits"]').length).toBeFalsy()
+
+        expect($('[data-test="book-a-visit"]').length).toBe(0)
+
+        expect($('[data-test=no-prisoner]').text()).toBe('You need to link a prisoner to book a visit.')
+        expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
 
@@ -78,7 +118,6 @@ describe('Visits home page (future visits list)', () => {
   })
 
   it('should render the Visits home page - with no future visits', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
@@ -87,9 +126,7 @@ describe('Visits home page (future visits list)', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-date-1"]').length).toBeFalsy()
-        expect($('[data-test=change-visit-heading]').length).toBeFalsy()
         expect($('[data-test="no-visits"]').length).toBeTruthy()
 
         expect(visitService.getFuturePublicVisits).toHaveBeenCalledWith(bookerReference)
@@ -101,8 +138,25 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
+  it('should render the Visits home page - with prisoner moved tag, when prisoner is registered to different prison', () => {
+    bookerService.getPrisoners.mockResolvedValue([TestData.prisoner({ registeredPrisonId: 'DHI' })])
+    visitService.getFuturePublicVisits.mockResolvedValue(futureVisitDetails)
+
+    return request(app)
+      .get(paths.VISITS.HOME)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('title').text()).toMatch(/^Visits -/)
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('Visits')
+        expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="moved-prison-tag-1"]').text()).toContain('John has moved prison')
+        expect($('[data-test="awaiting-review-tag-1"]').length).toBe(0)
+      })
+  })
+
   it('should render the Visits home page with the prisoner associated with the booker and store prisoners in session', () => {
-    bookerService.getPrisoners.mockResolvedValue([prisoner])
     visitService.getFuturePublicVisits.mockResolvedValue([])
     return request(app)
       .get(paths.VISITS.HOME)
@@ -112,10 +166,6 @@ describe('Visits home page (future visits list)', () => {
         expect($('title').text()).toMatch(/^Visits -/)
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('h1').text()).toBe('Visits')
-        expect($('[data-test="prisoner-name-at-location"]').text()).toContain('John Smith at Hewell (HMP & YOI)')
-        expect($('form[method=POST]').attr('action')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
-        expect($('input[name=prisonerDisplayId]').val()).toBe('uuidv4-1-1-1-1')
-        expect($('[data-test="book-a-visit"]').text().trim()).toBe('Book a visit')
 
         expect(bookerService.getPrisoners).toHaveBeenCalledWith(bookerReference)
         expect(sessionData).toStrictEqual({
@@ -133,6 +183,7 @@ describe('Visits home page (future visits list)', () => {
 
   it('should render the Visits home page with add a prisoner message and button', () => {
     bookerService.getPrisoners.mockResolvedValue([])
+    visitService.getFuturePublicVisits.mockResolvedValue([])
 
     return request(app)
       .get(paths.VISITS.HOME)
@@ -143,8 +194,8 @@ describe('Visits home page (future visits list)', () => {
         expect($('h1').text()).toBe('Visits')
         expect($('[data-test="back-link"]').length).toBe(0)
         expect($('[data-test="prisoner-name"]').length).toBe(0)
-        expect($('[data-test=no-prisoner]').text()).toBe('You need to add a prisoner to book a visit.')
-        expect($('[data-test="start"]').length).toBe(0)
+        expect($('[data-test=no-prisoner]').text()).toBe('You need to link a prisoner to book a visit.')
+        expect($('[data-test="book-a-visit"]').length).toBe(0)
         expect($('[data-test="add-prisoner"]').attr('href')).toBe(paths.ADD_PRISONER.LOCATION)
 
         expect(sessionData).toStrictEqual({
@@ -160,31 +211,17 @@ describe('Visits home page (future visits list)', () => {
       })
   })
 
-  it('Page header - should render the GOVUK One Login Header on pages where the user is logged in', () => {
+  it('should clear any stale session data', () => {
+    sessionData.booker = { reference: TestData.bookerReference().value, prisoners: [prisoner] }
+    sessionData.bookVisitJourney = { data: 'abandoned book visit journey data' } as unknown as BookVisitJourney
+
+    visitService.getFuturePublicVisits.mockResolvedValue([])
+
     return request(app)
       .get(paths.VISITS.HOME)
       .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('head > title').text()).toBe('Visits - Visit someone in prison - GOV.UK')
-
-        expect($('header .rebranded-one-login-header').length).toBe(1)
-        expect($('header.govuk-header').length).toBe(0)
-        expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
-        expect($('.govuk-service-navigation__link').length).toBe(2)
-        expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Visits')
-        expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Visitors')
-      })
-  })
-
-  it('Page header - should render the phase banner', () => {
-    return request(app)
-      .get(paths.VISITS.HOME)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('head > title').text()).toBe('Visits - Visit someone in prison - GOV.UK')
-        expect($('.govuk-phase-banner').text()).toContain('Beta')
+      .expect(() => {
+        expect(sessionData.bookVisitJourney).toBeUndefined()
       })
   })
 })
@@ -205,6 +242,7 @@ describe('Past visits list page', () => {
         expect($('h1').text()).toBe('Past visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_PAST}/${pastVisitDetails.visitDisplayId}`,
@@ -245,7 +283,7 @@ describe('Past visits list page', () => {
 })
 
 describe('Cancelled visits list page', () => {
-  const cancelledVisitDetails = TestData.visitDetails({ outcomeStatus: 'ESTABLISHMENT_CANCELLED' })
+  const cancelledVisitDetails = TestData.visitDetails()
 
   it('should render the cancelled visits page', () => {
     visitService.getCancelledPublicVisits.mockResolvedValue([cancelledVisitDetails])
@@ -260,6 +298,7 @@ describe('Cancelled visits list page', () => {
         expect($('h1').text()).toBe('Rejected and cancelled visits')
 
         expect($('[data-test="visit-date-1"]').text()).toBe('Thursday 30 May 2024')
+        expect($('[data-test="visit-prisoner-name-1"]').text()).toBe('John Smith at Hewell (HMP & YOI)')
         expect($('[data-test="visit-start-end-time-1"]').text()).toBe('10am to 11:30am')
         expect($('[data-test="visit-link-1"]').attr('href')).toBe(
           `${paths.VISITS.VISIT_CANCELLED}/${cancelledVisitDetails.visitDisplayId}`,

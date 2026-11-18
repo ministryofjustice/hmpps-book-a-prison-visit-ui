@@ -1,9 +1,9 @@
+import { Locale } from '../constants/locales'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 import {
   AvailableVisitSessionDto,
   BookerVisitorRequestValidationErrorResponse,
   CreateVisitorRequestResponseDto,
-  PrisonDto,
 } from '../data/orchestrationApiTypes'
 import { Prisoner, Visitor } from '../services/bookerService'
 import { type VisitDetails } from '../services/visitService'
@@ -25,11 +25,17 @@ export type AddPrisonerJourney = {
     'prisonerDob-year': string
     prisonNumber: string
   }
-  result?: boolean
+}
+
+export type AddPrisonerJourneyResult = {
+  selectedPrisonId: string
+  result: boolean
+  prisonerNumber: string
 }
 
 // data that is built up during an add visitor request journey
 export type AddVisitorJourney = {
+  prisoner: Prisoner
   visitorDetails: {
     firstName: string
     lastName: string
@@ -37,8 +43,15 @@ export type AddVisitorJourney = {
     'visitorDob-month': string
     'visitorDob-year': string
     visitorDob: string
+    languagePreference: Locale
   }
-  result?: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
+}
+
+export type AddVisitorJourneyResult = {
+  firstName: string
+  lastName: string
+  result: CreateVisitorRequestResponseDto['status'] | BookerVisitorRequestValidationErrorResponse['validationError']
+  prisoner: Prisoner
 }
 
 // data that is built up during a visit booking journey
@@ -47,7 +60,7 @@ export type BookVisitJourney = {
   prisoner: Prisoner
 
   // prison for this visit
-  prison?: PrisonDto
+  prisonId?: string
 
   // may be set during journey to flag why a visit cannot be booked
   cannotBookReason?: CannotBookReason
@@ -81,11 +94,12 @@ export type BookVisitJourney = {
   // contact details
   mainContactEmail?: string
   mainContactPhone?: string
+  languagePreference?: Locale
 }
 
 export type BookVisitConfirmed = {
   isARequest: boolean
-  prison: PrisonDto
+  prisonId: string
   visitReference: string
   hasEmail: boolean
   hasMobile: boolean
@@ -102,10 +116,7 @@ export type VisitCancelled = {
 }
 
 export type CannotBookReason =
-  | 'NO_VO_BALANCE'
-  | 'TRANSFER_OR_RELEASE'
-  | 'UNSUPPORTED_PRISON'
-  | 'NO_ELIGIBLE_ADULT_VISITOR'
+  'NO_VO_BALANCE' | 'TRANSFER_OR_RELEASE' | 'UNSUPPORTED_PRISON' | 'NO_ELIGIBLE_ADULT_VISITOR'
 
 export type FlashFormValues = Record<string, unknown>
 

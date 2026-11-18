@@ -8,6 +8,8 @@ export default class PrisonerLocationController {
 
   public view(): RequestHandler {
     return async (req, res) => {
+      delete req.session.addPrisonerJourneyResult
+
       const selectedPrisonId = req.session.addPrisonerJourney?.selectedPrisonId
       const prisonerDetails = req.session.addPrisonerJourney?.prisonerDetails
       const supportedPrisonIds = await this.prisonService.getSupportedPrisonIds()
