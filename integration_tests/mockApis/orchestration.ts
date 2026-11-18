@@ -387,11 +387,9 @@ export default {
   stubRegisterPrisoner: ({
     bookerReference = TestData.bookerReference(),
     prisoner = TestData.registerPrisonerForBookerDto(),
-    fail = false,
   }: {
     bookerReference?: BookerReference
     prisoner?: RegisterPrisonerForBookerDto
-    fail?: boolean
   } = {}): SuperAgentRequest =>
     stubFor({
       request: {
@@ -404,8 +402,40 @@ export default {
         ],
       },
       response: {
-        status: fail ? 422 : 200,
+        status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    }),
+
+  stubRegisterPrisonerFail: ({
+    bookerReference = TestData.bookerReference(),
+    prisoner = TestData.registerPrisonerForBookerDto(),
+    validationError = 'FAILED_REGISTRATION',
+  }: {
+    bookerReference?: BookerReference
+    prisoner?: RegisterPrisonerForBookerDto
+    validationError?: BookerVisitorRequestValidationErrorResponse['validationError'][number]
+  } = {}): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/orchestration/public/booker/${bookerReference.value}/permitted/prisoners/register`,
+        bodyPatterns: [
+          {
+            equalToJson: prisoner,
+          },
+        ],
+      },
+      response: {
+        status: 422,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          status: 422,
+          errorCode: null,
+          userMessage: 'Error',
+          developerMessage: null,
+          validationError,
+        },
       },
     }),
 
