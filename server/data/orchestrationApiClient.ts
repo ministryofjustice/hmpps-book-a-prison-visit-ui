@@ -25,6 +25,7 @@ import {
   CreateVisitorRequestResponseDto,
   PermittedPrisonerForBookerDto,
   WithdrawVisitorRequestDto,
+  BookerPrisonerRegistrationErrorResponse,
 } from './orchestrationApiTypes'
 
 export type SessionRestriction = AvailableVisitSessionDto['sessionRestriction']
@@ -239,7 +240,10 @@ export default class OrchestrationApiClient extends RestClient {
     )
   }
 
-  async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
+  async registerPrisoner(
+    bookerReference: string,
+    prisoner: RegisterPrisonerForBookerDto,
+  ): Promise<true | BookerPrisonerRegistrationErrorResponse['validationError']> {
     try {
       await this.post(
         {
@@ -251,8 +255,9 @@ export default class OrchestrationApiClient extends RestClient {
       )
       return true
     } catch (error) {
-      if ((<SanitisedError>error)?.responseStatus === 422) {
-        return false
+      const sanitisedError = error as SanitisedError<BookerPrisonerRegistrationErrorResponse>
+      if (sanitisedError.responseStatus === 422 && sanitisedError.data?.validationError) {
+        return sanitisedError.data.validationError
       }
       throw error
     }

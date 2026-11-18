@@ -68,7 +68,7 @@ export default class PrisonerDetailsController {
         prisonerNumber: data.prisonNumber,
       }
 
-      if (result) {
+      if (result === true) {
         delete req.session.addPrisonerJourney
         return res.redirect(paths.ADD_PRISONER.SUCCESS)
       }

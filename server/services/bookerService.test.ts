@@ -160,17 +160,32 @@ describe('Booker service', () => {
     })
 
     it('should attempt to register a prisoner and log failure', async () => {
-      orchestrationApiClient.registerPrisoner.mockResolvedValue(false)
+      orchestrationApiClient.registerPrisoner.mockResolvedValue('FAILED_REGISTRATION')
 
       const result = await bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)
 
-      expect(result).toBe(false)
+      expect(result).toBe('FAILED_REGISTRATION')
       expect(orchestrationApiClient.registerPrisoner).toHaveBeenCalledWith(
         bookerReference,
         registerPrisonerForBookerDto,
       )
       expect(logger.info).toHaveBeenCalledWith(
         `Failed to register prisoner ${registerPrisonerForBookerDto.prisonerId} for booker ${bookerReference}`,
+      )
+    })
+
+    it('should attempt to register a prisoner and log already registered failure', async () => {
+      orchestrationApiClient.registerPrisoner.mockResolvedValue('PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER')
+
+      const result = await bookerService.registerPrisoner(bookerReference, registerPrisonerForBookerDto)
+
+      expect(result).toBe('PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER')
+      expect(orchestrationApiClient.registerPrisoner).toHaveBeenCalledWith(
+        bookerReference,
+        registerPrisonerForBookerDto,
+      )
+      expect(logger.info).toHaveBeenCalledWith(
+        `Failed to register prisoner ${registerPrisonerForBookerDto.prisonerId} for booker ${bookerReference}: already registered against booker`,
       )
     })
 
