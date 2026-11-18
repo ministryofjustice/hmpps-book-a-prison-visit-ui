@@ -21,6 +21,7 @@ generic-service:
     PVB_URL: "https://dev.prisonvisits.prison.service.justice.gov.uk/en/request"
     GOOGLE_ANALYTICS_ID: "G-SSLMWLQYHQ"
     ENVIRONMENT_NAME: dev
+    LOG_LEVEL: "debug"
 
     FEATURE_MULTIPLE_PRISONERS: "true"
 
