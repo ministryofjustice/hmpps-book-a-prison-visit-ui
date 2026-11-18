@@ -4,6 +4,7 @@ import VisitsPage from '../../pages/visits/visits'
 import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
 import PrisonersPage from '../../pages/prisoners/prisoners'
+import SelectPrisonerPage from '../../pages/bookVisit/selectPrisoner'
 
 context('Visitors page', () => {
   const visitors = [
@@ -34,7 +35,6 @@ context('Visitors page', () => {
 
   const prison = TestData.prisonDto()
   const prisoner = TestData.bookerPrisonerInfoDto()
-  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
@@ -42,10 +42,7 @@ context('Visitors page', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.signIn()
 
     cy.task('stubGetPrison', prison)
@@ -60,8 +57,7 @@ context('Visitors page', () => {
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
 
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
     visitorsPage.visitorName(0).contains('Joan Phillips')
     visitorsPage.visitorDateOfBirth(0).contains('21 February 1980')
     visitorsPage.visitorAvailability(0).contains('Yes')
@@ -79,6 +75,9 @@ context('Visitors page', () => {
   it('should not show a banned visitor on book visit journey Select visitors page', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
     visitsPage.bookVisit()
+
+    const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+    selectPrisonerPage.continue()
 
     const selectVisitorsPage = Page.verifyOnPage(SelectVisitorsPage)
     selectVisitorsPage.getVisitorByNameLabel('Joan Phillips').should('exist')

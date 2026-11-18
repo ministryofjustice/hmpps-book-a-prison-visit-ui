@@ -1,0 +1,95 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{#
+  Macro to display visit details summary including tags, reference, and actions.
+  Params:
+    visit: The visit object
+    index: The index of the visit in the list
+    pathPrefix: The prefix for the visit details path (e.g. paths.VISITS.DETAILS)
+    showTags: Boolean to show tags (default false)
+    showReference: Boolean to show visit reference (default false)
+    showCancelLink: Boolean to show cancel visit link (default false)
+ #}
+{%- macro visitDetailsSummary(params) %}
+  {%- set visit = params.visit -%}
+  {%- set index = params.index -%}
+  {%- set pathPrefix = params.pathPrefix -%}
+  {%- set showTags = params.showTags | default(false) -%}
+  {%- set showReference = params.showReference | default(false) -%}
+  {%- set showCancelLink = params.showCancelLink | default(false) -%}
+
+  <h2 class="govuk-heading-s" data-test="visit-date-{{ index }}">
+    {{- visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_WITH_DAY, language) -}}
+  </h2>
+
+  <ul class="govuk-list">
+    {% if showTags %}
+      {% if visit.isRequest %}
+        <li>
+          {{ govukTag({
+          text: t("visits:future.awaitingReview"),
+          classes: "govuk-tag--orange govuk-!-margin-bottom-2",
+          attributes: { "data-test": "awaiting-review-tag-" + index  }
+        }) }}
+        </li>
+      {% endif %}
+
+      {% if visit.prisonerMoved %}
+        <li>
+          {{ govukTag({
+          text: t("visits:future.notAtPrisonTag", {
+            prisonerFirstName: visit.prisonerFirstName | capitalize
+          }),
+          classes: "govuk-tag--orange govuk-!-margin-top-1 govuk-!-margin-bottom-1",
+          attributes: { "data-test": "moved-prison-tag-" + index  }
+        }) }}
+        </li>
+      {% endif %}
+    {% endif %}
+
+    <li data-test="visit-start-end-time-{{ index }}">
+      {{- t("common:dateTime.timeRange", {
+        startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+        endTime: visit.endTimestamp | formatTimeFromDateTime(language)
+      }) -}}
+    </li>
+
+    <li data-test="visit-prisoner-name-{{ index }}">
+      {{- t("common:prisoner.prisonerAtPrison", {
+        prisonerName: visit | prisonerNameFirstLast,
+        prisonName: visit.prisonId | getPrisonName(prisonNames, language)
+      }) -}}
+    </li>
+
+    {% if showReference %}
+      <li>
+        {{ t("common:labels.visitReference") }}:
+        <span data-test="visit-reference-{{ index }}">{{ visit.reference }}</span>
+      </li>
+    {% endif %}
+
+    <li>
+      <a href="{{ pathPrefix }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state" data-test="visit-link-{{ index }}">
+        {{- t("visits:shared.viewDetailsLink") }}
+        <span class="govuk-visually-hidden">
+          {{ t("visits:shared.viewDetailsLinkHidden", {
+            startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+            date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
+          }) }}
+        </span>
+      </a>
+
+      {% if showCancelLink %}
+        <a href="{{ paths.VISITS.CANCEL_VISIT }}/{{ visit.visitDisplayId }}" class="govuk-link--no-visited-state govuk-!-padding-left-3" data-test="visit-link-cancel-{{ index }}">
+          {{- t("common:labels.cancelVisit") }}
+          <span class="govuk-visually-hidden">
+            {{ t("visits:future.cancelLinkHidden", {
+              startTime: visit.startTimestamp | formatTimeFromDateTime(language),
+              date: visit.startTimestamp | formatDate(dateFormats.DISPLAY_DATE_DAY_MONTH, language)
+            }) }}
+          </span>
+        </a>
+      {% endif %}
+    </li>
+  </ul>
+{% endmacro -%}

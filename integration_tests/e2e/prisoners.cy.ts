@@ -15,7 +15,6 @@ context('Prisoners page', () => {
       prisonerNumber: 'B4321CA',
     }),
   ]
-  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
@@ -23,10 +22,7 @@ context('Prisoners page', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners', { prisoners })
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
-    })
+    cy.task('stubGetFuturePublicVisits')
     cy.task('stubGetSupportedPrisonIds')
     cy.task('stubGetVisitors', { visitors: [TestData.visitorInfoDto()] })
     cy.task('stubGetVisitorRequests')
@@ -77,15 +73,13 @@ context('Prisoners page', () => {
     prisonersPage.prisonerName(0).contains('John Smith')
     prisonersPage.viewPrisonerVisitors(0)
 
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
-    visitorsPage.prisonerName().contains('John Smith')
+    Page.verifyOnPage(VisitorsPage, 'John Smith')
 
     cy.visit(paths.PRISONERS)
     const prisonersPageAfterVisit = Page.verifyOnPage(PrisonersPage)
     prisonersPageAfterVisit.prisonerName(1).contains('Roger Jones')
     prisonersPageAfterVisit.viewPrisonerVisitors(1)
 
-    const visitorsPageForRoger = Page.verifyOnPage(VisitorsPage)
-    visitorsPageForRoger.prisonerName().contains('Roger Jones')
+    Page.verifyOnPage(VisitorsPage, 'Roger Jones')
   })
 })

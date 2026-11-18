@@ -71,9 +71,9 @@ export default abstract class Page {
     cy.get('[data-test=hide-cookies-rejected]').click()
   }
 
-  oneLoginHeader = (): PageElement => cy.get('.rebranded-one-login-header')
+  oneLoginHeader = (): PageElement => cy.get('.cross-service-header')
 
-  signOut = (): PageElement => cy.get('.rebranded-one-login-header').contains('a', 'Sign out').click()
+  signOut = (): PageElement => cy.get('.cross-service-header').contains('a', 'Sign out').click()
 
   getServiceName = (): PageElement => cy.get('.govuk-service-navigation__text')
 

@@ -17,7 +17,7 @@ let sessionData: SessionData
 let flashData: FlashData
 
 const bookerReference = TestData.bookerReference().value
-const prisoner = TestData.prisoner()
+const prisoner = TestData.prisoner({ prisonerDisplayId: randomUUID() })
 const visitor = TestData.visitor()
 
 beforeEach(() => {
@@ -60,10 +60,11 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('h1').text()).toBe('Visitors')
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('John Smith’s visitors')
         expect($('.moj-alert').length).toBe(0)
 
-        expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="visitors-linked"]').text()).toBe('Visitors linked to your account')
         expect($('[data-test="visitor-name-0"]').text()).toBe('Joan Phillips')
         expect($('[data-test="visitor-dob-0"]').text()).toBe('21 February 1980')
         expect($('[data-test="visitor-availability-0"]').text()).toBe('Yes')
@@ -88,11 +89,12 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('h1').text()).toBe('Visitors')
-        expect($('[data-test="prisoner-visitors"]').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('h1').text()).toBe('John Smith’s visitors')
+        expect($('[data-test="visitors-linked"]').length).toBe(0)
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
         expect($('[data-test=no-visitors]').text().trim()).toContain('Warning')
-        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to your account')
+        expect($('[data-test=no-visitors]').text().trim()).toContain('No visitors are linked to John Smith.')
         expect($('[data-test=link-a-visitor]').length).toBe(1)
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
@@ -125,7 +127,9 @@ describe('Visitors page', () => {
           `${paths.CANCEL_VISITOR_REQUEST.CANCEL}/${visitorRequests[0].visitorRequestDisplayId}`,
         )
 
-        expect($('[data-test=link-a-visitor]').attr('href')).toBe(paths.ADD_VISITOR.START)
+        expect($('[data-test=link-a-visitor]').attr('href')).toBe(
+          `${paths.ADD_VISITOR.START}/${prisoner.prisonerDisplayId}`,
+        )
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
@@ -153,6 +157,20 @@ describe('Visitors page', () => {
         const $ = cheerio.load(res.text)
         expect($('.moj-alert').eq(0).text()).toContain(alert.title)
         expect($('.moj-alert').eq(0).text()).toContain(alert.text)
+      })
+  })
+
+  it('should render correct back link when FEATURE_MULTIPLE PRISONERS is enabled', () => {
+    enableFeatureForTest('multiplePrisoners')
+    bookerService.getVisitors.mockResolvedValue([visitor])
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONERS)
       })
   })
 
@@ -195,7 +213,7 @@ describe('Visitors page', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('[data-test="prisoner-visitors"]').text()).toContain('Sam Jones')
+        expect($('h1').text()).toContain('Sam Jones')
       })
   })
 })

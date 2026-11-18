@@ -8,4 +8,4 @@ export const mockTFunction = ((key: string, variables?: Record<string, unknown>)
   return `${key}|${Object.entries(variables)
     .map(([k, v]) => `${k}:${v}`)
     .join('|')}`
-}) as TFunction
+}) as unknown as TFunction

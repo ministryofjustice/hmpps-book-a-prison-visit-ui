@@ -1,13 +1,29 @@
 import { RequestHandler } from 'express'
 import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import { UUID } from 'crypto'
 import paths from '../../../constants/paths'
 import { dateOfBirthValidationChain } from '../../../utils/validations'
+import config from '../../../config'
+import { validatePrisonerDisplayId } from '../validations'
 
 export default class VisitorDetailsController {
   public view(): RequestHandler {
     return async (req, res) => {
-      const { addVisitorJourney } = req.session
-      const prisoner = req.session.booker!.prisoners[0]
+      let { addVisitorJourney } = req.session
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+      }
+      // If prisoner doesn't exist, validation will have already caught and redirected
+      const prisoner = req.session.booker?.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+
+      // Old session data won't contain prisoner (pre multiple prisoners feature)
+      if (addVisitorJourney?.prisoner && addVisitorJourney?.prisoner.prisonerNumber !== prisoner?.prisonerNumber) {
+        delete req.session.addVisitorJourney
+        addVisitorJourney = undefined
+      }
 
       const formValues: Record<string, string> = {
         ...(addVisitorJourney?.visitorDetails && { ...addVisitorJourney.visitorDetails }),
@@ -31,10 +47,19 @@ export default class VisitorDetailsController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const errors = validationResult(req)
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+
+      const prisoner = req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
+
+      if (!prisoner) {
+        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+      }
+
       if (!errors.isEmpty()) {
         req.flash('errors', errors.array())
         req.flash('formValues', matchedData(req, { onlyValidData: false }))
-        return res.redirect(paths.ADD_VISITOR.DETAILS)
+
+        return res.redirect(`${paths.ADD_VISITOR.DETAILS}/${prisonerDisplayId}`)
       }
 
       const data = <
@@ -50,6 +75,7 @@ export default class VisitorDetailsController {
       >matchedData(req)
 
       req.session.addVisitorJourney = {
+        prisoner,
         visitorDetails: {
           firstName: data.firstName,
           lastName: data.lastName,
@@ -61,7 +87,7 @@ export default class VisitorDetailsController {
         },
       }
 
-      return res.redirect(paths.ADD_VISITOR.CHECK)
+      return res.redirect(`${paths.ADD_VISITOR.CHECK}/${prisonerDisplayId}`)
     }
   }
 
@@ -81,5 +107,9 @@ export default class VisitorDetailsController {
 
       body('languagePreference').optional().isIn(['cy']),
     ]
+  }
+
+  public validatePrisonerDisplayId(): ValidationChain[] {
+    return [validatePrisonerDisplayId]
   }
 }

@@ -21,6 +21,7 @@ import { PrisonNameDto } from '../../data/prisonRegisterApiTypes'
 import { VisitorRequest, Prisoner, Visitor } from '../../services/bookerService'
 import { PrisonNames } from '../../services/prisonService'
 import { VisitDetails } from '../../services/visitService'
+import { VisitDetailsSummary } from '../visits/visitsUtils'
 
 export default class TestData {
   static addVisitorRequest = ({
@@ -364,6 +365,28 @@ export default class TestData {
     visitContact,
     visitors,
     visitorSupport,
+  })
+
+  static visitDetailsSummary = ({
+    visitDisplayId = 'uuidv4-1-1-1-1',
+    reference = 'ab-cd-ef-gh',
+    prisonerFirstName = 'JOHN',
+    prisonerLastName = 'SMITH',
+    prisonId = 'HEI',
+    startTimestamp = '2024-05-30T10:00:00',
+    endTimestamp = '2024-05-30T11:30:00',
+    isRequest = false,
+    prisonerMoved = false,
+  }: Partial<VisitDetailsSummary> = {}): VisitDetailsSummary => ({
+    visitDisplayId,
+    reference,
+    prisonerFirstName,
+    prisonerLastName,
+    prisonId,
+    startTimestamp,
+    endTimestamp,
+    isRequest,
+    prisonerMoved,
   })
 
   static visitDto = ({

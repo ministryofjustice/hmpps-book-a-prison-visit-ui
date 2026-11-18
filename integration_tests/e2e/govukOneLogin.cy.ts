@@ -16,6 +16,7 @@ context('GOV.UK One Login', () => {
     cy.task('stubPrisonNames')
     cy.task('stubGetBookerReference')
     cy.task('stubGetPrisoners')
+    cy.task('stubGetFuturePublicVisits')
   })
 
   describe('Sign in / sign out', () => {

@@ -3,6 +3,8 @@ import createError from 'http-errors'
 import { BookerService, VisitService } from '../../services'
 import { VisitDetails } from '../../services/visitService'
 import { BookedVisits } from '../../@types/bapv'
+import { clearSession } from '../../utils/utils'
+import { getVisitDetailsSummaries } from './visitsUtils'
 
 export default class VisitsController {
   public constructor(
@@ -10,26 +12,20 @@ export default class VisitsController {
     private readonly bookerService: BookerService,
   ) {}
 
-  public home(): RequestHandler {
-    return async (req, res) => {
+  public view(type: BookedVisits['type']): RequestHandler {
+    return async (req, res, next) => {
+      clearSession(req)
+
       const booker = req.session.booker!
       booker.prisoners = await this.bookerService.getPrisoners(booker.reference)
 
-      // if no prisoners, do not look for future
-      const visits = booker.prisoners?.length ? await this.visitService.getFuturePublicVisits(booker.reference) : []
-      const prisoner = booker.prisoners?.length ? booker.prisoners[0] : null
-      req.session.bookedVisits = { type: 'future', visits }
-
-      return res.render(`pages/visits/future`, { prisoner, visits, showOLServiceNav: true })
-    }
-  }
-
-  public view(type: BookedVisits['type']): RequestHandler {
-    return async (req, res, next) => {
-      const booker = req.session.booker!
-
       let visits: VisitDetails[]
+
       switch (type) {
+        case 'future':
+          visits = await this.visitService.getFuturePublicVisits(booker.reference)
+          break
+
         case 'past':
           visits = await this.visitService.getPastPublicVisits(booker.reference)
           break
@@ -43,8 +39,13 @@ export default class VisitsController {
       }
 
       req.session.bookedVisits = { type, visits }
+      const visitDetailsSummaries = getVisitDetailsSummaries({ prisoners: booker.prisoners, visits })
 
-      return res.render(`pages/visits/${type}`, { visits, showOLServiceNav: true })
+      return res.render(`pages/visits/${type}`, {
+        bookerHasPrisoners: booker.prisoners.length > 0,
+        visits: visitDetailsSummaries,
+        showOLServiceNav: true,
+      })
     }
   }
 }

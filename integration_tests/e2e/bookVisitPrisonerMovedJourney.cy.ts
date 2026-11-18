@@ -9,6 +9,7 @@ import UnsupportedPrisonPage from '../pages/confirmLocation/unsupportedPrison.cy
 import PvbPrisonPage from '../pages/confirmLocation/pvbPrisonPage.cy'
 import PrisonUpdatedPage from '../pages/confirmLocation/prisonUpdatedPage.cy'
 import SelectVisitorsPage from '../pages/bookVisit/selectVisitors'
+import SelectPrisonerPage from '../pages/bookVisit/selectPrisoner'
 
 context('Book visit journey - prisoner moved prison', () => {
   const today = new Date()
@@ -22,8 +23,6 @@ context('Book visit journey - prisoner moved prison', () => {
     lastName: 'One',
     dateOfBirth: format(subYears(today, 25), DateFormats.API_DATE), // 25-year-old
   })
-
-  const bookerReference = TestData.bookerReference().value
 
   beforeEach(() => {
     cy.task('reset')
@@ -41,10 +40,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -56,6 +52,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
         prisoner: 'John',
@@ -86,10 +86,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -101,6 +98,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
         prisoner: 'John',
@@ -123,10 +124,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -138,6 +136,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
         prisoner: 'John',
@@ -159,10 +161,7 @@ context('Book visit journey - prisoner moved prison', () => {
       })
       cy.task('stubGetBookerReference')
       cy.task('stubGetPrisoners', { prisoners: [prisoner] })
-      cy.task('stubGetFuturePublicVisits', {
-        bookerReference,
-        visits: [],
-      })
+      cy.task('stubGetFuturePublicVisits')
       cy.signIn()
 
       // Visits home page - prisoner shown
@@ -174,6 +173,10 @@ context('Book visit journey - prisoner moved prison', () => {
       cy.task('stubValidatePrisonerPass')
       cy.task('stubGetVisitorRequests')
       visitsPage.bookVisit()
+
+      // Select prisoner page
+      const selectPrisonerPage = Page.verifyOnPage(SelectPrisonerPage)
+      selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
         prisoner: 'John',

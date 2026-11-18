@@ -60,7 +60,7 @@ const paths = {
   },
 
   VISITS: {
-    HOME: '/visits',
+    HOME: '/visits', // future visits
     PAST: '/visits/past-visits',
     CANCELLED: '/visits/cancelled-visits',
     DETAILS: '/visits/details',

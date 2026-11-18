@@ -10,7 +10,12 @@ import Page from '../../pages/page'
 import VisitorsPage from '../../pages/visitors/visitors'
 import PrisonersPage from '../../pages/prisoners/prisoners'
 
-const bookerReference = TestData.bookerReference().value
+const prisoner1 = TestData.bookerPrisonerInfoDto()
+const prisoner2 = TestData.bookerPrisonerInfoDto({
+  prisonerNumber: 'B2345CD',
+  firstName: 'Lisa',
+  dateOfBirth: '1992-05-23',
+})
 
 context('Add a visitor', () => {
   beforeEach(() => {
@@ -19,16 +24,20 @@ context('Add a visitor', () => {
     cy.task('stubPrisonNames')
 
     cy.task('stubGetBookerReference')
-    cy.task('stubGetPrisoners', { prisoners: [TestData.bookerPrisonerInfoDto()] })
+    cy.task('stubGetPrisoners', { prisoners: [prisoner1, prisoner2] })
     cy.task('stubGetVisitors')
-    cy.task('stubGetVisitorRequests', { visitorRequests: [] })
-    cy.task('clearRateLimits')
-    cy.task('stubGetFuturePublicVisits', {
-      bookerReference,
-      visits: [],
+    cy.task('stubGetVisitors', {
+      bookerReference: TestData.bookerReference(),
+      prisonerNumber: prisoner2.prisoner.prisonerNumber,
     })
+    cy.task('stubGetVisitorRequests', {
+      visitorRequests: [],
+    })
+    cy.task('clearRateLimits')
+    cy.task('stubGetFuturePublicVisits')
   })
 
+  // Using first prisoner for this test
   it('should complete the add a visitor request journey', () => {
     // Visits home page
     cy.signIn()
@@ -38,7 +47,7 @@ context('Add a visitor', () => {
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -74,6 +83,7 @@ context('Add a visitor', () => {
     Page.verifyOnPage(VisitorRequestedPage)
   })
 
+  // Using second prisoner for this test
   it('should complete the add a visitor request journey - with the auto-approved final step', () => {
     // Visits home page
     cy.signIn()
@@ -82,8 +92,8 @@ context('Add a visitor', () => {
     // Navigate to Visitors page
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
-    prisonersPage.viewPrisonerVisitors(0)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    prisonersPage.viewPrisonerVisitors(1)
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'Lisa Smith')
     visitorsPage.visitorRequests().should('not.exist')
 
     // Start link a new visitor journey
@@ -92,7 +102,7 @@ context('Add a visitor', () => {
 
     // Enter visitor details
     addVisitorStartPage.continue()
-    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'John Smith')
+    const visitorDetailsPage = Page.verifyOnPage(VisitorDetailsPage, 'Lisa Smith')
     visitorDetailsPage.enterFirstName('Joan')
     visitorDetailsPage.enterLastName('Smith')
     visitorDetailsPage.enterVisitorDob(21, 2, 1980)
@@ -103,7 +113,7 @@ context('Add a visitor', () => {
     checkVisitorDetailsPage.firstName().contains('Joan')
     checkVisitorDetailsPage.lastName().contains('Smith')
     checkVisitorDetailsPage.dateOfBirth().contains('21 February 1980')
-    checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
+    checkVisitorDetailsPage.prisonerDetails().contains('Lisa Smith at Hewell (HMP & YOI)')
 
     // Change details and continue
     checkVisitorDetailsPage.changeDetails()
@@ -115,13 +125,16 @@ context('Add a visitor', () => {
 
     // Submit request and get to confirmation
     cy.task('stubAddVisitorRequest', {
-      visitorRequestResponse: TestData.createVisitorRequestResponseDto({ status: 'AUTO_APPROVED' }),
+      prisonerId: prisoner2.prisoner.prisonerNumber,
+      visitorRequestResponse: TestData.createVisitorRequestResponseDto({
+        status: 'AUTO_APPROVED',
+      }),
     })
     checkVisitorDetailsPage.submit()
     const visitorApprovedPage = Page.verifyOnPage(VisitorApprovedPage)
     visitorApprovedPage
       .visitorApprovedText()
-      .contains('Joan Phillips will appear as a visitor when you book visits for John Smith')
+      .contains('Joan Phillips will appear as a visitor when you book visits for Lisa Smith')
   })
 
   it('should complete the add a visitor request journey and fail with the duplicate request warning', () => {
@@ -133,7 +146,7 @@ context('Add a visitor', () => {
     visitsPage.goToServiceHeaderLinkByName('Visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
-    const visitorsPage = Page.verifyOnPage(VisitorsPage)
+    const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
 
     // Start link a new visitor journey
     visitorsPage.linkANewVisitor()
@@ -149,6 +162,7 @@ context('Add a visitor', () => {
     // Check visitor request
     visitorDetailsPage.continue()
     const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+    checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
     // Submit request and get failure page (duplicate request)
     cy.task('stubAddVisitorRequestFail')
@@ -171,7 +185,7 @@ context('Add a visitor', () => {
         visitsPage.goToServiceHeaderLinkByName('Visitors')
         const prisonersPage = Page.verifyOnPage(PrisonersPage)
         prisonersPage.viewPrisonerVisitors(0)
-        const visitorsPage = Page.verifyOnPage(VisitorsPage)
+        const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
 
         // Start link a new visitor journey
         visitorsPage.linkANewVisitor()
@@ -187,6 +201,7 @@ context('Add a visitor', () => {
         // Check visitor request
         visitorDetailsPage.continue()
         const checkVisitorDetailsPage = Page.verifyOnPage(CheckVisitorDetailsPage)
+        checkVisitorDetailsPage.prisonerDetails().contains('John Smith at Hewell (HMP & YOI)')
 
         // Submit request and get to confirmation
         cy.task('stubAddVisitorRequest')

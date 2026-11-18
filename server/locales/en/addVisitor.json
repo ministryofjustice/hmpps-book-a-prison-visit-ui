@@ -26,7 +26,7 @@
   },
   "visitorApproved": {
     "title": "Visitor linked",
-    "visitorLinked": "{{visitorName}} has been linked to your account",
+    "visitorLinked": "You can now book visits with this visitor.",
     "approvedMessage": "{{visitorName}} will appear as a visitor when you book visits for {{prisonerName}}."
   },
   "visitorRequested": {
