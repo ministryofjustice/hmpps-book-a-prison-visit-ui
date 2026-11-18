@@ -2,6 +2,7 @@ import { Locale } from '../constants/locales'
 import { SessionRestriction } from '../data/orchestrationApiClient'
 import {
   AvailableVisitSessionDto,
+  BookerPrisonerRegistrationErrorResponse,
   BookerVisitorRequestValidationErrorResponse,
   CreateVisitorRequestResponseDto,
 } from '../data/orchestrationApiTypes'
@@ -29,7 +30,7 @@ export type AddPrisonerJourney = {
 
 export type AddPrisonerJourneyResult = {
   selectedPrisonId: string
-  result: boolean
+  result: true | BookerPrisonerRegistrationErrorResponse['validationError']
   prisonerNumber: string
 }
 

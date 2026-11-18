@@ -222,6 +222,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/queue-admin/retry-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryDlqMessages']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/retry-all-dlqs': {
     parameters: {
       query?: never
@@ -247,6 +263,22 @@ export interface paths {
     }
     get?: never
     put: operations['purgeQueue']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/delete-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['deleteDlqMessages']
     post?: never
     delete?: never
     options?: never
@@ -957,6 +989,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/queue-admin/search-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['searchDlqMessages']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/queue-admin/get-dlq-messages/{dlqName}': {
     parameters: {
       query?: never
@@ -1508,7 +1556,7 @@ export interface components {
        * @example SOCIAL
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /**
        * @description Visit Status
        * @example RESERVED
@@ -1795,7 +1843,7 @@ export interface components {
        * @example SOCIAL
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /**
        * @description Visit Restriction
        * @example OPEN
@@ -1987,9 +2035,32 @@ export interface components {
       /** Format: int32 */
       messagesFoundCount: number
     }
+    RetryDlqMessagesBody: {
+      messageIds: string[]
+    }
+    RetryDlqMessagesResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesRetriedCount: number
+      retriedMessageIds: string[]
+      notFoundMessageIds: string[]
+    }
     PurgeQueueResult: {
       /** Format: int32 */
       messagesFoundCount: number
+    }
+    DeleteDlqMessagesBody: {
+      messageIds: string[]
+    }
+    DeleteDlqMessagesResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesDeletedCount: number
+      deletedMessageIds: string[]
+      notFoundMessageIds: string[]
+      failedMessageIds: string[]
     }
     /** @description Update a booker prisoner's prison code. */
     UpdateRegisteredPrisonerPrisonDto: {
@@ -2283,6 +2354,16 @@ export interface components {
        */
       languagePreference: 'en' | 'cy'
     }
+    BookerPrisonerRegistrationErrorResponse: {
+      /** Format: int32 */
+      status: number
+      /** Format: int32 */
+      errorCode?: number | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      /** @enum {string} */
+      validationError: 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER' | 'FAILED_REGISTRATION'
+    }
     /** @description Details to register a prisoner to a booker. */
     RegisterPrisonerForBookerDto: {
       /**
@@ -2533,6 +2614,19 @@ export interface components {
        */
       active: boolean
     }
+    EventAuditAttributeDto: {
+      /**
+       * @description Name of the attribute associated with the event audit
+       * @example AUTO_REJECTION_REASON
+       * @enum {string}
+       */
+      attributeName: 'AUTO_REJECTION_REASON'
+      /**
+       * @description Value of the attribute associated with the event audit
+       * @example Transfer
+       */
+      attributeValue: string
+    }
     /** @description Event Audit with actioned by user's full name populated */
     EventAuditOrchestrationDto: {
       /**
@@ -2592,10 +2686,12 @@ export interface components {
       text?: string | null
       /**
        * Format: date-time
-       * @description event creat date and time
+       * @description event creation date and time
        * @example 2018-12-01T13:45:00
        */
       createTimestamp: string
+      /** @description Additional Audit attributes */
+      auditAttributes: components['schemas']['EventAuditAttributeDto'][]
     }
     /** @description Offender restriction */
     OffenderRestrictionDto: {
@@ -3304,7 +3400,7 @@ export interface components {
        * @example SOCIAL
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /**
        * @description Session vo restriction
        * @enum {string}
@@ -3412,7 +3508,7 @@ export interface components {
        * @example Social
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /** @description Determines behaviour of location groups. True will mean the location groups are inclusive, false means they are exclusive. */
       areLocationGroupsInclusive: boolean
       /**
@@ -3675,7 +3771,7 @@ export interface components {
        * @example Social
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /** @description Determines behaviour of location groups. True will mean the location groups are inclusive, false means they are exclusive. */
       areLocationGroupsInclusive: boolean
       /**
@@ -3719,6 +3815,15 @@ export interface components {
         [key: string]: unknown
       }
       messageId: string
+      /** Format: int32 */
+      approximateReceiveCount?: number | null
+    }
+    SearchDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesReturnedCount: number
+      messages: components['schemas']['DlqMessage'][]
     }
     GetDlqResult: {
       /** Format: int32 */
@@ -4249,7 +4354,7 @@ export interface components {
        * @example SOCIAL
        * @enum {string}
        */
-      visitType: 'SOCIAL'
+      visitType: 'SOCIAL' | 'SOCIAL_VIDEO'
       /**
        * @description Visit Status
        * @example BOOKED
@@ -5310,6 +5415,32 @@ export interface operations {
       }
     }
   }
+  retryDlqMessages: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RetryDlqMessagesBody']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqMessagesResult']
+        }
+      }
+    }
+  }
   retryAllDlqs: {
     parameters: {
       query?: never
@@ -5348,6 +5479,32 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PurgeQueueResult']
+        }
+      }
+    }
+  }
+  deleteDlqMessages: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DeleteDlqMessagesBody']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['DeleteDlqMessagesResult']
         }
       }
     }
@@ -6521,7 +6678,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          'application/json': 'FAILED_REGISTRATION'
+          'application/json': components['schemas']['BookerPrisonerRegistrationErrorResponse']
         }
       }
     }
@@ -7835,6 +7992,31 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  searchDlqMessages: {
+    parameters: {
+      query?: {
+        filter?: string
+        maxMessages?: number
+      }
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SearchDlqResult']
         }
       }
     }
