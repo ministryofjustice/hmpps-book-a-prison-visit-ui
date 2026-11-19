@@ -9,7 +9,6 @@ import { createMockBookerService } from '../../../services/testutils/mocks'
 import TestData from '../../testutils/testData'
 import paths from '../../../constants/paths'
 import { VisitorRequest } from '../../../services/bookerService'
-import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -22,7 +21,6 @@ let sessionData: SessionData
 let visitorRequest: VisitorRequest
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   visitorRequest = TestData.visitorRequest({ visitorRequestDisplayId })
 
   sessionData = {

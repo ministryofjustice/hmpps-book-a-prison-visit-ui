@@ -60,7 +60,7 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('[data-test="back-link"]').length).toBe(1)
         expect($('h1').text()).toBe('John Smith’s visitors')
         expect($('.moj-alert').length).toBe(0)
 
@@ -89,7 +89,7 @@ describe('Visitors page', () => {
       .expect(res => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/^Visitors -/)
-        expect($('[data-test="back-link"]').length).toBe(0)
+        expect($('[data-test="back-link"]').length).toBe(1)
         expect($('h1').text()).toBe('John Smith’s visitors')
         expect($('[data-test="visitors-linked"]').length).toBe(0)
         expect($('[data-test="visitor-name-1"]').length).toBe(0)
@@ -160,8 +160,7 @@ describe('Visitors page', () => {
       })
   })
 
-  it('should render correct back link when FEATURE_MULTIPLE PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
+  it('should render correct back link', () => {
     bookerService.getVisitors.mockResolvedValue([visitor])
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 

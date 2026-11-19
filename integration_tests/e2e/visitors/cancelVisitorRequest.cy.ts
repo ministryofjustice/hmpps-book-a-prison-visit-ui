@@ -41,7 +41,7 @@ context('Cancel a visitor request', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Navigate to Visitors page
-    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Prisoners and visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
     const visitorsPage = Page.verifyOnPage(VisitorsPage, 'John Smith')
@@ -75,7 +75,7 @@ context('Cancel a visitor request', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
 
     // Navigate to Visitors page
-    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Prisoners and visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(1)
     const visitorsPage = Page.verifyOnPage(VisitorsPage, 'Lisa Smith')

@@ -8,7 +8,6 @@ import paths from '../../../constants/paths'
 import { createMockBookerService } from '../../../services/testutils/mocks'
 import { BookerService } from '../../../services'
 import type { AddVisitorJourneyResult } from '../../../@types/bapv'
-import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 import TestData from '../../testutils/testData'
 
 let app: Express
@@ -19,7 +18,6 @@ const prisoner = TestData.prisoner({ prisonerDisplayId: uuid })
 const bookerReference = TestData.bookerReference().value
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     addVisitorJourney: {
       visitorDetails: {
@@ -99,13 +97,6 @@ describe('Check visitor request details', () => {
       delete sessionData.addVisitorJourney
       return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
     })
-
-    it('should return to visitors page if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      delete sessionData.addVisitorJourney
-      return request(app).get(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
-    })
   })
 
   describe(`POST ${paths.ADD_VISITOR.CHECK}`, () => {
@@ -151,13 +142,6 @@ describe('Check visitor request details', () => {
     it('should return to prisoners page if no visitor request in session', () => {
       delete sessionData.addVisitorJourney
       return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.PRISONERS)
-    })
-
-    it('should return to visitors page on post if no visitor request in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      delete sessionData.addVisitorJourney
-      return request(app).post(`${paths.ADD_VISITOR.CHECK}/${uuid}`).expect(302).expect('location', paths.VISITORS)
     })
   })
 })

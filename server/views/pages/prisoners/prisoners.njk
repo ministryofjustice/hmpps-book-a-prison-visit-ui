@@ -2,6 +2,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% set activeLink = 'prisoners-visitors-link' %}
 {% set pageTitle = t("prisoners:prisoners.title") %}
 
 {% block content %}
@@ -28,15 +29,17 @@
         }) }}
       {% endif %}
 
-      <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
-      <p>{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
+      {% if features.multiplePrisoners or not prisonersTableRows | length %}
+        <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
+        <p>{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
 
-      {{ govukButton({
-        text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
-        href: paths.ADD_PRISONER.LOCATION,
-        preventDoubleClick: true,
-        attributes: { "data-test": "link-new-prisoner-button"}
-      }) }}
+        {{ govukButton({
+          text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
+          href: paths.ADD_PRISONER.LOCATION,
+          preventDoubleClick: true,
+          attributes: { "data-test": "link-new-prisoner-button"}
+        }) }}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

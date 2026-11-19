@@ -4,9 +4,9 @@
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set activeLink = 'visitors-link' %}
+{% set activeLink = 'prisoners-visitors-link' %}
 {% set pageTitle = t("visitors:visitors.title") %}
-{% set backLinkHref = paths.PRISONERS if features.multiplePrisoners else null%}
+{% set backLinkHref = paths.PRISONERS %}
 
 {% block content %}
   <div class="govuk-grid-row">

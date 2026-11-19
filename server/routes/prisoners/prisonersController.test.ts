@@ -34,12 +34,6 @@ afterEach(() => {
 })
 
 describe('Prisoners page', () => {
-  it('should return a 404 if FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-    disableFeatureForTest('multiplePrisoners')
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
-    return request(app).get(paths.PRISONERS).expect(404)
-  })
-
   it('should render the link new prisoner section when no prisoners are linked', () => {
     bookerService.getPrisoners.mockResolvedValue([])
     return request(app)
@@ -71,6 +65,20 @@ describe('Prisoners page', () => {
         expect($('[data-test="prisoner-visitors-link-0"]').text().trim()).toBe('View visitors linked to John Smith')
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
         expect($('[data-test="link-new-prisoner-button"]').text().trim()).toBe('Link a new prisoner')
+      })
+  })
+
+  it('should not render the linked new prisoners section when MULTIPLE_PRISONERS is disabled', () => {
+    disableFeatureForTest('multiplePrisoners')
+    app = appWithAllRoutes({ services: { bookerService }, sessionData })
+
+    return request(app)
+      .get(paths.PRISONERS)
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const $ = cheerio.load(res.text)
+        expect($('h2[data-test="link-new-prisoner"]').length).toBe(0)
+        expect($('[data-test="link-new-prisoner-button"]').length).toBe(0)
       })
   })
 })

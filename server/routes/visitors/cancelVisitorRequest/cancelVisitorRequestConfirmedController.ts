@@ -2,7 +2,6 @@ import type { RequestHandler } from 'express'
 import { matchedData, ValidationChain, validationResult } from 'express-validator'
 import { UUID } from 'crypto'
 import { validatePrisonerDisplayId } from '../validations'
-import config from '../../../config'
 import paths from '../../../constants/paths'
 
 export default class CancelVisitorRequestConfirmedController {
@@ -12,7 +11,7 @@ export default class CancelVisitorRequestConfirmedController {
     return async (req, res) => {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)

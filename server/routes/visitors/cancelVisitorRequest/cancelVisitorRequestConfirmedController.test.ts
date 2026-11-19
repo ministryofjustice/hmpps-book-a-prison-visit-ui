@@ -5,7 +5,6 @@ import { randomUUID } from 'crypto'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
-import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 import TestData from '../../testutils/testData'
 
 let app: Express
@@ -14,7 +13,6 @@ const uuid = randomUUID()
 const prisoner = TestData.prisoner({ prisonerDisplayId: uuid })
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     booker: {
       prisoners: [prisoner],

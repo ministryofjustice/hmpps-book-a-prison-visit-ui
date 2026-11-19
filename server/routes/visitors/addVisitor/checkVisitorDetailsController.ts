@@ -3,7 +3,6 @@ import { matchedData, ValidationChain, validationResult } from 'express-validato
 import { UUID } from 'crypto'
 import paths from '../../../constants/paths'
 import { BookerService } from '../../../services'
-import config from '../../../config'
 import { validatePrisonerDisplayId } from '../validations'
 
 export default class CheckVisitorDetailsController {
@@ -21,7 +20,7 @@ export default class CheckVisitorDetailsController {
         !addVisitorJourney.prisoner ||
         prisonerDisplayId !== addVisitorJourney.prisoner.prisonerDisplayId
       ) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       return res.render('pages/visitors/addVisitor/checkVisitorDetails', {
@@ -45,7 +44,7 @@ export default class CheckVisitorDetailsController {
         !addVisitorJourney.prisoner ||
         prisonerDisplayId !== addVisitorJourney.prisoner.prisonerDisplayId
       ) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       const { visitorDetails } = addVisitorJourney
@@ -86,7 +85,7 @@ export default class CheckVisitorDetailsController {
 
         case 'PRISONER_NOT_FOUND_FOR_BOOKER':
         default:
-          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITS.HOME)
+          return res.redirect(paths.PRISONERS)
       }
     }
   }

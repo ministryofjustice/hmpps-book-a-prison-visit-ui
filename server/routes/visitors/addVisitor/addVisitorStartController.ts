@@ -3,7 +3,6 @@ import { matchedData, ValidationChain, validationResult } from 'express-validato
 import { UUID } from 'crypto'
 import { validatePrisonerDisplayId } from '../validations'
 import paths from '../../../constants/paths'
-import config from '../../../config'
 
 export default class AddVisitorStartController {
   public view(): RequestHandler {
@@ -12,7 +11,7 @@ export default class AddVisitorStartController {
       const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
 
       if (!errors.isEmpty()) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       delete req.session.addVisitorJourneyResult
