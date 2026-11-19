@@ -53,7 +53,7 @@ context('Visitors page', () => {
 
   it('should show Visitors page with two visitors (one having a BAN restriction) and one visitor request', () => {
     const visitsPage = Page.verifyOnPage(VisitsPage)
-    visitsPage.goToServiceHeaderLinkByName('Visitors')
+    visitsPage.goToServiceHeaderLinkByName('Prisoners and visitors')
     const prisonersPage = Page.verifyOnPage(PrisonersPage)
     prisonersPage.viewPrisonerVisitors(0)
 
