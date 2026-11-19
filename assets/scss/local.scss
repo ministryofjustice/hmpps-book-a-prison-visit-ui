@@ -62,3 +62,9 @@
   align-items: center;
   gap: govuk-spacing(3);
 }
+
+.visits-button-group--align-start-mobile {
+  @include govuk-media-query($until: tablet) {
+    align-items: flex-start;
+  }
+}

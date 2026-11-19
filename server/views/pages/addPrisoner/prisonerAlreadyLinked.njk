@@ -14,7 +14,7 @@
         {{- t("addPrisoner:prisonerAlreadyLinked.alreadyLinkedMessage", { name: prisoner | prisonerNameFirstLast }) }}
       </p>
 
-      <div class="govuk-button-group">
+      <div class="govuk-button-group visits-button-group--align-start-mobile">
         {{ govukButton({
           text: t("common:buttons.bookAVisit"),
           href: paths.VISITS.HOME,
@@ -22,7 +22,9 @@
           preventDoubleClick: true
         }) }}
 
-        <a class="govuk-link--no-visited-state" data-test="view-linked-prisoners" href="{{paths.PRISONERS}}">{{ t("addPrisoner:prisonerAlreadyLinked.viewLinkedPrisoners") }}</a>
+        <p>
+          <a class="govuk-link--no-visited-state" data-test="view-linked-prisoners" href="{{paths.PRISONERS}}">{{ t("addPrisoner:prisonerAlreadyLinked.viewLinkedPrisoners") }}</a>
+        </p>
       </div>
     </div>
   </div>
