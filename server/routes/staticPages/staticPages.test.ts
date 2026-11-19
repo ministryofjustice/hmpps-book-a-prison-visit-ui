@@ -31,7 +31,7 @@ describe('Static content pages - authenticated users', () => {
         expect($('.govuk-service-navigation__service-name').text().trim()).toBe('Visit someone in prison')
         expect($('.govuk-service-navigation__link').length).toBe(2)
         expect($('.govuk-service-navigation__link').eq(0).text().trim()).toBe('Visits')
-        expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Visitors')
+        expect($('.govuk-service-navigation__link').eq(1).text().trim()).toBe('Prisoners and visitors')
 
         expect($('.govuk-phase-banner').text()).toContain('Beta')
 
