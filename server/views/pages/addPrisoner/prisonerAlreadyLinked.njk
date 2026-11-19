@@ -1,0 +1,29 @@
+{% extends "partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle =  t("addPrisoner:prisonerAlreadyLinked.title") %}
+
+{% set backLinkHref = paths.ADD_PRISONER.DETAILS %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
+      <p data-test="already-linked">
+        {{- t("addPrisoner:prisonerAlreadyLinked.alreadyLinkedMessage", { name: prisoner | prisonerNameFirstLast }) }}
+      </p>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: t("common:buttons.bookAVisit"),
+          href: paths.VISITS.HOME,
+          attributes: { "data-test": "book-a-visit" },
+          preventDoubleClick: true
+        }) }}
+
+        <a class="govuk-link--no-visited-state" data-test="view-linked-prisoners" href="{{paths.PRISONERS}}">{{ t("addPrisoner:prisonerAlreadyLinked.viewLinkedPrisoners") }}</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

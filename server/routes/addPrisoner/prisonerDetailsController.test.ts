@@ -167,7 +167,7 @@ describe('Prisoner details', () => {
     })
 
     it('should call service to register prisoner, save prisoner details in session and redirect to failure page - fail', () => {
-      bookerService.registerPrisoner.mockResolvedValue(false)
+      bookerService.registerPrisoner.mockResolvedValue('FAILED_REGISTRATION')
 
       return request(app)
         .post(paths.ADD_PRISONER.DETAILS)
@@ -179,7 +179,7 @@ describe('Prisoner details', () => {
           expect(sessionData.addPrisonerJourney!.prisonerDetails).toStrictEqual(prisonerDetails)
           expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
             selectedPrisonId,
-            result: false,
+            result: 'FAILED_REGISTRATION',
             prisonerNumber: 'A1234BC',
           })
           expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)

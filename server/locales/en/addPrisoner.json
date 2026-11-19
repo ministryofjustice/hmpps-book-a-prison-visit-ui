@@ -26,5 +26,11 @@
     "reasonNotAtPrison": "they are not located at this prison",
     "checkDetails": "You can <link>check the details you submitted by going back to the previous page</link>.",
     "contact": "If the prisoner details cannot be matched, you will need to contact the prisoner to get the correct information before you book a visit."
+  },
+
+  "prisonerAlreadyLinked": {
+    "title": "Prisoner already linked",
+    "alreadyLinkedMessage": "{{name}} is already linked to your account.",
+    "viewLinkedPrisoners": "View linked prisoners"
   }
 }

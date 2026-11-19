@@ -9,7 +9,12 @@ let app: Express
 let sessionData: SessionData
 
 beforeEach(() => {
-  sessionData = {} as SessionData
+  sessionData = {
+    addPrisonerJourneyResult: {
+      selectedPrisonId: 'HEI',
+      prisonerNumber: 'A1234BC',
+    },
+  } as SessionData
 
   app = appWithAllRoutes({ sessionData })
 })
@@ -25,11 +30,7 @@ describe('Prisoner not matched', () => {
     })
 
     it('should render prisoner details do not match page', () => {
-      sessionData.addPrisonerJourneyResult = {
-        selectedPrisonId: 'HEI',
-        result: false,
-        prisonerNumber: 'A1234BC',
-      }
+      sessionData.addPrisonerJourneyResult!.result = 'FAILED_REGISTRATION'
 
       return request(app)
         .get(paths.ADD_PRISONER.FAIL)
@@ -42,6 +43,24 @@ describe('Prisoner not matched', () => {
           expect($('h1').text()).toBe('Prisoner details do not match')
           expect($('[data-test=no-match-at-prison]').text()).toContain('Hewell (HMP & YOI)')
           expect($('[data-test=check-details] a').attr('href')).toBe(paths.ADD_PRISONER.DETAILS)
+        })
+    })
+
+    it('should render prisoner already linked page', () => {
+      sessionData.addPrisonerJourneyResult!.result = 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER'
+
+      return request(app)
+        .get(paths.ADD_PRISONER.FAIL)
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('title').text()).toMatch(/^Prisoner already linked -/)
+          expect($('#navigation').length).toBe(1)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.ADD_PRISONER.DETAILS)
+          expect($('h1').text()).toBe('Prisoner already linked')
+          expect($('[data-test=already-linked]').text()).toContain('John Smith')
+          expect($('[data-test=book-a-visit]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test=view-linked-prisoners]').attr('href')).toBe(paths.PRISONERS)
         })
     })
   })

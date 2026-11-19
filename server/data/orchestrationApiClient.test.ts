@@ -7,6 +7,7 @@ import {
   ApplicationDto,
   AvailableVisitSessionDto,
   AvailableVisitSessionRestrictionDto,
+  BookerPrisonerRegistrationErrorResponse,
   BookerVisitorRequestValidationErrorResponse,
   BookingOrchestrationRequestDto,
   CancelVisitOrchestrationDto,
@@ -365,17 +366,20 @@ describe('orchestrationApiClient', () => {
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 
-    it('should try to register a prisoner and return false for a 422 API response', async () => {
+    it('should try to register a prisoner and return validation error code for a 422 API response', async () => {
       const registerPrisonerForBookerDto = TestData.registerPrisonerForBookerDto()
 
       fakeOrchestrationApi
         .post(`/public/booker/${bookerReference.value}/permitted/prisoners/register`, registerPrisonerForBookerDto)
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(422)
+        .reply(422, <BookerPrisonerRegistrationErrorResponse>{
+          status: 422,
+          validationError: 'FAILED_REGISTRATION',
+        })
 
       const result = await orchestrationApiClient.registerPrisoner(bookerReference.value, registerPrisonerForBookerDto)
 
-      expect(result).toBe(false)
+      expect(result).toBe('FAILED_REGISTRATION')
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledTimes(1)
     })
 

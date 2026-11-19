@@ -44,9 +44,8 @@ context('Add a prisoner', () => {
     prisonerDetailsPage.enterPrisonNumber('A1234BC')
 
     // Submit prisoner details (entered incorrectly first time)
-    cy.task('stubRegisterPrisoner', {
+    cy.task('stubRegisterPrisonerFail', {
       prisoner: TestData.registerPrisonerForBookerDto({ prisonerLastName: 'Smyth' }),
-      fail: true,
     })
     prisonerDetailsPage.continue()
 
@@ -93,7 +92,7 @@ context('Add a prisoner', () => {
       prisonerDetailsPage.enterPrisonNumber('A1234BC')
 
       // Repeatedly attempt to add prisoner (API mocked to not match)
-      cy.task('stubRegisterPrisoner', { fail: true })
+      cy.task('stubRegisterPrisonerFail')
       // attempt #1
       prisonerDetailsPage.continue()
       const prisonerNotMatchedPage = Page.verifyOnPage(PrisonerNotMatchedPage)
@@ -114,9 +113,8 @@ context('Add a prisoner', () => {
 
       // Try another prisoner
       cy.go('back')
-      cy.task('stubRegisterPrisoner', {
+      cy.task('stubRegisterPrisonerFail', {
         prisoner: TestData.registerPrisonerForBookerDto({ prisonerId: 'B1234BC' }),
-        fail: true,
       })
       prisonerDetailsPage.enterPrisonNumber('B1234BC')
       // attempt #1
@@ -171,7 +169,7 @@ context('Add a prisoner', () => {
         prisonerDetailsPage.enterPrisonNumber('A1234BC')
 
         // Attempt to add prisoner (API mocked to not match)
-        cy.task('stubRegisterPrisoner', { bookerReference, fail: true })
+        cy.task('stubRegisterPrisonerFail', { bookerReference })
         prisonerDetailsPage.continue()
       }
 

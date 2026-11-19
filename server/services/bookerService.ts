@@ -14,6 +14,7 @@ import {
   CreateVisitorRequestResponseDto,
   PermittedPrisonerForBookerDto,
   RegisterPrisonerForBookerDto,
+  BookerPrisonerRegistrationErrorResponse,
 } from '../data/orchestrationApiTypes'
 import RateLimitService from './rateLimitService'
 
@@ -126,7 +127,10 @@ export default class BookerService {
     logger.info(`Visitor request '${requestReference}' has been cancelled by booker '${bookerReference}'`)
   }
 
-  async registerPrisoner(bookerReference: string, prisoner: RegisterPrisonerForBookerDto): Promise<boolean> {
+  async registerPrisoner(
+    bookerReference: string,
+    prisoner: RegisterPrisonerForBookerDto,
+  ): Promise<true | BookerPrisonerRegistrationErrorResponse['validationError']> {
     const [withinBookerLimit, withinPrisonerLimit] = await Promise.all([
       this.bookerRateLimit.incrementAndCheckLimit(bookerReference),
       this.prisonerRateLimit.incrementAndCheckLimit(prisoner.prisonerId),
@@ -145,8 +149,10 @@ export default class BookerService {
 
     const result = await this.orchestrationApiClient.registerPrisoner(bookerReference, prisoner)
 
-    const logMessage = result ? 'Registered' : 'Failed to register'
-    logger.info(`${logMessage} prisoner ${prisoner.prisonerId} for booker ${bookerReference}`)
+    const logMessage = result === true ? 'Registered' : 'Failed to register'
+    logger.info(
+      `${logMessage} prisoner ${prisoner.prisonerId} for booker ${bookerReference}${result === 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER' ? ': already registered against booker' : ''}`,
+    )
     return result
   }
 
