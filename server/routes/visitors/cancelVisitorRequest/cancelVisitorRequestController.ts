@@ -7,7 +7,6 @@ import paths from '../../../constants/paths'
 import { validateVisitorRequestDisplayId } from '../validations'
 import { getPrisonName } from '../../../utils/utils'
 import type { Locale } from '../../../constants/locales'
-import config from '../../../config'
 
 export default class CancelVisitorRequestController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -18,7 +17,7 @@ export default class CancelVisitorRequestController {
 
       const errors = validationResult(req)
       if (!errors.isEmpty() || visitorRequests === undefined) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       const { visitorRequestDisplayId } = matchedData<{ visitorRequestDisplayId: UUID }>(req)
@@ -48,7 +47,7 @@ export default class CancelVisitorRequestController {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
         if (!visitorRequestDisplayId) {
-          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+          return res.redirect(paths.PRISONERS)
         }
 
         req.flash('errors', errors.array())
@@ -63,7 +62,7 @@ export default class CancelVisitorRequestController {
       if (cancelVisitorRequest === 'no') {
         const prisoner = booker!.prisoners.find(p => p.prisonerNumber === visitorRequest.prisonerId)
         if (!prisoner) {
-          return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+          return res.redirect(paths.PRISONERS)
         }
 
         const prisonId = prisoner.registeredPrisonId

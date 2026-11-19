@@ -4,14 +4,12 @@ import * as cheerio from 'cheerio'
 import { SessionData } from 'express-session'
 import { appWithAllRoutes } from '../../testutils/appSetup'
 import paths from '../../../constants/paths'
-import { disableFeatureForTest, enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 import TestData from '../../testutils/testData'
 
 let app: Express
 let sessionData: SessionData
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   sessionData = {
     addVisitorJourneyResult: {
       firstName: 'first',
@@ -81,13 +79,6 @@ describe('Add visitor request failure pages', () => {
           expect($('[data-test="back-link"]').length).toBe(0)
           expect($('h1').text().trim()).toBe('Visitor request cannot be submitted')
         })
-    })
-
-    it('should redirect to visitors page if add visitor request journey result not in session when FEATURE_MULTIPLE_PRISONERS is disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      delete sessionData.addVisitorJourneyResult
-      return request(app).get(paths.ADD_VISITOR.FAIL_ALREADY_REQUESTED).expect(302).expect('location', paths.VISITORS)
     })
 
     it('should redirect to prisoners page if add visitor request journey result not in session', () => {

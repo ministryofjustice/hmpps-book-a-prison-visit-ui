@@ -3,7 +3,6 @@ import { body, matchedData, ValidationChain, validationResult } from 'express-va
 import { UUID } from 'crypto'
 import paths from '../../../constants/paths'
 import { dateOfBirthValidationChain } from '../../../utils/validations'
-import config from '../../../config'
 import { validatePrisonerDisplayId } from '../validations'
 
 export default class VisitorDetailsController {
@@ -14,7 +13,7 @@ export default class VisitorDetailsController {
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
       // If prisoner doesn't exist, validation will have already caught and redirected
       const prisoner = req.session.booker?.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
@@ -52,7 +51,7 @@ export default class VisitorDetailsController {
       const prisoner = req.session.booker!.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)
 
       if (!prisoner) {
-        return res.redirect(config.features.multiplePrisoners ? paths.PRISONERS : paths.VISITORS)
+        return res.redirect(paths.PRISONERS)
       }
 
       if (!errors.isEmpty()) {

@@ -8,7 +8,6 @@ import { FlashData, appWithAllRoutes, flashProvider } from '../../testutils/appS
 import paths from '../../../constants/paths'
 import { AddVisitorJourney, FlashFormValues } from '../../../@types/bapv'
 import TestData from '../../testutils/testData'
-import { enableFeatureForTest } from '../../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -22,7 +21,6 @@ const prisoner2 = TestData.prisoner({
 })
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   sessionData = { booker: { prisoners: [prisoner1, prisoner2] } } as SessionData
 
   app = appWithAllRoutes({ sessionData })
