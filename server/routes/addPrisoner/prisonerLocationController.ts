@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express'
-import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
-import { PrisonService } from '../../services'
+import { matchedData, ValidationChain, validationResult } from 'express-validator'
 import paths from '../../constants/paths'
+import { prisonIdValidation } from '../../utils/validations'
 
 export default class PrisonerLocationController {
-  public constructor(private readonly prisonService: PrisonService) {}
+  public constructor() {}
 
   public view(): RequestHandler {
     return async (req, res) => {
@@ -12,10 +12,8 @@ export default class PrisonerLocationController {
 
       const selectedPrisonId = req.session.addPrisonerJourney?.selectedPrisonId
       const prisonerDetails = req.session.addPrisonerJourney?.prisonerDetails
-      const supportedPrisonIds = await this.prisonService.getSupportedPrisonIds()
 
       req.session.addPrisonerJourney = {
-        supportedPrisonIds,
         ...(selectedPrisonId && { selectedPrisonId }),
         ...(prisonerDetails && { prisonerDetails }),
       }
@@ -28,7 +26,6 @@ export default class PrisonerLocationController {
         showOLServiceNav: true,
         errors: req.flash('errors'),
         formValues,
-        supportedPrisonIds,
       })
     }
   }
@@ -50,13 +47,6 @@ export default class PrisonerLocationController {
   }
 
   public validate(): ValidationChain[] {
-    return [
-      body('prisonId')
-        .custom((prisonId: string, { req }) => {
-          const supportedPrisonIds = (req as Express.Request).session.addPrisonerJourney?.supportedPrisonIds ?? []
-          return supportedPrisonIds.includes(prisonId)
-        })
-        .withMessage((_value, { req }) => req.t('validation:prisonSelectRequired')),
-    ]
+    return [prisonIdValidation('validation:prisonSelectRequired')]
   }
 }

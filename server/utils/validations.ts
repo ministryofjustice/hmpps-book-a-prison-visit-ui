@@ -1,7 +1,6 @@
 import { isAfter, isValid, parseISO } from 'date-fns'
 import { body, ValidationChain } from 'express-validator'
 
-// eslint-disable-next-line import/prefer-default-export
 export const dateOfBirthValidationChain = (dobFieldBaseName: string): ValidationChain[] => {
   return [
     // Tidy day, month, year fields
@@ -39,4 +38,15 @@ export const dateOfBirthValidationChain = (dobFieldBaseName: string): Validation
       return true
     }),
   ]
+}
+
+// Validate that prisonId is in the set of prisons present in req.context.prisonNames
+export const prisonIdValidation = (errorMsgKey: string): ValidationChain => {
+  return body('prisonId', (_value, { req }) => req.t(errorMsgKey))
+    .isLength({ min: 3, max: 3 })
+    .bail()
+    .custom((prisonId: string, { req }) => {
+      const validPrisonNames = (req as Express.Request).context?.prisonNames // these are keyed by prisonId
+      return validPrisonNames && prisonId in validPrisonNames
+    })
 }

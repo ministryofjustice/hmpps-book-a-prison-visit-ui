@@ -9,7 +9,7 @@ import PrisonerNotMatchedController from './prisonerNotMatchedController'
 export default function routes(services: Services): Router {
   const router = Router()
 
-  const prisonerLocationController = new PrisonerLocationController(services.prisonService)
+  const prisonerLocationController = new PrisonerLocationController()
   const prisonerDetailsController = new PrisonerDetailsController(services.bookerService)
   const prisonerAddedController = new PrisonerAddedController(services.bookerService)
   const prisonerNotAddedController = new PrisonerNotMatchedController()

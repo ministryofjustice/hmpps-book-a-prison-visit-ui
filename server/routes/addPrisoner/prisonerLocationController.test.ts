@@ -5,20 +5,15 @@ import { SessionData } from 'express-session'
 import { FieldValidationError } from 'express-validator'
 import { FlashData, appWithAllRoutes, flashProvider } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import { createMockPrisonService } from '../../services/testutils/mocks'
 import { AddPrisonerJourney } from '../../@types/bapv'
 
 let app: Express
 let sessionData: SessionData
 
-const supportedPrisonIds = ['HEI']
-const prisonService = createMockPrisonService()
-
 beforeEach(() => {
   sessionData = {} as SessionData
-  prisonService.getSupportedPrisonIds.mockResolvedValue(supportedPrisonIds)
 
-  app = appWithAllRoutes({ services: { prisonService }, sessionData })
+  app = appWithAllRoutes({ sessionData })
 })
 
 afterEach(() => {
@@ -34,7 +29,7 @@ describe('Prisoner location', () => {
       flashProvider.mockImplementation((key: keyof FlashData) => flashData[key])
     })
 
-    it('should render prisoner location page with list of supported prisons, store supported prison in session and clear any old session data', () => {
+    it('should render prisoner location page with list of supported prisons and clear any old session data', () => {
       sessionData.addPrisonerJourneyResult = {
         selectedPrisonId: 'some-prison-id',
         result: true,
@@ -52,14 +47,12 @@ describe('Prisoner location', () => {
           expect($('h1').text().trim()).toBe('Where is the prisoner you want to visit?')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.ADD_PRISONER.LOCATION)
-          expect($('input[name=prisonId]').length).toBe(1)
-          expect($('input[name=prisonId]:checked').length).toBe(0)
-          expect($('label[for=prisonId]').eq(0).text().trim()).toBe('Hewell (HMP & YOI)')
-          expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
+          expect($('select[name=prisonId] option').length).toBe(6) // 5 prisons in TestData.prisonNames() plus default option
+          expect($('select[name=prisonId] option:selected').text()).toBe('Select location') // default option
+
           expect($('[data-test="continue-button"]').text().trim()).toBe('Continue')
 
           expect(sessionData.addPrisonerJourneyResult).toBeUndefined()
-          expect(sessionData.addPrisonerJourney!.supportedPrisonIds).toStrictEqual(supportedPrisonIds)
         })
     })
 
@@ -67,7 +60,6 @@ describe('Prisoner location', () => {
       const selectedPrisonId = 'HEI'
       const prisonerDetails = { firstName: 'name' } as AddPrisonerJourney['prisonerDetails']
       sessionData.addPrisonerJourney = {
-        supportedPrisonIds,
         selectedPrisonId,
         prisonerDetails,
       }
@@ -77,12 +69,10 @@ describe('Prisoner location', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('input[name=prisonId]').length).toBe(1)
-          expect($('input[name=prisonId]:checked').length).toBe(1)
-          expect($('input[name=prisonId]').eq(0).val()).toBe('HEI')
+          expect($('select[name=prisonId] option:selected').val()).toBe('HEI')
+          expect($('select[name=prisonId] option:selected').text()).toBe('Hewell (HMP & YOI)')
 
           expect(sessionData.addPrisonerJourney).toStrictEqual<AddPrisonerJourney>({
-            supportedPrisonIds,
             selectedPrisonId,
             prisonerDetails,
           })
@@ -112,8 +102,11 @@ describe('Prisoner location', () => {
   })
 
   describe(`POST ${paths.ADD_PRISONER.LOCATION}`, () => {
+    beforeEach(() => {
+      sessionData.addPrisonerJourney = {}
+    })
+
     it('should save selected prison to session and redirect to prisoner details page', () => {
-      sessionData.addPrisonerJourney = { supportedPrisonIds }
       const selectedPrisonId = 'HEI'
 
       return request(app)
@@ -137,8 +130,6 @@ describe('Prisoner location', () => {
       })
 
       it('should set a validation error and redirect to original page when no prison selected', () => {
-        sessionData.addPrisonerJourney = { supportedPrisonIds }
-
         return request(app)
           .post(paths.ADD_PRISONER.LOCATION)
           .expect(302)
@@ -163,7 +154,6 @@ describe('Prisoner location', () => {
       })
 
       it('should set a validation error and redirect to original page when invalid prisonId selected', () => {
-        sessionData.addPrisonerJourney = { supportedPrisonIds }
         expectedFlashErrors[0].value = 'XYZ'
 
         return request(app)

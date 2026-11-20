@@ -1,8 +1,9 @@
 import type { RequestHandler } from 'express'
-import { body, matchedData, ValidationChain, validationResult } from 'express-validator'
+import { matchedData, ValidationChain, validationResult } from 'express-validator'
 import { PrisonService } from '../../services'
 import paths from '../../constants/paths'
 import config from '../../config'
+import { prisonIdValidation } from '../../utils/validations'
 
 export default class SelectPrisonController {
   public constructor(private readonly prisonService: PrisonService) {}
@@ -39,10 +40,6 @@ export default class SelectPrisonController {
   }
 
   public validate(): ValidationChain[] {
-    return [
-      body('prisonId')
-        .isLength({ min: 3, max: 3 })
-        .withMessage((_value, { req }) => req.t('validation:prisonSelectNone')),
-    ]
+    return [prisonIdValidation('validation:prisonSelectNone')]
   }
 }

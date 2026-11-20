@@ -62,6 +62,11 @@ export declare global {
 
     interface Request {
       id: string
+
+      context?: {
+        prisonNames?: PrisonNames
+      }
+
       flash(type: 'errors', message: ValidationError[]): number
       flash(type: 'errors'): ValidationError[]
 

@@ -24,15 +24,17 @@ import setUpI18n from '../../middleware/setUpI18n'
 import setCurrentUrl from '../../middleware/setCurrentUrl'
 import removeLngAndRedirect from '../../middleware/removeLngAndRedirect'
 import maintenancePageRoute from '../maintenancePageRoute'
+import populatePrisonNames from '../../middleware/populatePrisonNames'
 import authenticatedRoutes from '../authenticatedRoutes'
 import unauthenticatedRoutes from '../unauthenticatedRoutes'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
-import type { Services } from '../../services'
+import { type Services } from '../../services'
 import TestData from './testData'
 import analyticsConsent from '../../middleware/analyticsConsent'
 import { FlashFormValues, MoJAlert } from '../../@types/bapv'
 import { type Locale } from '../../constants/locales'
+import { createMockPrisonService } from '../../services/testutils/mocks'
 
 export const user: Express.User = {
   // Default values from GOV.UK One Login Simulator
@@ -87,8 +89,6 @@ function appSetup(
     res.locals = {
       ...res.locals,
       ...(req.user && { user: { ...req.user } }),
-
-      prisonNames: TestData.prisonNames(), // emulate populatePrisonNames()
     }
     next()
   })
@@ -98,6 +98,15 @@ function appSetup(
   app.get('*any', removeLngAndRedirect())
   app.use(maintenancePageRoute())
   app.use(analyticsConsent())
+
+  // Ensure prisonService has a mocked getAllPrisonNames method for populatePrisonNames middleware
+  // and provide a default implementation if not already mocked
+  const prisonService = services.prisonService ?? createMockPrisonService()
+  if (jest.isMockFunction(prisonService.getAllPrisonNames)) {
+    jest.mocked(prisonService.getAllPrisonNames).mockResolvedValue(TestData.prisonNames())
+  }
+  app.use(populatePrisonNames(prisonService))
+
   app.use(unauthenticatedRoutes(services))
   app.use(authenticatedRoutes(services))
   app.use((_req, _res, next) => next(new NotFound()))
