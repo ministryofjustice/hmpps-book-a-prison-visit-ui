@@ -15,10 +15,14 @@ const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const prisonNames = TestData.prisonNameDtos()
+const prisoner = TestData.prisoner({ prisonId: 'DHI' })
 
 beforeEach(() => {
   sessionData = {
-    booker: { reference: TestData.bookerReference().value, prisoners: [TestData.prisoner({ prisonId: 'DHI' })] },
+    booker: { reference: TestData.bookerReference().value },
+    bookVisitJourney: {
+      prisoner,
+    },
   } as SessionData
   app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
 })
@@ -43,8 +47,8 @@ describe('Confirm location', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^Prisoner has moved -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
-          expect($('h1').text().trim()).toBe('John is no longer at Hewell (HMP & YOI)')
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+          expect($('h1').text().trim()).toBe('John Smith is no longer at Hewell (HMP & YOI)')
 
           expect($('form[method=POST]').attr('action')).toBe(paths.PRISONER_MOVED.CONFIRM_LOCATION)
           expect($('h2').text().trim()).toContain('Select the prisoner’s location')
@@ -57,11 +61,12 @@ describe('Confirm location', () => {
     })
 
     it('should redirect to visits home if prisoner has NOT moved location', () => {
-      sessionData.booker!.prisoners = [TestData.prisoner()]
+      sessionData.bookVisitJourney!.prisoner.prisonId = 'HEI'
       return request(app).get(paths.PRISONER_MOVED.CONFIRM_LOCATION).expect(302).expect('location', paths.VISITS.HOME)
     })
 
     it('should render validation errors', () => {
+      sessionData.bookVisitJourney!.prisoner.prisonId = 'DHI'
       const validationError: FieldValidationError = {
         type: 'field',
         location: 'body',
@@ -84,18 +89,6 @@ describe('Confirm location', () => {
   })
 
   describe(`POST ${paths.PRISONER_MOVED.CONFIRM_LOCATION}`, () => {
-    beforeEach(() => {
-      const prisoner = TestData.prisoner({ prisonId: 'DHI', registeredPrisonId: 'HEI' })
-      sessionData = {
-        booker: { prisoners: [prisoner], reference: 'aaaa-bbbb-cccc' },
-      } as SessionData
-      app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
-    })
-
-    afterEach(() => {
-      jest.resetAllMocks()
-    })
-
     it('should redirect to prison updated page if correct prison is selected and prison is supported', () => {
       prisonService.isSupportedPrison.mockResolvedValue(true)
       return request(app)
@@ -137,7 +130,7 @@ describe('Confirm location', () => {
 
     it('should redirect to unsupported prison page if correct prison is selected, but they do not use a digital service', () => {
       prisonService.isSupportedPrison.mockResolvedValue(false)
-      sessionData.booker!.prisoners[0].prisonId = 'ACI'
+      sessionData.bookVisitJourney!.prisoner.prisonId = 'ACI'
       return request(app)
         .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
         .send({ prisonId: 'ACI' })
@@ -154,7 +147,7 @@ describe('Confirm location', () => {
     })
 
     it('should redirect to PVB prison page if correct prison is selected, but they use PVB', () => {
-      sessionData.booker!.prisoners[0].prisonId = 'CFI'
+      sessionData.bookVisitJourney!.prisoner.prisonId = 'CFI'
       return request(app)
         .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
         .send({ prisonId: 'CFI' })

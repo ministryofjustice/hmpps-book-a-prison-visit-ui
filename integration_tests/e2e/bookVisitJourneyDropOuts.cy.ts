@@ -179,7 +179,7 @@ context('Book visit journey - drop-out points', () => {
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(VisitsPage)
+      Page.verifyOnPage(SelectPrisonerPage)
     })
 
     it('should show drop-out page when prisoner has been released', () => {
@@ -211,7 +211,7 @@ context('Book visit journey - drop-out points', () => {
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(VisitsPage)
+      Page.verifyOnPage(SelectPrisonerPage)
     })
 
     it('should show drop-out page when no eligible visitors over 18', () => {
@@ -240,7 +240,7 @@ context('Book visit journey - drop-out points', () => {
 
       // Back link back to Visits home page
       cannotBookPage.backLink().click()
-      Page.verifyOnPage(VisitsPage)
+      Page.verifyOnPage(SelectPrisonerPage)
     })
   })
 })

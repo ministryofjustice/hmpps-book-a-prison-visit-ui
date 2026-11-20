@@ -83,7 +83,16 @@ export default class PrisonerDetailsController {
         prisonNumber: data.prisonNumber,
       }
 
-      return res.redirect(paths.ADD_PRISONER.FAIL)
+      switch (result) {
+        case 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER':
+          return res.redirect(paths.ADD_PRISONER.FAIL_ALREADY_LINKED)
+
+        case 'FAILED_REGISTRATION':
+          return res.redirect(paths.ADD_PRISONER.FAIL)
+
+        default:
+          return res.redirect(paths.RETURN_HOME)
+      }
     }
   }
 

@@ -58,7 +58,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
@@ -79,7 +79,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
@@ -99,7 +99,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test=cannot-book-reason]').text()).toBe(
@@ -119,7 +119,7 @@ describe('A visit cannot be booked', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('title').text()).toMatch(/^A visit cannot be booked -/)
-          expect($('[data-test="back-link"]').attr('href')).toBe(paths.VISITS.HOME)
+          expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
           expect($('h1').text()).toBe('A visit cannot be booked')
 
           expect($('[data-test="cannot-book-reason"]').text()).toContain(

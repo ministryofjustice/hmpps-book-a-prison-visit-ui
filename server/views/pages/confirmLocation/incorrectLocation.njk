@@ -9,7 +9,7 @@
     <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-l">{{- t("confirmLocation:incorrectLocation.prisonerNotAtPrison", {
-        prisonerFirstName: prisoner.firstName | capitalize,
+        prisonerName: prisoner | prisonerNameFirstLast,
         prisonName: confirmLocationSelectedPrison | getPrisonName(prisonNames, language)
       }) -}}</h1>
 
