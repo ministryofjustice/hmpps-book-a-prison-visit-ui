@@ -8,8 +8,4 @@ export default class MainContactPage extends Page {
   selectVisitorByName = (name: string): void => {
     cy.get('label').contains(name).siblings('input[name=contact]').check()
   }
-
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
 }

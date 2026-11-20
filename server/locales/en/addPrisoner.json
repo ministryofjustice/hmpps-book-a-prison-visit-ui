@@ -1,6 +1,8 @@
 {
   "prisonerLocation": {
     "title": "Where is the prisoner you want to visit?",
+    "selectLabel": "Select the prisoner’s location",
+    "selectPlaceholder": "Select location",
     "findPrisonerLink": "If you do not know, you can <link>apply to find the prisoner’s location</link>."
   },
 

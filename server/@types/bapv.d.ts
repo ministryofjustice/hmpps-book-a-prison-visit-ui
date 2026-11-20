@@ -16,7 +16,6 @@ export type Booker = {
 
 // data that is built up during an add prisoner journey
 export type AddPrisonerJourney = {
-  supportedPrisonIds: string[]
   selectedPrisonId?: string
   prisonerDetails?: {
     firstName: string

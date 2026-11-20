@@ -19,8 +19,4 @@ export default class VisitorDetailsPage extends Page {
     cy.get('#visitorDob-month').type(month.toString())
     cy.get('#visitorDob-year').type(year.toString())
   }
-
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
 }

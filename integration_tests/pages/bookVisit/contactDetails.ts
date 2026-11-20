@@ -16,8 +16,4 @@ export default class ContactDetailsPage extends Page {
   enterEmail = (email: string): PageElement => cy.get('#mainContactEmail').type(email)
 
   enterPhoneNumber = (number: string): PageElement => cy.get('#mainContactPhone').type(number)
-
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
 }

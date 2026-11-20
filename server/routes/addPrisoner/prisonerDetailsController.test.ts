@@ -16,10 +16,9 @@ const bookerService = createMockBookerService()
 let sessionData: SessionData
 
 const selectedPrisonId = 'HEI'
-const supportedPrisonIds = [selectedPrisonId]
 
 beforeEach(() => {
-  sessionData = { addPrisonerJourney: { supportedPrisonIds, selectedPrisonId } } as SessionData
+  sessionData = { addPrisonerJourney: { selectedPrisonId } } as SessionData
 
   app = appWithAllRoutes({ services: { bookerService }, sessionData })
 })

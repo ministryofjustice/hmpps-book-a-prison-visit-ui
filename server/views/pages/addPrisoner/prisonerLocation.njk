@@ -1,19 +1,17 @@
 {% extends "partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% set pageTitle = t("addPrisoner:prisonerLocation.title") %}
 
 {% set backLinkHref = paths.VISITS.HOME %}
 
-{% set prisonsRadios = [] %}
-{% for prisonId in supportedPrisonIds %}
-  {% set prisonsRadios = (prisonsRadios.push(
-    {
-      text: prisonId | getPrisonName(prisonNames, language),
-      value: prisonId
-    }
-  ), prisonsRadios) %}
+{% set prisonSelectItems = [{ value: "", text: t("addPrisoner:prisonerLocation.selectPlaceholder") }] %}
+{% for prisonId, prison in prisonNames %}
+  {% set prisonSelectItems = (prisonSelectItems.push({
+    value: prisonId,
+    text: prisonId | getPrisonName(prisonNames, language)
+  }), prisonSelectItems) %}
 {% endfor %}
 
 {% block content %}
@@ -22,22 +20,24 @@
 
       {% include "partials/errorSummary.njk" %}
 
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+
       <form action="{{ paths.ADD_PRISONER.LOCATION }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {{ govukRadios({
-          name: "prisonId",
-          fieldset: {
-            legend: {
-              text: pageTitle,
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
-            }
-          },
-          items: prisonsRadios,
-          value: formValues.prisonId,
-          errorMessage: errors | findError('prisonId')
-        }) }}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ govukSelect({
+              name: "prisonId",
+              label: {
+                text: t("addPrisoner:prisonerLocation.selectLabel")
+              },
+              items: prisonSelectItems,
+              value: formValues.prisonId,
+              errorMessage: errors | findError('prisonId')
+            }) }}
+          </div>
+        </div>
 
         <p>
           {{- t("addPrisoner:prisonerLocation.findPrisonerLink") | renderLinkTag("https://www.gov.uk/find-prisoner") | safe -}}
@@ -51,4 +51,8 @@
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block pageScripts %}
+  {% include "partials/selectPrisonAutocomplete.njk" %}
 {% endblock %}

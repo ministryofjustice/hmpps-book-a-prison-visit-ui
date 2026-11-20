@@ -26,8 +26,4 @@ export default class SelectVisitorsPage extends Page {
 
   // Visitor requests
   visitorRequest = (index: number): PageElement => cy.get(`[data-test=visitor-request-name-${index}]`)
-
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
 }

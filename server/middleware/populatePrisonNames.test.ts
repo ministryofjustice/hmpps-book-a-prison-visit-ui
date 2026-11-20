@@ -18,13 +18,14 @@ describe('populatePrisonNames', () => {
     res = { locals: {} } as Response
   })
 
-  it('should populate res.locals.prisonNames with prison names from the PrisonService', async () => {
+  it('should populate res.locals and req.context with prisonNames from the PrisonService', async () => {
     prisonService.getAllPrisonNames.mockResolvedValue(prisonNames)
 
     await populatePrisonNames(prisonService)(req, res, next)
 
     expect(prisonService.getAllPrisonNames).toHaveBeenCalled()
     expect(res.locals.prisonNames).toStrictEqual(prisonNames)
+    expect(req.context?.prisonNames).toStrictEqual(prisonNames)
     expect(next).toHaveBeenCalled()
   })
 })

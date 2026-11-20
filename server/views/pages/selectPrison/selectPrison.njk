@@ -25,19 +25,22 @@
       <form action="{{ paths.SELECT_PRISON }}" method="POST" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-        {{ govukSelect({
-          name: "prisonId",
-          formGroup: { classes: "govuk-!-width-two-thirds" },
-          label: {
-            text: t("selectPrison:selectPrison.selectLabel"),
-            classes: "govuk-visually-hidden"
-          },
-          hint: {
-            text: t("selectPrison:selectPrison.selectHint")
-          },
-          items: prisonSelectItems,
-          errorMessage: errors | findError('prisonId')
-        }) }}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ govukSelect({
+              name: "prisonId",
+              label: {
+                text: t("selectPrison:selectPrison.selectLabel"),
+                classes: "govuk-visually-hidden"
+              },
+              hint: {
+                text: t("selectPrison:selectPrison.selectHint")
+              },
+              items: prisonSelectItems,
+              errorMessage: errors | findError('prisonId')
+            }) }}
+          </div>
+        </div>
 
         {{ govukButton({
           text: t("common:buttons.continue"),
@@ -57,12 +60,5 @@
 {% endblock %}
 
 {% block pageScripts %}
-  <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script nonce="{{ cspNonce }}">
-    accessibleAutocomplete.enhanceSelectElement({
-      defaultValue: '',
-      showAllValues: true,
-      selectElement: document.querySelector('#prisonId')
-    })
-  </script>
+  {% include "partials/selectPrisonAutocomplete.njk" %}
 {% endblock %}
