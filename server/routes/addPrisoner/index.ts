@@ -21,7 +21,7 @@ export default function routes(services: Services): Router {
   router.post(paths.ADD_PRISONER.DETAILS, prisonerDetailsController.validate(), prisonerDetailsController.submit())
 
   router.get(paths.ADD_PRISONER.SUCCESS, prisonerAddedController.view())
-  router.get(paths.ADD_PRISONER.FAIL, prisonerNotAddedController.view())
+  router.get([paths.ADD_PRISONER.FAIL, paths.ADD_PRISONER.FAIL_ALREADY_LINKED], prisonerNotAddedController.view())
 
   return router
 }
