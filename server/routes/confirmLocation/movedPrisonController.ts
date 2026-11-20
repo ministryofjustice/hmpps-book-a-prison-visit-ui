@@ -12,8 +12,7 @@ export default class MovedPrisonController {
 
   public view(): RequestHandler {
     return async (req, res) => {
-      const booker = req.session.booker!
-      const prisoner = booker.prisoners[0]
+      const { prisoner } = req.session.bookVisitJourney!
 
       if (!prisoner || prisoner.prisonId === prisoner.registeredPrisonId) {
         return res.redirect(paths.VISITS.HOME)
@@ -29,7 +28,7 @@ export default class MovedPrisonController {
   public submit(): RequestHandler {
     return async (req, res) => {
       const booker = req.session.booker!
-      const prisoner = booker.prisoners[0]
+      const { prisoner } = req.session.bookVisitJourney!
 
       if (!prisoner || prisoner.prisonId === prisoner.registeredPrisonId) {
         return res.redirect(paths.VISITS.HOME)
@@ -76,8 +75,7 @@ export default class MovedPrisonController {
 
   public viewResult(result: 'prisonUpdated' | 'incorrectLocation' | 'pvbPrison' | 'unsupportedPrison'): RequestHandler {
     return async (req, res) => {
-      const booker = req.session.booker!
-      const prisoner = booker.prisoners[0]
+      const { prisoner } = req.session.bookVisitJourney!
       const { confirmLocationSelectedPrison } = req.session
 
       if (!prisoner || !confirmLocationSelectedPrison) {
