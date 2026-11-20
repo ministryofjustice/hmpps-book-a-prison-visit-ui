@@ -14,8 +14,4 @@ export default class AdditionalSupportPage extends Page {
   }
 
   enterSupportDetails = (details: string): PageElement => cy.get('#additionalSupport').type(details)
-
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
 }

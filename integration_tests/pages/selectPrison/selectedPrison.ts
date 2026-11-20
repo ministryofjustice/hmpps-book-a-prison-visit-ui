@@ -5,9 +5,5 @@ export default class SelectedPrisonPage extends Page {
     super(`Visiting ${prisonName}`)
   }
 
-  continue = (): void => {
-    cy.get('[data-test="continue-button"]').click()
-  }
-
   noDigitalService = (): PageElement => cy.get('[data-test="no-digital-service"]')
 }

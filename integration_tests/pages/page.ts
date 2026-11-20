@@ -92,6 +92,19 @@ export default abstract class Page {
 
   goToFooterLinkByName = (name: string): PageElement => cy.get('.govuk-footer__link').contains('a', name).click()
 
+  continue = (): void => {
+    cy.get('[data-test="continue-button"]').click()
+  }
+
+  autoCompletePrisonName = (startChars: string, expectedMatch: string): void => {
+    // enter initial characters to autocomplete input
+    cy.get('#prisonId').type(startChars)
+    // keypresses to choose match that should be found
+    cy.get('#prisonId').type('{downArrow}{enter}')
+    // check match
+    cy.get('#prisonId').should('have.value', expectedMatch)
+  }
+
   protected clickDisabledOnSubmitButton = (dataTestName: string): void => {
     cy.get(`[data-test=${dataTestName}]`).within(bookButton => {
       // set a one-off event listener for window unload to check

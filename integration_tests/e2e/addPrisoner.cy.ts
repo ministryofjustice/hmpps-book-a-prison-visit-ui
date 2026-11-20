@@ -33,7 +33,7 @@ context('Add a prisoner', () => {
 
     // Prisoner location page - select prison and continue
     const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
-    prisonerLocationPage.selectPrison('HEI')
+    prisonerLocationPage.autoCompletePrisonName('Hew', 'Hewell (HMP & YOI)')
     prisonerLocationPage.continue()
 
     // Prisoner details page - enter details
@@ -81,7 +81,7 @@ context('Add a prisoner', () => {
 
       // Prisoner location page - select prison and continue
       const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
-      prisonerLocationPage.selectPrison('HEI')
+      prisonerLocationPage.autoCompletePrisonName('Hew', 'Hewell (HMP & YOI)')
       prisonerLocationPage.continue()
 
       // Prisoner details page - enter details
@@ -158,7 +158,7 @@ context('Add a prisoner', () => {
 
         // Prisoner location page - select prison and continue
         const prisonerLocationPage = Page.verifyOnPage(PrisonerLocationPage)
-        prisonerLocationPage.selectPrison('HEI')
+        prisonerLocationPage.autoCompletePrisonName('Hew', 'Hewell (HMP & YOI)')
         prisonerLocationPage.continue()
 
         // Prisoner details page - enter details
