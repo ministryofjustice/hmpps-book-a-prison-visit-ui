@@ -43,6 +43,8 @@ export const dateOfBirthValidationChain = (dobFieldBaseName: string): Validation
 // Validate that prisonId is in the set of prisons present in req.context.prisonNames
 export const prisonIdValidation = (errorMsgKey: string): ValidationChain => {
   return body('prisonId', (_value, { req }) => req.t(errorMsgKey))
+    .isString()
+    .bail()
     .isLength({ min: 3, max: 3 })
     .bail()
     .custom((prisonId: string, { req }) => {
