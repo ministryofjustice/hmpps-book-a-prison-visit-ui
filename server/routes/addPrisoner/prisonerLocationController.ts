@@ -38,7 +38,8 @@ export default class PrisonerLocationController {
         return res.redirect(paths.ADD_PRISONER.LOCATION)
       }
 
-      const addPrisonerJourney = req.session.addPrisonerJourney!
+      req.session.addPrisonerJourney ??= {}
+      const { addPrisonerJourney } = req.session
       const { prisonId } = matchedData<{ prisonId: string }>(req)
       addPrisonerJourney.selectedPrisonId = prisonId
 
