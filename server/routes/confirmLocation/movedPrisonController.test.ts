@@ -15,19 +15,13 @@ const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const prisonNames = TestData.prisonNameDtos()
-const prisoner1 = TestData.prisoner()
-const prisoner2 = TestData.prisoner({
-  prisonerNumber: 'B2345DC',
-  firstName: 'Bob',
-  prisonId: 'DHI',
-})
 
 beforeEach(() => {
-  prisoner1.prisonId = 'DHI'
+  const prisoner = TestData.prisoner({ prisonId: 'DHI' })
   sessionData = {
     booker: { reference: TestData.bookerReference().value },
     bookVisitJourney: {
-      prisoner: prisoner1,
+      prisoner,
     },
   } as SessionData
   app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
@@ -90,6 +84,11 @@ describe('Confirm location', () => {
           expect($('.govuk-error-summary a[href="#prisonId"]').text()).toBe('No prison selected')
           expect($('#prisonId-error').text()).toContain('No prison selected')
         })
+    })
+
+    it('should redirect to visits home if there is no bookVisitJourney in the session', () => {
+      delete sessionData.bookVisitJourney
+      return request(app).get(paths.PRISONER_MOVED.CONFIRM_LOCATION).expect(302).expect('location', paths.VISITS.HOME)
     })
   })
 
@@ -168,6 +167,15 @@ describe('Confirm location', () => {
         })
     })
 
+    it('should redirect to visits home if there is no bookVisitJourney in the session', () => {
+      delete sessionData.bookVisitJourney
+      return request(app)
+        .post(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+        .send({ prisonId: 'DHI' })
+        .expect(302)
+        .expect('Location', paths.VISITS.HOME)
+    })
+
     describe('Validation errors', () => {
       let expectedFlashErrors: FieldValidationError[]
 
@@ -189,13 +197,13 @@ describe('Confirm location', () => {
       })
     })
 
-    // First prisoner
     describe('GET - Prisoner moved location updated page', () => {
       beforeEach(() => {
-        prisoner1.prisonId = 'DHI'
-        prisoner1.registeredPrisonId = 'DHI'
+        const prisoner1 = TestData.prisoner({ prisonId: 'DHI' })
+        const registeredPrisoner = TestData.prisoner({ prisonId: 'DHI', registeredPrisonId: 'DHI' })
+
         sessionData = {
-          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          booker: { reference: TestData.bookerReference().value, prisoners: [registeredPrisoner] },
           bookVisitJourney: {
             prisoner: prisoner1,
           },
@@ -220,17 +228,28 @@ describe('Confirm location', () => {
             expect($('h1').text().trim()).toBe('John Smith is at Drake Hall (HMP & YOI)')
             expect($('[data-test="continue"]').length).toBe(1)
             expect($('[data-test="continue"]').text().trim()).toBe('Continue')
+            expect(sessionData.bookVisitJourney?.prisoner.registeredPrisonId).toBe('DHI')
           })
       })
     })
 
-    // Second prisoner
     describe(`GET ${paths.PRISONER_MOVED.INCORRECT_LOCATION}`, () => {
       beforeEach(() => {
-        prisoner2.prisonId = 'HEI'
-        prisoner2.registeredPrisonId = 'HEI'
+        const prisoner1 = TestData.prisoner({ prisonId: 'DHI' })
+        const prisoner2 = TestData.prisoner({
+          prisonerNumber: 'B2345DC',
+          firstName: 'Bob',
+          registeredPrisonId: 'DHI',
+        })
+
+        const registeredPrisoner = TestData.prisoner({
+          prisonerNumber: 'B2345DC',
+          firstName: 'Bob',
+          prisonId: 'ACI',
+          registeredPrisonId: 'ACI',
+        })
         sessionData = {
-          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, registeredPrisoner] },
           bookVisitJourney: {
             prisoner: prisoner2,
           },
@@ -248,17 +267,17 @@ describe('Confirm location', () => {
             expect($('title').text()).toMatch(/^Prisoner is not at this prison -/)
             expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONER_MOVED.CONFIRM_LOCATION)
             expect($('h1').text().trim()).toBe('Bob Smith is not at Drake Hall (HMP & YOI)')
+            expect(sessionData.bookVisitJourney?.prisoner.registeredPrisonId).toBe('DHI')
           })
       })
     })
 
-    // First prisoner
     describe(`GET ${paths.PRISONER_MOVED.PVB_PRISON}`, () => {
       beforeEach(() => {
-        prisoner1.prisonId = 'CFI'
-        prisoner1.registeredPrisonId = 'CFI'
+        const prisoner1 = TestData.prisoner({ prisonId: 'CFI' })
+        const registeredPrisoner = TestData.prisoner({ prisonId: 'CFI', registeredPrisonId: 'CFI' })
         sessionData = {
-          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          booker: { reference: TestData.bookerReference().value, prisoners: [registeredPrisoner] },
           bookVisitJourney: {
             prisoner: prisoner1,
           },
@@ -281,17 +300,28 @@ describe('Confirm location', () => {
             expect($('title').text()).toMatch(/^Prisoner’s new location uses another service -/)
             expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
             expect($('h1').text().trim()).toBe('Cardiff (HMP & YOI) does not use this service')
+            expect(sessionData.bookVisitJourney?.prisoner.registeredPrisonId).toBe('CFI')
           })
       })
     })
 
-    // Second prisoner
     describe(`GET ${paths.PRISONER_MOVED.UNSUPPORTED_PRISON}`, () => {
       beforeEach(() => {
-        prisoner2.prisonId = 'ACI'
-        prisoner2.registeredPrisonId = 'ACI'
+        const prisoner1 = TestData.prisoner({ prisonId: 'DHI' })
+        const prisoner2 = TestData.prisoner({
+          prisonerNumber: 'B2345DC',
+          firstName: 'Bob',
+          prisonId: 'ACI',
+        })
+
+        const registeredPrisoner = TestData.prisoner({
+          prisonerNumber: 'B2345DC',
+          firstName: 'Bob',
+          prisonId: 'ACI',
+          registeredPrisonId: 'ACI',
+        })
         sessionData = {
-          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, registeredPrisoner] },
           bookVisitJourney: {
             prisoner: prisoner2,
           },
@@ -308,7 +338,16 @@ describe('Confirm location', () => {
             expect($('title').text()).toMatch(/^Prisoner’s new location does not use this service -/)
             expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
             expect($('h1').text().trim()).toBe('You cannot book visits to Altcourse (HMP & YOI) using this service')
+            expect(sessionData.bookVisitJourney?.prisoner.registeredPrisonId).toBe('ACI')
           })
+      })
+
+      it('should redirect to visits home if the prisoner is not in booker prisoners', () => {
+        sessionData.booker!.prisoners = []
+        return request(app)
+          .get(paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
+          .expect(302)
+          .expect('Location', paths.VISITS.HOME)
       })
     })
   })
