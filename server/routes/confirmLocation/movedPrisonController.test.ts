@@ -15,9 +15,10 @@ const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const prisonNames = TestData.prisonNameDtos()
-const prisoner = TestData.prisoner({ prisonId: 'DHI' })
+const prisoner = TestData.prisoner()
 
 beforeEach(() => {
+  prisoner.prisonId = 'DHI'
   sessionData = {
     booker: { reference: TestData.bookerReference().value },
     bookVisitJourney: {
@@ -66,7 +67,6 @@ describe('Confirm location', () => {
     })
 
     it('should render validation errors', () => {
-      sessionData.bookVisitJourney!.prisoner.prisonId = 'DHI'
       const validationError: FieldValidationError = {
         type: 'field',
         location: 'body',
