@@ -15,14 +15,19 @@ const prisonService = createMockPrisonService()
 let sessionData: SessionData
 
 const prisonNames = TestData.prisonNameDtos()
-const prisoner = TestData.prisoner()
+const prisoner1 = TestData.prisoner()
+const prisoner2 = TestData.prisoner({
+  prisonerNumber: 'B2345DC',
+  firstName: 'Bob',
+  prisonId: 'DHI',
+})
 
 beforeEach(() => {
-  prisoner.prisonId = 'DHI'
+  prisoner1.prisonId = 'DHI'
   sessionData = {
     booker: { reference: TestData.bookerReference().value },
     bookVisitJourney: {
-      prisoner,
+      prisoner: prisoner1,
     },
   } as SessionData
   app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
@@ -180,6 +185,129 @@ describe('Confirm location', () => {
           .expect(() => {
             expect(flashProvider).toHaveBeenCalledWith('errors', expectedFlashErrors)
             expect(sessionData.selectedPrison).toBeUndefined()
+          })
+      })
+    })
+
+    // First prisoner
+    describe('GET - Prisoner moved location updated page', () => {
+      beforeEach(() => {
+        prisoner1.prisonId = 'DHI'
+        prisoner1.registeredPrisonId = 'DHI'
+        sessionData = {
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          bookVisitJourney: {
+            prisoner: prisoner1,
+          },
+          confirmLocationSelectedPrison: 'DHI',
+        } as SessionData
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      })
+
+      it('should redirect to the visits page if there is no bookVisitJourney', () => {
+        delete sessionData.bookVisitJourney
+        return request(app).get(paths.PRISONER_MOVED.LOCATION_UPDATED).expect(302).expect('Location', paths.VISITS.HOME)
+      })
+
+      it('should render the location updated page for the first prisoner', () => {
+        return request(app)
+          .get(paths.PRISONER_MOVED.LOCATION_UPDATED)
+          .expect(200)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Prisoner’s location updated -/)
+            expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+            expect($('h1').text().trim()).toBe('John Smith is at Drake Hall (HMP & YOI)')
+            expect($('[data-test="continue"]').length).toBe(1)
+            expect($('[data-test="continue"]').text().trim()).toBe('Continue')
+          })
+      })
+    })
+
+    // Second prisoner
+    describe(`GET ${paths.PRISONER_MOVED.INCORRECT_LOCATION}`, () => {
+      beforeEach(() => {
+        prisoner2.prisonId = 'HEI'
+        prisoner2.registeredPrisonId = 'HEI'
+        sessionData = {
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          bookVisitJourney: {
+            prisoner: prisoner2,
+          },
+          confirmLocationSelectedPrison: 'DHI',
+        } as SessionData
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      })
+
+      it('should render the incorrect location page for the second prisoner', () => {
+        return request(app)
+          .get(paths.PRISONER_MOVED.INCORRECT_LOCATION)
+          .expect(200)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Prisoner is not at this prison -/)
+            expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONER_MOVED.CONFIRM_LOCATION)
+            expect($('h1').text().trim()).toBe('Bob Smith is not at Drake Hall (HMP & YOI)')
+          })
+      })
+    })
+
+    // First prisoner
+    describe(`GET ${paths.PRISONER_MOVED.PVB_PRISON}`, () => {
+      beforeEach(() => {
+        prisoner1.prisonId = 'CFI'
+        prisoner1.registeredPrisonId = 'CFI'
+        sessionData = {
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          bookVisitJourney: {
+            prisoner: prisoner1,
+          },
+          confirmLocationSelectedPrison: 'CFI',
+        } as SessionData
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      })
+
+      it('should redirect to the visits page if confirmLocationSelectedPrison is not in the session', () => {
+        delete sessionData.confirmLocationSelectedPrison
+        return request(app).get(paths.PRISONER_MOVED.PVB_PRISON).expect(302).expect('Location', paths.VISITS.HOME)
+      })
+
+      it('should render the pvb prison page', () => {
+        return request(app)
+          .get(paths.PRISONER_MOVED.PVB_PRISON)
+          .expect(200)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Prisoner’s new location uses another service -/)
+            expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+            expect($('h1').text().trim()).toBe('Cardiff (HMP & YOI) does not use this service')
+          })
+      })
+    })
+
+    // Second prisoner
+    describe(`GET ${paths.PRISONER_MOVED.UNSUPPORTED_PRISON}`, () => {
+      beforeEach(() => {
+        prisoner2.prisonId = 'ACI'
+        prisoner2.registeredPrisonId = 'ACI'
+        sessionData = {
+          booker: { reference: TestData.bookerReference().value, prisoners: [prisoner1, prisoner2] },
+          bookVisitJourney: {
+            prisoner: prisoner2,
+          },
+          confirmLocationSelectedPrison: 'ACI',
+        } as SessionData
+        app = appWithAllRoutes({ services: { bookerService, prisonService }, sessionData })
+      })
+      it('should render the unsupported prison page', () => {
+        return request(app)
+          .get(paths.PRISONER_MOVED.UNSUPPORTED_PRISON)
+          .expect(200)
+          .expect(res => {
+            const $ = cheerio.load(res.text)
+            expect($('title').text()).toMatch(/^Prisoner’s new location does not use this service -/)
+            expect($('[data-test="back-link"]').attr('href')).toBe(paths.BOOK_VISIT.SELECT_PRISONER)
+            expect($('h1').text().trim()).toBe('You cannot book visits to Altcourse (HMP & YOI) using this service')
           })
       })
     })
