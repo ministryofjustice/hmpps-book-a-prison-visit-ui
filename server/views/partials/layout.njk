@@ -125,14 +125,16 @@
         lang: "en",
         href: currentUrlEn.pathname + currentUrlEn.search,
         current: language == "en",
-        languageDescriptionText: "Change the language to English"
+        languageDescriptionText: "Change the language to English",
+        attributes: { "data-test": "english-button" }
       },
       {
         text: "Cymraeg",
         lang: "cy",
         href: currentUrlCy.pathname + currentUrlCy.search,
         current: language == "cy",
-        languageDescriptionText: "Newid yr iaith ir Gymraeg"
+        languageDescriptionText: "Newid yr iaith ir Gymraeg",
+        attributes: { "data-test": "cymraeg-button" }
       }
     ]
   }) }}
