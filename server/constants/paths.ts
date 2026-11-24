@@ -18,6 +18,7 @@ const paths = {
     DETAILS: '/prisoner',
     SUCCESS: '/prisoner-added',
     FAIL: '/prisoner-incorrect',
+    FAIL_ALREADY_LINKED: '/prisoner-already-linked',
   },
 
   ADD_VISITOR: {

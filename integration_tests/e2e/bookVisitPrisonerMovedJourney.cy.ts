@@ -58,7 +58,7 @@ context('Book visit journey - prisoner moved prison', () => {
       selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
-        prisoner: 'John',
+        prisoner: 'John Smith',
         prisonName: 'Drake Hall (HMP & YOI)',
       })
 
@@ -104,14 +104,14 @@ context('Book visit journey - prisoner moved prison', () => {
       selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
-        prisoner: 'John',
+        prisoner: 'John Smith',
         prisonName: 'Foston Hall (HMP & YOI)',
       })
       confirmLocationSelectPrisonPage.findPrisonerLink().should('have.attr', 'href', 'https://www.gov.uk/find-prisoner')
       confirmLocationSelectPrisonPage.prisonDropdown('Cardiff (HMP & YOI)')
       confirmLocationSelectPrisonPage.continueButton()
 
-      const incorrectLocationPage = Page.verifyOnPage(IncorrectLocationPage, 'John is not at Cardiff (HMP & YOI)')
+      const incorrectLocationPage = Page.verifyOnPage(IncorrectLocationPage, 'John Smith is not at Cardiff (HMP & YOI)')
       incorrectLocationPage.secondHeading().contains('What if I don’t know the prisoner’s location?')
       incorrectLocationPage.findPrisonerLink().should('have.attr', 'href', 'https://www.gov.uk/find-prisoner')
     })
@@ -142,7 +142,7 @@ context('Book visit journey - prisoner moved prison', () => {
       selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
-        prisoner: 'John',
+        prisoner: 'John Smith',
         prisonName: 'Hewell (HMP & YOI)',
       })
 
@@ -179,7 +179,7 @@ context('Book visit journey - prisoner moved prison', () => {
       selectPrisonerPage.continue()
 
       const confirmLocationSelectPrisonPage = Page.verifyOnPage(ConfirmLocationSelectPrison, {
-        prisoner: 'John',
+        prisoner: 'John Smith',
         prisonName: 'Drake Hall (HMP & YOI)',
       })
 

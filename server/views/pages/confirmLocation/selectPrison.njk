@@ -12,7 +12,7 @@
   }), prisonSelectItems) %}
 {% endfor %}
 
-{% set backLinkHref = paths.VISITS.HOME %}
+{% set backLinkHref = paths.BOOK_VISIT.SELECT_PRISONER %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -21,7 +21,7 @@
       {% include "partials/errorSummary.njk" %}
 
       <h1 class="govuk-heading-l">{{- t("confirmLocation:selectPrison.prisonerNotAtPrison", {
-        prisonerFirstName: prisoner.firstName | capitalize,
+        prisonerName: prisoner | prisonerNameFirstLast,
         prisonName: prisoner.registeredPrisonId | getPrisonName(prisonNames, language)
       }) -}}</h1>
 

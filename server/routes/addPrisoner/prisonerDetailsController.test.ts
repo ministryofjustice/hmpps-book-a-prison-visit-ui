@@ -185,6 +185,26 @@ describe('Prisoner details', () => {
         })
     })
 
+    it('should redirect to failure already linked page if service to register prisoner returns already linked', () => {
+      bookerService.registerPrisoner.mockResolvedValue('PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER')
+
+      return request(app)
+        .post(paths.ADD_PRISONER.DETAILS)
+        .send(prisonerDetails)
+        .expect(302)
+        .expect('Location', paths.ADD_PRISONER.FAIL_ALREADY_LINKED)
+        .expect(() => {
+          expect(flashProvider).not.toHaveBeenCalled()
+          expect(sessionData.addPrisonerJourney!.prisonerDetails).toStrictEqual(prisonerDetails)
+          expect(sessionData.addPrisonerJourneyResult).toStrictEqual<AddPrisonerJourneyResult>({
+            selectedPrisonId,
+            result: 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER',
+            prisonerNumber: 'A1234BC',
+          })
+          expect(bookerService.registerPrisoner).toHaveBeenCalledWith(bookerReference, registerPrisonerDto)
+        })
+    })
+
     it('should throw any other API error response', () => {
       bookerService.registerPrisoner.mockRejectedValue(new BadRequest())
 

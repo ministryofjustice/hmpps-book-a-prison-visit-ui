@@ -50,7 +50,7 @@ describe('Prisoner not matched', () => {
       sessionData.addPrisonerJourneyResult!.result = 'PRISONER_ALREADY_REGISTERED_AGAINST_BOOKER'
 
       return request(app)
-        .get(paths.ADD_PRISONER.FAIL)
+        .get(paths.ADD_PRISONER.FAIL_ALREADY_LINKED)
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
