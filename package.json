@@ -32,6 +32,7 @@
     "i18n:reset-translation-state": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON bin/i18nResetTranslationState.ts",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
+    "int-test-init:ci": "bash integration_tests/startOneLoginSimulator.sh",
     "clean": "rm -rf dist build node_modules stylesheets"
   },
   "engines": {
