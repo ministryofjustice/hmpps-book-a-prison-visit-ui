@@ -4,7 +4,7 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "service-header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
-{% from "components/language-toggle/macro.njk" import visitsLanguageToggle %}
+{% from "govuk/components/language-navigation/macro.njk" import govukLanguageNavigation %}
 
 {% set navigationItems = [
   {
@@ -117,12 +117,24 @@
     </div>
   {% endif %}
 
-  {{ visitsLanguageToggle({
-    selectedLang: language,
-    href: {
-      en: currentUrlEn.pathname + currentUrlEn.search,
-      cy: currentUrlCy.pathname + currentUrlCy.search
-    }
+  {{ govukLanguageNavigation({
+    classes: "no-visited-state govuk-!-text-align-right govuk-!-font-size-16 govuk-!-margin-top-3 govuk-!-display-inline",
+    items: [
+      {
+        text: "English",
+        lang: "en",
+        href: currentUrlEn.pathname + currentUrlEn.search,
+        current: language == "en",
+        languageDescriptionText: "Change the language to English"
+      },
+      {
+        text: "Cymraeg",
+        lang: "cy",
+        href: currentUrlCy.pathname + currentUrlCy.search,
+        current: language == "cy",
+        languageDescriptionText: "Newid yr iaith ir Gymraeg"
+      }
+    ]
   }) }}
 {% endblock %}
 
