@@ -1,5 +1,4 @@
 {% extends "partials/layout.njk" %}
-{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = t("selectPrison:selectedPrison.title", {
@@ -7,14 +6,6 @@
 }) %}
 
 {% set backLinkHref = paths.SELECT_PRISON %}
-
-{% set insetText -%}
-  {{- t("selectPrison:selectedPrison.onlyOnePrisoner", {
-    prisonName: prisonId | getPrisonName(prisonNames, language)
-  })
-    | renderLinkTag("https://www.gov.uk/government/collections/prisons-in-england-and-wales")
-    | safe -}}
-{%- endset %}
 
 {% block content %}
 
@@ -27,10 +18,6 @@
         <p>{{ t("selectPrison:selectedPrison.howBookingChanged") }}</p>
 
         <p>{{ t("selectPrison:selectedPrison.signInPrompt") }}</p>
-
-        {{ govukInsetText({
-          html: insetText
-        }) }}
 
         {{ govukButton({
           text: t("common:buttons.continue"),
