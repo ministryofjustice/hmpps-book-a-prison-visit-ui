@@ -118,7 +118,7 @@
     "write-excel-file": "4.1.1"
   },
   "overrides": {
-    "@opentelemetry/core": "2.12.1",
+    "@opentelemetry/core": "3.1.1",
     "brace-expansion": "5.0.13",
     "cypress-axe": {
       "cypress": "$cypress"
