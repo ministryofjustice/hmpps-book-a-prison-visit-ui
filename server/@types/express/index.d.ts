@@ -54,7 +54,7 @@ export declare global {
       email: string
       email_verified: boolean
       phone_number: string
-      phone_number_verified: boolean
+      phone_number_verified?: boolean
 
       // User's ID token (required during sign-out)
       idToken?: string
