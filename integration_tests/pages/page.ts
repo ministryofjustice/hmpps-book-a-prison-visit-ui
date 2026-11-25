@@ -37,9 +37,6 @@ export default abstract class Page {
 
         // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
         { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
-
-        // TODO temporary until language toggle is replaced in VB-7107'
-        { id: 'label-content-name-mismatch', selector: 'visits-language-toggle' },
       ],
     })
 
@@ -82,11 +79,11 @@ export default abstract class Page {
 
   backLink = (): PageElement => cy.get('[data-test="back-link"]')
 
-  getCurrentLanguage = (): PageElement => cy.get('.visits-language-toggle li[aria-current="true"]')
+  getCurrentLanguage = (): PageElement => cy.get('.govuk-language-navigation li span[aria-current="true"]')
 
-  selectEnglishLanguage = (): PageElement => cy.get('.visits-language-toggle a').contains('English').click()
+  selectEnglishLanguage = (): PageElement => cy.get('.govuk-language-navigation a[data-test="english-button"]').click()
 
-  selectWelshLanguage = (): PageElement => cy.get('.visits-language-toggle a').contains('Cymraeg').click()
+  selectWelshLanguage = (): PageElement => cy.get('.govuk-language-navigation a[data-test="cymraeg-button"]').click()
 
   getMessages = (index: number): PageElement => cy.get('.moj-alert').eq(index)
 

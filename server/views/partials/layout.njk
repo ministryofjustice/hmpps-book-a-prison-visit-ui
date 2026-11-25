@@ -4,7 +4,7 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 {% from "service-header/service-header.njk" import govukOneLoginServiceHeader %}
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
-{% from "components/language-toggle/macro.njk" import visitsLanguageToggle %}
+{% from "govuk/components/language-navigation/macro.njk" import govukLanguageNavigation %}
 
 {% set navigationItems = [
   {
@@ -107,23 +107,40 @@
       | renderLinkTag("https://submit.forms.service.gov.uk/form/263703/visit-someone-in-prison/", true)
   }) }}
 
-  {% if backLinkHref %}
-    <div class="govuk-!-display-inline" role="navigation">
-      {{ govukBackLink({
-        text: t("common:links.back"),
-        href: backLinkHref,
-        attributes: { "data-test": "back-link" }
-      }) }}
-    </div>
-  {% endif %}
+  <div class="app-page-navigation">
+    {% if backLinkHref %}
+      <div class="govuk-!-display-inline" role="navigation">
+        {{ govukBackLink({
+          text: t("common:links.back"),
+          href: backLinkHref,
+          attributes: { "data-test": "back-link" },
+          classes: "govuk-!-margin-bottom-1"
+        }) }}
+      </div>
+    {% endif %}
 
-  {{ visitsLanguageToggle({
-    selectedLang: language,
-    href: {
-      en: currentUrlEn.pathname + currentUrlEn.search,
-      cy: currentUrlCy.pathname + currentUrlCy.search
-    }
-  }) }}
+    {{ govukLanguageNavigation({
+      classes: "no-visited-state govuk-!-text-align-right govuk-!-font-size-16 govuk-!-margin-top-3 govuk-!-margin-bottom-0",
+      items: [
+        {
+          text: "English",
+          lang: "en",
+          href: currentUrlEn.pathname + currentUrlEn.search,
+          current: language == "en",
+          languageDescriptionText: "Change the language to English",
+          attributes: { "data-test": "english-button" }
+        },
+        {
+          text: "Cymraeg",
+          lang: "cy",
+          href: currentUrlCy.pathname + currentUrlCy.search,
+          current: language == "cy",
+          languageDescriptionText: "Newid yr iaith ir Gymraeg",
+          attributes: { "data-test": "cymraeg-button" }
+        }
+      ]
+    }) }}
+  </div>
 {% endblock %}
 
 {% block govukFooter %}

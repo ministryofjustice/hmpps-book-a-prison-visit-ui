@@ -56,6 +56,15 @@
   max-width: unset;
 }
 
+.app-page-navigation {
+  display: flow-root;
+  margin-bottom: govuk-spacing(3);
+}
+
+.govuk-language-navigation {
+  float: right;
+}
+
 .visits-heading-action {
   display: flex;
   justify-content: space-between;

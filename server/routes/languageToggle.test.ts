@@ -20,9 +20,9 @@ describe('Language toggle', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/Visit someone in prison/)
 
-        expect($('.visits-language-toggle li[aria-current="true"]').text().trim()).toBe('English')
-        expect($('.visits-language-toggle a').text().trim()).toBe('Cymraeg')
-        expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
+        expect($('.govuk-language-navigation li span[aria-current="true"]').text().trim()).toBe('English')
+        expect($('.govuk-language-navigation a').text().trim()).toBe('Cymraeg Newid yr iaith ir Gymraeg')
+        expect($('.govuk-language-navigation a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
       })
   })
 
@@ -35,9 +35,9 @@ describe('Language toggle', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/Ymweld â rhywun yn y carchar/)
 
-        expect($('.visits-language-toggle li[aria-current="true"]').text().trim()).toBe('Cymraeg')
-        expect($('.visits-language-toggle a').text().trim()).toBe('English')
-        expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=en')
+        expect($('.govuk-language-navigation li span[aria-current="true"]').text().trim()).toBe('Cymraeg')
+        expect($('.govuk-language-navigation a').text().trim()).toBe('English Change the language to English')
+        expect($('.govuk-language-navigation a').attr('href')).toBe('/some-page?foo=bar&lng=en')
       })
   })
 
@@ -50,9 +50,9 @@ describe('Language toggle', () => {
         const $ = cheerio.load(res.text)
         expect($('title').text()).toMatch(/Visit someone in prison/)
 
-        expect($('.visits-language-toggle li[aria-current="true"]').text().trim()).toBe('English')
-        expect($('.visits-language-toggle a').text().trim()).toBe('Cymraeg')
-        expect($('.visits-language-toggle a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
+        expect($('.govuk-language-navigation li span[aria-current="true"]').text().trim()).toBe('English')
+        expect($('.govuk-language-navigation a').text().trim()).toBe('Cymraeg Newid yr iaith ir Gymraeg')
+        expect($('.govuk-language-navigation a').attr('href')).toBe('/some-page?foo=bar&lng=cy')
       })
   })
 })
