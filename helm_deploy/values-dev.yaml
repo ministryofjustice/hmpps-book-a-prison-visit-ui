@@ -23,8 +23,6 @@ generic-service:
     ENVIRONMENT_NAME: dev
     LOG_LEVEL: "debug"
 
-    FEATURE_MULTIPLE_PRISONERS: "true"
-
   allowlist:
     groups:
       - digital_staff_and_mojo
