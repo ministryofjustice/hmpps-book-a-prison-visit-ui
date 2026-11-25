@@ -32,14 +32,17 @@ jobs:
   node_unit_tests:
     name: node unit tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2 # WORKFLOW_VERSION
+    with:
+      test-report-continue-on-error: true
     needs: [node_build]
     secrets: inherit
   node_integration_tests:
     name: node integration tests
-    uses: ./.github/workflows/node_integration_tests.yml # LOCAL_VERSION
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
     secrets: inherit
     with:
+      test-report-continue-on-error: true
       redis_tag: '7'
   # acceptance_tests_public_staging:
   #   name: Acceptance tests (staging)
