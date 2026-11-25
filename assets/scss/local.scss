@@ -56,8 +56,12 @@
   max-width: unset;
 }
 
+.app-page-navigation {
+  display: flow-root;
+  margin-bottom: govuk-spacing(3);
+}
+
 .govuk-language-navigation {
-  margin-bottom: govuk-spacing(-2);
   float: right;
 }
 
