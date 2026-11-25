@@ -29,17 +29,15 @@
         }) }}
       {% endif %}
 
-      {% if features.multiplePrisoners or not prisonersTableRows | length %}
-        <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
-        <p>{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
+      <h2 class="govuk-heading-m" data-test="link-new-prisoner">{{ t("prisoners:prisoners.linkANewPrisonerHeading") }}</h2>
+      <p>{{ t("prisoners:prisoners.linkANewPrisonerText") }}</p>
 
-        {{ govukButton({
-          text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
-          href: paths.ADD_PRISONER.LOCATION,
-          preventDoubleClick: true,
-          attributes: { "data-test": "link-new-prisoner-button"}
-        }) }}
-      {% endif %}
+      {{ govukButton({
+        text: t("prisoners:prisoners.linkANewPrisonerRequestLink"),
+        href: paths.ADD_PRISONER.LOCATION,
+        preventDoubleClick: true,
+        attributes: { "data-test": "link-new-prisoner-button"}
+      }) }}
     </div>
   </div>
 {% endblock %}

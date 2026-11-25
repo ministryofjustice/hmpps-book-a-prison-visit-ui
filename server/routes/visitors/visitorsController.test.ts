@@ -8,7 +8,6 @@ import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import paths from '../../constants/paths'
 import { MoJAlert } from '../../@types/bapv'
-import { enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -55,7 +54,7 @@ describe('Visitors page', () => {
     bookerService.getVisitors.mockResolvedValue([visitor])
 
     return request(app)
-      .get(paths.VISITORS)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -71,6 +70,7 @@ describe('Visitors page', () => {
         expect($('[data-test=no-visitors]').length).toBe(0)
         expect($('[data-test=visitor-requests]').length).toBe(0)
         expect($('[data-test=link-a-visitor]').length).toBe(1)
+        expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONERS)
 
         expect(bookerService.getVisitors).toHaveBeenCalledWith(bookerReference, prisoner.prisonerNumber)
         expect(bookerService.getVisitorRequests).toHaveBeenCalledWith({
@@ -84,7 +84,7 @@ describe('Visitors page', () => {
     bookerService.getVisitors.mockResolvedValue([])
 
     return request(app)
-      .get(paths.VISITORS)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -113,7 +113,7 @@ describe('Visitors page', () => {
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
-      .get(paths.VISITORS)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -151,7 +151,7 @@ describe('Visitors page', () => {
     bookerService.getVisitors.mockResolvedValue([])
 
     return request(app)
-      .get(paths.VISITORS)
+      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
@@ -160,28 +160,13 @@ describe('Visitors page', () => {
       })
   })
 
-  it('should render correct back link', () => {
-    bookerService.getVisitors.mockResolvedValue([visitor])
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
-
-    return request(app)
-      .get(`${paths.VISITORS}/${prisoner.prisonerDisplayId}`)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('[data-test="back-link"]').attr('href')).toBe(paths.PRISONERS)
-      })
-  })
-
-  it('should return prisoners page if no prisoner display id is provided and FEATURE_MULTIPLE PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
+  it('should return prisoners page if no prisoner display id is provided', () => {
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app).get(paths.VISITORS).expect(302).expect('Location', paths.PRISONERS)
   })
 
-  it('should redirect to visits home if incorrect prisoner display id is provided and FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
+  it('should redirect to visits home if incorrect prisoner display id is provided', () => {
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     return request(app)
@@ -190,8 +175,7 @@ describe('Visitors page', () => {
       .expect('Location', paths.VISITS.HOME)
   })
 
-  it('should show correct prisoner when FEATURE_MULTIPLE_PRISONERS is enabled', () => {
-    enableFeatureForTest('multiplePrisoners')
+  it('should show correct prisoner', () => {
     app = appWithAllRoutes({ services: { bookerService }, sessionData })
 
     const prisonerDisplayId: UUID = randomUUID()

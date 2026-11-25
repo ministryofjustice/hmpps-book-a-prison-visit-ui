@@ -12,7 +12,6 @@ import { Prisoner } from '../../services/bookerService'
 import { createMockBookerService } from '../../services/testutils/mocks'
 import { BookerPrisonerValidationErrorResponse } from '../../data/orchestrationApiTypes'
 import { BookVisitJourney, CannotBookReason, FlashFormValues } from '../../@types/bapv'
-import { disableFeatureForTest, enableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 import * as utils from '../../utils/utils'
 
 jest.mock('../../../logger')
@@ -28,10 +27,6 @@ const prisoner2 = TestData.prisoner({
   prisonerDisplayId: randomUUID(),
   firstName: 'Bob',
   dateOfBirth: '1990-05-10',
-})
-
-beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
 })
 
 afterEach(() => {
@@ -153,20 +148,6 @@ describe('Select prisoner', () => {
           const $ = cheerio.load(res.text)
           expect($('.govuk-error-summary a[href="#prisonerDisplayId"]').text()).toBe('validation error message')
           expect($('#prisonerDisplayId-error').text()).toContain('validation error message')
-        })
-    })
-
-    it('should NOT show link new prisoner button if multiple prisoners feature disabled', () => {
-      disableFeatureForTest('multiplePrisoners')
-      app = appWithAllRoutes({ sessionData })
-      sessionData.booker!.prisoners = [prisoner1]
-
-      return request(app)
-        .get(paths.BOOK_VISIT.SELECT_PRISONER)
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="link-new-prisoner"]').length).toBe(0)
         })
     })
   })
