@@ -19,7 +19,7 @@ interface GOVUKOneLoginUserInfoResponse extends openidClient.UserInfoResponse {
   email: string
   email_verified: boolean
   phone_number: string
-  phone_number_verified: boolean
+  phone_number_verified?: boolean
 }
 
 // Passport strategy for GOV.UK One Login
