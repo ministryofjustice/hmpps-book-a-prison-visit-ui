@@ -1,13 +1,11 @@
 import { RequestHandler } from 'express'
 import { matchedData, ValidationChain, validationResult } from 'express-validator'
 import { UUID } from 'crypto'
-import type { Prisoner } from '../../services/bookerService'
 import { BookerService } from '../../services'
 import paths from '../../constants/paths'
 import { buildVisitorRequestsTableRows, buildVisitorsTableRows } from './visitorsUtils'
 import type { Locale } from '../../constants/locales'
 import { validatePrisonerDisplayId } from './validations'
-import config from '../../config'
 
 export default class VisitorsController {
   public constructor(private readonly bookerService: BookerService) {}
@@ -20,24 +18,18 @@ export default class VisitorsController {
         return res.redirect(paths.VISITS.HOME)
       }
 
-      let prisoner: Prisoner
-
-      if (config.features.multiplePrisoners) {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-          return res.redirect(paths.VISITS.HOME)
-        }
-
-        const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
-        if (!prisonerDisplayId) {
-          /// TODO remove original visitors path: currently only for supporting exisitng visitors path redirect to prisoners page
-          return res.redirect(paths.PRISONERS)
-        }
-
-        prisoner = booker.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)!
-      } else {
-        prisoner = booker.prisoners[0] as Prisoner
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.redirect(paths.VISITS.HOME)
       }
+
+      const { prisonerDisplayId } = matchedData<{ prisonerDisplayId: UUID }>(req)
+      if (!prisonerDisplayId) {
+        /// TODO remove original visitors path: currently only for supporting exisitng visitors path redirect to prisoners page
+        return res.redirect(paths.PRISONERS)
+      }
+
+      const prisoner = booker.prisoners.find(p => p.prisonerDisplayId === prisonerDisplayId)!
 
       const [visitors, visitorRequests] = await Promise.all([
         this.bookerService.getVisitors(booker.reference, prisoner.prisonerNumber),

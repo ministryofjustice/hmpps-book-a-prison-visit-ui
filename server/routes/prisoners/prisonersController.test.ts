@@ -6,7 +6,6 @@ import { createMockBookerService } from '../../services/testutils/mocks'
 import TestData from '../testutils/testData'
 import { appWithAllRoutes } from '../testutils/appSetup'
 import paths from '../../constants/paths'
-import { enableFeatureForTest, disableFeatureForTest } from '../../data/testutils/mockFeatureFlags'
 
 let app: Express
 
@@ -17,7 +16,6 @@ const bookerReference = TestData.bookerReference().value
 const prisoner = TestData.prisoner()
 
 beforeEach(() => {
-  enableFeatureForTest('multiplePrisoners')
   bookerService.getVisitorRequests.mockResolvedValue([])
   bookerService.getPrisoners.mockResolvedValue([prisoner])
   sessionData = {
@@ -65,20 +63,6 @@ describe('Prisoners page', () => {
         expect($('[data-test="prisoner-visitors-link-0"]').text().trim()).toBe('View visitors linked to John Smith')
         expect($('h2[data-test="link-new-prisoner"]').text()).toBe('Link a new prisoner')
         expect($('[data-test="link-new-prisoner-button"]').text().trim()).toBe('Link a new prisoner')
-      })
-  })
-
-  it('should not render the linked new prisoners section when MULTIPLE_PRISONERS is disabled', () => {
-    disableFeatureForTest('multiplePrisoners')
-    app = appWithAllRoutes({ services: { bookerService }, sessionData })
-
-    return request(app)
-      .get(paths.PRISONERS)
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        const $ = cheerio.load(res.text)
-        expect($('h2[data-test="link-new-prisoner"]').length).toBe(0)
-        expect($('[data-test="link-new-prisoner-button"]').length).toBe(0)
       })
   })
 })

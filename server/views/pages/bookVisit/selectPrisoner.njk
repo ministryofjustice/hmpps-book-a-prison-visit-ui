@@ -62,13 +62,11 @@
         }) }}
       </form>
 
-      {% if features.multiplePrisoners %}
-        <p>
-          <a href="{{ paths.ADD_PRISONER.LOCATION }}" data-test="link-new-prisoner" class="govuk-link--no-visited-state">
-            {{- t("prisoners:prisoners.linkANewPrisonerRequestLink") -}}
-          </a>
-        </p>
-      {% endif %}
+      <p>
+        <a href="{{ paths.ADD_PRISONER.LOCATION }}" data-test="link-new-prisoner" class="govuk-link--no-visited-state">
+          {{- t("prisoners:prisoners.linkANewPrisonerRequestLink") -}}
+        </a>
+      </p>
     </div>
   </div>
 {% endblock %}
